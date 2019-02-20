@@ -1,0 +1,26 @@
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+$lang['school'] = 'School';
+$lang['observ'] = 'Observing';
+$lang['adding'] = 'Adding';
+$lang['editing'] = 'Editing';
+$lang['classes'] = 'Classes';
+$lang['exit'] = 'Exit';
+$lang['f'] = 'Last name';
+$lang['i'] = 'First name';
+$lang['o'] = 'Surname';
+$lang['birthday'] = 'Birthday';
+$lang['class'] = 'Class';
+$lang['address'] = 'Address';
+$lang['phone'] = 'Phone number';
+$lang['uid'] = 'UID';
+$lang['card'] = 'Card';
+$lang['save'] = 'Save';
+$lang['clear'] = 'Clear';
+$lang['delete'] = 'Delete';
+$lang['number'] = 'Number';
+$lang['letter'] = 'Letter';
+$lang['year_short'] = '';
+$lang['developed'] = 'Developet by';
+$lang['missing'] = 'Missing';
+$lang['not_selected'] = 'Not selected';

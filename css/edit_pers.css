@@ -1,0 +1,76 @@
+#menu {
+  background: #ffffff;
+  box-shadow: 0 1px 0 0 #d7d8db, 0 0 0 1px #e3e4e8;
+  margin: 0 0 0 1%;
+  height: 100%;
+  width: 20%;
+  float: left;
+  overflow-y: auto;
+}
+#main {
+  margin: 0 2% 0 22%;
+}
+a:link.pers, a:visited.pers {
+  font-family: lucida sans unicode, lucida grande, sans-serif;
+  font-size: 14px;
+  color: black;
+  text-decoration: none;
+}
+a:hover.pers {
+  color: #00d2ff;
+}
+.Container {
+  padding: 0;
+  margin: 0;
+}
+.Container li {
+	list-style-type: none;
+}
+.Node {
+  margin-left: 18px;
+  zoom: 1;
+}
+.IsRoot {
+  margin-left: 0;
+}
+.Expand {
+  width: 18px;
+  height: 18px;
+  float: left;
+}
+ .Content {
+  margin-left:18px;
+  min-height: 18px;
+}
+.ExpandOpen .Expand {
+  background-image: url(/img/minus.gif);
+}
+.ExpandClosed .Expand {
+  background-image: url(/img/plus.gif);
+}
+.ExpandLeaf .Expand {
+	background-image: url(/img/leaf.gif);
+}
+.Node {
+	margin-left: 18px;
+	zoom: 1;
+	background-image : url(/img/i.gif);
+	background-position : top left;
+	background-repeat : repeat-y;
+}
+.IsLast {
+	background-image: url(/img/i_half.gif);
+	background-repeat : no-repeat;
+}
+.ExpandOpen .Container {
+	display: block;
+}
+.ExpandClosed .Container {
+	display: none;
+}
+.ExpandOpen .Expand, .ExpandClosed .Expand {
+	cursor: pointer;
+}
+.ExpandLeaf .Expand {
+	cursor: auto;
+}

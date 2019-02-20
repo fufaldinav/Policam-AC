@@ -1,0 +1,26 @@
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+$lang['school'] = 'Школа №';
+$lang['observ'] = 'Наблюдение';
+$lang['adding'] = 'Добавление';
+$lang['editing'] = 'Редактирование';
+$lang['classes'] = 'Классы';
+$lang['exit'] = 'Выход';
+$lang['f'] = 'ФАМИЛИЯ';
+$lang['i'] = 'Имя';
+$lang['o'] = 'Отчество';
+$lang['birthday'] = 'Дата рождения';
+$lang['class'] = 'Класс';
+$lang['address'] = 'Адрес';
+$lang['phone'] = 'Контактный телефон';
+$lang['uid'] = 'Уникальный номер';
+$lang['card'] = 'Карта';
+$lang['save'] = 'Сохранить';
+$lang['clear'] = 'Очистить';
+$lang['delete'] = 'Удалить';
+$lang['number'] = 'Номер';
+$lang['letter'] = 'Литера';
+$lang['year_short'] = 'г.';
+$lang['developed'] = 'Разработано';
+$lang['missing'] = 'Отсутствует';
+$lang['not_selected'] = 'Не выбрана';
