@@ -511,7 +511,7 @@ class Ac extends CI_Controller {
 
 		$this->load->model('ac_model');
 
-		$school_id = $this->user_id = $this->ion_auth->user()->row()->school_id;
+		$school_id = $this->ion_auth->user()->row()->school_id;
 
 		$classes = $this->ac_model->get_classes_by_school($school_id);
 
