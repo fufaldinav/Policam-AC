@@ -504,6 +504,20 @@ class Ac extends CI_Controller {
 		}
 	}
 
+	public function get_classes() {
+		if (!$this->ion_auth->logged_in()) {
+			redirect('auth/login');
+		}
+
+		$this->load->model('ac_model');
+
+		$school_id = $this->user_id = $this->ion_auth->user()->row()->school_id;
+
+		$classes = $this->ac_model->get_classes_by_school($school_id);
+
+		echo json_encode($classes);
+	}
+
 	public function get_pers() {
 		if (!$this->ion_auth->logged_in()) {
 			redirect('auth/login');

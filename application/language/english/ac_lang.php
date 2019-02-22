@@ -24,3 +24,4 @@ $lang['year_short'] = '';
 $lang['developed'] = 'Developet by';
 $lang['missing'] = 'Missing';
 $lang['not_selected'] = 'Not selected';
+$lang['entrance_wo_card'] = 'Entrance w/o card';

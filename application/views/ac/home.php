@@ -2,6 +2,8 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?>
     <div id="container">
+      <div id="menu" hidden>
+      </div>
       <div id="main">
         <table border="0" cellpadding="0" cellspacing="0">
           <tr>
@@ -48,6 +50,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <?php echo lang('uid');?><br />
             <input id="id" name="id" size="15" type="text" readonly />
            </td>
+          </tr>
+          <tr height="10%">
+             <td colspan="2" align="center">
+                <button id="entrance_wo_card" type="button" onclick="toggleMenu();"><?php echo lang('entrance_wo_card');?></button>
+             </td>
           </tr>
         </table>
       </div>
