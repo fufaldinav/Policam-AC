@@ -17,6 +17,9 @@ function getServerTime() {
         sendError(e);
         alert(`Ошибка: ${e.name}: ${e.message}`);
       }
+    },
+    error: function() {
+     alert(`Неизвестная ошибка`);
     }
   });
 }

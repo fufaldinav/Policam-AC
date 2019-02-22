@@ -12,9 +12,8 @@ class Ac_model extends CI_Model {
 
 	public function get_school_by_user($user_id) {
 		$this->db->where('users.id', $user_id);
-		$this->db->from('users');
 		$this->db->join('schools', 'schools.id = users.school_id', 'inner');
-		$query = $this->db->get();
+		$query = $this->db->get('users');
 
 		if ($query->num_rows() > 0) {
 			return $query->row();
@@ -198,10 +197,6 @@ class Ac_model extends CI_Model {
 		}
 
 		return [];
-	}
-
-	public function add_photo() {
-
 	}
 
 	public function delete_photo($personal_id = NULL, $photo_hash = NULL) {
