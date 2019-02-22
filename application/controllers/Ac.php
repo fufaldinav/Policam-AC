@@ -626,7 +626,7 @@ class Ac extends CI_Controller {
 			if (isset($_FILES['file'])) {
 				$file = $_FILES['file'];
 				$error = '';
-				$path = './img/ac/';
+				$path = '/var/www/img_ac/';
 				$extensions = ['jpg', 'jpeg'];
 
 				$file_name = $file['name'];
@@ -659,7 +659,7 @@ class Ac extends CI_Controller {
 				$response = [];
 				if (!$error) {
 					$time = now('Asia/Yekaterinburg');
-					//TODO удаление файлов
+
 					$this->db->where('personal_id', NULL);
 					$this->db->where('time <', $time - 86400);
 					$query = $this->db->get('photo');
