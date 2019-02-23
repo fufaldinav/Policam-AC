@@ -18,6 +18,14 @@ body {
 }
 #main {
 	grid-area: main;
+	position: relative;
+}
+.container {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
 }
 #header {
 	grid-area: header;
@@ -143,7 +151,7 @@ select {
 button:hover, input:hover, select:hover {
 	background-color: #00d2ff;
 }
-.info-container {
+#info-container {
 	height: 90%;
 	display: grid;
 	grid-template-areas:
@@ -163,22 +171,22 @@ button:hover, input:hover, select:hover {
 .info-item {
 	padding: 5 10;
 }
-.info-item-photo {
+#info-item-photo {
 	grid-area: photo;
 	text-align: center;
 }
-.info-item-address {
+#info-item-address {
 	grid-area: address;
 	justify-self: center;
 	text-align: center;
 }
-.info-item-phone, .info-item-card, .info-item-uid {
+#info-item-phone, #info-item-card, #info-item-uid {
 	justify-self: center;
 	text-align: center;
 }
-.info-item-button1 {
+#info-item-button1 {
 	justify-self: end;
 }
-.info-item-button2 {
+#info-item-button2 {
 	justify-self: start;
 }
