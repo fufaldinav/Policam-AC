@@ -154,7 +154,7 @@ td {
 	width: 50%;
 	padding: 5;
 }
-.grid-container {
+.info-container {
 	width: 100%;
 	height: 90%;
 	display: grid;
@@ -170,25 +170,25 @@ td {
 	grid-template-rows: repeat(7, 1fr);
 	align-items: center;
 }
-.grid-item {
+.info-item {
 	padding: 5 10 5 10;
 }
-.grid-item-photo {
+.info-item-photo {
 	grid-area: photo;
 	text-align: center;
 }
-.grid-item-address {
+.info-item-address {
 	grid-area: address;
 	justify-self: center;
 	text-align: center;
 }
-.grid-item-phone, .grid-item-card {
+.info-item-phone, .info-item-card {
 	justify-self: center;
 	text-align: center;
 }
-.grid-item-button1 {
+.info-item-button1 {
 	justify-self: end;
 }
-.grid-item-button2 {
+.info-item-button2 {
 	justify-self: start;
 }
