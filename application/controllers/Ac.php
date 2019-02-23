@@ -222,7 +222,7 @@ class Ac extends CI_Controller {
 		$data['table'] = $this->table->generate();
 
 		$header['school'] = $this->ac_model->render_school_name($school_id);
-		$header['css'] = $this->ac_model->render_css(['ac', 'classes']);
+		$header['css'] = $this->ac_model->render_css(['ac', 'tables']);
 		$header['js'] = $this->ac_model->render_js(['classes']);
 		$header['nav'] = $this->ac_model->render_nav();
 
