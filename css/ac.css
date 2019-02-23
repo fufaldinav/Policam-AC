@@ -69,13 +69,6 @@ body {
   height: 100%;
   overflow-y: auto;
 }
-.small {
-	width: 50%;
-}
-#scrollable-container {
-	height: 100%;
-	overflow-y: scroll;
-}
 a.nav:link, a.nav:visited {
 	box-shadow: 0 1px 0 0 #d7d8db, 0 0 0 1px #e3e4e8;
   background-color: #8ae0f2;
