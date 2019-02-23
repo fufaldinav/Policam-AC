@@ -123,19 +123,19 @@ class Ac extends CI_Controller {
 				$data['classes'][$row->id] .= ' "';
 				$data['classes'][$row->id] .= $row->letter;
 				$data['classes'][$row->id] .= '"';
-				$data['menu'] .= '<li class="Node IsRoot ExpandClosed';
-				$data['menu'] .= ($k == $last_k) ? ' IsLast' : '';
-				$data['menu'] .= '"><div class="Expand"></div><div class="Content ExpandContent">';
+				$data['menu'] .= '<li class="tree-node tree-is-root tree-expand-closed';
+				$data['menu'] .= ($k == $last_k) ? ' tree-is-last' : '';
+				$data['menu'] .= '"><div class="tree-expand"></div><div class="tree-content tree-expand-content">';
 				$data['menu'] .= $data['classes'][$row->id];
-				$data['menu'] .= '</div><ul class="Container">';
+				$data['menu'] .= '</div><ul class="tree-container">';
 				$cur_class = $personal[$row->number.$row->letter]; //number + letter для сортировки дерева 1А -> 1Б -> 2А etc.
 				$last_n = count($cur_class) - 1;
 				foreach ($cur_class as $n => $pers) {
 					$data['menu'] .= '<li id="pers';
 					$data['menu'] .= $pers->pers_id;
-					$data['menu'] .= '" class="Node ExpandLeaf';
+					$data['menu'] .= '" class="tree-node tree-expand-leaf';
 					$data['menu'] .= ($n == $last_n) ? ' IsLast' : '';
-					$data['menu'] .= '"><div class="Expand"></div><div class="Content">';
+					$data['menu'] .= '"><div class="tree-expand"></div><div class="tree-content">';
 					$data['menu'] .= ($pers->card_id) ? '(+) ' : '';
 					$data['menu'] .= '<a class="pers" href="#';
 					$data['menu'] .=	$pers->pers_id;

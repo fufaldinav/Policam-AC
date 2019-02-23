@@ -180,7 +180,7 @@ function getCardsByPers(pers_id) {
             cards.innerHTML = cards.innerHTML + `<div id="card${c.id}">${c.wiegand} <button type="button" onclick="delCard(${c.id});">Отвязать</button><br /></div>`
        		});
           let li = document.getElementById(`pers${pers.id}`); //добавим пользователю метку наличия ключей
-          let c = li.querySelector('.Content');
+          let c = li.querySelector('.tree-content');
           if (c.innerHTML.indexOf(`(+) `) == -1) {
             c.innerHTML = `(+) ${c.innerHTML}`;
           }

@@ -152,7 +152,7 @@ button:hover, input:hover, select:hover {
 	background-color: #00d2ff;
 }
 #info-container {
-	height: 90%;
+	height: 100%;
 	display: grid;
 	grid-template-areas:
 		"photo f"
