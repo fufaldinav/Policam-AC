@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?>
             <div id="main">
-                <div class="container">
+                <div class="container main-container">
                     <div id="menu" onclick="tree_toggle(arguments[0]);">
                         <?php echo $menu;?>
                     </div>

@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?>
             <div id="main">
-                <div class="info-container">
+                <div id="info-container">
                     <div id="info-item-photo" class="info-item">
                         <div id="photo_bg" class="photo">
                               <div id="photo_del" data-title="<?php echo lang('delete')?>" hidden>
