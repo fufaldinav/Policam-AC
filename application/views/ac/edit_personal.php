@@ -17,19 +17,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                       <?php echo lang('class');?><br />
                       <?php echo form_dropdown('class', $classes, '0', $class_attr);?>
                   </div>
-                  <div class="grid-item">
+                  <div class="grid-item grid-item-f">
                       <?php echo lang('f');?><br />
                       <input maxlength="20" id="f" name="f" size="30" type="text" required readonly />
                   </div>
-                  <div class="grid-item">
+                  <div class="grid-item grid-item-i">
                       <?php echo lang('i');?><br />
                       <input maxlength="20" id="i" name="i" size="30" type="text" required readonly />
                   </div>
-                  <div class="grid-item">
+                  <div class="grid-item grid-item-o">
                       <?php echo lang('o');?><br />
                       <input maxlength="20" id="o" name="o" size="30" type="text" readonly />
                   </div>
-                  <div class="grid-item">
+                  <div class="grid-item grid-item-birthday">
                       <?php echo lang('birthday');?><br />
                       <input maxlength="20" id="birthday" name="birthday" size="15" type="date" required readonly />
                   </div>
@@ -37,21 +37,21 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <?php echo lang('address');?><br />
                     <input maxlength="50" id="address" name="address" size="60" type="text" readonly />
                   </div>
-                  <div class="grid-item">
+                  <div class="grid-item grid-item-phone">
                     <?php echo lang('phone');?><br />
                     <input maxlength="10" id="phone" name="phone" size="15" type="text" readonly />
                   </div>
-                  <div class="grid-item">
+                  <div class="grid-item grid-item-card">
                     <?php echo lang('card');?><br />
                     <div id="cards"></div>
                     <div id="card_selector">
                       <?php echo form_dropdown('card_menu', $cards, '0', $card_attr);?>
                     </div>
                   </div>
-                  <div class="grid-item">
+                  <div class="grid-item grid-item-button1">
                     <button id="save" type="button"><?php echo lang('save');?></button>
                   </div>
-                  <div class="grid-item">
+                  <div class="grid-item grid-item-button2">
                     <button id="delete" type="button"><?php echo lang('delete');?></button>
                   </div>
               </div>

@@ -191,6 +191,7 @@ td {
 		"button1 button2";
 	grid-template-columns: 50%;
 	grid-template-rows: repeat(7, 1fr);
+	align-items: center;
 }
 .grid-item {
 	padding: 5 10 5 10;
@@ -200,4 +201,14 @@ td {
 }
 .grid-item-address {
 	grid-area: address;
+	justify-self: center;
+}
+.grid-item-phone, .grid-item-card {
+	justify-self: center;
+}
+.grid-item-button1 {
+	justify-self: end;
+}
+.grid-item-button2 {
+	justify-self: start;
 }
