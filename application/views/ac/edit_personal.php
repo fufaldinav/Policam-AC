@@ -7,7 +7,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
           </div>
           <div id="main">
               <div class="grid-container">
-                  <div class="grid-item">
+                  <div class="grid-item grid-item-photo">
                       <div id="photo_bg" class="photo">
                         <div id="photo_del" data-title="<?php echo lang('delete')?>" hidden>
                           <img src="/img/delete.png" />
@@ -33,7 +33,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                       <?php echo lang('birthday');?><br />
                       <input maxlength="20" id="birthday" name="birthday" size="15" type="date" required readonly />
                   </div>
-                  <div class="grid-item">
+                  <div class="grid-item grid-item-address">
                     <?php echo lang('address');?><br />
                     <input maxlength="50" id="address" name="address" size="60" type="text" readonly />
                   </div>

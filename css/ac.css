@@ -181,20 +181,23 @@ td {
 	width: 100%;
 	height: 90%;
 	display: grid;
-	grid-template-areas: 	"a b"
-												"a c"
-												"a d"
-												"a e"
-												"f f"
-												"g h"
-												"i j";
+	grid-template-areas:
+		"photo f"
+		"photo i"
+		"photo o"
+		"photo birthday"
+		"address address"
+		"phone card"
+		"button1 button2";
+	grid-template-columns: 50%;
+	grid-template-rows: repeat(7, 1fr);
 }
 .grid-item {
 	padding: 5 10 5 10;
 }
-.grid-item:nth-child(1) {
-	grid-area: a;
+.grid-item-photo {
+	grid-area: photo;
 }
-.grid-item:nth-child(6) {
-	grid-area: f;
+.grid-item-address {
+	grid-area: address;
 }
