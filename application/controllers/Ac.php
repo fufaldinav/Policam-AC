@@ -106,7 +106,7 @@ class Ac extends CI_Controller {
 
 		$school_id = $this->ac_model->get_school_by_user($this->user_id)->id;
 
-		$data['menu'] = '<ul class="Container">';
+		$data['menu'] = '<ul class="tree-container">';
 
 		//классы
 		$data['classes'] = [];
