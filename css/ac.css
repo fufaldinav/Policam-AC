@@ -184,10 +184,10 @@ td {
 	grid-template-areas: 	"a b"
 												"a c"
 												"a d"
-												"e f"
-												"g g"
-												"h i"
-												"j k";
+												"a e"
+												"f f"
+												"g h"
+												"i j";
 }
 .grid-item {
 	padding: 5 10 5 10;
@@ -195,16 +195,13 @@ td {
 .grid-item:nth-child(1) {
 	grid-area: a;
 }
-.grid-item:nth-child(5) {
-	justify-self: end;
-}
-.grid-item:nth-child(7) {
-	grid-area: g;
+.grid-item:nth-child(6) {
+	grid-area: f;
 	justify-self: center;
 }
-.grid-item:nth-child(8) {
+.grid-item:nth-child(7) {
 	justify-self: end;
 }
-.grid-item:nth-child(10) {
+.grid-item:nth-child(9) {
 	justify-self: end;
 }
