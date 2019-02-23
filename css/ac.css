@@ -58,10 +58,8 @@ body {
 #menu {
   background: #ffffff;
   box-shadow: 0 1px 0 0 #d7d8db, 0 0 0 1px #e3e4e8;
-  margin: 0 0 0 1%;
+  margin: 0 0 0 20px;
   height: 100%;
-  width: 20%;
-  float: left;
   overflow-y: auto;
 }
 .small {
@@ -160,7 +158,7 @@ button:hover, input:hover, select:hover {
 	grid-template-rows: repeat(7, 1fr);
 	align-items: center;
 	background: #ffffff;
-  margin: 0 2% 0 2%;
+  margin: 0 20px 0 20px;
   box-shadow: 0 1px 0 0 #d7d8db, 0 0 0 1px #e3e4e8;
 }
 .info-item {
