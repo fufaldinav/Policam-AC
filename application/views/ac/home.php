@@ -2,8 +2,6 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?>
             <div id="main">
-                <div id="menu" hidden>
-                </div>
                 <div class="info-container">
                     <div class="info-item info-item-photo">
                         <div id="photo_bg" class="photo"></div>
