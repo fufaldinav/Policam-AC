@@ -1,14 +1,7 @@
-#menu {
-  background: #ffffff;
-  box-shadow: 0 1px 0 0 #d7d8db, 0 0 0 1px #e3e4e8;
-  margin: 0 0 0 1%;
-  height: 100%;
-  width: 20%;
-  float: left;
-  overflow-y: auto;
-}
-#main {
-  margin: 0 2% 0 22%;
+.main-container {
+  display: grid;
+  grid-template-columns: 20% 80%;
+  grid-template-rows: 100%;
 }
 a:link.pers, a:visited.pers {
   font-family: lucida sans unicode, lucida grande, sans-serif;
@@ -19,58 +12,58 @@ a:link.pers, a:visited.pers {
 a:hover.pers {
   color: #00d2ff;
 }
-.Container {
+.tree-container {
   padding: 0;
   margin: 0;
 }
-.Container li {
+.tree-container li {
 	list-style-type: none;
 }
-.Node {
+.tree-node {
   margin-left: 18px;
   zoom: 1;
 }
-.IsRoot {
+.tree-is-root {
   margin-left: 0;
 }
-.Expand {
+.tree-expand {
   width: 18px;
   height: 18px;
   float: left;
 }
- .Content {
+ .tree-content {
   margin-left:18px;
   min-height: 18px;
 }
-.ExpandOpen .Expand {
+.tree-expand-open .tree-expand {
   background-image: url(/img/minus.gif);
 }
-.ExpandClosed .Expand {
+.tree-expand-closed .tree-expand {
   background-image: url(/img/plus.gif);
 }
-.ExpandLeaf .Expand {
+.tree-expand-leaf .tree-expand {
 	background-image: url(/img/leaf.gif);
 }
-.Node {
+.tree-node {
 	margin-left: 18px;
 	zoom: 1;
 	background-image : url(/img/i.gif);
 	background-position : top left;
 	background-repeat : repeat-y;
 }
-.IsLast {
+.tree-is-last {
 	background-image: url(/img/i_half.gif);
 	background-repeat : no-repeat;
 }
-.ExpandOpen .Container {
+.tree-expand-open .tree-container {
 	display: block;
 }
-.ExpandClosed .Container {
+.tree-expand-closed .tree-container {
 	display: none;
 }
-.ExpandOpen .Expand, .ExpandClosed .Expand {
+.tree-expand-open .tree-expand, .tree-expand-closed .tree-expand {
 	cursor: pointer;
 }
-.ExpandLeaf .Expand {
+.tree-expand-leaf .tree-expand {
 	cursor: auto;
 }

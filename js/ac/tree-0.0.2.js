@@ -1,15 +1,15 @@
 function tree_toggle(event) {
 	event = event || window.event
 	let clickedElem = event.target || event.srcElement
-	if (!hasClass(clickedElem, `Expand`)) {
+	if (!hasClass(clickedElem, `tree-expand`)) {
 		return
 	}
 	let node = clickedElem.parentNode
-	if (hasClass(node, `ExpandLeaf`)) {
+	if (hasClass(node, `tree-expand-leaf`)) {
 		return
 	}
-	let newClass = hasClass(node, `ExpandOpen`) ? `ExpandClosed` : `ExpandOpen`
-	let re =  /(^|\s)(ExpandOpen|ExpandClosed)(\s|$)/
+	let newClass = hasClass(node, `tree-expand-open`) ? `tree-expand-closed` : `tree-expand-open`
+	let re =  /(^|\s)(tree-expand-open|tree-expand-closed)(\s|$)/
 	node.className = node.className.replace(re, `$1`+newClass+`$3`)
 }
 

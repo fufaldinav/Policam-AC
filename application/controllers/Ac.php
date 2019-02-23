@@ -106,7 +106,7 @@ class Ac extends CI_Controller {
 
 		$school_id = $this->ac_model->get_school_by_user($this->user_id)->id;
 
-		$data['menu'] = '<ul class="Container">';
+		$data['menu'] = '<ul class="tree-container">';
 
 		//классы
 		$data['classes'] = [];
@@ -123,19 +123,19 @@ class Ac extends CI_Controller {
 				$data['classes'][$row->id] .= ' "';
 				$data['classes'][$row->id] .= $row->letter;
 				$data['classes'][$row->id] .= '"';
-				$data['menu'] .= '<li class="Node IsRoot ExpandClosed';
-				$data['menu'] .= ($k == $last_k) ? ' IsLast' : '';
-				$data['menu'] .= '"><div class="Expand"></div><div class="Content ExpandContent">';
+				$data['menu'] .= '<li class="tree-node tree-is-root tree-expand-closed';
+				$data['menu'] .= ($k == $last_k) ? ' tree-is-last' : '';
+				$data['menu'] .= '"><div class="tree-expand"></div><div class="tree-content tree-expand-content">';
 				$data['menu'] .= $data['classes'][$row->id];
-				$data['menu'] .= '</div><ul class="Container">';
+				$data['menu'] .= '</div><ul class="tree-container">';
 				$cur_class = $personal[$row->number.$row->letter]; //number + letter для сортировки дерева 1А -> 1Б -> 2А etc.
 				$last_n = count($cur_class) - 1;
 				foreach ($cur_class as $n => $pers) {
 					$data['menu'] .= '<li id="pers';
 					$data['menu'] .= $pers->pers_id;
-					$data['menu'] .= '" class="Node ExpandLeaf';
-					$data['menu'] .= ($n == $last_n) ? ' IsLast' : '';
-					$data['menu'] .= '"><div class="Expand"></div><div class="Content">';
+					$data['menu'] .= '" class="tree-node tree-expand-leaf';
+					$data['menu'] .= ($n == $last_n) ? ' tree-is-last' : '';
+					$data['menu'] .= '"><div class="tree-expand"></div><div class="tree-content">';
 					$data['menu'] .= ($pers->card_id) ? '(+) ' : '';
 					$data['menu'] .= '<a class="pers" href="#';
 					$data['menu'] .=	$pers->pers_id;
@@ -222,7 +222,7 @@ class Ac extends CI_Controller {
 		$data['table'] = $this->table->generate();
 
 		$header['school'] = $this->ac_model->render_school_name($school_id);
-		$header['css'] = $this->ac_model->render_css(['ac']);
+		$header['css'] = $this->ac_model->render_css(['ac', 'tables']);
 		$header['js'] = $this->ac_model->render_js(['classes']);
 		$header['nav'] = $this->ac_model->render_nav();
 
@@ -502,6 +502,20 @@ class Ac extends CI_Controller {
 			$this->db->update('personal', ['class_id' => NULL]);
 			echo 'ok';
 		}
+	}
+
+	public function get_classes() {
+		if (!$this->ion_auth->logged_in()) {
+			redirect('auth/login');
+		}
+
+		$this->load->model('ac_model');
+
+		$school_id = $this->ion_auth->user()->row()->school_id;
+
+		$classes = $this->ac_model->get_classes_by_school($school_id);
+
+		echo json_encode($classes);
 	}
 
 	public function get_pers() {

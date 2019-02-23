@@ -1,0 +1,26 @@
+.login-form {
+    width: 550;
+		margin: 0 auto;
+		background: #ffffff;
+    box-shadow: 0 1px 0 0 #d7d8db, 0 0 0 1px #e3e4e8;
+}
+.table {
+	display: table;
+	width: 100%;
+}
+.tr {
+	display: table-row;
+}
+.td {
+	display: table-cell;
+	padding: 5 10 5 10;
+}
+.td-right {
+	text-align: right;
+}
+.td-center {
+	text-align: center;
+}
+.td-40 {
+	width: 40%;
+}

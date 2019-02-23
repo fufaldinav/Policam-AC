@@ -81,3 +81,44 @@ function setPersData(card) {
     }
   });
 }
+
+//переключение меню
+function toggleMenu() {
+  let menu = document.getElementById(`menu`);
+  let main = document.getElementById(`main`);
+  if (menu.hidden) {
+    getClasses(menu);
+    main.style.marginLeft = `22%`;
+    menu.hidden = false;
+  } else {
+    main.style.marginLeft = `2%`;
+    menu.hidden = true;
+  }
+}
+
+//запрос списка классов
+//получение данных пользователя из БД
+function getClasses(menu) {
+  $.ajax({
+    url: '/index.php/ac/get_classes',
+    type: 'GET',
+    success: function(data) {
+      try {
+        data = JSON.parse(data);
+        if (data) {
+          let classList = ``;
+          data.forEach(function(c) {
+            classList += `<button id="class${c.id}" type="button" onclick="">${c.number} "${c.letter}"</button><br />`;
+          });
+          menu.innerHTML = classList;
+        }
+      } catch(e) {
+        sendError(e);
+        alert(`Ошибка: ${e.name}: ${e.message}`);
+      }
+    },
+    error: function() {
+     alert(`Неизвестная ошибка`);
+    }
+  });
+}

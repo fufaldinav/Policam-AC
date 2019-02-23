@@ -24,3 +24,4 @@ $lang['year_short'] = 'г.';
 $lang['developed'] = 'Разработано';
 $lang['missing'] = 'Отсутствует';
 $lang['not_selected'] = 'Не выбрана';
+$lang['entrance_wo_card'] = 'Вход без карты';
