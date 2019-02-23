@@ -188,5 +188,11 @@ td {
 												"j k";
 }
 .grid-item {
-
+	padding: 5 10 5 10;
+}
+.grid-item:nth-child(1) {
+	grid-area: a;
+}
+.grid-item:nth-child(6) {
+	grid-area: g;
 }
