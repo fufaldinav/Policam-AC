@@ -11,14 +11,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <div id="container">
             <div id="header">
                 <div id="header-container">
+                    <div id="header-left">
+                        <?php echo lang('school');?> <?php echo $school;?>
+                    </div>
                     <div id="header-content">
                       <?php echo $nav;?>
                     </div>
-                </div>
-                <div id="header-left">
-                    <?php echo lang('school');?> <?php echo $school;?>
-                </div>
-                <div id="header-right">
-                    <a class="nav" href="/auth/logout"><?php echo lang('exit');?></a>
+                    <div id="header-right">
+                        <a class="nav" href="/auth/logout"><?php echo lang('exit');?></a>
+                    </div>
                 </div>
             </div>
