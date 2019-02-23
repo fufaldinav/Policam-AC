@@ -14,7 +14,7 @@ body {
 		"main"
 		"footer";
 	grid-template-columns: 100%;
-	grid-template-rows: 5% auto 5%;
+	grid-template-rows: 5% 90% 5%;
 }
 #main {
 	grid-area: main;
