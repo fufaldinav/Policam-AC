@@ -177,3 +177,16 @@ td {
 .td-40 {
 	width: 40%;
 }
+.grid-container {
+	display: grid;
+	grid-template-areas: 	"a b"
+												"a c"
+												"a d"
+												"e f"
+												"g g"
+												"h i"
+												"j k";
+}
+.grid-item {
+
+}
