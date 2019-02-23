@@ -2,10 +2,10 @@
 		<div id="header">
 				<div id="header-container">
 						<div id="header-left">
-								<?php echo lang('school');?> <?php echo $school;?>
+								<?php echo lang('index_heading');?>
 						</div>
 						<div id="header-content">
-							<?php echo $nav;?>
+							<?php echo lang('index_subheading');?>
 						</div>
 						<div id="header-right">
 								<a class="nav" href="/auth/logout"><?php echo lang('exit');?></a>
