@@ -1,5 +1,6 @@
 .login-form {
-    width: 50%;
+    width: 550;
+		margin: 0 auto;
 		background: #ffffff;
     box-shadow: 0 1px 0 0 #d7d8db, 0 0 0 1px #e3e4e8;
 }
