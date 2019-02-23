@@ -134,7 +134,7 @@ class Ac extends CI_Controller {
 					$data['menu'] .= '<li id="pers';
 					$data['menu'] .= $pers->pers_id;
 					$data['menu'] .= '" class="tree-node tree-expand-leaf';
-					$data['menu'] .= ($n == $last_n) ? ' IsLast' : '';
+					$data['menu'] .= ($n == $last_n) ? ' tree-is-last' : '';
 					$data['menu'] .= '"><div class="tree-expand"></div><div class="tree-content">';
 					$data['menu'] .= ($pers->card_id) ? '(+) ' : '';
 					$data['menu'] .= '<a class="pers" href="#';
