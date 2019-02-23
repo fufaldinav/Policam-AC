@@ -1,6 +1,6 @@
 body {
 	background: #e3f5f7;
-	margin: 0 0 0 0;
+	margin: 0;
 	font-family: lucida sans unicode, lucida grande, sans-serif;
 	font-size: 16px;
 }
@@ -31,30 +31,29 @@ body {
 }
 #header-container {
 	display: grid;
-	grid-template-columns: 200px auto 200px;
+	grid-template-columns: 250px auto 250px;
 	grid-template-rows: 100%;
 }
 #footer-container {
 	display: grid;
-	grid-template-columns: auto 200px;
+	grid-template-columns: 250px auto 250px;
 	grid-template-rows: 100%;
 }
-#header-left, #footer-left {
+#header-left {
 	padding: 5px 10px;
-	width: 200px;
-	text-align: left;
-}
-#header-right, #footer-right {
-
-}
-#footer-right {
-	padding: 10 0 0 0;
 }
 #header-content, #footer-content {
 	text-align: center;
 }
+#header-right {
+	justify-self: end;
+}
 #footer-content {
-	padding: 10 0 0 0;
+	padding: 10 auto;
+}
+#footer-right {
+	justify-self: end;
+	padding: 10 10 auto;
 }
 #menu {
   background: #ffffff;
