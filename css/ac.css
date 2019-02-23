@@ -194,13 +194,15 @@ td {
 }
 .grid-item:nth-child(1) {
 	grid-area: a;
+	justify-self: center;
+	align-self: center;
 }
 .grid-item:nth-child(6) {
 	grid-area: f;
 	justify-self: center;
 }
-.grid-item:nth-child(7) {
-	justify-self: end;
+.grid-item:nth-child(7), .grid-item:nth-child(8) {
+	justify-self: center;
 }
 .grid-item:nth-child(9) {
 	justify-self: end;
