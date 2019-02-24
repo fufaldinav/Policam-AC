@@ -154,11 +154,11 @@ button:hover, input:hover, select:hover {
 		"photo f"
 		"photo i"
 		"photo o"
-		"photo birthday"
+		"class birthday"
 		"address address"
 		"phone card";
 	grid-template-columns: 50%;
-	grid-template-rows: repeat(4, 17.5%) repeat(3, 10%);
+	grid-template-rows: repeat(3, 15%) repeat(4, 13.75%);
 	align-items: center;
 	background: #ffffff;
   margin: 0 20px 0 20px;
@@ -176,7 +176,7 @@ button:hover, input:hover, select:hover {
 	justify-self: center;
 	text-align: center;
 }
-#info-item-phone, #info-item-card, #info-item-uid {
+#info-item-class, #info-item-birthday, #info-item-phone, #info-item-card, #info-item-uid {
 	justify-self: center;
 	text-align: center;
 }

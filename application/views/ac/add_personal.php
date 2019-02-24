@@ -11,8 +11,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                   </div>
                             </div>
                             <input id="photo" name="photo" type="file" onchange="handleFiles(this.files)" /><br />
-                            <?php echo lang('class');?><br />
-                            <?php echo form_dropdown('class', $classes, '0', $class_attr);?>
                         </div>
                         <div id="info-item-f" class="info-item">
                             <?php echo lang('f');?><br />
@@ -25,6 +23,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <div id="info-item-o" class="info-item">
                             <?php echo lang('o');?><br />
                             <input maxlength="20" id="o" name="o" size="30" type="text" />
+                        </div>
+                        <div id="info-item-class" class="info-item">
+                            <?php echo lang('class');?><br />
+                            <?php echo form_dropdown('class', $classes, '0', $class_attr);?>
                         </div>
                         <div id="info-item-birthday" class="info-item">
                             <?php echo lang('birthday');?><br />

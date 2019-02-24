@@ -6,8 +6,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <div id="info-container">
                         <div id="info-item-photo" class="info-item">
                             <div id="photo_bg" class="photo"></div>
-                            <?php echo lang('class');?><br />
-                            <input id="class" name="class" size="3" type="text" readonly />
                         </div>
                         <div id="info-item-f" class="info-item">
                             <?php echo lang('f');?><br />
@@ -20,6 +18,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <div id="info-item-o" class="info-item">
                             <?php echo lang('o');?><br />
                               <input id="o" name="o" size="30" type="text" readonly />
+                        </div>
+                        <div id="info-item-class" class="info-item">
+                            <?php echo lang('class');?><br />
+                            <input id="class" name="class" size="3" type="text" readonly />
                         </div>
                         <div id="info-item-birthday" class="info-item">
                             <?php echo lang('birthday');?><br />
