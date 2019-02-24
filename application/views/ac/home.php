@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         </div>
                         <div id="info-item-birthday" class="info-item">
                             <?php echo lang('birthday');?><br />
-                              <input id="birthday" name="birthday" size="15" type="date" readonly />
+                            <input id="birthday" name="birthday" size="15" type="date" readonly />
                         </div>
                         <div id="info-item-address" class="info-item">
                             <?php echo lang('address');?><br />
