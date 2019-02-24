@@ -274,7 +274,7 @@ class Ac_model extends CI_Model {
 	}
 
 	public function render_js($arr) {
-		$result = '<script src="/js/jquery-1.12.4.min.js"></script>';
+		$result = '<script src="/js/jquery-3.3.1.min.js"></script>';
 
 		foreach ($arr as $str) {
 			switch ($str) {
