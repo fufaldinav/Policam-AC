@@ -11,7 +11,7 @@ function sendError(message) {
 
 //получим список неизвестных карт (брелоков) из БД
 function getCards(id) {
-  let card = persInfo.elements.card_menu;
+  let card = document.getElementById(`card`);
   $.ajax({
     url: `/index.php/ac/get_cards`,
     type: `GET`,

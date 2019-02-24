@@ -37,7 +37,7 @@ function getNewMsgs(events, time) {
       try {
         data = JSON.parse(data);
         time = data.time;
-        if (!document.getElementById(`card_menu`).disabled) { //если меню неизвестных карт активно
+        if (!document.getElementById(`card`).disabled) { //если меню неизвестных карт активно
           if (data.msgs.length > 0) {
             let o = confirm(`Введен неизвестный ключ. Выбрать его в качестве нового ключа пользователя?`);
             if (o) {

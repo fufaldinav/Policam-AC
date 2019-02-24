@@ -1,5 +1,5 @@
 .login-form {
-    width: 550;
+    width: 550px;
 		margin: 0 auto;
 		background: #ffffff;
     box-shadow: 0 1px 0 0 #d7d8db, 0 0 0 1px #e3e4e8;
@@ -13,7 +13,7 @@
 }
 .td {
 	display: table-cell;
-	padding: 5 10 5 10;
+	padding: 5px 10px;
 }
 .td-right {
 	text-align: right;

@@ -230,14 +230,18 @@ class Ac_model extends CI_Model {
 			$file_path_b .= $photo_hash;
 			$file_path_b .= '.jpg';
 
-			unlink($file_path_b);
+			if (file_exists($file_path_b)) {
+				unlink($file_path_b);
+			}
 
 			$file_path_s = $file_path;
 			$file_path_s .= 's/';
 			$file_path_s .= $photo_hash;
 			$file_path_s .= '.jpg';
 
-			unlink($file_path_s);
+			if (file_exists($file_path_s)) {
+				unlink($file_path_s);
+			}
 
 			return TRUE;
 		} catch (Exception $e) {
@@ -274,7 +278,7 @@ class Ac_model extends CI_Model {
 	}
 
 	public function render_js($arr) {
-		$result = '<script src="/js/jquery-1.12.4.min.js"></script>';
+		$result = '<script src="/js/jquery-3.3.1.min.js"></script>';
 
 		foreach ($arr as $str) {
 			switch ($str) {

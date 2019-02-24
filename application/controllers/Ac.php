@@ -81,7 +81,7 @@ class Ac extends CI_Controller {
 			}
 		}
 
-		$data['card_attr'] = 'id="card_menu"';
+		$data['card_attr'] = 'id="card"';
 
 		$header['school'] = $this->ac_model->render_school_name($school_id);
 		$header['css'] = $this->ac_model->render_css(['ac']);
@@ -168,7 +168,7 @@ class Ac extends CI_Controller {
 			}
 		}
 
-		$data['card_attr'] = 'id="card_menu" disabled';
+		$data['card_attr'] = 'id="card" disabled';
 
 		$header['school'] = $this->ac_model->render_school_name($school_id);
 		$header['css'] = $this->ac_model->render_css(['ac', 'edit_pers']);
@@ -271,11 +271,11 @@ class Ac extends CI_Controller {
 			$this->db->update('photo', ['personal_id' => $personal_id]);
 		}
 
-		if ($json_data['card_menu'] > 0) {
-			$this->db->where('id', $json_data['card_menu']);
+		if ($json_data['card'] > 0) {
+			$this->db->where('id', $json_data['card']);
 			$this->db->update('cards', ['holder_id' => $personal_id]);
 
-			$this->ac_model->add_card($json_data['card_menu']);
+			$this->ac_model->add_card($json_data['card']);
 		}
 
 		echo $personal_id;
@@ -319,11 +319,11 @@ class Ac extends CI_Controller {
 			$this->db->update('photo', ['personal_id' => $json_data['id']]);
 		}
 
-		if ($json_data['card_menu'] > 0) {
-			$this->db->where('id', $json_data['card_menu']);
+		if ($json_data['card'] > 0) {
+			$this->db->where('id', $json_data['card']);
 			$this->db->update('cards', ['holder_id' => $json_data['id']]);
 
-			$this->ac_model->add_card($json_data['card_menu']);
+			$this->ac_model->add_card($json_data['card']);
 		}
 
 		echo $json_data['id'];

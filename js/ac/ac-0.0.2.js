@@ -1,7 +1,6 @@
-let persInfo, time, events = [4,5]; //где 4,5 - события разрешенного входа/выхода
+let time, events = [4,5]; //где 4,5 - события разрешенного входа/выхода
 
 document.addEventListener("DOMContentLoaded", function() {
-  persInfo = document.forms.pers_info;
   time = getServerTime();
   getNewMsgs(events, time);
 });

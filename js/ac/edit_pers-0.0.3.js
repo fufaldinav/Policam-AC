@@ -1,57 +1,65 @@
-let pers = {}, persInfo, events = [2,3]; //где 2,3 - события запрещенного входа/выхода
-
-document.addEventListener("DOMContentLoaded", function() {
-  persInfo = document.forms.pers_info;
-});
+let events = [2, 3]; //где 2,3 - события запрещенного входа/выхода
+let pers =  {
+              'f': null,
+              'i': null,
+              'o': null,
+              'photo': null,
+              'class': null,
+              'birthday': null,
+              'address': null,
+              'phone': null,
+              'card': null
+            }
 
 //обновление информации пользователя в БД
 function updatePersInfo() {
-  let f = persInfo.elements;
-
-  if (!persInfo.checkValidity()) {
-    alert(`Введены не все данные`);
-    return;
-  }
-
-  Object.keys(f).map(function(k, index) { //перебор элементов формы
-    if (f[k].name == `photo`) {
-      f[k].value = null;
-    } else if (f[k].value) {
-      pers[f[k].name] = f[k].value;
+  let checkValidity = true;
+  Object.keys(pers).map(function(k, index) {
+    let elem = document.getElementById(k);
+    if (elem.required && elem.value === ``) {
+      elem.classList.add(`no-data`);
+      checkValidity = false;
+    }
+    if (k == `photo`) {
+      //TODO
+    } else if (elem.value) {
+      pers[k] = elem.value;
     } else {
-      pers[f[k].name] = null;
+      pers[k] = null;
     }
   });
-  //отправим JSON
-	$.ajax({
-		url: `/index.php/ac/update_pers`,
-		type: `POST`,
-		data: {
-			data: JSON.stringify(pers)
-		},
-		success: function(res) {
-      try {
-        if (res) {
-          getCardsByPers(res);
-          alert(`Пользователь №${res} успешно сохранен`);
-        } else {
-          alert(`Неизвестная ошибка`);
+  if (!checkValidity) {
+    alert(`Введены не все данные`);
+  } else {
+    $.ajax({
+      url: `/index.php/ac/update_pers`,
+      type: `POST`,
+      data: {
+        data: JSON.stringify(pers)
+      },
+      success: function(res) {
+        try {
+          if (res) {
+            getCardsByPers(res);
+            alert(`Пользователь №${res} успешно сохранен`);
+          } else {
+            alert(`Неизвестная ошибка`);
+          }
+        } catch(e) {
+          sendError(e);
+          alert(`Ошибка: ${e.name}: ${e.message}`);
         }
-      } catch(e) {
-        sendError(e);
-        alert(`Ошибка: ${e.name}: ${e.message}`);
+      },
+      error: function() {
+        alert(`Неизвестная ошибка`);
       }
-		},
-    error: function() {
-      alert(`Неизвестная ошибка`);
-    }
-	});
+    });
+  }
 }
 
 //удаление пользователя из БД
 function deletePers() {
-  let o = confirm(`Подтвердите удаление.`);
-  if (!o) {
+  if (!confirm(`Подтвердите удаление.`)) {
     return;
   }
   $.ajax({
@@ -63,30 +71,30 @@ function deletePers() {
 		success: function(res) {
       try {
         if (res) {
-          let f = persInfo.elements;
-          Object.keys(f).map(function(k, index) { //перебор элементов формы
-            if (f[k].name == `card_menu`) { //поставить в карты "Не выбрано"
-              f[k].value = 0;
-            } else if (f[k].name != `class`) { //обнулить значение всех полей, кроме Класс
-              f[k].value = null;
+          Object.keys(pers).map(function(k, index) { //перебор элементов формы
+            let elem = document.getElementById(k);
+            if (k == `card`) { //поставить в карты "Не выбрано"
+              elem.value = 0;
+            } else if (k != `class`) { //обнулить значение всех полей, кроме Класс
+              elem.value = null;
             }
             if (k == `photo`) { //скрыть поле загрузки фото
-              f[k].hidden = true;
+              elem.hidden = true;
             } else { //запретить редактирование полей
-              f[k].readOnly = true;
+              elem.readOnly = true;
             }
           });
           document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/0.jpg)';
           let li = document.getElementById(`pers${pers.id}`); //текущий элемент в ветке
           let ul = li.parentElement;  //родитель этого элемента
           li.remove(); //удаляем элемент
-          ul.lastElementChild.classList.add(`IsLast`); //устанавливаем последний элемент в ветке
+          ul.lastElementChild.classList.add(`tree-is-last`); //устанавливаем последний элемент в ветке
           for (let k in pers) {
             pers[k] = null;
           }
           document.getElementById(`cards`).innerHTML = ``; //очистка списка привязанных карт
           document.getElementById(`card_selector`).hidden = false; //отобразим меню с неизвестными картами
-          document.getElementById(`card_menu`).disabled = true; //но запретим редактирование
+          document.getElementById(`card`).disabled = true; //но запретим редактирование
           document.getElementById(`photo`).onchange = function() { return false; };
           document.getElementById(`photo_del`).onclick = function() { return false; };
           document.getElementById(`photo_del`).hidden = true;
@@ -174,7 +182,7 @@ function getCardsByPers(pers_id) {
         cards.innerHTML = ``;
         if (data) {
           document.getElementById(`card_selector`).hidden = true; //спрячем неизвестные карты
-          document.getElementById(`card_menu`).disabled = true; //отключим меню неизвеснтых карт
+          document.getElementById(`card`).disabled = true; //отключим меню неизвеснтых карт
           data = JSON.parse(data);
           data.forEach(function(c) { //добавим каждую карту в список привязанных
             cards.innerHTML = cards.innerHTML + `<div id="card${c.id}">${c.wiegand} <button type="button" onclick="delCard(${c.id});">Отвязать</button><br /></div>`
@@ -186,7 +194,7 @@ function getCardsByPers(pers_id) {
           }
         } else {
           document.getElementById(`card_selector`).hidden = false; //отобразим неизвестные карты
-          document.getElementById(`card_menu`).disabled = false; //включим меню неизвеснтых карт
+          document.getElementById(`card`).disabled = false; //включим меню неизвеснтых карт
           getCards();
         }
       } catch(e) {
@@ -249,10 +257,10 @@ function delCard(id) {
           cardsHtml = (cardsHtml.trim) ? cardsHtml.trim() : cardsHtml.replace(/^\s+/,'');
           if (cardsHtml == ``) { //если список привязанных карт пуст, то отобразим и включим меню и запросим неизвеснтые карты
             document.getElementById(`card_selector`).hidden = false;
-            document.getElementById(`card_menu`).disabled = false;
+            document.getElementById(`card`).disabled = false;
             getCards();
             let li = document.getElementById(`pers${pers.id}`); //удалим у пользователя метку наличия ключей
-            let c = li.querySelector('.Content');
+            let c = li.querySelector('.tree-content');
             if (c.innerHTML.indexOf(`(+) `) == 0) {
               c.innerHTML = c.innerHTML.substring(4);
             }
