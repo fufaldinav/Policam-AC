@@ -626,7 +626,7 @@ class Ac extends CI_Controller {
 			if (isset($_FILES['file'])) {
 				$file = $_FILES['file'];
 				$error = '';
-				$path = '/var/www/img_ac/';
+				$path = 'D:/img_ac/';
 				$extensions = ['jpg', 'jpeg'];
 
 				$file_name = $file['name'];

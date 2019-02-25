@@ -224,7 +224,7 @@ class Ac_model extends CI_Model {
 		$this->db->delete('photo', ['hash' => $photo_hash]);
 
 		try {
-			$file_path = '/var/www/img_ac/';
+			$file_path = 'D:/img_ac/';
 
 			$file_path_b = $file_path;
 			$file_path_b .= $photo_hash;
