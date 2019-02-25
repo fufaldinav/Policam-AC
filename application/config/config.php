@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://policam.ddns.net:8088/';
+$config['base_url'] = 'http://test.policam.ru/';
 
 /*
 |--------------------------------------------------------------------------
