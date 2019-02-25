@@ -415,6 +415,10 @@ class Ac_model extends CI_Model {
 		$this->db->order_by('time', 'ASC');
 		$query = $this->db->get('tasks');
 
-		return $query->result();
+		if ($query->num_rows() > 0) {
+			return $query->row();
+		} else {
+			return NULL;
+		}
 	}
 }

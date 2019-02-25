@@ -199,9 +199,9 @@ class Server extends CI_Controller {
 		}
 
 		//запрос заданий из БД
-		$tasks = $this->ac_model->get_tasks($c_id);
+		$task = $this->ac_model->get_last_task($c_id);
 
-		foreach ($tasks as $task) {
+		if ($task) {
 			$json_data['messages'][] = json_decode($task->json);
 		}
 
