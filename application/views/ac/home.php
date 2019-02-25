@@ -8,15 +8,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     </div>
                     <div id="info-f" class="info-item">
                         <?php echo lang('f');?><br />
-                          <input id="f" name="f" size="30" type="text" readonly />
+                        <input id="f" name="f" size="30" type="text" readonly />
                     </div>
                     <div id="info-i" class="info-item">
                         <?php echo lang('i');?><br />
-                          <input id="i" name="i" size="30" type="text" readonly />
+                        <input id="i" name="i" size="30" type="text" readonly />
                     </div>
                     <div id="info-o" class="info-item">
                         <?php echo lang('o');?><br />
-                          <input id="o" name="o" size="30" type="text" readonly />
+                        <input id="o" name="o" size="30" type="text" readonly />
                     </div>
                     <div id="info-class" class="info-item">
                         <?php echo lang('class');?><br />
@@ -28,15 +28,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     </div>
                     <div id="info-address" class="info-item">
                         <?php echo lang('address');?><br />
-                          <input id="address" name="address" size="60" type="text" readonly />
+                        <input id="address" name="address" size="60" type="text" readonly />
                     </div>
                     <div id="info-phone" class="info-item">
                         <?php echo lang('phone');?><br />
-                          <input id="phone" name="phone" size="15" type="text" readonly />
+                        <input id="phone" name="phone" size="15" type="text" readonly />
                     </div>
                     <div id="info-uid" class="info-item">
                         <?php echo lang('uid');?><br />
-                          <input id="id" name="id" size="15" type="text" readonly />
+                        <input id="id" name="id" size="15" type="text" readonly />
                     </div>
                 </div>
             </div>
