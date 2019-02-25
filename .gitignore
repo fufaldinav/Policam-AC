@@ -40,3 +40,6 @@ img/ac/*.db
 img/ac/s/*.jpg
 img/ac/s/*.db
 !img/ac/s/0.jpg
+
+logs/*
+!logs/index.html
