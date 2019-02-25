@@ -12,7 +12,7 @@ class Ac extends CI_Controller {
 
 		$this->lang->load('ac');
 
-		if (!$this->ion_auth->logged_in()) {
+		if ($this->ion_auth->logged_in()) {
 			$this->user_id = $this->ion_auth->user()->row()->id;
 		}
 	}
