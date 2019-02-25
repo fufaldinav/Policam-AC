@@ -759,7 +759,7 @@ class Ac extends CI_Controller {
 		$timestring = '%H:%i:%s';
 		$time = mdate($timestring, $time);
 
-		$path = './logs';
+		$path = '/var/www/logs';
 
 		if (!is_dir($path)) {
 			mkdir($path, 0777, true);
