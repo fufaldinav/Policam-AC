@@ -312,6 +312,33 @@ class Ac_model extends CI_Model {
 		return $html;
 	}
 
+	public function add_all_cards_to_controller($controller_id) {
+		$this->db->select('cards.wiegand AS "wiegand"');
+		$this->db->where('controllers.id', $controller_id);
+		$this->db->join('schools', 'schools.id = controllers.school_id', 'left');
+		$this->db->join('classes', 'classes.school_id = schools.id', 'left');
+		$this->db->join('personal', 'personal.class_id = classes.id', 'left');
+		$this->db->join('cards', 'cards.holder_id = personal.id', 'left');
+		$query = $this->db->get('controllers');
+
+		$cards = $query->result();
+
+		$count = count($cards);
+		$counter = 0;
+		$data = [];
+		for ($i = 0; $i < $count; $i++) {
+			$data[] = $cards[$i]->wiegand;
+			if ($i > 0 && ($i % 10) == 0) {
+				$counter += $this->add_cards_to_controller($data, $controller_id);
+				$data = [];
+			} else if ($i == ($count - 1)) {
+				$counter += $this->add_cards_to_controller($data, $controller_id);
+			}
+		}
+
+		return $counter;
+	}
+
 	public function add_cards_to_controller($cards, $controller_id) {
 		$data = '"cards": [';
 		if (is_array($cards)) {
