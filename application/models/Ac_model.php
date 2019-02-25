@@ -7,7 +7,9 @@ class Ac_model extends CI_Model {
 	public function __construct()	{
 		parent::__construct();
 
-		$this->user_id = $this->ion_auth->user()->row()->id;
+		if (!$this->ion_auth->logged_in()) {
+			$this->user_id = $this->ion_auth->user()->row()->id;
+		}
 	}
 
 	public function get_school_by_user($user_id) {
