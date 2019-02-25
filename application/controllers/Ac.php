@@ -427,22 +427,7 @@ class Ac extends CI_Controller {
 
 		if ($this->db->affected_rows()) {
 			foreach ($controllers as $c) {
-				$id = mt_rand(500000,999999999);
-
-				$json = '{"id":';
-				$json .= $id;
-				$json .= ',"operation":"del_cards","cards":[{"card":"';
-				$json .= $wiegand;
-				$json .= '"}]}';
-
-				$data = [
-							'id' => $id,
-							'controller_id' => $c->id,
-							'json' => $json,
-							'time' => now('Asia/Yekaterinburg')
-						];
-
-				$this->db->insert('tasks', $data);
+				$this->ac_model->del_cards_from_controller($wiegand, $c);
 			}
 
 			if ($is_post) {

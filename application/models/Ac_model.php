@@ -133,23 +133,10 @@ class Ac_model extends CI_Model {
 		$school_id = $this->get_school_by_user($this->user_id)->school_id;
 		$controllers = $this->get_controllers_by_school($school_id);
 
+		$wiegand = $query->row()->wiegand;
+
 		foreach ($controllers as $c) {
-			$id = mt_rand(500000,999999999);
-
-			$json = '{"id":';
-			$json .= $id;
-			$json .= ',"operation":"add_cards","cards":[{"card":"';
-			$json .= $query->row()->wiegand;
-			$json .= '","flags":32,"tz":255}]}';
-
-			$data = [
-						'id' => $id,
-						'controller_id' => $c->id,
-						'json' => $json,
-						'time' => now('Asia/Yekaterinburg')
-					];
-
-			$this->db->insert('tasks', $data);
+			$this->add_cards_to_controller($wiegand, $c);
 		}
 
 		return TRUE;
@@ -323,5 +310,84 @@ class Ac_model extends CI_Model {
 		}
 
 		return $html;
+	}
+
+	public function add_cards_to_controller($cards, $controller_id) {
+		$data = '"cards": [';
+		if (is_array($cards)) {
+			foreach ($cards as $card) {
+				$data .= '{"card":"';
+				$data .= $cards;
+				$data .= '","flags":32,"tz":255},';
+			}
+			$data = substr($data, 0, -1);
+		} else {
+			$data .= '{"card":"';
+			$data .= $cards;
+			$data .= '"}';
+		}
+		$data .= ']';
+		return $this->add_task('add_cards', $controller_id, $data);
+	}
+
+	public function del_cards_from_controller($cards, $controller_id) {
+		$data = '"cards": [';
+		if (is_array($cards)) {
+			foreach ($cards as $card) {
+				$data .= '{"card":"';
+				$data .= $cards;
+				$data .= '"},';
+			}
+			$data = substr($data, 0, -1);
+		} else {
+			$data .= '{"card":"';
+			$data .= $cards;
+			$data .= '"}';
+		}
+		$data .= ']';
+		return $this->add_task('del_cards', $controller_id, $data);
+	}
+
+	public function clear_cards($controller_id) {
+		return $this->add_task('clear_cards', $controller_id, $data);
+	}
+
+	public function add_task($operation, $controller_id, $data = NULL) {
+		$id = mt_rand(500000,999999999);
+
+		$json = '{"id":';
+		$json .= $id;
+		$json .= ',"operation":"';
+		$json .= $operation;
+		$json .= '"';
+		$json .= (isset($data)) ? ',' : '';
+		$json .= (isset($data)) ? $data : '';
+		$json .= '}';
+
+		$data =	[
+							'id' => $id,
+							'controller_id' => $controller_id,
+							'json' => $json,
+							'time' => now('Asia/Yekaterinburg')
+						];
+
+		$this->db->insert('tasks', $data);
+
+		return $this->db->affected_rows();
+	}
+
+	public function del_task($id) {
+		$this->db->where('id', $id);
+		$this->db->delete('tasks');
+
+		return $this->db->affected_rows();
+	}
+
+	public function get_tasks($controller_id) {
+		$this->db->where('controller_id', $controller_id);
+		$this->db->order_by('time', 'ASC');
+		$query = $this->db->get('tasks');
+
+		return $query->result();
 	}
 }

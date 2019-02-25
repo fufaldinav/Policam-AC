@@ -5,6 +5,12 @@ use WebSocket\Client;
 
 class Server extends CI_Controller {
 
+	public function __construct()	{
+		parent::__construct();
+
+		$this->load->model('ac_model');
+	}
+
 	public function index() {
 		$this->load->helper('file');
 		$this->load->helper('date');
@@ -66,9 +72,7 @@ class Server extends CI_Controller {
 			//простой ответ
 			if (!isset($json_m['operation']) && isset($json_m['success'])) {
 				if ($json_m['success'] == 1) {
-					//удалим выполненные задания
-					$this->db->where('id', $json_m['id']);
-					$this->db->delete('tasks');
+					$this->ac_model->del_task($json_m['id']);
 				}
 			}
 			//запуск контроллера
@@ -195,11 +199,9 @@ class Server extends CI_Controller {
 		}
 
 		//запрос заданий из БД
-		$this->db->where('controller_id', $c_id);
-		$this->db->order_by('time', 'ASC');
-		$query = $this->db->get('tasks');
+		$tasks = $this->ac_model->get_tasks($c_id);
 
-		foreach ($query->result() as $task) {
+		foreach ($tasks as $task) {
 			$json_data['messages'][] = json_decode($task->json);
 		}
 
