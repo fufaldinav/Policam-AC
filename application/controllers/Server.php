@@ -38,7 +38,13 @@ class Server extends CI_Controller {
 			$this->db->update('controllers', $data);
 		}
 		else {
-			$path = './logs/inc-';
+			$path = './logs';
+
+			if (!is_dir($path)) {
+				mkdir($path, 0777, true);
+			}
+
+			$path .= '/inc-';
 			$path .= $date;
 			$path .= '.txt';
 
@@ -199,7 +205,13 @@ class Server extends CI_Controller {
 
 		echo json_encode($json_data);
 
-		$path = './logs/inc-';
+		$path = './logs';
+
+		if (!is_dir($path)) {
+			mkdir($path, 0777, true);
+		}
+
+		$path .= '/inc-';
 		$path .= $date;
 		$path .= '.txt';
 
@@ -213,7 +225,13 @@ class Server extends CI_Controller {
 
 		write_file($path, $message, 'a');
 
-		$path = './logs/out-';
+		$path = './logs';
+
+		if (!is_dir($path)) {
+			mkdir($path, 0777, true);
+		}
+
+		$path .= '/out-';
 		$path .= $date;
 		$path .= '.txt';
 
