@@ -38,7 +38,7 @@ class Server extends CI_Controller {
 			$this->db->update('controllers', $data);
 		}
 		else {
-			$path = './logs';
+			$path = '/var/www/logs';
 
 			if (!is_dir($path)) {
 				mkdir($path, 0777, true);
@@ -205,7 +205,7 @@ class Server extends CI_Controller {
 
 		echo json_encode($json_data);
 
-		$path = './logs';
+		$path = '/var/www/logs';
 
 		if (!is_dir($path)) {
 			mkdir($path, 0777, true);
@@ -225,7 +225,7 @@ class Server extends CI_Controller {
 
 		write_file($path, $message, 'a');
 
-		$path = './logs';
+		$path = '/var/www/logs';
 
 		if (!is_dir($path)) {
 			mkdir($path, 0777, true);
