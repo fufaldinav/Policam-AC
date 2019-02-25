@@ -23,9 +23,6 @@ body {
 #main {
 	grid-area: main;
 }
-.container {
-	height: 100%;
-}
 #header {
 	grid-area: header;
 }
@@ -147,7 +144,7 @@ select {
 button:hover, input:hover, select:hover {
 	background-color: #00d2ff;
 }
-#info-container {
+#info {
 	height: 100%;
 	display: grid;
 	grid-template-areas:
@@ -167,23 +164,23 @@ button:hover, input:hover, select:hover {
 .info-item {
 	padding: 5px 10px;
 }
-#info-item-photo {
+#info-photo {
 	grid-area: photo;
 	height: 90%;
 	text-align: center;
 }
-#info-item-address {
+#info-address {
 	grid-area: address;
 	justify-self: center;
 	text-align: center;
 }
-#info-item-class, #info-item-birthday, #info-item-phone, #info-item-card, #info-item-uid {
+#info-class, #info-birthday, #info-phone, #info-card, #info-uid {
 	justify-self: center;
 	text-align: center;
 }
-#info-item-button1 {
+#info-button1 {
 	justify-self: end;
 }
-#info-item-button2 {
+#info-button2 {
 	justify-self: start;
 }
