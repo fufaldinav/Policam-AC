@@ -317,7 +317,7 @@ class Ac_model extends CI_Model {
 		if (is_array($cards)) {
 			foreach ($cards as $card) {
 				$data .= '{"card":"';
-				$data .= $cards;
+				$data .= $card;
 				$data .= '","flags":32,"tz":255},';
 			}
 			$data = substr($data, 0, -1);
@@ -335,7 +335,7 @@ class Ac_model extends CI_Model {
 		if (is_array($cards)) {
 			foreach ($cards as $card) {
 				$data .= '{"card":"';
-				$data .= $cards;
+				$data .= $card;
 				$data .= '"},';
 			}
 			$data = substr($data, 0, -1);
