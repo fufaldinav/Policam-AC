@@ -410,7 +410,7 @@ class Ac_model extends CI_Model {
 		return $this->db->affected_rows();
 	}
 
-	public function get_tasks($controller_id) {
+	public function get_last_task($controller_id) {
 		$this->db->where('controller_id', $controller_id);
 		$this->db->order_by('time', 'ASC');
 		$query = $this->db->get('tasks');
