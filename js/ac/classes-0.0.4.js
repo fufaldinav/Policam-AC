@@ -18,7 +18,7 @@ function del(id) {
 				} else {
 					alert(`Неизвестная ошибка`);
 				}
-			} catch(e) {
+			} catch (e) {
 				alert(`Ошибка удаления: ${e.name}: ${e.message}`);
 				sendError(e);
 			}

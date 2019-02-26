@@ -13,7 +13,7 @@ function getServerTime() {
 		success: function(data) {
 			try {
 				time = data;
-			} catch(e) {
+			} catch (e) {
 				sendError(e);
 				alert(`Ошибка: ${e.name}: ${e.message}`);
 			}
@@ -49,7 +49,7 @@ function getNewMsgs(events, time) {
 					if (data.msgs.length > 0) {
 						let o = confirm(`Введен неизвестный ключ. Добавить его текущему пользователю?`);
 						if (o) {
-							let card = data.msgs[data.msgs.length - 1].card_id;  //последний прочитанный ключ из БД
+							let card = data.msgs[data.msgs.length - 1].card_id; //последний прочитанный ключ из БД
 							saveCard(card);
 						}
 					}
@@ -57,7 +57,7 @@ function getNewMsgs(events, time) {
 				setTimeout(function() {
 					getNewMsgs(events, time);
 				}, 100);
-			} catch(e) {
+			} catch (e) {
 				sendError(e);
 				alert(`Ошибка: ${e.name}: ${e.message}`);
 			}

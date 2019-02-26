@@ -1,15 +1,15 @@
 let events = [2, 3]; //где 2,3 - события запрещенного входа/выхода
-let pers =	{
-				'f': null,
-				'i': null,
-				'o': null,
-				'photo': null,
-				'class': null,
-				'birthday': null,
-				'address': null,
-				'phone': null,
-				'card': null
-			}
+let pers = {
+	'f': null,
+	'i': null,
+	'o': null,
+	'photo': null,
+	'class': null,
+	'birthday': null,
+	'address': null,
+	'phone': null,
+	'card': null
+}
 
 function savePersInfo() {
 	let checkValidity = true;
@@ -47,7 +47,7 @@ function savePersInfo() {
 					} else {
 						alert(`Пустой ответ от сервера`);
 					}
-				} catch(e) {
+				} catch (e) {
 					sendError(e);
 					alert(`Ошибка: ${e.name}: ${e.message}`);
 				}
@@ -70,7 +70,9 @@ function clearPersInfo() {
 	});
 	document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/0.jpg)';
 	document.getElementById(`photo_del`).hidden = true;
-	document.getElementById(`photo_del`).onclick = function() { return false; };
+	document.getElementById(`photo_del`).onclick = function() {
+		return false;
+	};
 }
 
 function checkData(e) {

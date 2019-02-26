@@ -1,4 +1,4 @@
-let time, events = [4,5]; //где 4,5 - события разрешенного входа/выхода
+let time, events = [4, 5]; //где 4,5 - события разрешенного входа/выхода
 
 document.addEventListener("DOMContentLoaded", function() {
 	getClasses();
@@ -11,7 +11,7 @@ function getServerTime() {
 	$.ajax({
 		url: `/index.php/util/get_time`,
 		success: function(data) {
-		time = data;
+			time = data;
 		},
 		type: `GET`
 	});
@@ -41,7 +41,7 @@ function getNewMsgs(events, time) {
 				} else {
 					alert(`Пустой ответ от сервера`);
 				}
-			} catch(e) {
+			} catch (e) {
 				sendError(e);
 				alert(`Ошибка: ${e.name}: ${e.message}`);
 			}
@@ -77,7 +77,7 @@ function setPersData(card) {
 				} else {
 					alert(`Пустой ответ от сервера`);
 				}
-			} catch(e) {
+			} catch (e) {
 				sendError(e);
 				alert(`Ошибка: ${e.name}: ${e.message}`);
 			}
@@ -105,7 +105,7 @@ function getClasses() {
 				} else {
 					alert(`Пустой ответ от сервера`);
 				}
-			} catch(e) {
+			} catch (e) {
 				sendError(e);
 				alert(`Ошибка: ${e.name}: ${e.message}`);
 			}
@@ -133,7 +133,7 @@ function getPersonal(class_id) {
 				} else {
 					alert(`Пустой ответ от сервера`);
 				}
-			} catch(e) {
+			} catch (e) {
 				sendError(e);
 				alert(`Ошибка: ${e.name}: ${e.message}`);
 			}
@@ -188,7 +188,7 @@ function sendInfo(type, pers_id) {
 				} else {
 					alert(`Пустой ответ от сервера`);
 				}
-			} catch(e) {
+			} catch (e) {
 				sendError(e);
 				alert(`Ошибка: ${e.name}: ${e.message}`);
 			}

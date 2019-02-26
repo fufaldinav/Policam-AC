@@ -36,7 +36,7 @@ function getCards(id) {
 				} else {
 					alert(`Пустой ответ от сервера`);
 				}
-			} catch(e) {
+			} catch (e) {
 				sendError(e);
 				alert(`Ошибка: ${e.name}: ${e.message}`);
 			}
@@ -79,7 +79,7 @@ function handleFiles(files) {
 					document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/0.jpg)';
 					pers.photo = null;
 				}
-			} catch(e) {
+			} catch (e) {
 				sendError(e);
 				alert(`Ошибка: ${e.name}: ${e.message}`);
 			}
@@ -107,14 +107,16 @@ function deletePhoto() {
 				if (res == `ok`) {
 					document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/0.jpg)';
 					document.getElementById(`photo_del`).hidden = true;
-					document.getElementById(`photo_del`).onclick = function() { return false; };
+					document.getElementById(`photo_del`).onclick = function() {
+						return false;
+					};
 					document.getElementById(`photo`).hidden = false;
 					document.getElementById(`photo`).value = null;
 					pers.photo = null;
 				} else {
 					alert(`Неизвестная ошибка`);
 				}
-			} catch(e) {
+			} catch (e) {
 				sendError(e);
 				alert(`Ошибка: ${e.name}: ${e.message}`);
 			}

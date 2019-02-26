@@ -44,7 +44,7 @@ function updatePersInfo() {
 					} else {
 						alert(`Пустой ответ от сервера`);
 					}
-				} catch(e) {
+				} catch (e) {
 					sendError(e);
 					alert(`Ошибка: ${e.name}: ${e.message}`);
 				}
@@ -93,16 +93,24 @@ function deletePers() {
 					document.getElementById(`cards`).innerHTML = ``; //очистка списка привязанных карт
 					document.getElementById(`card_selector`).hidden = false; //отобразим меню с неизвестными картами
 					document.getElementById(`card`).disabled = true; //но запретим редактирование
-					document.getElementById(`photo`).onchange = function() { return false; };
-					document.getElementById(`photo_del`).onclick = function() { return false; };
+					document.getElementById(`photo`).onchange = function() {
+						return false;
+					};
+					document.getElementById(`photo_del`).onclick = function() {
+						return false;
+					};
 					document.getElementById(`photo_del`).hidden = true;
-					document.getElementById(`save`).onclick = function() { return false; };
-					document.getElementById(`delete`).onclick = function() { return false; };
+					document.getElementById(`save`).onclick = function() {
+						return false;
+					};
+					document.getElementById(`delete`).onclick = function() {
+						return false;
+					};
 					alert(`Пользователь №${res} успешно удален`);
 				} else {
 					alert(`Пустой ответ от сервера`);
 				}
-			} catch(e) {
+			} catch (e) {
 				sendError(e);
 				alert(`Ошибка: ${e.name}: ${e.message}`);
 			}
@@ -140,21 +148,25 @@ function getPersData(pers_id) {
 						data.photo = `0`;
 						document.getElementById(`photo`).hidden = false;
 						document.getElementById(`photo_del`).hidden = true;
-						document.getElementById(`photo_del`).onclick = function() { return false; };
+						document.getElementById(`photo_del`).onclick = function() {
+							return false;
+						};
 					} else {
 						document.getElementById(`photo`).hidden = true;
 						document.getElementById(`photo_del`).hidden = false;
 						document.getElementById(`photo_del`).onclick = deletePhoto;
 					}
 					photo.style.backgroundImage = 'url(/img/ac/s/' + data.photo + '.jpg)';
-					document.getElementById(`photo`).onchange = function() { handleFiles(this.files); };
+					document.getElementById(`photo`).onchange = function() {
+						handleFiles(this.files);
+					};
 					document.getElementById(`save`).onclick = updatePersInfo;
 					document.getElementById(`delete`).onclick = deletePers;
 					getCardsByPers(pers.id);
 				} else {
 					alert(`Пустой ответ от сервера`);
 				}
-			} catch(e) {
+			} catch (e) {
 				sendError(e);
 				alert(`Ошибка удаления: ${e.name}: ${e.message}`);
 			}
@@ -193,7 +205,7 @@ function getCardsByPers(pers_id) {
 					document.getElementById(`card`).disabled = false; //включим меню неизвеснтых карт
 					getCards();
 				}
-			} catch(e) {
+			} catch (e) {
 				sendError(e);
 				alert(`Ошибка удаления: ${e.name}: ${e.message}`);
 			}
@@ -220,7 +232,7 @@ function saveCard(card) {
 				} else {
 					alert(`Неизвестная ошибка`);
 				}
-			} catch(e) {
+			} catch (e) {
 				sendError(e);
 				alert(`Ошибка: ${e.name}: ${e.message}`);
 			}
@@ -247,7 +259,7 @@ function delCard(id) {
 					let card = document.getElementById(`card${id}`);
 					card.remove(); //удалим карту из списка привязанных
 					let cardsHtml = document.getElementById(`cards`).innerHTML;
-					cardsHtml = (cardsHtml.trim) ? cardsHtml.trim() : cardsHtml.replace(/^\s+/,``);
+					cardsHtml = (cardsHtml.trim) ? cardsHtml.trim() : cardsHtml.replace(/^\s+/, ``);
 					if (cardsHtml == ``) { //если список привязанных карт пуст, то отобразим и включим меню и запросим неизвеснтые карты
 						document.getElementById(`card_selector`).hidden = false;
 						document.getElementById(`card`).disabled = false;
@@ -262,7 +274,7 @@ function delCard(id) {
 				} else {
 					alert(`Неизвестная ошибка`);
 				}
-			} catch(e) {
+			} catch (e) {
 				sendError(e);
 				alert(`Ошибка: ${e.name}: ${e.message}`);
 			}

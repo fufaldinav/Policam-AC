@@ -9,10 +9,10 @@ function tree_toggle(event) {
 		return
 	}
 	let newClass = hasClass(node, `tree-expand-open`) ? `tree-expand-closed` : `tree-expand-open`
-	let re =  /(^|\s)(tree-expand-open|tree-expand-closed)(\s|$)/
-	node.className = node.className.replace(re, `$1`+newClass+`$3`)
+	let re = /(^|\s)(tree-expand-open|tree-expand-closed)(\s|$)/
+	node.className = node.className.replace(re, `$1` + newClass + `$3`)
 }
 
 function hasClass(elem, className) {
-	return new RegExp("(^|\\s)"+className+"(\\s|$)").test(elem.className)
+	return new RegExp("(^|\\s)" + className + "(\\s|$)").test(elem.className)
 }
