@@ -25,3 +25,6 @@ $lang['developed'] = 'Developet by';
 $lang['missing'] = 'Missing';
 $lang['not_selected'] = 'Not selected';
 $lang['entrance_wo_card'] = 'Entrance w/o card';
+$lang['registred'] = 'Registred';
+$lang['and'] = 'and';
+$lang['card_deleted'] = 'card deleted';

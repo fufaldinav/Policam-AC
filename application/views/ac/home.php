@@ -1,7 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?>
-            <div id="main">
+            <div id="main" class="main-grid-container">
+                <div id="menu">
+                  <!-- MENU -->
+                </div>
                 <div id="info">
                     <div id="info-photo" class="info-item">
                         <div id="photo_bg" class="photo"></div>

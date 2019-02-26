@@ -135,7 +135,7 @@ class Db extends CI_Controller {
 		$personal_id = $this->input->post('pers');
 
 		if (!$personal_id) {
-			return FALSE;
+			return NULL;
 		}
 
 		$cards = $this->ac_model->get_cards($personal_id);
@@ -153,7 +153,7 @@ class Db extends CI_Controller {
 		if ($this->db->affected_rows() > 0) {
 			echo $personal_id;
 		} else {
-			return FALSE;
+			return NULL;
 		}
 
 	}
@@ -179,11 +179,11 @@ class Db extends CI_Controller {
 			if ($this->ac_model->add_card($card_id)) {
 				echo 'ok';
 			} else {
-				return FALSE;
+				return NULL;
 			}
 
 		} else {
-			return FALSE;
+			return NULL;
 		}
 
 	}
@@ -198,33 +198,16 @@ class Db extends CI_Controller {
 			exit;
 		}
 
-		$is_post = FALSE;
+		$post_data = $this->input->post('card');
 
-		if (!$card_id && $this->input->post('card')) {
-			$card_id = $this->input->post('card');
-			$is_post = TRUE;
+		if (!$card_id && $post_data) {
+			$card_id = $post_data;
 		} else if (!$card_id) {
-			return FALSE;
+			return NULL;
 		}
 
-		$school_id = $this->ac_model->get_school_by_user($this->user_id)->school_id;
-		$controllers = $this->ac_model->get_controllers_by_school($school_id);
-
-		$this->db->where('id', $card_id);
-		$wiegand = $this->db->get('cards')->row()->wiegand;
-
-		$this->db->where('id', $card_id);
-		$this->db->update('cards', ['holder_id' => -1]);
-
-		if ($this->db->affected_rows()) {
-			foreach ($controllers as $c) {
-				$this->ac_model->del_cards_from_controller($wiegand, $c->id);
-			}
-
-			if ($is_post) {
-				echo 'ok';
-			}
-
+		if ($this->ac_model->delete_card($card_id) && $post_data) {
+			echo 'ok';
 		}
 	}
 
@@ -243,7 +226,7 @@ class Db extends CI_Controller {
 		$school = $this->input->post('school');
 
 		if (!$number || !$letter || !$school) {
-			return FALSE;
+			return NULL;
 		}
 
 		$data = [
@@ -273,7 +256,7 @@ class Db extends CI_Controller {
 		$class_id = $this->input->post('class');
 
 		if (!$class_id) {
-			return FALSE;
+			return NULL;
 		}
 
 		$this->db->where('id', $class_id);
@@ -299,36 +282,41 @@ class Db extends CI_Controller {
 		echo json_encode($classes);
 	}
 
+	public function get_personal($class_id) {
+		if (!$this->ion_auth->logged_in()) {
+			header("HTTP/1.1 401 Unauthorized");
+			exit;
+		}
+
+		$personal = $this->ac_model->get_personal_by_class($class_id, $full_info = FALSE);
+
+		echo json_encode($personal);
+	}
+
 	public function get_pers() {
 		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
 		}
 
-		$card = $this->input->post('card');
-		$pers = $this->input->post('pers');
+		$card_id = $this->input->post('card');
+		$pers_id = $this->input->post('pers');
 
-		if (!$pers) {
-			$pers = $this->ac_model->get_pers_by_card($card);
+		if (!$pers_id) {
+			$pers = $this->ac_model->get_pers_by_card($card_id);
 			$class = $this->ac_model->get_class_by_id($pers->class);
 			$pers->class = $class->number;
 			$pers->class .= ' "';
 			$pers->class .= $class->letter;
 			$pers->class .= '"';
 		} else {
-			$this->db->select('address, birthday, f, i, o, phone');
-			$this->db->select('personal.id AS \'id\'');
-			$this->db->select('class_id AS \'class\'');
-			$this->db->select('photo.hash AS \'photo\'');
-			$this->db->where('personal.id', $pers);
-			$this->db->join('photo', 'photo.id = personal.photo_id', 'left');
-			$pers = $this->db->get('personal')->row();
+			$pers = $this->ac_model->get_pers($pers_id);
 		}
 
 		if ($pers) {
 			echo json_encode($pers);
 		} else {
-			return FALSE;
+			return NULL;
 		}
 
 	}
@@ -363,7 +351,7 @@ class Db extends CI_Controller {
 		if ($this->input->post('holder_id')) {
 			$holder_id = $this->input->post('holder_id');
 		} else {
-			return FALSE;
+			return NULL;
 		}
 
 		$cards = $this->ac_model->get_cards($holder_id);

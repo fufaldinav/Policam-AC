@@ -220,9 +220,9 @@ class Util extends CI_Controller {
 		}
 		if ($controller_id) {
 			echo $this->ac_model->add_all_cards_to_controller($controller_id);
-			echo ' заданий записано';
+			echo ' заданий записано'; //TODO
 		} else {
-			echo 'Не выбран контроллер';
+			echo 'Не выбран контроллер'; //TODO
 		}
 	}
 
@@ -237,9 +237,62 @@ class Util extends CI_Controller {
 		}
 		if ($controller_id) {
 			echo $this->ac_model->set_door_params($controller_id, $open_time);
-			echo ' заданий записано';
+			echo ' заданий записано'; //TODO
 		} else {
-			echo 'Не выбран контроллер';
+			echo 'Не выбран контроллер'; //TODO
+		}
+	}
+
+	public function card_problem() {
+		if (!$this->ion_auth->logged_in()) {
+			header("HTTP/1.1 401 Unauthorized");
+			exit;
+		}
+
+		$type = $this->input->post('type');
+		$pers_id = $this->input->post('pers_id');
+
+		$response = lang('registred');
+
+		if ($type >= 1 && $type <= 3)
+			$pers = $this->ac_model->get_pers($pers_id);
+
+		if ($type == 1) {
+			$desc = $pers->id;
+			$desc .= ' ';
+			$desc .= $pers->f;
+			$desc .= ' ';
+			$desc .= $pers->i;
+			$desc .= ' forgot card';
+
+			if ($this->ac_model->add_user_event($type, $desc))
+				echo $response;
+		} else if ($type == 2 || $type == 3) {
+			$cards = $this->ac_model->get_cards($pers_id);
+
+			if (!$cards)
+				return FALSE;
+
+			foreach ($cards as $card) {
+				$this->ac_model->delete_card($card->id);
+			}
+
+			$desc = $pers->id;
+			$desc .= ' ';
+			$desc .= $pers->f;
+			$desc .= ' ';
+			$desc .= $pers->i;
+			$desc .= ' lost/broke card';
+
+			$response .= ' ';
+			$response .= lang('and');
+			$response .= ' ';
+			$response .= lang('card_deleted');
+
+			if ($this->ac_model->add_user_event($type, $desc))
+				echo $response;
+		} else {
+			return NULL;
 		}
 	}
 
