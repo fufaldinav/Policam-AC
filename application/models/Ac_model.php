@@ -136,7 +136,7 @@ class Ac_model extends CI_Model {
 		$wiegand = $query->row()->wiegand;
 
 		foreach ($controllers as $c) {
-			$this->add_cards_to_controller($wiegand, $c);
+			$this->add_cards_to_controller($wiegand, $c->id);
 		}
 
 		return TRUE;
@@ -351,7 +351,7 @@ class Ac_model extends CI_Model {
 		} else {
 			$data .= '{"card":"';
 			$data .= $cards;
-			$data .= '"}';
+			$data .= '","flags":32,"tz":255}';
 		}
 		$data .= ']';
 		return $this->add_task('add_cards', $controller_id, $data);

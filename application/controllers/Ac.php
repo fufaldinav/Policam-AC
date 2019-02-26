@@ -413,7 +413,7 @@ class Ac extends CI_Controller {
 
 		if ($this->db->affected_rows()) {
 			foreach ($controllers as $c) {
-				$this->ac_model->del_cards_from_controller($wiegand, $c);
+				$this->ac_model->del_cards_from_controller($wiegand, $c->id);
 			}
 
 			if ($is_post) {
