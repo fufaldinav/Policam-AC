@@ -25,11 +25,14 @@ class Db extends CI_Controller {
 	}
 
 	public function save_pers() {
-		if (!$this->ion_auth->logged_in()) {
-			redirect('auth/login');
+		if (!$this->ion_auth->logged_in())
+		{
+			header("HTTP/1.1 401 Unauthorized");
+			exit;
 		}
 		if (!$this->ion_auth->in_group(2)) {
-			redirect('/');
+			header('HTTP/1.1 403 Forbidden');
+			exit;
 		}
 
 		$json_data = json_decode($this->input->post('data'), true);
@@ -73,11 +76,14 @@ class Db extends CI_Controller {
 	}
 
 	public function update_pers() {
-		if (!$this->ion_auth->logged_in()) {
-			redirect('auth/login');
+		if (!$this->ion_auth->logged_in())
+		{
+			header("HTTP/1.1 401 Unauthorized");
+			exit;
 		}
 		if (!$this->ion_auth->in_group(2)) {
-			redirect('/');
+			header('HTTP/1.1 403 Forbidden');
+			exit;
 		}
 
 		$json_data = json_decode($this->input->post('data'), true);
@@ -119,11 +125,14 @@ class Db extends CI_Controller {
 	}
 
 	public function delete_pers() {
-		if (!$this->ion_auth->logged_in()) {
-			redirect('auth/login');
+		if (!$this->ion_auth->logged_in())
+		{
+			header("HTTP/1.1 401 Unauthorized");
+			exit;
 		}
 		if (!$this->ion_auth->in_group(2)) {
-			redirect('/');
+			header('HTTP/1.1 403 Forbidden');
+			exit;
 		}
 
 		$personal_id = $this->input->post('pers');
@@ -153,11 +162,14 @@ class Db extends CI_Controller {
 	}
 
 	public function add_card() {
-		if (!$this->ion_auth->logged_in()) {
-			redirect('auth/login');
+		if (!$this->ion_auth->logged_in())
+		{
+			header("HTTP/1.1 401 Unauthorized");
+			exit;
 		}
 		if (!$this->ion_auth->in_group(2)) {
-			redirect('/');
+			header('HTTP/1.1 403 Forbidden');
+			exit;
 		}
 
 		$card_id = $this->input->post('card');
@@ -181,11 +193,14 @@ class Db extends CI_Controller {
 	}
 
 	public function delete_card($card_id = NULL) {
-		if (!$this->ion_auth->logged_in()) {
-			redirect('auth/login');
+		if (!$this->ion_auth->logged_in())
+		{
+			header("HTTP/1.1 401 Unauthorized");
+			exit;
 		}
 		if (!$this->ion_auth->in_group(2)) {
-			redirect('/');
+			header('HTTP/1.1 403 Forbidden');
+			exit;
 		}
 
 		$is_post = FALSE;
@@ -219,11 +234,14 @@ class Db extends CI_Controller {
 	}
 
 	public function save_class() {
-		if (!$this->ion_auth->logged_in()) {
-			redirect('auth/login');
+		if (!$this->ion_auth->logged_in())
+		{
+			header("HTTP/1.1 401 Unauthorized");
+			exit;
 		}
 		if (!$this->ion_auth->in_group(2)) {
-			redirect('/');
+			header('HTTP/1.1 403 Forbidden');
+			exit;
 		}
 
 		$number = $this->input->post('number');
@@ -249,11 +267,14 @@ class Db extends CI_Controller {
 	}
 
 	public function delete_class() {
-		if (!$this->ion_auth->logged_in()) {
-			redirect('auth/login');
+		if (!$this->ion_auth->logged_in())
+		{
+			header("HTTP/1.1 401 Unauthorized");
+			exit;
 		}
 		if (!$this->ion_auth->in_group(2)) {
-			redirect('/');
+			header('HTTP/1.1 403 Forbidden');
+			exit;
 		}
 
 		$class_id = $this->input->post('class');
@@ -273,8 +294,10 @@ class Db extends CI_Controller {
 	}
 
 	public function get_classes() {
-		if (!$this->ion_auth->logged_in()) {
-			redirect('auth/login');
+		if (!$this->ion_auth->logged_in())
+		{
+			header("HTTP/1.1 401 Unauthorized");
+			exit;
 		}
 
 		$school_id = $this->ion_auth->user()->row()->school_id;
@@ -285,8 +308,10 @@ class Db extends CI_Controller {
 	}
 
 	public function get_pers() {
-		if (!$this->ion_auth->logged_in()) {
-			redirect('auth/login');
+		if (!$this->ion_auth->logged_in())
+		{
+			header("HTTP/1.1 401 Unauthorized");
+			exit;
 		}
 
 		$card = $this->input->post('card');
@@ -318,11 +343,14 @@ class Db extends CI_Controller {
 	}
 
 	public function get_cards() {
-		if (!$this->ion_auth->logged_in()) {
-			redirect('auth/login');
+		if (!$this->ion_auth->logged_in())
+		{
+			header("HTTP/1.1 401 Unauthorized");
+			exit;
 		}
 		if (!$this->ion_auth->in_group(2)) {
-			redirect('/');
+			header('HTTP/1.1 403 Forbidden');
+			exit;
 		}
 
 		$this->db->select('id, wiegand');
@@ -333,11 +361,14 @@ class Db extends CI_Controller {
 	}
 
 	public function get_cards_by_pers() {
-		if (!$this->ion_auth->logged_in()) {
-			redirect('auth/login');
+		if (!$this->ion_auth->logged_in())
+		{
+			header("HTTP/1.1 401 Unauthorized");
+			exit;
 		}
 		if (!$this->ion_auth->in_group(2)) {
-			redirect('/');
+			header('HTTP/1.1 403 Forbidden');
+			exit;
 		}
 
 		if ($this->input->post('holder_id')) {

@@ -22,24 +22,25 @@ class Util extends CI_Controller {
 		if (!$this->ion_auth->logged_in()) {
 			redirect('auth/login');
 		}
-
 	}
 
 	public function get_time() {
 		if (!$this->ion_auth->logged_in()) {
-			redirect('auth/login');
+			header("HTTP/1.1 401 Unauthorized");
+			exit;
 		}
+
 		echo time();
 	}
 
 	public function get_events() {
 		if (!$this->ion_auth->logged_in()) {
-			redirect('auth/login');
+			header("HTTP/1.1 401 Unauthorized");
+			exit;
 		}
 
 		echo json_encode([
 							'msgs' => $this->ac_model->start_polling(),
-							// response again the server time to update the "js time variable"
 							'time' => now('Asia/Yekaterinburg')
 						]);
 	}
@@ -47,10 +48,12 @@ class Util extends CI_Controller {
 	public function save_photo() {
 		if (!$this->ion_auth->logged_in())
 		{
-			redirect('auth/login');
+			header("HTTP/1.1 401 Unauthorized");
+			exit;
 		}
 		if (!$this->ion_auth->in_group(2)) {
-			redirect('/');
+			header('HTTP/1.1 403 Forbidden');
+			exit;
 		}
 
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -149,10 +152,12 @@ class Util extends CI_Controller {
 	public function delete_photo() {
 		if (!$this->ion_auth->logged_in())
 		{
-			redirect('auth/login');
+			header("HTTP/1.1 401 Unauthorized");
+			exit;
 		}
 		if (!$this->ion_auth->in_group(2)) {
-			redirect('/');
+			header('HTTP/1.1 403 Forbidden');
+			exit;
 		}
 
 		if ($this->input->post('id') || $this->input->post('photo')) {
@@ -170,7 +175,8 @@ class Util extends CI_Controller {
 	public function save_js_errors($err = NULL) {
 		if (!$this->ion_auth->logged_in())
 		{
-			redirect('auth/login');
+			header("HTTP/1.1 401 Unauthorized");
+			exit;
 		}
 
 		$this->load->helper('file');
@@ -206,12 +212,14 @@ class Util extends CI_Controller {
 	}
 
 	public function reload($controller_id = NULL) {
-		if (!$this->ion_auth->logged_in()) {
-			redirect('auth/login');
+		if (!$this->ion_auth->logged_in())
+		{
+			header("HTTP/1.1 401 Unauthorized");
+			exit;
 		}
 		if (!$this->ion_auth->is_admin()) {
-			echo 'Нужно быть администратором';
-			return;
+			header('HTTP/1.1 403 Forbidden');
+			exit;
 		}
 		if ($controller_id) {
 			echo $this->ac_model->add_all_cards_to_controller($controller_id);
@@ -222,12 +230,14 @@ class Util extends CI_Controller {
 	}
 
 	public function door($controller_id = NULL, $open_time = NULL) {
-		if (!$this->ion_auth->logged_in()) {
-			redirect('auth/login');
+		if (!$this->ion_auth->logged_in())
+		{
+			header("HTTP/1.1 401 Unauthorized");
+			exit;
 		}
 		if (!$this->ion_auth->is_admin()) {
-			echo 'Нужно быть администратором';
-			return;
+			header('HTTP/1.1 403 Forbidden');
+			exit;
 		}
 		if ($controller_id) {
 			echo $this->ac_model->set_door_params($controller_id, $open_time);
