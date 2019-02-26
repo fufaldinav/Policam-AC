@@ -1,7 +1,6 @@
 //удалить из базы
 function del(id) {
-  let o = confirm(`Подтвердите удаление.`);
-  if (!o) {
+  if (!confirm(`Подтвердите удаление.`)) {
     return;
   }
   //отправим JSON
