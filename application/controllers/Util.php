@@ -194,7 +194,7 @@ class Util extends CI_Controller {
 		$path = '/var/www/logs';
 
 		if (!is_dir($path)) {
-			mkdir($path, 0777, true);
+			mkdir($path, 0777, TRUE);
 		}
 
 		$path .= '/err-';

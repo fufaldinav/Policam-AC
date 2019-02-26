@@ -34,7 +34,7 @@ class Db extends CI_Controller {
 			exit;
 		}
 
-		$json_data = json_decode($this->input->post('data'), true);
+		$json_data = json_decode($this->input->post('data'), TRUE);
 
 		if (isset($json_data['photo'])) {
 			$this->db->select('id');
@@ -84,7 +84,7 @@ class Db extends CI_Controller {
 			exit;
 		}
 
-		$json_data = json_decode($this->input->post('data'), true);
+		$json_data = json_decode($this->input->post('data'), TRUE);
 
 		if (isset($json_data['photo'])) {
 			$this->db->select('id');
