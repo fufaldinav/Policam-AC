@@ -25,8 +25,7 @@ class Db extends CI_Controller {
 	}
 
 	public function save_pers() {
-		if (!$this->ion_auth->logged_in())
-		{
+		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
 		}
@@ -76,8 +75,7 @@ class Db extends CI_Controller {
 	}
 
 	public function update_pers() {
-		if (!$this->ion_auth->logged_in())
-		{
+		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
 		}
@@ -125,8 +123,7 @@ class Db extends CI_Controller {
 	}
 
 	public function delete_pers() {
-		if (!$this->ion_auth->logged_in())
-		{
+		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
 		}
@@ -162,8 +159,7 @@ class Db extends CI_Controller {
 	}
 
 	public function add_card() {
-		if (!$this->ion_auth->logged_in())
-		{
+		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
 		}
@@ -193,8 +189,7 @@ class Db extends CI_Controller {
 	}
 
 	public function delete_card($card_id = NULL) {
-		if (!$this->ion_auth->logged_in())
-		{
+		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
 		}
@@ -234,8 +229,7 @@ class Db extends CI_Controller {
 	}
 
 	public function save_class() {
-		if (!$this->ion_auth->logged_in())
-		{
+		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
 		}
@@ -267,8 +261,7 @@ class Db extends CI_Controller {
 	}
 
 	public function delete_class() {
-		if (!$this->ion_auth->logged_in())
-		{
+		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
 		}
@@ -294,8 +287,7 @@ class Db extends CI_Controller {
 	}
 
 	public function get_classes() {
-		if (!$this->ion_auth->logged_in())
-		{
+		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
 		}
@@ -308,8 +300,7 @@ class Db extends CI_Controller {
 	}
 
 	public function get_pers() {
-		if (!$this->ion_auth->logged_in())
-		{
+		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
 		}
@@ -343,8 +334,7 @@ class Db extends CI_Controller {
 	}
 
 	public function get_cards() {
-		if (!$this->ion_auth->logged_in())
-		{
+		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
 		}
@@ -361,8 +351,7 @@ class Db extends CI_Controller {
 	}
 
 	public function get_cards_by_pers() {
-		if (!$this->ion_auth->logged_in())
-		{
+		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
 		}

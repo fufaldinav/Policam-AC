@@ -46,8 +46,7 @@ class Util extends CI_Controller {
 	}
 
 	public function save_photo() {
-		if (!$this->ion_auth->logged_in())
-		{
+		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
 		}
@@ -150,8 +149,7 @@ class Util extends CI_Controller {
 	}
 
 	public function delete_photo() {
-		if (!$this->ion_auth->logged_in())
-		{
+		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
 		}
@@ -212,8 +210,7 @@ class Util extends CI_Controller {
 	}
 
 	public function reload($controller_id = NULL) {
-		if (!$this->ion_auth->logged_in())
-		{
+		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
 		}
@@ -230,8 +227,7 @@ class Util extends CI_Controller {
 	}
 
 	public function door($controller_id = NULL, $open_time = NULL) {
-		if (!$this->ion_auth->logged_in())
-		{
+		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
 		}
