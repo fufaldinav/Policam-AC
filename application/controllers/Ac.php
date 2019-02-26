@@ -10,9 +10,12 @@ class Ac extends CI_Controller {
 
 		$this->load->helper('language');
 
+		$this->load->model('ac_model');
 		$this->lang->load('ac');
 
-		$this->user_id = $this->ion_auth->user()->row()->id;
+		if ($this->ion_auth->logged_in()) {
+			$this->user_id = $this->ion_auth->user()->row()->id;
+		}
 	}
 
 	public function index() {
@@ -21,8 +24,6 @@ class Ac extends CI_Controller {
 		} else if ($this->ion_auth->is_admin()) {
 			redirect('auth');
 		}
-
-		$this->load->model('ac_model');
 
 		$school_id = $this->ac_model->get_school_by_user($this->user_id)->id;
 
@@ -45,7 +46,6 @@ class Ac extends CI_Controller {
 		}
 
 		$this->load->helper('form');
-		$this->load->model('ac_model');
 
 		$school_id = $this->ac_model->get_school_by_user($this->user_id)->id;
 
@@ -102,7 +102,6 @@ class Ac extends CI_Controller {
 		}
 
 		$this->load->helper('form');
-		$this->load->model('ac_model');
 
 		$school_id = $this->ac_model->get_school_by_user($this->user_id)->id;
 
@@ -189,7 +188,6 @@ class Ac extends CI_Controller {
 		}
 
 		$this->load->library('table');
-		$this->load->model('ac_model');
 
 		$school_id = $this->ac_model->get_school_by_user($this->user_id)->school_id;
 
@@ -239,8 +237,6 @@ class Ac extends CI_Controller {
 			redirect('/');
 		}
 
-		$this->load->model('ac_model');
-
 		$json_data = json_decode($this->input->post('data'), true);
 
 		if (isset($json_data['photo'])) {
@@ -289,8 +285,6 @@ class Ac extends CI_Controller {
 			redirect('/');
 		}
 
-		$this->load->model('ac_model');
-
 		$json_data = json_decode($this->input->post('data'), true);
 
 		if (isset($json_data['photo'])) {
@@ -337,8 +331,6 @@ class Ac extends CI_Controller {
 			redirect('/');
 		}
 
-		$this->load->model('ac_model');
-
 		$personal_id = $this->input->post('pers');
 
 		if (!$personal_id) {
@@ -373,8 +365,6 @@ class Ac extends CI_Controller {
 			redirect('/');
 		}
 
-		$this->load->model('ac_model');
-
 		$card_id = $this->input->post('card');
 		$pers_id = $this->input->post('pers');
 
@@ -403,8 +393,6 @@ class Ac extends CI_Controller {
 			redirect('/');
 		}
 
-		$this->load->model('ac_model');
-
 		$is_post = FALSE;
 
 		if (!$card_id && $this->input->post('card')) {
@@ -425,22 +413,7 @@ class Ac extends CI_Controller {
 
 		if ($this->db->affected_rows()) {
 			foreach ($controllers as $c) {
-				$id = mt_rand(500000,999999999);
-
-				$json = '{"id":';
-				$json .= $id;
-				$json .= ',"operation":"del_cards","cards":[{"card":"';
-				$json .= $wiegand;
-				$json .= '"}]}';
-
-				$data = [
-							'id' => $id,
-							'controller_id' => $c->id,
-							'json' => $json,
-							'time' => now('Asia/Yekaterinburg')
-						];
-
-				$this->db->insert('tasks', $data);
+				$this->ac_model->del_cards_from_controller($wiegand, $c);
 			}
 
 			if ($is_post) {
@@ -509,8 +482,6 @@ class Ac extends CI_Controller {
 			redirect('auth/login');
 		}
 
-		$this->load->model('ac_model');
-
 		$school_id = $this->ion_auth->user()->row()->school_id;
 
 		$classes = $this->ac_model->get_classes_by_school($school_id);
@@ -522,8 +493,6 @@ class Ac extends CI_Controller {
 		if (!$this->ion_auth->logged_in()) {
 			redirect('auth/login');
 		}
-
-		$this->load->model('ac_model');
 
 		$card = $this->input->post('card');
 		$pers = $this->input->post('pers');
@@ -565,8 +534,6 @@ class Ac extends CI_Controller {
 			redirect('auth/login');
 		}
 
-		$this->load->model('ac_model');
-
 		echo json_encode([
 							'msgs' => $this->ac_model->start_polling(),
 							// response again the server time to update the "js time variable"
@@ -596,8 +563,6 @@ class Ac extends CI_Controller {
 		if (!$this->ion_auth->in_group(2)) {
 			redirect('/');
 		}
-
-		$this->load->model('ac_model');
 
 		if ($this->input->post('holder_id')) {
 			$holder_id = $this->input->post('holder_id');
@@ -664,8 +629,6 @@ class Ac extends CI_Controller {
 					$this->db->where('time <', $time - 86400);
 					$query = $this->db->get('photo');
 
-					$this->load->model('ac_model');
-
 					foreach ($query->result() as $row) {
 						$this->ac_model->delete_photo(NULL, $row->hash);
 					}
@@ -725,8 +688,6 @@ class Ac extends CI_Controller {
 			redirect('/');
 		}
 
-		$this->load->model('ac_model');
-
 		if ($this->input->post('id') || $this->input->post('photo')) {
 			$id = $this->input->post('id');
 			$photo = $this->input->post('photo');
@@ -759,7 +720,7 @@ class Ac extends CI_Controller {
 		$timestring = '%H:%i:%s';
 		$time = mdate($timestring, $time);
 
-		$path = './logs';
+		$path = '/var/www/logs';
 
 		if (!is_dir($path)) {
 			mkdir($path, 0777, true);
@@ -775,6 +736,22 @@ class Ac extends CI_Controller {
 		$message .= PHP_EOL;
 
 		write_file($path, $message, 'a');
+	}
+
+	public function reload($controller_id = NULL) {
+		if (!$this->ion_auth->logged_in()) {
+			redirect('auth/login');
+		}
+		if (!$this->ion_auth->is_admin()) {
+			echo 'Нужно быть администратором';
+			return;
+		}
+		if ($controller_id) {
+			echo $this->ac_model->add_all_cards_to_controller($controller_id);
+			echo ' заданий записано';
+		} else {
+			echo 'Не выбран контроллер';
+		}
 	}
 
 }

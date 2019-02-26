@@ -7,7 +7,9 @@ class Ac_model extends CI_Model {
 	public function __construct()	{
 		parent::__construct();
 
-		$this->user_id = $this->ion_auth->user()->row()->id;
+		if ($this->ion_auth->logged_in()) {
+			$this->user_id = $this->ion_auth->user()->row()->id;
+		}
 	}
 
 	public function get_school_by_user($user_id) {
@@ -131,23 +133,10 @@ class Ac_model extends CI_Model {
 		$school_id = $this->get_school_by_user($this->user_id)->school_id;
 		$controllers = $this->get_controllers_by_school($school_id);
 
+		$wiegand = $query->row()->wiegand;
+
 		foreach ($controllers as $c) {
-			$id = mt_rand(500000,999999999);
-
-			$json = '{"id":';
-			$json .= $id;
-			$json .= ',"operation":"add_cards","cards":[{"card":"';
-			$json .= $query->row()->wiegand;
-			$json .= '","flags":32,"tz":255}]}';
-
-			$data = [
-						'id' => $id,
-						'controller_id' => $c->id,
-						'json' => $json,
-						'time' => now('Asia/Yekaterinburg')
-					];
-
-			$this->db->insert('tasks', $data);
+			$this->add_cards_to_controller($wiegand, $c);
 		}
 
 		return TRUE;
@@ -321,5 +310,115 @@ class Ac_model extends CI_Model {
 		}
 
 		return $html;
+	}
+
+	public function add_all_cards_to_controller($controller_id) {
+		$this->db->select('cards.wiegand AS "wiegand"');
+		$this->db->where('controllers.id', $controller_id);
+		$this->db->join('schools', 'schools.id = controllers.school_id', 'left');
+		$this->db->join('classes', 'classes.school_id = schools.id', 'left');
+		$this->db->join('personal', 'personal.class_id = classes.id', 'left');
+		$this->db->join('cards', 'cards.holder_id = personal.id', 'left');
+		$query = $this->db->get('controllers');
+
+		$cards = $query->result();
+
+		$count = count($cards);
+		$counter = 0;
+		$data = [];
+		for ($i = 0; $i < $count; $i++) {
+			$data[] = $cards[$i]->wiegand;
+			if ($i > 0 && ($i % 10) == 0) {
+				$counter += $this->add_cards_to_controller($data, $controller_id);
+				$data = [];
+			} else if ($i == ($count - 1)) {
+				$counter += $this->add_cards_to_controller($data, $controller_id);
+			}
+		}
+
+		return $counter;
+	}
+
+	public function add_cards_to_controller($cards, $controller_id) {
+		$data = '"cards": [';
+		if (is_array($cards)) {
+			foreach ($cards as $card) {
+				$data .= '{"card":"';
+				$data .= $card;
+				$data .= '","flags":32,"tz":255},';
+			}
+			$data = substr($data, 0, -1);
+		} else {
+			$data .= '{"card":"';
+			$data .= $cards;
+			$data .= '"}';
+		}
+		$data .= ']';
+		return $this->add_task('add_cards', $controller_id, $data);
+	}
+
+	public function del_cards_from_controller($cards, $controller_id) {
+		$data = '"cards": [';
+		if (is_array($cards)) {
+			foreach ($cards as $card) {
+				$data .= '{"card":"';
+				$data .= $card;
+				$data .= '"},';
+			}
+			$data = substr($data, 0, -1);
+		} else {
+			$data .= '{"card":"';
+			$data .= $cards;
+			$data .= '"}';
+		}
+		$data .= ']';
+		return $this->add_task('del_cards', $controller_id, $data);
+	}
+
+	public function clear_cards($controller_id) {
+		return $this->add_task('clear_cards', $controller_id, $data);
+	}
+
+	public function add_task($operation, $controller_id, $data = NULL) {
+		$id = mt_rand(500000,999999999);
+
+		$json = '{"id":';
+		$json .= $id;
+		$json .= ',"operation":"';
+		$json .= $operation;
+		$json .= '"';
+		$json .= (isset($data)) ? ',' : '';
+		$json .= (isset($data)) ? $data : '';
+		$json .= '}';
+
+		$data =	[
+							'id' => $id,
+							'controller_id' => $controller_id,
+							'json' => $json,
+							'time' => now('Asia/Yekaterinburg')
+						];
+
+		$this->db->insert('tasks', $data);
+
+		return $this->db->affected_rows();
+	}
+
+	public function del_task($id) {
+		$this->db->where('id', $id);
+		$this->db->delete('tasks');
+
+		return $this->db->affected_rows();
+	}
+
+	public function get_last_task($controller_id) {
+		$this->db->where('controller_id', $controller_id);
+		$this->db->order_by('time', 'ASC');
+		$query = $this->db->get('tasks');
+
+		if ($query->num_rows() > 0) {
+			return $query->row();
+		} else {
+			return NULL;
+		}
 	}
 }
