@@ -68,6 +68,7 @@ class Ac_model extends CI_Model {
 			$this->db->select('personal.id AS "id"');
 			$this->db->join('personal', 'personal.class_id = classes.id', 'left');
 			$this->db->where('classes.id', $class_id);
+			$this->db->order_by('f ASC, i ASC, o ASC');
 			$query = $this->db->get('classes');
 
 			return $query->result();
