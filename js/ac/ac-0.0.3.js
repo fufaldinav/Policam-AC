@@ -8,19 +8,19 @@ document.addEventListener("DOMContentLoaded", function() {
 //получение времени от сервера
 function getServerTime() {
   $.ajax({
-    url: '/index.php/util/get_time',
+    url: `/index.php/util/get_time`,
     success: function(data) {
       time = data;
     },
-    type: 'GET'
+    type: `GET`
   });
 }
 
 //получение сообщений от сервера
 function getNewMsgs(events, time) {
   $.ajax({
-    url: '/index.php/util/get_events',
-    type: 'POST',
+    url: `/index.php/util/get_events`,
+    type: `POST`,
     data: {
       events: events,
       time: time
@@ -50,8 +50,8 @@ function getNewMsgs(events, time) {
 //получение данных пользователя из БД
 function setPersData(card) {
   $.ajax({
-    url: '/index.php/db/get_pers',
-    type: 'POST',
+    url: `/index.php/db/get_pers`,
+    type: `POST`,
     data: {
       card: card
     },
@@ -99,6 +99,8 @@ function getClasses(menu) {
   $.ajax({
     url: '/index.php/db/get_classes',
     type: 'GET',
+    url: `/index.php/db/get_classes`,
+    type: `GET`,
     success: function(data) {
       try {
         data = JSON.parse(data);
