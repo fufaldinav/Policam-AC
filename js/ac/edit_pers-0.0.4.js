@@ -32,7 +32,7 @@ function updatePersInfo() {
     alert(`Введены не все данные`);
   } else {
     $.ajax({
-      url: `/index.php/ac/update_pers`,
+      url: `/index.php/db/update_pers`,
       type: `POST`,
       data: {
         data: JSON.stringify(pers)
@@ -63,7 +63,7 @@ function deletePers() {
     return;
   }
   $.ajax({
-		url: `/index.php/ac/delete_pers`,
+		url: `/index.php/db/delete_pers`,
 		type: `POST`,
 		data: {
       pers: pers.id
@@ -118,7 +118,7 @@ function deletePers() {
 //получение данных пользователя из БД
 function getPersData(pers_id) {
   $.ajax({
-    url: '/index.php/ac/get_pers',
+    url: '/index.php/db/get_pers',
     type: 'POST',
     data: {
       pers: pers_id
@@ -171,7 +171,7 @@ function getPersData(pers_id) {
 //получение списка карт (брелоков) от сервера
 function getCardsByPers(pers_id) {
   $.ajax({
-    url: '/index.php/ac/get_cards_by_pers',
+    url: '/index.php/db/get_cards_by_pers',
     type: 'POST',
     data: {
       holder_id: pers_id
@@ -212,7 +212,7 @@ function getCardsByPers(pers_id) {
 function saveCard(card) {
   //отправим JSON
 	$.ajax({
-		url: `/index.php/ac/add_card`,
+		url: `/index.php/db/add_card`,
 		type: `POST`,
 		data: {
 			card: card,
@@ -245,7 +245,7 @@ function delCard(id) {
   }
   //отправим JSON
 	$.ajax({
-		url: `/index.php/ac/delete_card`,
+		url: `/index.php/db/delete_card`,
 		type: `POST`,
 		data: { card: id },
 		success: function(res) {

@@ -31,7 +31,7 @@ function savePersInfo() {
     alert(`Введены не все данные`);
   } else {
     $.ajax({
-  		url: `/index.php/ac/save_pers`,
+  		url: `/index.php/db/save_pers`,
   		type: `POST`,
   		data: {
         data: JSON.stringify(pers)

@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function() {
 //получение времени от сервера
 function getServerTime() {
   $.ajax({
-    url: '/index.php/ac/get_time',
+    url: '/index.php/util/get_time',
     type: 'GET',
     success: function(data) {
       try {
@@ -27,7 +27,7 @@ function getServerTime() {
 //получение сообщений из БД
 function getNewMsgs(events, time) {
   $.ajax({
-    url: '/index.php/ac/get_events',
+    url: '/index.php/util/get_events',
     type: 'POST',
     data: {
       events: events,

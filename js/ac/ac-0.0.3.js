@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function() {
 //получение времени от сервера
 function getServerTime() {
   $.ajax({
-    url: '/index.php/ac/get_time',
+    url: '/index.php/util/get_time',
     success: function(data) {
       time = data;
     },
@@ -19,7 +19,7 @@ function getServerTime() {
 //получение сообщений от сервера
 function getNewMsgs(events, time) {
   $.ajax({
-    url: '/index.php/ac/get_events',
+    url: '/index.php/util/get_events',
     type: 'POST',
     data: {
       events: events,
@@ -50,7 +50,7 @@ function getNewMsgs(events, time) {
 //получение данных пользователя из БД
 function setPersData(card) {
   $.ajax({
-    url: '/index.php/ac/get_pers',
+    url: '/index.php/db/get_pers',
     type: 'POST',
     data: {
       card: card
@@ -95,11 +95,9 @@ function toggleMenu() {
   }
 }
 
-//запрос списка классов
-//получение данных пользователя из БД
 function getClasses(menu) {
   $.ajax({
-    url: '/index.php/ac/get_classes',
+    url: '/index.php/db/get_classes',
     type: 'GET',
     success: function(data) {
       try {

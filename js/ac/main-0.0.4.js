@@ -1,7 +1,7 @@
 //сохранить ошибку на сервере
 function sendError(message) {
   $.ajax({
-    url: `/index.php/ac/save_js_errors`,
+    url: `/index.php/util/save_js_errors`,
     type: `POST`,
     data: {
       data: message
@@ -13,7 +13,7 @@ function sendError(message) {
 function getCards(id) {
   let card = document.getElementById(`card`);
   $.ajax({
-    url: `/index.php/ac/get_cards`,
+    url: `/index.php/db/get_cards`,
     type: `GET`,
     success: function(data) {
       try {
@@ -57,7 +57,7 @@ function handleFiles(files) {
   formData.append(`file`, files[0]);
   //отправим JSON
 	$.ajax({
-		url: `/index.php/ac/save_photo`,
+		url: `/index.php/util/save_photo`,
 		type: `POST`,
     method: `POST`,
     contentType: false,
@@ -93,7 +93,7 @@ function deletePhoto() {
     return;
   }
   $.ajax({
-		url: `/index.php/ac/delete_photo`,
+		url: `/index.php/util/delete_photo`,
 		type: `POST`,
 		data: {
       id: pers.id,
