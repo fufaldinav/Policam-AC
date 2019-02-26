@@ -23,6 +23,11 @@ body {
 #main {
 	grid-area: main;
 }
+.main-grid-container {
+  display: grid;
+  grid-template-columns: 20% 80%;
+  grid-template-rows: 100%;
+}
 #header {
 	grid-area: header;
 }
@@ -65,18 +70,6 @@ body {
   height: 100%;
   overflow-y: auto;
 }
-a.nav:link, a.nav:visited {
-	box-shadow: 0 1px 0 0 #d7d8db, 0 0 0 1px #e3e4e8;
-  background-color: #8ae0f2;
-  color: black;
-  padding: 5px 10px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-}
-a.nav:hover, a.nav:active {
-  background-color: #00d2ff;
-}
 .photo {
 	height: 100%;
 	max-height: 320px;
@@ -114,24 +107,6 @@ a.nav:hover, a.nav:active {
 #school {
 	font-weight: bold;
 	font-size: 20px;
-}
-button, input, select {
-	font-size: 20px;
-	background-color : #8ae0f2;
-	border: 0;
-	padding: 1px 5px;
-}
-input, select {
-	font-style: italic;
-}
-input.no-data {
-	background-color : #f13934;
-}
-.submit {
-	font-style: normal;
-}
-button:hover, input:hover, select:hover {
-	background-color: #00d2ff;
 }
 #info {
 	height: 100%;
@@ -172,4 +147,46 @@ button:hover, input:hover, select:hover {
 }
 #info-button2 {
 	justify-self: start;
+}
+.menu-item {
+	margin: 4px 4px;
+	padding: 5px 5px;
+	text-align: center;
+	font-size: 16px;
+}
+.menu-item:hover {
+	cursor: pointer;
+}
+a.nav:link, a.nav:visited {
+	margin: 0 1px;
+  padding: 5px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+button, input, select {
+	font-size: 20px;
+	border: 0;
+	padding: 1px 5px;
+}
+.menu-item, a.nav:link, a.nav:visited, button, input, select {
+	background-color: #8ae0f2;
+	box-shadow: 0 1px 0 0 #d7d8db, 0 0 0 1px #e3e4e8;
+  color: black;
+}
+.menu-item:hover, a.nav:hover, a.nav:active, button:hover, input:hover, select:hover {
+	background-color: #00d2ff;
+	box-shadow: 0 1px 0 0 #008cff, 0 0 0 1px #008cff;
+}
+input, select {
+	font-style: italic;
+}
+input.no-data {
+	background-color : #f13934;
+}
+input.submit {
+	font-style: normal;
+}
+button:hover {
+	cursor: pointer;
 }
