@@ -17,20 +17,24 @@ function getCards(id) {
     type: `GET`,
     success: function(data) {
       try {
-        data = JSON.parse(data);
-        while (card.length > 0) { //удалить все элементы из меню карт
-         card.remove(card.length - 1);
-        }
-        if (data.length == 0) { //если нет неизвестных карт
-         _addOption(card, 0, `Отсутствует`);
-         } else { //иначе заполним меню картами
-           _addOption(card, 0, `Не выбрана`); //первый пункт
-           data.forEach(function(c) {
-             _addOption(card, c.id, c.wiegand);
-            });
-        }
-        if (id) { //если передавали id, то установим карту как текущую
-         card.value = id;
+        if (data) {
+          data = JSON.parse(data);
+          while (card.length > 0) { //удалить все элементы из меню карт
+           card.remove(card.length - 1);
+          }
+          if (data.length == 0) { //если нет неизвестных карт
+           _addOption(card, 0, `Отсутствует`);
+           } else { //иначе заполним меню картами
+             _addOption(card, 0, `Не выбрана`); //первый пункт
+             data.forEach(function(c) {
+               _addOption(card, c.id, c.wiegand);
+              });
+          }
+          if (id) { //если передавали id, то установим карту как текущую
+           card.value = id;
+          }
+        } else {
+          alert(`Пустой ответ от сервера`);
         }
       } catch(e) {
         sendError(e);

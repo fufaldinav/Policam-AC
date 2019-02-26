@@ -47,9 +47,13 @@ function save(id) {
       school: id
 		},
 		success: function(res) {
-      let c = JSON.parse(res);
-			alert(`Класс ${c.number} "${c.letter}" успешно сохранен`);
-      location.reload();
+      if (res) {
+        let c = JSON.parse(res);
+  			alert(`Класс ${c.number} "${c.letter}" успешно сохранен`);
+        location.reload();
+      } else {
+        alert(`Пустой ответ от сервера`);
+      }
 		},
     error: function() {
      alert(`Неизвестная ошибка`);

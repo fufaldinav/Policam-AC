@@ -45,7 +45,7 @@ function savePersInfo() {
             alert(`Пользователь №${res} успешно сохранен`);
             clearPersInfo();
           } else {
-            alert(`Неизвестная ошибка`);
+            alert(`Пустой ответ от сервера`);
           }
         } catch(e) {
           sendError(e);

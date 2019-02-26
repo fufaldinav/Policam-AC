@@ -43,7 +43,7 @@ function updatePersInfo() {
             getCardsByPers(res);
             alert(`Пользователь №${res} успешно сохранен`);
           } else {
-            alert(`Неизвестная ошибка`);
+            alert(`Пустой ответ от сервера`);
           }
         } catch(e) {
           sendError(e);
@@ -102,7 +102,7 @@ function deletePers() {
           document.getElementById(`delete`).onclick = function() { return false; };
           alert(`Пользователь №${res} успешно удален`);
         } else {
-          alert(`Неизвестная ошибка`);
+          alert(`Пустой ответ от сервера`);
         }
       } catch(e) {
         sendError(e);
@@ -155,7 +155,7 @@ function getPersData(pers_id) {
           document.getElementById(`delete`).onclick = deletePers;
           getCardsByPers(pers.id);
         } else {
-          alert(`Неизвестная ошибка`);
+          alert(`Пустой ответ от сервера`);
         }
       } catch(e) {
         sendError(e);

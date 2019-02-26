@@ -27,15 +27,19 @@ function getNewMsgs(events, time) {
     },
     success: function(data) {
       try {
-        data = JSON.parse(data);
-        time = data.time;
-        if (data.msgs.length > 0) {
-          let card = data.msgs[data.msgs.length - 1].card_id; //последний прочитанный ключ из БД
-          setPersData(card);
+        if (data) {
+          data = JSON.parse(data);
+          time = data.time;
+          if (data.msgs.length > 0) {
+            let card = data.msgs[data.msgs.length - 1].card_id; //последний прочитанный ключ из БД
+            setPersData(card);
+          }
+          setTimeout(function() {
+            getNewMsgs(events, time);
+          }, 10);
+        } else {
+          alert(`Пустой ответ от сервера`);
         }
-        setTimeout(function() {
-          getNewMsgs(events, time);
-        }, 10);
       } catch(e) {
         sendError(e);
         alert(`Ошибка: ${e.name}: ${e.message}`);
@@ -57,8 +61,8 @@ function setPersData(card) {
     },
     success: function(data) {
       try {
-        data = JSON.parse(data);
         if (data) {
+          data = JSON.parse(data);
           Object.keys(data).map(function(k) { //перебор полученных данных
             if (document.getElementById(k)) {
               document.getElementById(k).value = data[k];
@@ -69,6 +73,8 @@ function setPersData(card) {
             data.photo = `0`;
           }
           photo.style.backgroundImage = 'url(/img/ac/s/' + data.photo + '.jpg)';
+        } else {
+          alert(`Пустой ответ от сервера`);
         }
       } catch(e) {
         sendError(e);
