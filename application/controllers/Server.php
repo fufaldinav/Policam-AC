@@ -28,7 +28,7 @@ class Server extends CI_Controller {
 		$json_array = json_decode($json_message, TRUE);
 
 		//запрос контроллера по серийнику из БД
-		$query = $this->db->get_where('controllers', Array('sn' => $json_array['sn']), 1, 0);
+		$query = $this->db->get_where('controllers', [ 'sn' => $json_array['sn'] ], 1, 0);
 
 		//поиск контроллера в базе
 		if ($query->num_rows() > 0) {
@@ -37,9 +37,7 @@ class Server extends CI_Controller {
 			$c_id = $query->row()->id;
 
 			//время последнего соединения контроллера
-			$data = Array(
-							'last_conn' => $time
-			);
+			$data = [ 'last_conn' => $time ];
 			$this->db->where('id', $c_id);
 			$this->db->update('controllers', $data);
 		}
@@ -84,11 +82,11 @@ class Server extends CI_Controller {
 				$json_data['messages'][] = $m;
 
 				//запишем ip-адресс контролера
-				$data = Array(
-								'fw' => $json_m['fw'],
-								'conn_fw' => $json_m['conn_fw'],
-								'ip' => $json_m['controller_ip']
-				);
+				$data =	[
+									'fw' => $json_m['fw'],
+									'conn_fw' => $json_m['conn_fw'],
+									'ip' => $json_m['controller_ip']
+								];
 				$this->db->where('id', $c_id);
 				$this->db->update('controllers', $data);
 			}
@@ -96,7 +94,7 @@ class Server extends CI_Controller {
 			elseif ($json_m['operation'] == 'check_access') {
 				$m['id'] = $json_m['id'];
 				$m['operation'] = 'check_access';
-				$query = $this->db->get_where('cards', Array('wiegand' => $json_m['card']), 1, 0);
+				$query = $this->db->get_where('cards', [ 'wiegand' => $json_m['card'] ], 1, 0);
 
 				if ($query->num_rows() > 0) {
 					$card_id = $query->row()->id;
@@ -113,12 +111,12 @@ class Server extends CI_Controller {
 					$this->_set_card_last_conn($card_id, $c_id);
 
 				}	else {
-					$data = Array(
-									'wiegand' => $json_m['card'],
-									'last_conn' => $time,
-									'controller_id' => $c_id,
-									'holder_id' => -1
-					);
+					$data =	[
+										'wiegand' => $json_m['card'],
+										'last_conn' => $time,
+										'controller_id' => $c_id,
+										'holder_id' => -1
+									];
 					$this->db->insert('cards', $data);
 					$data['id'] = $this->db->insert_id();
 
@@ -135,14 +133,14 @@ class Server extends CI_Controller {
 			//события на контроллере
 			elseif ($json_m['operation'] == 'events') {
 				$event_count = 0;
-				$event_data = Array();
+				$event_data = [];
 
 				//чтение событий
 				foreach ($json_m['events'] as $event) {
 					$event_time = DateTime::createFromFormat('Y-m-d H:i:s', $event['time']);
 					$event_time = $event_time->getTimestamp();
 
-					$query = $this->db->get_where('cards', Array('wiegand' => $event['card']), 1, 0);
+					$query = $this->db->get_where('cards', [ 'wiegand' => $event['card'] ], 1, 0);
 					//проверяем наличие карты в БД
 					if ($query->num_rows() > 0) {
 						$card_id = $query->row()->id;
@@ -153,39 +151,27 @@ class Server extends CI_Controller {
 					} else {
 						$card_holder_id = -1;
 
-						$data = Array(
-										'wiegand' => $event['card'],
-										'last_conn' => $time,
-										'controller_id' => $c_id,
-										'holder_id' => $card_holder_id
-						);
+						$data = [
+											'wiegand' => $event['card'],
+											'last_conn' => $time,
+											'controller_id' => $c_id,
+											'holder_id' => $card_holder_id
+										];
 						$this->db->insert('cards', $data);
 
 						$card_id = $this->db->insert_id();
 
 					}
 
-					$client_data = Array(
-						'controller_id' => $c_id,
-						'event' => $event['event'],
-						'flag' => $event['flag'],
-						'time' => $event_time,
-						'server_time' => now('Asia/Yekaterinburg'),
-						'card_id' => $card_id
-					);
+					$client_data =	[
+														'controller_id' => $c_id,
+														'event' => $event['event'],
+														'flag' => $event['flag'],
+														'time' => $event_time,
+														'server_time' => now('Asia/Yekaterinburg'),
+														'card_id' => $card_id
+													];
 					$event_data[] = $client_data;
-
-					/*if ($event['event'] == 0 || $event['event'] == 1 || $event['event'] == 4 || $event['event'] == 5) {//TODO проверить эвент
-						$this->db->where('cards.id', $card_id);
-						$this->db->from('cards');
-						$this->db->join('personal', 'personal.id = cards.holder_id', 'left');
-						$query = $this->db->get();
-
-						$this->_send_data(Array(
-							'event' => $client_data,
-							'user' => $query->row()
-						), 2);
-					}*/
 
 					$event_count++;
 				}
@@ -248,18 +234,6 @@ class Server extends CI_Controller {
 		write_file($path, $message, 'a');
 	}
 
-	/*private function _send_data($data, $msg_type = 0, $user_id = 0)	{
-		//$client = new Client("ws://192.168.1.9:8081/ws");
-		//$client->send(json_encode($data));
-		$sql_data = Array(
-			'user_id' => $user_id,
-			'time' => now('Asia/Yekaterinburg'),
-			'msg_type' => $msg_type,
-			'json' => json_encode($data)
-		);
-		$this->db->insert('messages', $sql_data);
-	}*/
-
 	private function _set_card_last_conn($card_id, $c_id) {
 		$data = Array(
 						'last_conn' => now('Asia/Yekaterinburg'),
@@ -268,23 +242,4 @@ class Server extends CI_Controller {
 		$this->db->where('id', $card_id);
 		$this->db->update('cards', $data);
 	}
-
-	/*private function _wiegand_to_EM($str)
-	{
-		$a = hexdec(substr($str, -6, 2)); //000000>>AB<<ABAB -->> 171
-		$b = hexdec(substr($str, -4)); //000000AB>>ABAB<< -->> 43947
-
-		$a = _charAdd($a, 3); //171 -->> '171'
-		$b = _charAdd($a, 6); //43947 -->> '043947'
-
-		return $a.','.$b;
-	}
-
-	private function _char_add($str, $l)
-	{
-		while (strlen($str) < $l) {
-			$str = substr_replace($str, '0', 0);
-		}
-		return $str;
-	}*/
 }
