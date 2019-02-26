@@ -379,6 +379,17 @@ class Ac_model extends CI_Model {
 		return $this->add_task('clear_cards', $controller_id, $data);
 	}
 
+	public function set_door_params($controller_id, $open_time, $open_control = 0, $close_control = 0) {
+		$data = '"open":';
+		$data .= $open_time;
+		$data .= ',"open_control":';
+		$data .= $open_control;
+		$data .= ',"close_control":';
+		$data .= $close_control;
+		
+		return $this->add_task('set_door_params', $controller_id, $data);
+	}
+
 	public function add_task($operation, $controller_id, $data = NULL) {
 		$id = mt_rand(500000,999999999);
 

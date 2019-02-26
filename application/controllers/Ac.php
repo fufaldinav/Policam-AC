@@ -754,5 +754,21 @@ class Ac extends CI_Controller {
 		}
 	}
 
+	public function door($controller_id = NULL, $open_time = NULL) {
+		if (!$this->ion_auth->logged_in()) {
+			redirect('auth/login');
+		}
+		if (!$this->ion_auth->is_admin()) {
+			echo 'Нужно быть администратором';
+			return;
+		}
+		if ($controller_id) {
+			echo $this->ac_model->set_door_params($controller_id, $open_time);
+			echo ' заданий записано';
+		} else {
+			echo 'Не выбран контроллер';
+		}
+	}
+
 }
 ?>
