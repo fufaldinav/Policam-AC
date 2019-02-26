@@ -1,16 +1,15 @@
 let events = [2, 3]; //где 2,3 - события запрещенного входа/выхода
-let pers =	{
-				'f': null,
-				'i': null,
-				'o': null,
-				'photo': null,
-				'class': null,
-				'birthday': null,
-				'address': null,
-				'phone': null,
-				'card': null
-			}
-
+let pers = {
+	'f': null,
+	'i': null,
+	'o': null,
+	'photo': null,
+	'class': null,
+	'birthday': null,
+	'address': null,
+	'phone': null,
+	'card': null
+}
 //обновление информации пользователя в БД
 function updatePersInfo() {
 	let checkValidity = true;
@@ -56,7 +55,6 @@ function updatePersInfo() {
 		});
 	}
 }
-
 //удаление пользователя из БД
 function deletePers() {
 	if (!confirm(`Подтвердите удаление.`)) {
@@ -114,7 +112,6 @@ function deletePers() {
 		}
 	});
 }
-
 //получение данных пользователя из БД
 function getPersData(pers_id) {
 	$.ajax({
@@ -167,7 +164,6 @@ function getPersData(pers_id) {
 		}
 	});
 }
-
 //получение списка карт (брелоков) от сервера
 function getCardsByPers(pers_id) {
 	$.ajax({
@@ -207,10 +203,8 @@ function getCardsByPers(pers_id) {
 		}
 	});
 }
-
 //добавление карты в БД
 function saveCard(card) {
-	//отправим JSON
 	$.ajax({
 		url: `/index.php/db/add_card`,
 		type: `POST`,
@@ -227,8 +221,8 @@ function saveCard(card) {
 					alert(`Неизвестная ошибка`);
 				}
 			} catch(e) {
-			sendError(e);
-			alert(`Ошибка: ${e.name}: ${e.message}`);
+				sendError(e);
+				alert(`Ошибка: ${e.name}: ${e.message}`);
 			}
 		},
 		error: function() {
@@ -236,7 +230,6 @@ function saveCard(card) {
 		}
 	});
 }
-
 //удаление карты из БД
 function delCard(id) {
 	if (!confirm(`Подтвердите удаление.`)) {
@@ -249,33 +242,33 @@ function delCard(id) {
 			card: id
 		},
 		success: function(res) {
-		try {
-			if (res == `ok`) {
-				let card = document.getElementById(`card${id}`);
-				card.remove(); //удалим карту из списка привязанных
-				let cardsHtml = document.getElementById(`cards`).innerHTML;
-				cardsHtml = (cardsHtml.trim) ? cardsHtml.trim() : cardsHtml.replace(/^\s+/,``);
-				if (cardsHtml == ``) { //если список привязанных карт пуст, то отобразим и включим меню и запросим неизвеснтые карты
-					document.getElementById(`card_selector`).hidden = false;
-					document.getElementById(`card`).disabled = false;
-					getCards();
-					let li = document.getElementById(`pers${pers.id}`); //удалим у пользователя метку наличия ключей
-					let c = li.querySelector(`.tree-content`);
-					if (c.innerHTML.indexOf(`(+) `) == 0) {
-						c.innerHTML = c.innerHTML.substring(4);
+			try {
+				if (res == `ok`) {
+					let card = document.getElementById(`card${id}`);
+					card.remove(); //удалим карту из списка привязанных
+					let cardsHtml = document.getElementById(`cards`).innerHTML;
+					cardsHtml = (cardsHtml.trim) ? cardsHtml.trim() : cardsHtml.replace(/^\s+/,``);
+					if (cardsHtml == ``) { //если список привязанных карт пуст, то отобразим и включим меню и запросим неизвеснтые карты
+						document.getElementById(`card_selector`).hidden = false;
+						document.getElementById(`card`).disabled = false;
+						getCards();
+						let li = document.getElementById(`pers${pers.id}`); //удалим у пользователя метку наличия ключей
+						let c = li.querySelector(`.tree-content`);
+						if (c.innerHTML.indexOf(`(+) `) == 0) {
+							c.innerHTML = c.innerHTML.substring(4);
+						}
 					}
+					alert(`Ключ успешно отвязан`);
+				} else {
+					alert(`Неизвестная ошибка`);
 				}
-				alert(`Ключ успешно отвязан`);
-			} else {
-				alert(`Неизвестная ошибка`);
+			} catch(e) {
+				sendError(e);
+				alert(`Ошибка: ${e.name}: ${e.message}`);
 			}
-		} catch(e) {
-			sendError(e);
-			alert(`Ошибка: ${e.name}: ${e.message}`);
-		}
 		},
 		error: function() {
-		alert(`Неизвестная ошибка`);
+			alert(`Неизвестная ошибка`);
 		}
 	});
 }
