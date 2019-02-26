@@ -115,28 +115,17 @@ a.nav:hover, a.nav:active {
 	font-weight: bold;
 	font-size: 20px;
 }
-button {
+button, input, select {
 	font-size: 20px;
 	background-color : #8ae0f2;
 	border: 0;
 	padding: 1px 5px;
 }
-input {
+input, select {
 	font-style: italic;
-	font-size: 20px;
-	background-color : #8ae0f2;
-	border: 0;
-	padding: 1px 5px;
 }
 input.no-data {
 	background-color : #f13934;
-}
-select {
-	font-style: italic;
-	font-size: 20px;
-	background-color : #8ae0f2;
-	border: 0;
-	padding: 1px 5px;
 }
 .submit {
 	font-style: normal;
