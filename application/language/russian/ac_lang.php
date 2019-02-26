@@ -25,3 +25,6 @@ $lang['developed'] = 'Разработано';
 $lang['missing'] = 'Отсутствует';
 $lang['not_selected'] = 'Не выбрана';
 $lang['entrance_wo_card'] = 'Вход без карты';
+$lang['registred'] = 'Событие зарегистрировано';
+$lang['and'] = 'и';
+$lang['card_deleted'] = 'карта удалена';

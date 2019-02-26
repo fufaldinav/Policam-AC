@@ -1,7 +1,7 @@
 //сохранить ошибку на сервере
 function sendError(message) {
   $.ajax({
-    url: `/index.php/ac/save_js_errors`,
+    url: `/index.php/util/save_js_errors`,
     type: `POST`,
     data: {
       data: message
@@ -13,24 +13,28 @@ function sendError(message) {
 function getCards(id) {
   let card = document.getElementById(`card`);
   $.ajax({
-    url: `/index.php/ac/get_cards`,
+    url: `/index.php/db/get_cards`,
     type: `GET`,
     success: function(data) {
       try {
-        data = JSON.parse(data);
-        while (card.length > 0) { //удалить все элементы из меню карт
-         card.remove(card.length - 1);
-        }
-        if (data.length == 0) { //если нет неизвестных карт
-         _addOption(card, 0, `Отсутствует`);
-         } else { //иначе заполним меню картами
-           _addOption(card, 0, `Не выбрана`); //первый пункт
-           data.forEach(function(c) {
-             _addOption(card, c.id, c.wiegand);
-            });
-        }
-        if (id) { //если передавали id, то установим карту как текущую
-         card.value = id;
+        if (data) {
+          data = JSON.parse(data);
+          while (card.length > 0) { //удалить все элементы из меню карт
+           card.remove(card.length - 1);
+          }
+          if (data.length == 0) { //если нет неизвестных карт
+           _addOption(card, 0, `Отсутствует`);
+           } else { //иначе заполним меню картами
+             _addOption(card, 0, `Не выбрана`); //первый пункт
+             data.forEach(function(c) {
+               _addOption(card, c.id, c.wiegand);
+              });
+          }
+          if (id) { //если передавали id, то установим карту как текущую
+           card.value = id;
+          }
+        } else {
+          alert(`Пустой ответ от сервера`);
         }
       } catch(e) {
         sendError(e);
@@ -57,7 +61,7 @@ function handleFiles(files) {
   formData.append(`file`, files[0]);
   //отправим JSON
 	$.ajax({
-		url: `/index.php/ac/save_photo`,
+		url: `/index.php/util/save_photo`,
 		type: `POST`,
     method: `POST`,
     contentType: false,
@@ -93,7 +97,7 @@ function deletePhoto() {
     return;
   }
   $.ajax({
-		url: `/index.php/ac/delete_photo`,
+		url: `/index.php/util/delete_photo`,
 		type: `POST`,
 		data: {
       id: pers.id,

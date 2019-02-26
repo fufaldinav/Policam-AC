@@ -12,6 +12,23 @@ class Ac_model extends CI_Model {
 		}
 	}
 
+
+	public function get_pers($pers_id) {
+		$this->db->select('address, birthday, f, i, o, phone');
+		$this->db->select('personal.id AS \'id\'');
+		$this->db->select('class_id AS \'class\'');
+		$this->db->select('photo.hash AS \'photo\'');
+		$this->db->where('personal.id', $pers_id);
+		$this->db->join('photo', 'photo.id = personal.photo_id', 'left');
+		$query = $this->db->get('personal');
+
+		if ($query->num_rows() > 0) {
+			return $query->row();
+		} else {
+			return NULL;
+		}
+	}
+
 	public function get_school_by_user($user_id) {
 		$this->db->where('users.id', $user_id);
 		$this->db->join('schools', 'schools.id = users.school_id', 'inner');
@@ -39,6 +56,21 @@ class Ac_model extends CI_Model {
 		} else {
 			return FALSE;
 		}
+	}
+
+	public function get_personal_by_class($class_id, $full_info = FALSE) {
+			if ($full_info === TRUE) {
+				$select = '*';
+			} else {
+				$select = 'f, i, o';
+			}
+			$this->db->select($select);
+			$this->db->select('personal.id AS "id"');
+			$this->db->join('personal', 'personal.class_id = classes.id', 'left');
+			$this->db->where('classes.id', $class_id);
+			$query = $this->db->get('classes');
+
+			return $query->result();
 	}
 
 	public function get_class_by_id($class_id) {
@@ -136,10 +168,30 @@ class Ac_model extends CI_Model {
 		$wiegand = $query->row()->wiegand;
 
 		foreach ($controllers as $c) {
-			$this->add_cards_to_controller($wiegand, $c);
+			$this->add_cards_to_controller($wiegand, $c->id);
 		}
 
 		return TRUE;
+	}
+
+	public function delete_card($card_id) {
+		$school_id = $this->ac_model->get_school_by_user($this->user_id)->school_id;
+		$controllers = $this->ac_model->get_controllers_by_school($school_id);
+
+		$this->db->where('id', $card_id);
+		$wiegand = $this->db->get('cards')->row()->wiegand;
+
+		$this->db->where('id', $card_id);
+		$this->db->update('cards', ['holder_id' => -1]);
+
+		if ($this->db->affected_rows()) {
+			foreach ($controllers as $c) {
+				$this->ac_model->del_cards_from_controller($wiegand, $c->id);
+			}
+			return TRUE;
+		} else {
+			return NULL;
+		}
 	}
 
 	public function start_polling() {
@@ -351,7 +403,7 @@ class Ac_model extends CI_Model {
 		} else {
 			$data .= '{"card":"';
 			$data .= $cards;
-			$data .= '"}';
+			$data .= '","flags":32,"tz":255}';
 		}
 		$data .= ']';
 		return $this->add_task('add_cards', $controller_id, $data);
@@ -377,6 +429,17 @@ class Ac_model extends CI_Model {
 
 	public function clear_cards($controller_id) {
 		return $this->add_task('clear_cards', $controller_id, $data);
+	}
+
+	public function set_door_params($controller_id, $open_time, $open_control = 0, $close_control = 0) {
+		$data = '"open":';
+		$data .= $open_time;
+		$data .= ',"open_control":';
+		$data .= $open_control;
+		$data .= ',"close_control":';
+		$data .= $close_control;
+
+		return $this->add_task('set_door_params', $controller_id, $data);
 	}
 
 	public function add_task($operation, $controller_id, $data = NULL) {
@@ -420,5 +483,18 @@ class Ac_model extends CI_Model {
 		} else {
 			return NULL;
 		}
+	}
+
+	public function add_user_event($type, $desc) {
+		$data =	[
+								'user_id' => $this->user_id,
+								'type' => $type,
+								'description' => $desc,
+								'time' => now('Asia/Yekaterinburg')
+						];
+
+		$this->db->insert('users_events', $data);
+
+		return $this->db->affected_rows();
 	}
 }

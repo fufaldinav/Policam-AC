@@ -6,7 +6,7 @@ function del(id) {
   }
   //отправим JSON
 	$.ajax({
-		url: `/index.php/ac/delete_class`,
+		url: `/index.php/db/delete_class`,
 		type: `POST`,
 		data: { class: id },
 		success: function(res) {
@@ -39,7 +39,7 @@ function save(id) {
 
   //отправим JSON
 	$.ajax({
-		url: `/index.php/ac/save_class`,
+		url: `/index.php/db/save_class`,
 		type: `POST`,
 		data: {
       number: number,
@@ -47,9 +47,13 @@ function save(id) {
       school: id
 		},
 		success: function(res) {
-      let c = JSON.parse(res);
-			alert(`Класс ${c.number} "${c.letter}" успешно сохранен`);
-      location.reload();
+      if (res) {
+        let c = JSON.parse(res);
+  			alert(`Класс ${c.number} "${c.letter}" успешно сохранен`);
+        location.reload();
+      } else {
+        alert(`Пустой ответ от сервера`);
+      }
 		},
     error: function() {
      alert(`Неизвестная ошибка`);

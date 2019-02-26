@@ -25,7 +25,7 @@ class Server extends CI_Controller {
 		$json_data['interval'] = 10; //интервал обновления данных
 		$json_data['messages'] = [];
 
-		$json_array = json_decode($json_message, true);
+		$json_array = json_decode($json_message, TRUE);
 
 		//запрос контроллера по серийнику из БД
 		$query = $this->db->get_where('controllers', Array('sn' => $json_array['sn']), 1, 0);
@@ -47,7 +47,7 @@ class Server extends CI_Controller {
 			$path = '/var/www/logs';
 
 			if (!is_dir($path)) {
-				mkdir($path, 0777, true);
+				mkdir($path, 0777, TRUE);
 			}
 
 			$path .= '/inc-';
@@ -210,7 +210,7 @@ class Server extends CI_Controller {
 		$path = '/var/www/logs';
 
 		if (!is_dir($path)) {
-			mkdir($path, 0777, true);
+			mkdir($path, 0777, TRUE);
 		}
 
 		$path .= '/inc-';
@@ -230,7 +230,7 @@ class Server extends CI_Controller {
 		$path = '/var/www/logs';
 
 		if (!is_dir($path)) {
-			mkdir($path, 0777, true);
+			mkdir($path, 0777, TRUE);
 		}
 
 		$path .= '/out-';

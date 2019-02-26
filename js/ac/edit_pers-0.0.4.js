@@ -32,7 +32,7 @@ function updatePersInfo() {
     alert(`Введены не все данные`);
   } else {
     $.ajax({
-      url: `/index.php/ac/update_pers`,
+      url: `/index.php/db/update_pers`,
       type: `POST`,
       data: {
         data: JSON.stringify(pers)
@@ -43,7 +43,7 @@ function updatePersInfo() {
             getCardsByPers(res);
             alert(`Пользователь №${res} успешно сохранен`);
           } else {
-            alert(`Неизвестная ошибка`);
+            alert(`Пустой ответ от сервера`);
           }
         } catch(e) {
           sendError(e);
@@ -63,7 +63,7 @@ function deletePers() {
     return;
   }
   $.ajax({
-		url: `/index.php/ac/delete_pers`,
+		url: `/index.php/db/delete_pers`,
 		type: `POST`,
 		data: {
       pers: pers.id
@@ -102,7 +102,7 @@ function deletePers() {
           document.getElementById(`delete`).onclick = function() { return false; };
           alert(`Пользователь №${res} успешно удален`);
         } else {
-          alert(`Неизвестная ошибка`);
+          alert(`Пустой ответ от сервера`);
         }
       } catch(e) {
         sendError(e);
@@ -118,8 +118,8 @@ function deletePers() {
 //получение данных пользователя из БД
 function getPersData(pers_id) {
   $.ajax({
-    url: '/index.php/ac/get_pers',
-    type: 'POST',
+    url: `/index.php/db/get_pers`,
+    type: `POST`,
     data: {
       pers: pers_id
     },
@@ -155,7 +155,7 @@ function getPersData(pers_id) {
           document.getElementById(`delete`).onclick = deletePers;
           getCardsByPers(pers.id);
         } else {
-          alert(`Неизвестная ошибка`);
+          alert(`Пустой ответ от сервера`);
         }
       } catch(e) {
         sendError(e);
@@ -171,8 +171,8 @@ function getPersData(pers_id) {
 //получение списка карт (брелоков) от сервера
 function getCardsByPers(pers_id) {
   $.ajax({
-    url: '/index.php/ac/get_cards_by_pers',
-    type: 'POST',
+    url: `/index.php/db/get_cards_by_pers`,
+    type: `POST`,
     data: {
       holder_id: pers_id
     },
@@ -188,7 +188,7 @@ function getCardsByPers(pers_id) {
             cards.innerHTML = cards.innerHTML + `<div id="card${c.id}">${c.wiegand} <button type="button" onclick="delCard(${c.id});">Отвязать</button><br /></div>`
        		});
           let li = document.getElementById(`pers${pers.id}`); //добавим пользователю метку наличия ключей
-          let c = li.querySelector('.tree-content');
+          let c = li.querySelector(`.tree-content`);
           if (c.innerHTML.indexOf(`(+) `) == -1) {
             c.innerHTML = `(+) ${c.innerHTML}`;
           }
@@ -212,7 +212,7 @@ function getCardsByPers(pers_id) {
 function saveCard(card) {
   //отправим JSON
 	$.ajax({
-		url: `/index.php/ac/add_card`,
+		url: `/index.php/db/add_card`,
 		type: `POST`,
 		data: {
 			card: card,
@@ -245,7 +245,7 @@ function delCard(id) {
   }
   //отправим JSON
 	$.ajax({
-		url: `/index.php/ac/delete_card`,
+		url: `/index.php/db/delete_card`,
 		type: `POST`,
 		data: { card: id },
 		success: function(res) {
@@ -254,13 +254,13 @@ function delCard(id) {
           let card = document.getElementById(`card${id}`);
           card.remove(); //удалим карту из списка привязанных
           let cardsHtml = document.getElementById(`cards`).innerHTML;
-          cardsHtml = (cardsHtml.trim) ? cardsHtml.trim() : cardsHtml.replace(/^\s+/,'');
+          cardsHtml = (cardsHtml.trim) ? cardsHtml.trim() : cardsHtml.replace(/^\s+/,``);
           if (cardsHtml == ``) { //если список привязанных карт пуст, то отобразим и включим меню и запросим неизвеснтые карты
             document.getElementById(`card_selector`).hidden = false;
             document.getElementById(`card`).disabled = false;
             getCards();
             let li = document.getElementById(`pers${pers.id}`); //удалим у пользователя метку наличия ключей
-            let c = li.querySelector('.tree-content');
+            let c = li.querySelector(`.tree-content`);
             if (c.innerHTML.indexOf(`(+) `) == 0) {
               c.innerHTML = c.innerHTML.substring(4);
             }
