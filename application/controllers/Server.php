@@ -36,7 +36,7 @@ class Server extends CI_Controller
 		$inc_messages = $decoded_msg['message'];
 
 		//запрос контроллера по серийнику из БД
-		$this->db->wher('sn', $sn);
+		$this->db->where('sn', $sn);
 		$query = $this->db->get('controllers');
 
 		//поиск контроллера в базе
