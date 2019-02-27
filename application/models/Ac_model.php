@@ -522,4 +522,14 @@ class Ac_model extends CI_Model
 
 		return $this->db->affected_rows();
 	}
+
+	public function set_card_last_conn($card_id, $controller_id)
+	{
+		$data = [
+			'last_conn' => now('Asia/Yekaterinburg'),
+			'controller_id' => $controller_id
+		];
+		$this->db->where('id', $card_id);
+		$this->db->update('cards', $data);
+	}
 }

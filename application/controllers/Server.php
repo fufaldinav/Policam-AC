@@ -1,8 +1,6 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-use WebSocket\Client;
-
 class Server extends CI_Controller
 {
 	public function __construct()
@@ -14,232 +12,185 @@ class Server extends CI_Controller
 
 	public function index()
 	{
+		$LOG_PATH = '/var/www/logs';
+
+		if (!is_dir($LOG_PATH)) {
+			mkdir($LOG_PATH, 0644, true);
+		}
+
 		$this->load->helper('file');
 		$this->load->helper('date');
 
-		$json_message = file_get_contents('php://input');
+		$inc_json_msg = file_get_contents('php://input');
+		$out_json_msg = [];
 
-		$datestring = '%Y-%m-%d %H:%i:%s';
 		$time = now('Asia/Yekaterinburg');
-		$json_data['date'] = mdate($datestring, $time);
-		$datestring = '%Y-%m-%d';
-		$date = mdate($datestring, $time);
-		$json_data['interval'] = 10; //интервал обновления данных
-		$json_data['messages'] = [];
+		$out_json_msg['date'] = mdate('%Y-%m-%d %H:%i:%s', $time);
+		$log_date = mdate('%Y-%m-%d', $time);
+		$out_json_msg['interval'] = 10;
+		$out_json_msg['messages'] = [];
 
-		$json_array = json_decode($json_message, TRUE);
+		$decoded_msg = json_decode($inc_json_msg, true);
+		$type = $decoded_msg['type'];
+		$sn = $decoded_msg['sn'];
+		$inc_messages = $decoded_msg['message'];
 
 		//запрос контроллера по серийнику из БД
-		$query = $this->db->get_where('controllers', Array('sn' => $json_array['sn']), 1, 0);
+		$this->db->wher('sn', $sn);
+		$query = $this->db->get('controllers');
 
 		//поиск контроллера в базе
 		if ($query->num_rows() > 0) {
 			$active = $query->row()->active;
 			$online = $query->row()->online;
-			$c_id = $query->row()->id;
+			$controller_id = $query->row()->id;
 
-			//время последнего соединения контроллера
 			$data = ['last_conn' => $time];
-			$this->db->where('id', $c_id);
+			$this->db->where('id', $controller_id);
 			$this->db->update('controllers', $data);
-		}
-		else {
-			$path = '/var/www/logs';
+		} else {
+			$path = "$LOG_PATH/inc-$log_date.txt";
 
-			if (!is_dir($path)) {
-				mkdir($path, 0777, TRUE);
-			}
+			write_file($path, "TYPE: $type || SN: $sn || Неизвестный контроллер\n", 'a');
 
-			$path .= '/inc-';
-			$path .= $date;
-			$path .= '.txt';
-
-			$message = 'TYPE: ';
-			$message .= $json_array['type'];
-			$message .= ' || SN: ';
-			$message .= $json_array['sn'];
-			$message .= ' || Неизвестный контроллер';
-			$message .= PHP_EOL;
-
-			write_file($path, $message, 'a');
 			return false;
 		}
 
 		header('Content-Type: application/json');
 
 		//чтение json сообщения
-		foreach ($json_array['messages'] as $json_m) {
+		foreach ($inc_messages as $inc_m) {
+			//
 			//простой ответ
-			if (!isset($json_m['operation']) && isset($json_m['success'])) {
-				if ($json_m['success'] == 1) {
-					$this->ac_model->del_task($json_m['id']);
+			//
+			if (!isset($inc_m['operation']) && isset($inc_m['success'])) {
+				if ($inc_m['success'] == 1) {
+					$this->ac_model->del_task($inc_m['id']);
 				}
 			}
+			//
 			//запуск контроллера
-			elseif ($json_m['operation'] == 'power_on') {
-				$m['id'] = 0;
-				$m['operation'] = 'set_active';
-				$m['active'] = $active;
-				$m['online'] = $online;
-				$json_data['messages'][] = $m;
+			//
+			elseif ($inc_m['operation'] == 'power_on') {
+				$out_m = [];
+				$out_m['id'] = 0;
+				$out_m['operation'] = 'set_active';
+				$out_m['active'] = $active;
+				$out_m['online'] = $online;
+				$out_json_msg['messages'][] = $out_m;
 
-				//запишем ip-адресс контролера
-				$data = Array(
-								'fw' => $json_m['fw'],
-								'conn_fw' => $json_m['conn_fw'],
-								'ip' => $json_m['controller_ip']
-				);
-				$this->db->where('id', $c_id);
+				$data = [
+					'fw' => $inc_m['fw'],
+					'conn_fw' => $inc_m['conn_fw'],
+					'ip' => $inc_m['controller_ip']
+				];
+				$this->db->where('id', $controller_id);
 				$this->db->update('controllers', $data);
 			}
+			//
 			//проверка доступа
-			elseif ($json_m['operation'] == 'check_access') {
-				$m['id'] = $json_m['id'];
-				$m['operation'] = 'check_access';
-				$query = $this->db->get_where('cards', ['wiegand' => $json_m['card']], 1, 0);
+			//
+			elseif ($inc_m['operation'] == 'check_access') {
+				$out_m['id'] = $inc_m['id']; //запись верна, т.к. ответ должен быть с тем же id
+				$out_m['operation'] = 'check_access';
+				$out_m['granted'] = 0;
+
+				$this->db->where('wiegand', $inc_m['card']);
+				$query = $this->db->get('cards');
 
 				if ($query->num_rows() > 0) {
 					$card_id = $query->row()->id;
 
-					if ($query->row()->holder_id == -1) {
-						$m['granted'] = 0;
-					//$this->_send_data($query->row(), 1);
-					} else {
-						$m['granted'] = 1;
+					if ($query->row()->holder_id != -1) {
+						$out_m['granted'] = 1;
 					}
 
-					$this->_set_card_last_conn($card_id, $c_id);
+					$this->ac_model->set_card_last_conn($card_id, $controller_id);
 				} else {
 					$data = [
-						'wiegand' => $json_m['card'],
+						'wiegand' => $inc_m['card'],
 						'last_conn' => $time,
-						'controller_id' => $c_id,
+						'controller_id' => $controller_id,
 						'holder_id' => -1
 					];
 					$this->db->insert('cards', $data);
-					$data['id'] = $this->db->insert_id();
-
-					$m['granted'] = 0;
-
-					//$this->_send_data($data, 1);
 				}
-				$json_data['messages'][] = $m;
+				$out_json_msg['messages'][] = $out_m;
 			}
+			//
 			//пинг от контроллера
-			elseif ($json_m['operation'] == 'ping') {
+			//
+			elseif ($inc_m['operation'] == 'ping') {
 				//do nothing
 			}
+			//
 			//события на контроллере
-			elseif ($json_m['operation'] == 'events') {
-				$event_count = 0;
-				$event_data = [];
+			//
+			elseif ($inc_m['operation'] == 'events') {
+				$events_count = 0;
+				$events = [];
 
 				//чтение событий
-				foreach ($json_m['events'] as $event) {
+				foreach ($inc_m['events'] as $event) {
 					$event_time = DateTime::createFromFormat('Y-m-d H:i:s', $event['time']);
 					$event_time = $event_time->getTimestamp();
 
-					$query = $this->db->get_where('cards', ['wiegand' => $event['card']], 1, 0);
+					$this->db->where('wiegand', $event['card']);
+					$query = $this->db->get('cards');
 					//проверяем наличие карты в БД
 					if ($query->num_rows() > 0) {
 						$card_id = $query->row()->id;
-						$card_holder_id = $query->row()->holder_id;
 
-						$this->_set_card_last_conn($card_id, $c_id);
+						$this->ac_model->set_card_last_conn($card_id, $controller_id);
 					} else {
-						$card_holder_id = -1;
-
 						$data = [
 							'wiegand' => $event['card'],
 							'last_conn' => $time,
-							'controller_id' => $c_id,
-							'holder_id' => $card_holder_id
+							'controller_id' => $controller_id,
+							'holder_id' => -1
 						];
 						$this->db->insert('cards', $data);
 
 						$card_id = $this->db->insert_id();
 					}
 
-					$client_data = [
-						'controller_id' => $c_id,
+					$events[] = [
+						'controller_id' => $controller_id,
 						'event' => $event['event'],
 						'flag' => $event['flag'],
 						'time' => $event_time,
-						'server_time' => now('Asia/Yekaterinburg'),
+						'server_time' => $time,
 						'card_id' => $card_id
 					];
-					$event_data[] = $client_data;
 
-					$event_count++;
+					$events_count++;
 				}
-				$this->db->insert_batch('events', $event_data);
+				$this->db->insert_batch('events', $events);
 
-				$m['id'] = $json_m['id'];
-				$m['operation'] = 'events';
-				$m['events_success'] = $event_count;
-				$json_data['messages'][] = $m;
+				$out_m['id'] = $inc_m['id'];
+				$out_m['operation'] = 'events';
+				$out_m['events_success'] = $events_count;
+				$out_json_msg['messages'][] = $out_m;
 			}
 		}
 
 		//запрос заданий из БД
-		$task = $this->ac_model->get_last_task($c_id);
+		$task = $this->ac_model->get_last_task($controller_id);
 
 		if ($task) {
-			$json_data['messages'][] = json_decode($task->json);
+			$out_json_msg['messages'][] = json_decode($task->json);
 		}
 
-		echo json_encode($json_data);
+		echo json_encode($out_json_msg);
 
-		$path = '/var/www/logs';
+		$path = "$LOG_PATH/inc-$log_date.txt";
+		write_file($path, "TYPE: $type || SN: $sn || $inc_json_msg\n", 'a');
 
-		if (!is_dir($path)) {
-			mkdir($path, 0777, TRUE);
-		}
-
-		$path .= '/inc-';
-		$path .= $date;
-		$path .= '.txt';
-
-		$message = 'TYPE: ';
-		$message .= $json_array['type'];
-		$message .= ' || SN: ';
-		$message .= $json_array['sn'];
-		$message .= ' || ';
-		$message .= $json_message;
-		$message .= PHP_EOL;
-
-		write_file($path, $message, 'a');
-
-		$path = '/var/www/logs';
-
-		if (!is_dir($path)) {
-			mkdir($path, 0777, TRUE);
-		}
-
-		$path .= '/out-';
-		$path .= $date;
-		$path .= '.txt';
-
-		$message = 'TYPE: ';
-		$message .= $json_array['type'];
-		$message .= ' || SN: ';
-		$message .= $json_array['sn'];
-		$message .= ' || ';
-		$message .= json_encode($json_data);
-		$message .= PHP_EOL;
-
-		write_file($path, $message, 'a');
+		$path = "$LOG_PATH/out-$log_date.txt";
+		write_file($path, "TYPE: $type || SN: $sn || json_encode($out_json_msg)\n", 'a');
 	}
 
-	private function _set_card_last_conn($card_id, $c_id)
-	{
-		$data = [
-			'last_conn' => now('Asia/Yekaterinburg'),
-			'controller_id' => $c_id
-		];
-		$this->db->where('id', $card_id);
-		$this->db->update('cards', $data);
-	}
+
 
 	/*private function _wiegand_to_EM($str)
 	{
