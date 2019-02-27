@@ -36,12 +36,8 @@ class Server extends CI_Controller
 		$inc_messages = $decoded_msg['message'];
 
 		//запрос контроллера по серийнику из БД
-<<<<<<< HEAD
-		$query = $this->db->get_where('controllers', [ 'sn' => $json_array['sn'] ], 1, 0);
-=======
 		$this->db->wher('sn', $sn);
 		$query = $this->db->get('controllers');
->>>>>>> test
 
 		//поиск контроллера в базе
 		if ($query->num_rows() > 0) {
@@ -49,14 +45,8 @@ class Server extends CI_Controller
 			$online = $query->row()->online;
 			$controller_id = $query->row()->id;
 
-<<<<<<< HEAD
-			//время последнего соединения контроллера
-			$data = [ 'last_conn' => $time ];
-			$this->db->where('id', $c_id);
-=======
 			$data = ['last_conn' => $time];
 			$this->db->where('id', $controller_id);
->>>>>>> test
 			$this->db->update('controllers', $data);
 		} else {
 			$path = "$LOG_PATH/inc-$log_date.txt";
@@ -80,22 +70,6 @@ class Server extends CI_Controller
 			}
 			//
 			//запуск контроллера
-<<<<<<< HEAD
-			elseif ($json_m['operation'] == 'power_on') {
-				$m['id'] = 0;
-				$m['operation'] = 'set_active';
-				$m['active'] = $active;
-				$m['online'] = $online;
-				$json_data['messages'][] = $m;
-
-				//запишем ip-адресс контролера
-				$data =	[
-									'fw' => $json_m['fw'],
-									'conn_fw' => $json_m['conn_fw'],
-									'ip' => $json_m['controller_ip']
-								];
-				$this->db->where('id', $c_id);
-=======
 			//
 			elseif ($inc_m['operation'] == 'power_on') {
 				$out_m = [];
@@ -111,17 +85,10 @@ class Server extends CI_Controller
 					'ip' => $inc_m['controller_ip']
 				];
 				$this->db->where('id', $controller_id);
->>>>>>> test
 				$this->db->update('controllers', $data);
 			}
 			//
 			//проверка доступа
-<<<<<<< HEAD
-			elseif ($json_m['operation'] == 'check_access') {
-				$m['id'] = $json_m['id'];
-				$m['operation'] = 'check_access';
-				$query = $this->db->get_where('cards', [ 'wiegand' => $json_m['card'] ], 1, 0);
-=======
 			//
 			elseif ($inc_m['operation'] == 'check_access') {
 				$out_m['id'] = $inc_m['id']; //запись верна, т.к. ответ должен быть с тем же id
@@ -130,7 +97,6 @@ class Server extends CI_Controller
 
 				$this->db->where('wiegand', $inc_m['card']);
 				$query = $this->db->get('cards');
->>>>>>> test
 
 				if ($query->num_rows() > 0) {
 					$card_id = $query->row()->id;
@@ -139,15 +105,6 @@ class Server extends CI_Controller
 						$out_m['granted'] = 1;
 					}
 
-<<<<<<< HEAD
-				}	else {
-					$data =	[
-										'wiegand' => $json_m['card'],
-										'last_conn' => $time,
-										'controller_id' => $c_id,
-										'holder_id' => -1
-									];
-=======
 					$this->ac_model->set_card_last_conn($card_id, $controller_id);
 				} else {
 					$data = [
@@ -156,7 +113,6 @@ class Server extends CI_Controller
 						'controller_id' => $controller_id,
 						'holder_id' => -1
 					];
->>>>>>> test
 					$this->db->insert('cards', $data);
 				}
 				$out_json_msg['messages'][] = $out_m;
@@ -169,69 +125,35 @@ class Server extends CI_Controller
 			}
 			//
 			//события на контроллере
-<<<<<<< HEAD
-			elseif ($json_m['operation'] == 'events') {
-				$event_count = 0;
-				$event_data = [];
-=======
 			//
 			elseif ($inc_m['operation'] == 'events') {
 				$events_count = 0;
 				$events = [];
->>>>>>> test
 
 				//чтение событий
 				foreach ($inc_m['events'] as $event) {
 					$event_time = DateTime::createFromFormat('Y-m-d H:i:s', $event['time']);
 					$event_time = $event_time->getTimestamp();
 
-<<<<<<< HEAD
-					$query = $this->db->get_where('cards', [ 'wiegand' => $event['card'] ], 1, 0);
-=======
 					$this->db->where('wiegand', $event['card']);
 					$query = $this->db->get('cards');
->>>>>>> test
 					//проверяем наличие карты в БД
 					if ($query->num_rows() > 0) {
 						$card_id = $query->row()->id;
 
 						$this->ac_model->set_card_last_conn($card_id, $controller_id);
 					} else {
-<<<<<<< HEAD
-						$card_holder_id = -1;
-
-						$data = [
-											'wiegand' => $event['card'],
-											'last_conn' => $time,
-											'controller_id' => $c_id,
-											'holder_id' => $card_holder_id
-										];
-=======
 						$data = [
 							'wiegand' => $event['card'],
 							'last_conn' => $time,
 							'controller_id' => $controller_id,
 							'holder_id' => -1
 						];
->>>>>>> test
 						$this->db->insert('cards', $data);
 
 						$card_id = $this->db->insert_id();
 					}
 
-<<<<<<< HEAD
-					$client_data =	[
-														'controller_id' => $c_id,
-														'event' => $event['event'],
-														'flag' => $event['flag'],
-														'time' => $event_time,
-														'server_time' => now('Asia/Yekaterinburg'),
-														'card_id' => $card_id
-													];
-					$event_data[] = $client_data;
-
-					$event_count++;
-=======
 					$events[] = [
 						'controller_id' => $controller_id,
 						'event' => $event['event'],
@@ -242,7 +164,6 @@ class Server extends CI_Controller
 					];
 
 					$events_count++;
->>>>>>> test
 				}
 				$this->db->insert_batch('events', $events);
 
@@ -269,16 +190,6 @@ class Server extends CI_Controller
 		write_file($path, "TYPE: $type || SN: $sn || json_encode($out_json_msg)\n", 'a');
 	}
 
-<<<<<<< HEAD
-	private function _set_card_last_conn($card_id, $c_id) {
-		$data = Array(
-						'last_conn' => now('Asia/Yekaterinburg'),
-						'controller_id' => $c_id
-		);
-		$this->db->where('id', $card_id);
-		$this->db->update('cards', $data);
-	}
-=======
 
 
 	/*private function _wiegand_to_EM($str)
@@ -299,5 +210,4 @@ class Server extends CI_Controller
 		}
 		return $str;
 	}*/
->>>>>>> test
 }
