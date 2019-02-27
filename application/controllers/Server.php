@@ -192,8 +192,6 @@ class Server extends CI_Controller
 		write_file($path, "TYPE: $type || SN: $sn || $out_json_msg\n", 'a');
 	}
 
-
-
 	/*private function _wiegand_to_EM($str)
 	{
 		$a = hexdec(substr($str, -6, 2)); //000000>>AB<<ABAB -->> 171
