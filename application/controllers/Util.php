@@ -1,11 +1,12 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Util extends CI_Controller {
-
+class Util extends CI_Controller
+{
 	private $user_id;
 
-	public function __construct()	{
+	public function __construct()
+	{
 		parent::__construct();
 
 		$this->load->helper('language');
@@ -18,13 +19,15 @@ class Util extends CI_Controller {
 		}
 	}
 
-	public function index() {
+	public function index()
+	{
 		if (!$this->ion_auth->logged_in()) {
 			redirect('auth/login');
 		}
 	}
 
-	public function get_time() {
+	public function get_time()
+	{
 		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
@@ -33,19 +36,21 @@ class Util extends CI_Controller {
 		echo time();
 	}
 
-	public function get_events() {
+	public function get_events()
+	{
 		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
 		}
 
 		echo json_encode([
-							'msgs' => $this->ac_model->start_polling(),
-							'time' => now('Asia/Yekaterinburg')
-						]);
+			'msgs' => $this->ac_model->start_polling(),
+			'time' => now('Asia/Yekaterinburg')
+		]);
 	}
 
-	public function save_photo() {
+	public function save_photo()
+	{
 		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
@@ -56,7 +61,6 @@ class Util extends CI_Controller {
 		}
 
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
 			if (isset($_FILES['file'])) {
 				$file = $_FILES['file'];
 				$error = '';
@@ -94,12 +98,12 @@ class Util extends CI_Controller {
 				if (!$error) {
 					$time = now('Asia/Yekaterinburg');
 
-					$this->db->where('personal_id', NULL);
+					$this->db->where('personal_id', null);
 					$this->db->where('time <', $time - 86400);
 					$query = $this->db->get('photo');
 
 					foreach ($query->result() as $row) {
-						$this->ac_model->delete_photo(NULL, $row->hash);
+						$this->ac_model->delete_photo(null, $row->hash);
 					}
 
 					$this->db->where('hash', $file_hash);
@@ -143,12 +147,11 @@ class Util extends CI_Controller {
 					echo '0';
 				}
 			}
-
 		}
-
 	}
 
-	public function delete_photo() {
+	public function delete_photo()
+	{
 		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
@@ -162,7 +165,7 @@ class Util extends CI_Controller {
 			$id = $this->input->post('id');
 			$photo = $this->input->post('photo');
 		} else {
-			return FALSE;
+			return false;
 		}
 
 		if ($this->ac_model->delete_photo($id, $photo)) {
@@ -170,9 +173,9 @@ class Util extends CI_Controller {
 		}
 	}
 
-	public function save_js_errors($err = NULL) {
-		if (!$this->ion_auth->logged_in())
-		{
+	public function save_js_errors($err = null)
+	{
+		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
 		}
@@ -181,8 +184,8 @@ class Util extends CI_Controller {
 
 		if ($this->input->post('data')) {
 			$err = $this->input->post('data');
-		} else if ($err === NULL) {
-			return FALSE;
+		} elseif ($err === null) {
+			return false;
 		}
 
 		$time = now('Asia/Yekaterinburg');
@@ -194,7 +197,7 @@ class Util extends CI_Controller {
 		$path = '/var/www/logs';
 
 		if (!is_dir($path)) {
-			mkdir($path, 0777, TRUE);
+			mkdir($path, 0777, true);
 		}
 
 		$path .= '/err-';
@@ -209,7 +212,8 @@ class Util extends CI_Controller {
 		write_file($path, $message, 'a');
 	}
 
-	public function reload($controller_id = NULL) {
+	public function reload($controller_id = null)
+	{
 		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
@@ -226,7 +230,8 @@ class Util extends CI_Controller {
 		}
 	}
 
-	public function door($controller_id = NULL, $open_time = NULL) {
+	public function door($controller_id = null, $open_time = null)
+	{
 		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
@@ -243,7 +248,8 @@ class Util extends CI_Controller {
 		}
 	}
 
-	public function card_problem() {
+	public function card_problem()
+	{
 		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
@@ -254,8 +260,9 @@ class Util extends CI_Controller {
 
 		$response = lang('registred');
 
-		if ($type >= 1 && $type <= 3)
+		if ($type >= 1 && $type <= 3) {
 			$pers = $this->ac_model->get_pers($pers_id);
+		}
 
 		if ($type == 1) {
 			$desc = $pers->id;
@@ -265,13 +272,15 @@ class Util extends CI_Controller {
 			$desc .= $pers->i;
 			$desc .= ' forgot card';
 
-			if ($this->ac_model->add_user_event($type, $desc))
+			if ($this->ac_model->add_user_event($type, $desc)) {
 				echo $response;
-		} else if ($type == 2 || $type == 3) {
+			}
+		} elseif ($type == 2 || $type == 3) {
 			$cards = $this->ac_model->get_cards($pers_id);
 
-			if (!$cards)
-				return FALSE;
+			if (!$cards) {
+				return false;
+			}
 
 			foreach ($cards as $card) {
 				$this->ac_model->delete_card($card->id);
@@ -289,12 +298,11 @@ class Util extends CI_Controller {
 			$response .= ' ';
 			$response .= lang('card_deleted');
 
-			if ($this->ac_model->add_user_event($type, $desc))
+			if ($this->ac_model->add_user_event($type, $desc)) {
 				echo $response;
+			}
 		} else {
-			return NULL;
+			return null;
 		}
 	}
-
 }
-?>

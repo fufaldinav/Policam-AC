@@ -1,10 +1,12 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Ac_model extends CI_Model {
+class Ac_model extends CI_Model
+{
 	private $user_id;
 
-	public function __construct()	{
+	public function __construct()
+	{
 		parent::__construct();
 
 		if ($this->ion_auth->logged_in()) {
@@ -13,11 +15,12 @@ class Ac_model extends CI_Model {
 	}
 
 
-	public function get_pers($pers_id) {
+	public function get_pers($pers_id)
+	{
 		$this->db->select('address, birthday, f, i, o, phone');
-		$this->db->select('personal.id AS \'id\'');
-		$this->db->select('class_id AS \'class\'');
-		$this->db->select('photo.hash AS \'photo\'');
+		$this->db->select("personal.id AS 'id'");
+		$this->db->select("class_id AS 'class'");
+		$this->db->select("photo.hash AS 'photo'");
 		$this->db->where('personal.id', $pers_id);
 		$this->db->join('photo', 'photo.id = personal.photo_id', 'left');
 		$query = $this->db->get('personal');
@@ -25,11 +28,12 @@ class Ac_model extends CI_Model {
 		if ($query->num_rows() > 0) {
 			return $query->row();
 		} else {
-			return NULL;
+			return null;
 		}
 	}
 
-	public function get_school_by_user($user_id) {
+	public function get_school_by_user($user_id)
+	{
 		$this->db->where('users.id', $user_id);
 		$this->db->join('schools', 'schools.id = users.school_id', 'inner');
 		$query = $this->db->get('users');
@@ -37,15 +41,16 @@ class Ac_model extends CI_Model {
 		if ($query->num_rows() > 0) {
 			return $query->row();
 		} else {
-			return FALSE;
+			return false;
 		}
 	}
 
-	public function get_pers_by_card($card_id) {
+	public function get_pers_by_card($card_id)
+	{
 		$this->db->select('address, birthday, f, i, o, phone');
-		$this->db->select('personal.id AS \'id\'');
-		$this->db->select('class_id AS \'class\'');
-		$this->db->select('photo.hash AS \'photo\'');
+		$this->db->select("personal.id AS 'id'");
+		$this->db->select("class_id AS 'class'");
+		$this->db->select("photo.hash AS 'photo'");
 		$this->db->where('cards.id', $card_id);
 		$this->db->join('personal', 'personal.id = cards.holder_id', 'inner');
 		$this->db->join('photo', 'photo.id = personal.photo_id', 'left');
@@ -54,38 +59,40 @@ class Ac_model extends CI_Model {
 		if ($query->num_rows() > 0) {
 			return $query->row();
 		} else {
-			return FALSE;
+			return false;
 		}
 	}
 
-	public function get_personal_by_class($class_id, $full_info = FALSE) {
-			if ($full_info === TRUE) {
-				$select = '*';
-			} else {
-				$select = 'f, i, o';
-			}
-			$this->db->select($select);
-			$this->db->select('personal.id AS "id"');
-			$this->db->join('personal', 'personal.class_id = classes.id', 'left');
-			$this->db->where('classes.id', $class_id);
-			$this->db->order_by('f ASC, i ASC, o ASC');
-			$query = $this->db->get('classes');
+	public function get_personal_by_class($class_id, $full_info = null)
+	{
+		if ($full_info === true) {
+			$this->db->select('*');
+		} else {
+			$this->db->select('f, i, o');
+		}
+		$this->db->select('personal.id AS "id"');
+		$this->db->join('personal', 'personal.class_id = classes.id', 'left');
+		$this->db->where('classes.id', $class_id);
+		$this->db->order_by('f ASC, i ASC, o ASC');
+		$query = $this->db->get('classes');
 
-			return $query->result();
+		return $query->result();
 	}
 
-	public function get_class_by_id($class_id) {
+	public function get_class_by_id($class_id)
+	{
 		$this->db->where('id', $class_id);
 		$query = $this->db->get('classes');
 
 		if ($query->num_rows() > 0) {
 			return $query->row();
 		} else {
-			return FALSE;
+			return false;
 		}
 	}
 
-	public function get_classes_by_school($school_id) {
+	public function get_classes_by_school($school_id)
+	{
 		$this->db->where('school_id', $school_id);
 		$this->db->order_by('number ASC, letter ASC');
 		$query = $this->db->get('classes');
@@ -93,37 +100,38 @@ class Ac_model extends CI_Model {
 		if ($query->num_rows() > 0) {
 			return $query->result();
 		} else {
-			return FALSE;
+			return false;
 		}
 	}
 
-	public function get_controllers_by_school($school_id) {
+	public function get_controllers_by_school($school_id)
+	{
 		$this->db->where('school_id', $school_id);
 		$query = $this->db->get('controllers');
 
 		if ($query->num_rows() > 0) {
 			return $query->result();
 		} else {
-			return FALSE;
+			return false;
 		}
 	}
 
-	public function get_pers_and_cards_by_school($school_id) {
+	public function get_pers_and_cards_by_school($school_id)
+	{
 		$this->db->select('number, letter, f, i, o');
-		$this->db->select('personal.id AS \'pers_id\'');
-		$this->db->select('cards.id AS \'card_id\'');
+		$this->db->select("personal.id AS 'id'");
+		$this->db->select("cards.id AS 'card_id'");
 		$this->db->where('classes.school_id', $school_id);
 		$this->db->from('classes');
 		$this->db->join('personal', 'personal.class_id = classes.id', 'left');
 		$this->db->join('cards', 'cards.holder_id = personal.id', 'left');
-		$this->db->group_by('pers_id'); //чтобы не дублировались записи с несколькими ключами
+		$this->db->group_by('id'); //чтобы не дублировались записи с несколькими ключами
 		$this->db->order_by('number ASC, letter ASC, f ASC, i ASC');
 		$query = $this->db->get()->result();
 
 
 
 		if (count($query) > 0) {
-			//echo $this->db->last_query();
 			$classes = [];
 
 			foreach ($query as $row) {
@@ -134,13 +142,13 @@ class Ac_model extends CI_Model {
 
 			return $classes;
 		} else {
-			return FALSE;
+			return false;
 		}
 	}
 
-	public function get_cards($holder_id = -1, $controller_id = NULL) {
-		if (!$this->ion_auth->logged_in())
-		{
+	public function get_cards($holder_id = -1, $controller_id = null)
+	{
+		if (!$this->ion_auth->logged_in()) {
 			redirect('auth/login');
 		}
 
@@ -154,11 +162,12 @@ class Ac_model extends CI_Model {
 		if ($query->num_rows() > 0) {
 			return $query->result();
 		} else {
-			return FALSE;
+			return false;
 		}
 	}
 
-	public function add_card($card_id) {
+	public function add_card($card_id)
+	{
 		$this->db->select('wiegand, controller_id');
 		$this->db->where('id', $card_id);
 		$query = $this->db->get('cards');
@@ -172,10 +181,11 @@ class Ac_model extends CI_Model {
 			$this->add_cards_to_controller($wiegand, $c->id);
 		}
 
-		return TRUE;
+		return true;
 	}
 
-	public function delete_card($card_id) {
+	public function delete_card($card_id)
+	{
 		$school_id = $this->ac_model->get_school_by_user($this->user_id)->school_id;
 		$controllers = $this->ac_model->get_controllers_by_school($school_id);
 
@@ -189,13 +199,14 @@ class Ac_model extends CI_Model {
 			foreach ($controllers as $c) {
 				$this->ac_model->del_cards_from_controller($wiegand, $c->id);
 			}
-			return TRUE;
+			return true;
 		} else {
-			return NULL;
+			return null;
 		}
 	}
 
-	public function start_polling() {
+	public function start_polling()
+	{
 		$events = $this->input->post('events');
 		$time = $this->input->post('time');
 
@@ -241,7 +252,8 @@ class Ac_model extends CI_Model {
 		return [];
 	}
 
-	public function delete_photo($personal_id = NULL, $photo_hash = NULL) {
+	public function delete_photo($personal_id = null, $photo_hash = null)
+	{
 		if (!$personal_id) {
 			$this->db->select('personal.id AS "id"');
 			$this->db->where('photo.hash', $photo_hash);
@@ -261,7 +273,7 @@ class Ac_model extends CI_Model {
 		}
 
 		$this->db->where('id', $personal_id);
-		$this->db->update('personal', ['photo_id' => NULL]);
+		$this->db->update('personal', ['photo_id' => null]);
 
 		$this->db->delete('photo', ['hash' => $photo_hash]);
 
@@ -285,20 +297,20 @@ class Ac_model extends CI_Model {
 				unlink($file_path_s);
 			}
 
-			return TRUE;
+			return true;
 		} catch (Exception $e) {
 			$this->save_js_errors($e);
-			return FALSE;
+			return false;
 		}
 	}
 
-	public function render_school_name($school_id) { //TODO check
+	public function render_school_name($school_id)
+	{ //TODO check
 		$this->db->where('id', $school_id);
 		$query = $this->db->get('schools');
 
 		$school = $query->row()->number;
-		if ($query->row()->address)
-		{
+		if ($query->row()->address) {
 			$school .= ' (';
 			$school .= $query->row()->address;
 			$school .= ')';
@@ -307,7 +319,8 @@ class Ac_model extends CI_Model {
 		return $school;
 	}
 
-	public function render_css($arr) {
+	public function render_css($arr)
+	{
 		$result = '';
 
 		foreach ($arr as $str) {
@@ -319,7 +332,8 @@ class Ac_model extends CI_Model {
 		return $result;
 	}
 
-	public function render_js($arr) {
+	public function render_js($arr)
+	{
 		$result = '<script src="/js/jquery-3.3.1.min.js"></script>';
 
 		foreach ($arr as $str) {
@@ -345,7 +359,8 @@ class Ac_model extends CI_Model {
 		return $result;
 	}
 
-	public function render_nav() {
+	public function render_nav()
+	{
 		$html = '<a class="nav" href="/">';
 		$html .= lang('observ');
 		$html .= '</a>';
@@ -365,7 +380,8 @@ class Ac_model extends CI_Model {
 		return $html;
 	}
 
-	public function add_all_cards_to_controller($controller_id) {
+	public function add_all_cards_to_controller($controller_id)
+	{
 		$this->db->select('cards.wiegand AS "wiegand"');
 		$this->db->where('controllers.id', $controller_id);
 		$this->db->join('schools', 'schools.id = controllers.school_id', 'left');
@@ -384,7 +400,7 @@ class Ac_model extends CI_Model {
 			if ($i > 0 && ($i % 10) == 0) {
 				$counter += $this->add_cards_to_controller($data, $controller_id);
 				$data = [];
-			} else if ($i == ($count - 1)) {
+			} elseif ($i == ($count - 1)) {
 				$counter += $this->add_cards_to_controller($data, $controller_id);
 			}
 		}
@@ -392,7 +408,8 @@ class Ac_model extends CI_Model {
 		return $counter;
 	}
 
-	public function add_cards_to_controller($cards, $controller_id) {
+	public function add_cards_to_controller($cards, $controller_id)
+	{
 		$data = '"cards": [';
 		if (is_array($cards)) {
 			foreach ($cards as $card) {
@@ -410,7 +427,8 @@ class Ac_model extends CI_Model {
 		return $this->add_task('add_cards', $controller_id, $data);
 	}
 
-	public function del_cards_from_controller($cards, $controller_id) {
+	public function del_cards_from_controller($cards, $controller_id)
+	{
 		$data = '"cards": [';
 		if (is_array($cards)) {
 			foreach ($cards as $card) {
@@ -428,11 +446,13 @@ class Ac_model extends CI_Model {
 		return $this->add_task('del_cards', $controller_id, $data);
 	}
 
-	public function clear_cards($controller_id) {
+	public function clear_cards($controller_id)
+	{
 		return $this->add_task('clear_cards', $controller_id, $data);
 	}
 
-	public function set_door_params($controller_id, $open_time, $open_control = 0, $close_control = 0) {
+	public function set_door_params($controller_id, $open_time, $open_control = 0, $close_control = 0)
+	{
 		$data = '"open":';
 		$data .= $open_time;
 		$data .= ',"open_control":';
@@ -443,8 +463,9 @@ class Ac_model extends CI_Model {
 		return $this->add_task('set_door_params', $controller_id, $data);
 	}
 
-	public function add_task($operation, $controller_id, $data = NULL) {
-		$id = mt_rand(500000,999999999);
+	public function add_task($operation, $controller_id, $data = null)
+	{
+		$id = mt_rand(500000, 999999999);
 
 		$json = '{"id":';
 		$json .= $id;
@@ -456,25 +477,27 @@ class Ac_model extends CI_Model {
 		$json .= '}';
 
 		$data =	[
-							'id' => $id,
-							'controller_id' => $controller_id,
-							'json' => $json,
-							'time' => now('Asia/Yekaterinburg')
-						];
+			'id' => $id,
+			'controller_id' => $controller_id,
+			'json' => $json,
+			'time' => now('Asia/Yekaterinburg')
+		];
 
 		$this->db->insert('tasks', $data);
 
 		return $this->db->affected_rows();
 	}
 
-	public function del_task($id) {
+	public function del_task($id)
+	{
 		$this->db->where('id', $id);
 		$this->db->delete('tasks');
 
 		return $this->db->affected_rows();
 	}
 
-	public function get_last_task($controller_id) {
+	public function get_last_task($controller_id)
+	{
 		$this->db->where('controller_id', $controller_id);
 		$this->db->order_by('time', 'ASC');
 		$query = $this->db->get('tasks');
@@ -482,17 +505,18 @@ class Ac_model extends CI_Model {
 		if ($query->num_rows() > 0) {
 			return $query->row();
 		} else {
-			return NULL;
+			return null;
 		}
 	}
 
-	public function add_user_event($type, $desc) {
+	public function add_user_event($type, $desc)
+	{
 		$data =	[
-								'user_id' => $this->user_id,
-								'type' => $type,
-								'description' => $desc,
-								'time' => now('Asia/Yekaterinburg')
-						];
+			'user_id' => $this->user_id,
+			'type' => $type,
+			'description' => $desc,
+			'time' => now('Asia/Yekaterinburg')
+		];
 
 		$this->db->insert('users_events', $data);
 

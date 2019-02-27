@@ -1,17 +1,19 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 use WebSocket\Client;
 
-class Server extends CI_Controller {
-
-	public function __construct()	{
+class Server extends CI_Controller
+{
+	public function __construct()
+	{
 		parent::__construct();
 
 		$this->load->model('ac_model');
 	}
 
-	public function index() {
+	public function index()
+	{
 		$this->load->helper('file');
 		$this->load->helper('date');
 
@@ -37,9 +39,7 @@ class Server extends CI_Controller {
 			$c_id = $query->row()->id;
 
 			//время последнего соединения контроллера
-			$data = Array(
-							'last_conn' => $time
-			);
+			$data = ['last_conn' => $time];
 			$this->db->where('id', $c_id);
 			$this->db->update('controllers', $data);
 		}
@@ -62,7 +62,7 @@ class Server extends CI_Controller {
 			$message .= PHP_EOL;
 
 			write_file($path, $message, 'a');
-			return FALSE;
+			return false;
 		}
 
 		header('Content-Type: application/json');
@@ -96,29 +96,26 @@ class Server extends CI_Controller {
 			elseif ($json_m['operation'] == 'check_access') {
 				$m['id'] = $json_m['id'];
 				$m['operation'] = 'check_access';
-				$query = $this->db->get_where('cards', Array('wiegand' => $json_m['card']), 1, 0);
+				$query = $this->db->get_where('cards', ['wiegand' => $json_m['card']], 1, 0);
 
 				if ($query->num_rows() > 0) {
 					$card_id = $query->row()->id;
 
-					if ($query->row()->holder_id == -1)
-					{
+					if ($query->row()->holder_id == -1) {
 						$m['granted'] = 0;
-						//$this->_send_data($query->row(), 1);
-					}
-					else {
+					//$this->_send_data($query->row(), 1);
+					} else {
 						$m['granted'] = 1;
 					}
 
 					$this->_set_card_last_conn($card_id, $c_id);
-
-				}	else {
-					$data = Array(
-									'wiegand' => $json_m['card'],
-									'last_conn' => $time,
-									'controller_id' => $c_id,
-									'holder_id' => -1
-					);
+				} else {
+					$data = [
+						'wiegand' => $json_m['card'],
+						'last_conn' => $time,
+						'controller_id' => $c_id,
+						'holder_id' => -1
+					];
 					$this->db->insert('cards', $data);
 					$data['id'] = $this->db->insert_id();
 
@@ -135,57 +132,43 @@ class Server extends CI_Controller {
 			//события на контроллере
 			elseif ($json_m['operation'] == 'events') {
 				$event_count = 0;
-				$event_data = Array();
+				$event_data = [];
 
 				//чтение событий
 				foreach ($json_m['events'] as $event) {
 					$event_time = DateTime::createFromFormat('Y-m-d H:i:s', $event['time']);
 					$event_time = $event_time->getTimestamp();
 
-					$query = $this->db->get_where('cards', Array('wiegand' => $event['card']), 1, 0);
+					$query = $this->db->get_where('cards', ['wiegand' => $event['card']], 1, 0);
 					//проверяем наличие карты в БД
 					if ($query->num_rows() > 0) {
 						$card_id = $query->row()->id;
 						$card_holder_id = $query->row()->holder_id;
 
 						$this->_set_card_last_conn($card_id, $c_id);
-
 					} else {
 						$card_holder_id = -1;
 
-						$data = Array(
-										'wiegand' => $event['card'],
-										'last_conn' => $time,
-										'controller_id' => $c_id,
-										'holder_id' => $card_holder_id
-						);
+						$data = [
+							'wiegand' => $event['card'],
+							'last_conn' => $time,
+							'controller_id' => $c_id,
+							'holder_id' => $card_holder_id
+						];
 						$this->db->insert('cards', $data);
 
 						$card_id = $this->db->insert_id();
-
 					}
 
-					$client_data = Array(
+					$client_data = [
 						'controller_id' => $c_id,
 						'event' => $event['event'],
 						'flag' => $event['flag'],
 						'time' => $event_time,
 						'server_time' => now('Asia/Yekaterinburg'),
 						'card_id' => $card_id
-					);
+					];
 					$event_data[] = $client_data;
-
-					/*if ($event['event'] == 0 || $event['event'] == 1 || $event['event'] == 4 || $event['event'] == 5) {//TODO проверить эвент
-						$this->db->where('cards.id', $card_id);
-						$this->db->from('cards');
-						$this->db->join('personal', 'personal.id = cards.holder_id', 'left');
-						$query = $this->db->get();
-
-						$this->_send_data(Array(
-							'event' => $client_data,
-							'user' => $query->row()
-						), 2);
-					}*/
 
 					$event_count++;
 				}
@@ -248,23 +231,12 @@ class Server extends CI_Controller {
 		write_file($path, $message, 'a');
 	}
 
-	/*private function _send_data($data, $msg_type = 0, $user_id = 0)	{
-		//$client = new Client("ws://192.168.1.9:8081/ws");
-		//$client->send(json_encode($data));
-		$sql_data = Array(
-			'user_id' => $user_id,
-			'time' => now('Asia/Yekaterinburg'),
-			'msg_type' => $msg_type,
-			'json' => json_encode($data)
-		);
-		$this->db->insert('messages', $sql_data);
-	}*/
-
-	private function _set_card_last_conn($card_id, $c_id) {
-		$data = Array(
-						'last_conn' => now('Asia/Yekaterinburg'),
-						'controller_id' => $c_id
-		);
+	private function _set_card_last_conn($card_id, $c_id)
+	{
+		$data = [
+			'last_conn' => now('Asia/Yekaterinburg'),
+			'controller_id' => $c_id
+		];
 		$this->db->where('id', $card_id);
 		$this->db->update('cards', $data);
 	}
