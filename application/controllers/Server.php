@@ -33,7 +33,7 @@ class Server extends CI_Controller
 		$decoded_msg = json_decode($inc_json_msg, true);
 		$type = $decoded_msg['type'];
 		$sn = $decoded_msg['sn'];
-		$inc_messages = $decoded_msg['message'];
+		$inc_messages = $decoded_msg['messages'];
 
 		//запрос контроллера по серийнику из БД
 		$this->db->where('sn', $sn);
