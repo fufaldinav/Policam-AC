@@ -22,13 +22,13 @@ class Server extends CI_Controller
 		$this->load->helper('date');
 
 		$inc_json_msg = file_get_contents('php://input');
-		$out_json_msg = [];
+		$out_msg = [];
 
 		$time = now('Asia/Yekaterinburg');
-		$out_json_msg['date'] = mdate('%Y-%m-%d %H:%i:%s', $time);
+		$out_msg['date'] = mdate('%Y-%m-%d %H:%i:%s', $time);
 		$log_date = mdate('%Y-%m-%d', $time);
-		$out_json_msg['interval'] = 10;
-		$out_json_msg['messages'] = [];
+		$out_msg['interval'] = 10;
+		$out_msg['messages'] = [];
 
 		$decoded_msg = json_decode($inc_json_msg, true);
 		$type = $decoded_msg['type'];
@@ -77,7 +77,7 @@ class Server extends CI_Controller
 				$out_m['operation'] = 'set_active';
 				$out_m['active'] = $active;
 				$out_m['online'] = $online;
-				$out_json_msg['messages'][] = $out_m;
+				$out_msg['messages'][] = $out_m;
 
 				$data = [
 					'fw' => $inc_m['fw'],
@@ -115,7 +115,7 @@ class Server extends CI_Controller
 					];
 					$this->db->insert('cards', $data);
 				}
-				$out_json_msg['messages'][] = $out_m;
+				$out_msg['messages'][] = $out_m;
 			}
 			//
 			//пинг от контроллера
@@ -170,7 +170,7 @@ class Server extends CI_Controller
 				$out_m['id'] = $inc_m['id'];
 				$out_m['operation'] = 'events';
 				$out_m['events_success'] = $events_count;
-				$out_json_msg['messages'][] = $out_m;
+				$out_msg['messages'][] = $out_m;
 			}
 		}
 
@@ -178,16 +178,18 @@ class Server extends CI_Controller
 		$task = $this->ac_model->get_last_task($controller_id);
 
 		if ($task) {
-			$out_json_msg['messages'][] = json_decode($task->json);
+			$out_msg['messages'][] = json_decode($task->json);
 		}
 
-		echo json_encode($out_json_msg);
+		$out_json_msg = json_encode($out_msg);
+		echo $out_json_msg;
 
 		$path = "$LOG_PATH/inc-$log_date.txt";
 		write_file($path, "TYPE: $type || SN: $sn || $inc_json_msg\n", 'a');
 
 		$path = "$LOG_PATH/out-$log_date.txt";
-		write_file($path, "TYPE: $type || SN: $sn || json_encode($out_json_msg)\n", 'a');
+
+		write_file($path, "TYPE: $type || SN: $sn || $out_json_msg\n", 'a');
 	}
 
 
