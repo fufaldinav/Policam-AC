@@ -14,7 +14,12 @@ class Ac_model extends CI_Model
 		}
 	}
 
-
+	/**
+	 * Получение информации о человеке
+	 *
+	 * @param			int							$pers_id
+	 * @return		mixed[]|null
+	 */
 	public function get_pers($pers_id)
 	{
 		$this->db->select('address, birthday, f, i, o, phone');
@@ -32,6 +37,12 @@ class Ac_model extends CI_Model
 		}
 	}
 
+	/**
+	 * Получение информации о школе, к которой привязан пользователь
+	 *
+	 * @param			int							$user_id
+	 * @return		mixed[]|null
+	 */
 	public function get_school_by_user($user_id)
 	{
 		$this->db->where('users.id', $user_id);
@@ -41,10 +52,16 @@ class Ac_model extends CI_Model
 		if ($query->num_rows() > 0) {
 			return $query->row();
 		} else {
-			return false;
+			return null;
 		}
 	}
 
+	/**
+	 * Получение информации о человеке, к которому привязана карта
+	 *
+	 * @param			int							$card_id
+	 * @return		mixed[]|null
+	 */
 	public function get_pers_by_card($card_id)
 	{
 		$this->db->select('address, birthday, f, i, o, phone');
@@ -59,10 +76,17 @@ class Ac_model extends CI_Model
 		if ($query->num_rows() > 0) {
 			return $query->row();
 		} else {
-			return false;
+			return null;
 		}
 	}
 
+	/**
+	 * Получение списка людей из класса
+	 *
+	 * @param			int				$class_id
+	 * @param			bool			$full_info
+	 * @return		mixed[]
+	 */
 	public function get_personal_by_class($class_id, $full_info = null)
 	{
 		if ($full_info === true) {
@@ -79,6 +103,12 @@ class Ac_model extends CI_Model
 		return $query->result();
 	}
 
+	/**
+	 * Получение информации о классе
+	 *
+	 * @param			int							$class_id
+	 * @return		mixed[]|null
+	 */
 	public function get_class_by_id($class_id)
 	{
 		$this->db->where('id', $class_id);
@@ -87,10 +117,16 @@ class Ac_model extends CI_Model
 		if ($query->num_rows() > 0) {
 			return $query->row();
 		} else {
-			return false;
+			return null;
 		}
 	}
 
+	/**
+	 * Получение информации о классах конкретной школы
+	 *
+	 * @param			int							$school_id
+	 * @return		mixed[]|null
+	 */
 	public function get_classes_by_school($school_id)
 	{
 		$this->db->where('school_id', $school_id);
@@ -100,10 +136,16 @@ class Ac_model extends CI_Model
 		if ($query->num_rows() > 0) {
 			return $query->result();
 		} else {
-			return false;
+			return null;
 		}
 	}
 
+	/**
+	 * Получение информации о контроллерах конкретной школы
+	 *
+	 * @param			int							$school_id
+	 * @return		mixed[]|null
+	 */
 	public function get_controllers_by_school($school_id)
 	{
 		$this->db->where('school_id', $school_id);
@@ -112,29 +154,34 @@ class Ac_model extends CI_Model
 		if ($query->num_rows() > 0) {
 			return $query->result();
 		} else {
-			return false;
+			return null;
 		}
 	}
 
+	/**
+	 * Получение списка людей и привязаных к ним карт
+	 *
+	 * @param			int							$school_id
+	 * @return		mixed[]|null
+	 */
 	public function get_pers_and_cards_by_school($school_id)
 	{
 		$this->db->select('number, letter, f, i, o');
 		$this->db->select("personal.id AS 'id'");
 		$this->db->select("cards.id AS 'card_id'");
 		$this->db->where('classes.school_id', $school_id);
-		$this->db->from('classes');
 		$this->db->join('personal', 'personal.class_id = classes.id', 'left');
 		$this->db->join('cards', 'cards.holder_id = personal.id', 'left');
 		$this->db->group_by('id'); //чтобы не дублировались записи с несколькими ключами
 		$this->db->order_by('number ASC, letter ASC, f ASC, i ASC');
-		$query = $this->db->get()->result();
+		$query = $this->db->get('classes');
 
 
 
-		if (count($query) > 0) {
+		if ($query->num_rows() > 0) {
 			$classes = [];
 
-			foreach ($query as $row) {
+			foreach ($query->result() as $row) {
 				$classes[$row->number.$row->letter][] = $row; //number + letter для сортировки дерева 1А -> 1Б -> 2А etc.
 			}
 
@@ -142,30 +189,35 @@ class Ac_model extends CI_Model
 
 			return $classes;
 		} else {
-			return false;
+			return null;
 		}
 	}
 
-	public function get_cards($holder_id = -1, $controller_id = null)
+	/**
+	 * Получение списка карт, привязаных к конкретному человеку или все неизвестные карты
+	 *
+	 * @param			int							$holder_id		Опционально, по-умолчанию -1 (список всех неизвестных карт)
+	 * @return		mixed[]|null
+	 */
+	public function get_cards($holder_id = -1)
 	{
-		if (!$this->ion_auth->logged_in()) {
-			redirect('auth/login');
-		}
-
 		$this->db->select('id, wiegand, holder_id');
 		$this->db->where('holder_id', $holder_id);
-		if ($controller_id) {
-			$this->db->where('controller_id', $controller_id);
-		}
 		$query = $this->db->get('cards');
 
 		if ($query->num_rows() > 0) {
 			return $query->result();
 		} else {
-			return false;
+			return null;
 		}
 	}
 
+	/**
+	 * Добавить карты в память контроллеров
+	 *
+	 * @param			int			$card_id
+	 * @return		bool
+	 */
 	public function add_card($card_id)
 	{
 		$this->db->select('wiegand, controller_id');
@@ -184,6 +236,12 @@ class Ac_model extends CI_Model
 		return true;
 	}
 
+	/**
+	 * Удалить карты из памяти контроллеров
+	 *
+	 * @param			int			$card_id
+	 * @return		bool
+	 */
 	public function delete_card($card_id)
 	{
 		$school_id = $this->ac_model->get_school_by_user($this->user_id)->school_id;
@@ -205,6 +263,11 @@ class Ac_model extends CI_Model
 		}
 	}
 
+	/**
+	 * Реализация long polling
+	 *
+	 * @return		array
+	 */
 	public function start_polling()
 	{
 		$events = $this->input->post('events');
@@ -252,9 +315,20 @@ class Ac_model extends CI_Model
 		return [];
 	}
 
+	/**
+	 * Удалить фото из БД и диска
+	 *
+	 * @param			int					$personal_id		Опционально, если не указан, найти ID по фото
+	 * @param			string			$photo_hash			Опционально, если не указан, фото по ID человека
+	 * @return		bool|null
+	 */
 	public function delete_photo($personal_id = null, $photo_hash = null)
 	{
-		if (!$personal_id) {
+		if ($personal_id === null && $photo_hash === null) {
+			return null;
+		}
+
+		if ($personal_id === null) {
 			$this->db->select('personal.id AS "id"');
 			$this->db->where('photo.hash', $photo_hash);
 			$this->db->join('personal', 'personal.photo_id = photo.id', 'left');
@@ -263,7 +337,7 @@ class Ac_model extends CI_Model
 			$personal_id = $query->row()->id;
 		}
 
-		if (!$photo_hash) {
+		if ($photo_hash === null) {
 			$this->db->select('hash');
 			$this->db->where('personal.id', $personal_id);
 			$this->db->join('photo', 'photo.id = personal.photo_id', 'left');
@@ -300,10 +374,16 @@ class Ac_model extends CI_Model
 			return true;
 		} catch (Exception $e) {
 			$this->save_js_errors($e);
-			return false;
+			return null;
 		}
 	}
 
+	/**
+	 * Удалить фото из БД и диска
+	 *
+	 * @param			int				$school_id
+	 * @return		string									Строка в формате 'N (адресс при наличии)'
+	 */
 	public function render_school_name($school_id)
 	{ //TODO check
 		$this->db->where('id', $school_id);
@@ -319,6 +399,12 @@ class Ac_model extends CI_Model
 		return $school;
 	}
 
+	/**
+	 * Рендер строки подключения CSS
+	 *
+	 * @param			string[]		$arr
+	 * @return		string
+	 */
 	public function render_css($arr)
 	{
 		$result = '';
@@ -332,6 +418,12 @@ class Ac_model extends CI_Model
 		return $result;
 	}
 
+	/**
+	 * Рендер строки подключения JavaScript
+	 *
+	 * @param			string[]		$arr
+	 * @return		string
+	 */
 	public function render_js($arr)
 	{
 		$result = '<script src="/js/jquery-3.3.1.min.js"></script>';
@@ -359,6 +451,11 @@ class Ac_model extends CI_Model
 		return $result;
 	}
 
+	/**
+	 * Рендер навигационных кнопок
+	 *
+	 * @return	string
+	 */
 	public function render_nav()
 	{
 		$html = '<a class="nav" href="/">';
@@ -380,6 +477,13 @@ class Ac_model extends CI_Model
 		return $html;
 	}
 
+	/**
+	 * Отправляет все карты (частями максимум 10 карт за раз) в контроллер,
+	 * предварительно получив список карт людей, принадлежащих школе контроллера
+	 *
+	 * @param			int		$controller_id
+	 * @return		int		Вернет количество сообщений, отправленных на контроллер
+	 */
 	public function add_all_cards_to_controller($controller_id)
 	{
 		$this->db->select('cards.wiegand AS "wiegand"');
@@ -408,6 +512,13 @@ class Ac_model extends CI_Model
 		return $counter;
 	}
 
+	/**
+	 * Добавление карт в контроллер
+	 *
+	 * @param			string[]|string		$cards
+	 * @param			int								$controller_id
+	 * @return		int
+	 */
 	public function add_cards_to_controller($cards, $controller_id)
 	{
 		$data = '"cards": [';
@@ -427,6 +538,13 @@ class Ac_model extends CI_Model
 		return $this->add_task('add_cards', $controller_id, $data);
 	}
 
+	/**
+	 * Удаление карт из контроллера
+	 *
+	 * @param			string[]|string		$cards
+	 * @param			int								$controller_id
+	 * @return		int
+	 */
 	public function del_cards_from_controller($cards, $controller_id)
 	{
 		$data = '"cards": [';
@@ -446,11 +564,27 @@ class Ac_model extends CI_Model
 		return $this->add_task('del_cards', $controller_id, $data);
 	}
 
+
+	/**
+	 * Удаление всех карт из контроллера
+	 *
+	 * @param			int		$controller_id
+	 * @return		int
+	 */
 	public function clear_cards($controller_id)
 	{
 		return $this->add_task('clear_cards', $controller_id, $data);
 	}
 
+	/**
+	 * Установить параметры открытия
+	 *
+	 * @param			int		$controller_id
+	 * @param			int		$open_time				Время открытия в 0.1 сек
+	 * @param			int		$open_control			Опционально, контроль открытия в 0.1 сек
+	 * @param			int		$close_control		Опционально, контроль закрытия в 0.1 сек
+	 * @return		int
+	 */
 	public function set_door_params($controller_id, $open_time, $open_control = 0, $close_control = 0)
 	{
 		$data = '"open":';
@@ -463,6 +597,14 @@ class Ac_model extends CI_Model
 		return $this->add_task('set_door_params', $controller_id, $data);
 	}
 
+	/**
+	 * Добавление задания для отправки на контроллер
+	 *
+	 * @param			int		$operation				Операция, отправляемая на контроллер
+	 * @param			int		$controller_id
+	 * @param			int		$data							Опционально, дополнительные данные
+	 * @return		int
+	 */
 	public function add_task($operation, $controller_id, $data = null)
 	{
 		$id = mt_rand(500000, 999999999);
@@ -488,6 +630,12 @@ class Ac_model extends CI_Model
 		return $this->db->affected_rows();
 	}
 
+	/**
+	 * Удалить задания, отправленные на контроллер
+	 *
+	 * @param			int		$id
+	 * @return		int
+	 */
 	public function del_task($id)
 	{
 		$this->db->where('id', $id);
@@ -496,6 +644,12 @@ class Ac_model extends CI_Model
 		return $this->db->affected_rows();
 	}
 
+	/**
+	 * Получить последнее задания для отправки на контроллер
+	 *
+	 * @param			int							$controller_id
+	 * @return		mixed[]|bool
+	 */
 	public function get_last_task($controller_id)
 	{
 		$this->db->where('controller_id', $controller_id);
@@ -509,6 +663,13 @@ class Ac_model extends CI_Model
 		}
 	}
 
+	/**
+	 * Сохранить полученое от пользователя событие
+	 *
+	 * @param			int				$type		Тип события
+	 * @param			string		$desc		Описание события
+	 * @return		int
+	 */
 	public function add_user_event($type, $desc)
 	{
 		$data =	[
@@ -523,6 +684,12 @@ class Ac_model extends CI_Model
 		return $this->db->affected_rows();
 	}
 
+	/**
+	 * Установить время последней связи с картой
+	 *
+	 * @param		int		$card_id					Тип события
+	 * @param		int		$controller_id		Описание события
+	 */
 	public function set_card_last_conn($card_id, $controller_id)
 	{
 		$data = [
