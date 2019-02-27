@@ -1,11 +1,12 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Ac extends CI_Controller {
-
+class Ac extends CI_Controller
+{
 	private $user_id;
 
-	public function __construct()	{
+	public function __construct()
+	{
 		parent::__construct();
 
 		$this->load->helper('language');
@@ -18,10 +19,11 @@ class Ac extends CI_Controller {
 		}
 	}
 
-	public function index() {
+	public function index()
+	{
 		if (!$this->ion_auth->logged_in()) {
 			redirect('auth/login');
-		} else if ($this->ion_auth->is_admin()) {
+		} elseif ($this->ion_auth->is_admin()) {
 			redirect('auth');
 		}
 
@@ -37,7 +39,8 @@ class Ac extends CI_Controller {
 		$this->load->view('ac/footer');
 	}
 
-	public function add_pers() {
+	public function add_pers()
+	{
 		if (!$this->ion_auth->logged_in()) {
 			redirect('auth/login');
 		}
@@ -58,10 +61,7 @@ class Ac extends CI_Controller {
 			$data['classes']['0'] = lang('missing');
 		} else {
 			foreach ($classes as $row) {
-				$data['classes'][$row->id] = $row->number;
-				$data['classes'][$row->id] .= ' "';
-				$data['classes'][$row->id] .= $row->letter;
-				$data['classes'][$row->id] .= '"';
+				$data['classes'][$row->id] = $row->number . ' "' . $row->letter . '"';
 			}
 		}
 
@@ -93,7 +93,8 @@ class Ac extends CI_Controller {
 		$this->load->view('ac/footer');
 	}
 
-	public function edit_pers() {
+	public function edit_pers()
+	{
 		if (!$this->ion_auth->logged_in()) {
 			redirect('auth/login');
 		}
@@ -118,34 +119,23 @@ class Ac extends CI_Controller {
 			$personal = $this->ac_model->get_pers_and_cards_by_school($school_id);
 			$last_k = count($classes) - 1;
 			foreach ($classes as $k => $row) {
-				$data['classes'][$row->id] = $row->number;
-				$data['classes'][$row->id] .= ' "';
-				$data['classes'][$row->id] .= $row->letter;
-				$data['classes'][$row->id] .= '"';
-				$data['menu'] .= '<li class="tree-node tree-is-root tree-expand-closed';
-				$data['menu'] .= ($k == $last_k) ? ' tree-is-last' : '';
-				$data['menu'] .= '"><div class="tree-expand"></div><div class="tree-content tree-expand-content">';
-				$data['menu'] .= $data['classes'][$row->id];
-				$data['menu'] .= '</div><ul class="tree-container">';
+				$data['classes'][$row->id] = $row->number . ' "' . $row->letter . '"';
+				$data['menu'] .= '<li class="tree-node tree-is-root tree-expand-closed' . (($k == $last_k) ? ' tree-is-last' : '') . '">'
+											. '<div class="tree-expand"></div>'
+											. '<div class="tree-content tree-expand-content">'
+											. $data['classes'][$row->id]
+											. '</div>'
+											. '<ul class="tree-container">';
 				$cur_class = $personal[$row->number.$row->letter]; //number + letter для сортировки дерева 1А -> 1Б -> 2А etc.
 				$last_n = count($cur_class) - 1;
-				foreach ($cur_class as $n => $pers) {
-					$data['menu'] .= '<li id="pers';
-					$data['menu'] .= $pers->pers_id;
-					$data['menu'] .= '" class="tree-node tree-expand-leaf';
-					$data['menu'] .= ($n == $last_n) ? ' tree-is-last' : '';
-					$data['menu'] .= '"><div class="tree-expand"></div><div class="tree-content">';
-					$data['menu'] .= ($pers->card_id) ? '(+) ' : '';
-					$data['menu'] .= '<a class="pers" href="#';
-					$data['menu'] .=	$pers->pers_id;
-					$data['menu'] .=	'" onClick="getPersData(';
-					$data['menu'] .=	$pers->pers_id;
-					$data['menu'] .= ')">';
-					$data['menu'] .= $pers->f;
-					$data['menu'] .= ' ';
-					$data['menu'] .= $pers->i;
-					$data['menu'] .= '</a>';
-					$data['menu'] .= '</div></li>';
+				foreach ($cur_class as $n => $p) {
+					$data['menu'] .= '<li id="pers' . $p->id . '" class="tree-node tree-expand-leaf' . (($n == $last_n) ? ' tree-is-last' : '') . '">'
+												. '<div class="tree-expand"></div>'
+												. '<div class="tree-content">'
+												. (($p->card_id) ? '(+) ' : '')
+												. '<a class="pers" href="#' . $p->id . '" onClick="getPersData(' . $p->id . ')">' . $p->f . ' ' . $p->i . '</a>'
+												. '</div>'
+												. '</li>';
 				}
 				$data['menu'] .= '</ul></li>';
 			}
@@ -179,7 +169,8 @@ class Ac extends CI_Controller {
 		$this->load->view('ac/footer');
 	}
 
-	public function classes() {
+	public function classes()
+	{
 		if (!$this->ion_auth->logged_in()) {
 			redirect('auth/login');
 		}
@@ -197,23 +188,16 @@ class Ac extends CI_Controller {
 
 		$this->table->set_heading(lang('number'), lang('letter'), '');
 
-		$delete = '<button onclick="save(';
-		$delete .= $school_id;
-		$delete .= ')">';
-		$delete .= lang('save');
-		$delete .= '</button>';
+		$delete = '<button onclick="save(' . $school_id . ')">' . lang('save') . '</button>';
+
 		$this->table->add_row(
-								'<input id="number" type="text" size="2" maxlength="2" required />',
-								'<input id="letter" type="text" size="1" maxlength="1" required />',
-								$delete
-							);
+			'<input id="number" type="text" size="2" maxlength="2" required />',
+			'<input id="letter" type="text" size="1" maxlength="1" required />',
+			$delete
+		);
 
 		foreach ($query->result() as $row) {
-			$delete = '<button onclick="del(';
-			$delete .= $row->id;
-			$delete .= ')">';
-			$delete .= lang('delete');
-			$delete .= '</button>';
+			$delete = '<button onclick="del(' . $row->id . ')">' . lang('delete') . '</button>';
 			$this->table->add_row($row->number, $row->letter, $delete);
 		}
 
@@ -228,6 +212,4 @@ class Ac extends CI_Controller {
 		$this->load->view('ac/classes', $data);
 		$this->load->view('ac/footer');
 	}
-
 }
-?>

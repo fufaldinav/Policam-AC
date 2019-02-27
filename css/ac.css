@@ -24,9 +24,9 @@ body {
 	grid-area: main;
 }
 .main-grid-container {
-  display: grid;
-  grid-template-columns: 20% 80%;
-  grid-template-rows: 100%;
+	display: grid;
+	grid-template-columns: 20% 80%;
+	grid-template-rows: 100%;
 }
 #header {
 	grid-area: header;
@@ -64,11 +64,11 @@ body {
 	padding: 10px 10px;
 }
 #menu {
-  background: #ffffff;
-  box-shadow: 0 1px 0 0 #d7d8db, 0 0 0 1px #e3e4e8;
-  margin: 0 0 0 20px;
-  height: 100%;
-  overflow-y: auto;
+	background: #ffffff;
+	box-shadow: 0 1px 0 0 #d7d8db, 0 0 0 1px #e3e4e8;
+	margin: 0 0 0 20px;
+	height: 100%;
+	overflow-y: auto;
 }
 .photo {
 	height: 100%;
@@ -97,12 +97,12 @@ body {
 #photo_del:hover::after {
 	content: attr(data-title);
 	position: absolute;
-  left: 16px;
+	left: 16px;
 	top: 16px;
 	box-shadow: 0 1px 0 0 #d7d8db, 0 0 0 1px #e3e4e8;
-  background-color: #8ae0f2;
-  font-size: 12px;
-  padding: 2px 5px;
+	background-color: #8ae0f2;
+	font-size: 12px;
+	padding: 2px 5px;
 }
 #school {
 	font-weight: bold;
@@ -122,8 +122,8 @@ body {
 	grid-template-rows: repeat(3, 15%) repeat(4, 13.75%);
 	align-items: center;
 	background: #ffffff;
-  margin: 0 20px 0 20px;
-  box-shadow: 0 1px 0 0 #d7d8db, 0 0 0 1px #e3e4e8;
+	margin: 0 20px 0 20px;
+	box-shadow: 0 1px 0 0 #d7d8db, 0 0 0 1px #e3e4e8;
 }
 .info-item {
 	padding: 5px 10px;
@@ -159,10 +159,10 @@ body {
 }
 a.nav:link, a.nav:visited {
 	margin: 0 1px;
-  padding: 5px 10px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
+	padding: 5px 10px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
 }
 button, input, select {
 	font-size: 20px;
@@ -172,7 +172,7 @@ button, input, select {
 .menu-item, a.nav:link, a.nav:visited, button, input, select {
 	background-color: #8ae0f2;
 	box-shadow: 0 1px 0 0 #d7d8db, 0 0 0 1px #e3e4e8;
-  color: black;
+	color: black;
 }
 .menu-item:hover, a.nav:hover, a.nav:active, button:hover, input:hover, select:hover {
 	background-color: #00d2ff;

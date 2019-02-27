@@ -1,11 +1,12 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Db extends CI_Controller {
-
+class Db extends CI_Controller
+{
 	private $user_id;
 
-	public function __construct()	{
+	public function __construct()
+	{
 		parent::__construct();
 
 		$this->load->helper('language');
@@ -18,13 +19,15 @@ class Db extends CI_Controller {
 		}
 	}
 
-	public function index() {
+	public function index()
+	{
 		if (!$this->ion_auth->logged_in()) {
 			redirect('auth/login');
 		}
 	}
 
-	public function save_pers() {
+	public function save_pers()
+	{
 		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
@@ -34,7 +37,7 @@ class Db extends CI_Controller {
 			exit;
 		}
 
-		$json_data = json_decode($this->input->post('data'), TRUE);
+		$json_data = json_decode($this->input->post('data'), true);
 
 		if (isset($json_data['photo'])) {
 			$this->db->select('id');
@@ -45,15 +48,15 @@ class Db extends CI_Controller {
 
 
 		$data = [
-					'class_id' => $json_data['class'],
-					'f' => $json_data['f'],
-					'i' => $json_data['i'],
-					'o' => (isset($json_data['o'])) ? $json_data['o'] : NULL,
-					'birthday' => $json_data['birthday'],
-					'address' => (isset($json_data['address'])) ? $json_data['address'] : NULL,
-					'phone' => (isset($json_data['phone'])) ? $json_data['phone'] : NULL,
-					'photo_id' => (isset($photo_id)) ? $photo_id : NULL
-				];
+			'class_id' => $json_data['class'],
+			'f' => $json_data['f'],
+			'i' => $json_data['i'],
+			'o' => (isset($json_data['o'])) ? $json_data['o'] : null,
+			'birthday' => $json_data['birthday'],
+			'address' => (isset($json_data['address'])) ? $json_data['address'] : null,
+			'phone' => (isset($json_data['phone'])) ? $json_data['phone'] : null,
+			'photo_id' => (isset($photo_id)) ? $photo_id : null
+		];
 
 		$this->db->insert('personal', $data);
 
@@ -74,7 +77,8 @@ class Db extends CI_Controller {
 		echo $personal_id;
 	}
 
-	public function update_pers() {
+	public function update_pers()
+	{
 		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
@@ -84,7 +88,7 @@ class Db extends CI_Controller {
 			exit;
 		}
 
-		$json_data = json_decode($this->input->post('data'), TRUE);
+		$json_data = json_decode($this->input->post('data'), true);
 
 		if (isset($json_data['photo'])) {
 			$this->db->select('id');
@@ -94,15 +98,15 @@ class Db extends CI_Controller {
 		}
 
 		$data = [
-					'class_id' => $json_data['class'],
-					'f' => $json_data['f'],
-					'i' => $json_data['i'],
-					'o' => (isset($json_data['o'])) ? $json_data['o'] : NULL,
-					'birthday' => $json_data['birthday'],
-					'address' => (isset($json_data['address'])) ? $json_data['address'] : NULL,
-					'phone' => (isset($json_data['phone'])) ? $json_data['phone'] : NULL,
-					'photo_id' => (isset($photo_id)) ? $photo_id : NULL
-				];
+			'class_id' => $json_data['class'],
+			'f' => $json_data['f'],
+			'i' => $json_data['i'],
+			'o' => (isset($json_data['o'])) ? $json_data['o'] : null,
+			'birthday' => $json_data['birthday'],
+			'address' => (isset($json_data['address'])) ? $json_data['address'] : null,
+			'phone' => (isset($json_data['phone'])) ? $json_data['phone'] : null,
+			'photo_id' => (isset($photo_id)) ? $photo_id : null
+		];
 
 		$this->db->where('id', $json_data['id']);
 		$this->db->update('personal', $data);
@@ -122,7 +126,8 @@ class Db extends CI_Controller {
 		echo $json_data['id'];
 	}
 
-	public function delete_pers() {
+	public function delete_pers()
+	{
 		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
@@ -135,7 +140,7 @@ class Db extends CI_Controller {
 		$personal_id = $this->input->post('pers');
 
 		if (!$personal_id) {
-			return NULL;
+			return null;
 		}
 
 		$cards = $this->ac_model->get_cards($personal_id);
@@ -153,12 +158,12 @@ class Db extends CI_Controller {
 		if ($this->db->affected_rows() > 0) {
 			echo $personal_id;
 		} else {
-			return NULL;
+			return null;
 		}
-
 	}
 
-	public function add_card() {
+	public function add_card()
+	{
 		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
@@ -179,16 +184,15 @@ class Db extends CI_Controller {
 			if ($this->ac_model->add_card($card_id)) {
 				echo 'ok';
 			} else {
-				return NULL;
+				return null;
 			}
-
 		} else {
-			return NULL;
+			return null;
 		}
-
 	}
 
-	public function delete_card($card_id = NULL) {
+	public function delete_card($card_id = null)
+	{
 		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
@@ -202,8 +206,8 @@ class Db extends CI_Controller {
 
 		if (!$card_id && $post_data) {
 			$card_id = $post_data;
-		} else if (!$card_id) {
-			return NULL;
+		} elseif (!$card_id) {
+			return null;
 		}
 
 		if ($this->ac_model->delete_card($card_id) && $post_data) {
@@ -211,7 +215,8 @@ class Db extends CI_Controller {
 		}
 	}
 
-	public function save_class() {
+	public function save_class()
+	{
 		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
@@ -226,24 +231,24 @@ class Db extends CI_Controller {
 		$school = $this->input->post('school');
 
 		if (!$number || !$letter || !$school) {
-			return NULL;
+			return null;
 		}
 
 		$data = [
-					'number' => $number,
-					'letter' => $letter,
-					'school_id' => $school
-				];
+			'number' => $number,
+			'letter' => $letter,
+			'school_id' => $school
+		];
 
 		$this->db->insert('classes', $data);
 
 		if ($this->db->affected_rows()) {
 			echo json_encode($data);
 		}
-
 	}
 
-	public function delete_class() {
+	public function delete_class()
+	{
 		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
@@ -256,7 +261,7 @@ class Db extends CI_Controller {
 		$class_id = $this->input->post('class');
 
 		if (!$class_id) {
-			return NULL;
+			return null;
 		}
 
 		$this->db->where('id', $class_id);
@@ -264,12 +269,13 @@ class Db extends CI_Controller {
 
 		if ($this->db->affected_rows()) {
 			$this->db->where('class_id', $class_id);
-			$this->db->update('personal', ['class_id' => NULL]);
+			$this->db->update('personal', ['class_id' => null]);
 			echo 'ok';
 		}
 	}
 
-	public function get_classes() {
+	public function get_classes()
+	{
 		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
@@ -282,18 +288,20 @@ class Db extends CI_Controller {
 		echo json_encode($classes);
 	}
 
-	public function get_personal($class_id) {
+	public function get_personal($class_id)
+	{
 		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
 		}
 
-		$personal = $this->ac_model->get_personal_by_class($class_id, $full_info = FALSE);
+		$personal = $this->ac_model->get_personal_by_class($class_id, $full_info = false);
 
 		echo json_encode($personal);
 	}
 
-	public function get_pers() {
+	public function get_pers()
+	{
 		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
@@ -305,10 +313,7 @@ class Db extends CI_Controller {
 		if (!$pers_id) {
 			$pers = $this->ac_model->get_pers_by_card($card_id);
 			$class = $this->ac_model->get_class_by_id($pers->class);
-			$pers->class = $class->number;
-			$pers->class .= ' "';
-			$pers->class .= $class->letter;
-			$pers->class .= '"';
+			$pers->class = $class->number . ' "' . $class->letter . '"';
 		} else {
 			$pers = $this->ac_model->get_pers($pers_id);
 		}
@@ -316,12 +321,12 @@ class Db extends CI_Controller {
 		if ($pers) {
 			echo json_encode($pers);
 		} else {
-			return NULL;
+			return null;
 		}
-
 	}
 
-	public function get_cards() {
+	public function get_cards()
+	{
 		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
@@ -338,7 +343,8 @@ class Db extends CI_Controller {
 		echo json_encode($query->result());
 	}
 
-	public function get_cards_by_pers() {
+	public function get_cards_by_pers()
+	{
 		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
@@ -351,7 +357,7 @@ class Db extends CI_Controller {
 		if ($this->input->post('holder_id')) {
 			$holder_id = $this->input->post('holder_id');
 		} else {
-			return NULL;
+			return null;
 		}
 
 		$cards = $this->ac_model->get_cards($holder_id);
@@ -360,6 +366,4 @@ class Db extends CI_Controller {
 			echo json_encode($cards);
 		}
 	}
-
 }
-?>
