@@ -1,19 +1,19 @@
 let events = [2, 3]; //где 2,3 - события запрещенного входа/выхода
-let pers = {
+let person = {
 	'f': null,
 	'i': null,
 	'o': null,
 	'photo': null,
-	'class': null,
+	'div': null,
 	'birthday': null,
 	'address': null,
 	'phone': null,
 	'card': null
 }
 //обновление информации пользователя в БД
-function updatePersInfo() {
+function updatePersonInfo() {
 	let checkValidity = true;
-	Object.keys(pers).map(function(k, index) {
+	Object.keys(person).map(function(k, index) {
 		let elem = document.getElementById(k);
 		if (elem.required && elem.value === ``) {
 			elem.classList.add(`no-data`);
@@ -22,24 +22,24 @@ function updatePersInfo() {
 		if (k == `photo`) {
 			//TODO
 		} else if (elem.value) {
-			pers[k] = elem.value;
+			person[k] = elem.value;
 		} else {
-			pers[k] = null;
+			person[k] = null;
 		}
 	});
 	if (!checkValidity) {
 		alert(`Введены не все данные`);
 	} else {
 		$.ajax({
-			url: `/index.php/db/update_pers`,
+			url: `/index.php/db/update_person`,
 			type: `POST`,
 			data: {
-				data: JSON.stringify(pers)
+				person: JSON.stringify(person)
 			},
 			success: function(res) {
 				try {
 					if (res) {
-						getCardsByPers(res);
+						getCardsByPerson(res);
 						alert(`Пользователь №${res} успешно сохранен`);
 					} else {
 						alert(`Пустой ответ от сервера`);
@@ -56,24 +56,24 @@ function updatePersInfo() {
 	}
 }
 //удаление пользователя из БД
-function deletePers() {
+function deletePerson() {
 	if (!confirm(`Подтвердите удаление.`)) {
 		return;
 	}
 	$.ajax({
-		url: `/index.php/db/delete_pers`,
+		url: `/index.php/db/delete_person`,
 		type: `POST`,
 		data: {
-			pers: pers.id
+			person_id: person.id
 		},
 		success: function(res) {
 			try {
 				if (res) {
-					Object.keys(pers).map(function(k, index) { //перебор элементов формы
+					Object.keys(person).map(function(k, index) { //перебор элементов формы
 						let elem = document.getElementById(k);
 						if (k == `card`) { //поставить в карты "Не выбрано"
 							elem.value = 0;
-						} else if (k != `class`) { //обнулить значение всех полей, кроме Класс
+						} else if (k != `div`) { //обнулить значение всех полей, кроме Класс
 							elem.value = null;
 						}
 						if (k == `photo`) { //скрыть поле загрузки фото
@@ -83,12 +83,12 @@ function deletePers() {
 						}
 					});
 					document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/0.jpg)';
-					let li = document.getElementById(`pers${pers.id}`); //текущий элемент в ветке
+					let li = document.getElementById(`person${person.id}`); //текущий элемент в ветке
 					let ul = li.parentElement; //родитель этого элемента
 					li.remove(); //удаляем элемент
 					ul.lastElementChild.classList.add(`tree-is-last`); //устанавливаем последний элемент в ветке
-					for (let k in pers) {
-						pers[k] = null;
+					for (let k in person) {
+						person[k] = null;
 					}
 					document.getElementById(`cards`).innerHTML = ``; //очистка списка привязанных карт
 					document.getElementById(`card_selector`).hidden = false; //отобразим меню с неизвестными картами
@@ -121,19 +121,19 @@ function deletePers() {
 	});
 }
 //получение данных пользователя из БД
-function getPersData(pers_id) {
+function getPersonInfo(person_id) {
 	$.ajax({
-		url: `/index.php/db/get_pers`,
+		url: `/index.php/db/get_person`,
 		type: `POST`,
 		data: {
-			pers: pers_id
+			person_id: person_id
 		},
-		success: function(data) {
+		success: function(res) {
 			try {
-				if (data) {
-					data = JSON.parse(data);
+				if (res) {
+					let data = JSON.parse(res);
 					Object.keys(data).map(function(k, index) { //перебор полученных данных
-						pers[k] = data[k];
+						person[k] = data[k];
 						if (document.getElementById(k)) { //существует ли элемент с id = свойство объекта, т.к. могут быть "посторонние" данные
 							if (k == `photo`) { //отобразим поле загрузки фото
 								document.getElementById(k).value = null;
@@ -160,9 +160,9 @@ function getPersData(pers_id) {
 					document.getElementById(`photo`).onchange = function() {
 						handleFiles(this.files);
 					};
-					document.getElementById(`save`).onclick = updatePersInfo;
-					document.getElementById(`delete`).onclick = deletePers;
-					getCardsByPers(pers.id);
+					document.getElementById(`save`).onclick = updatePersonInfo;
+					document.getElementById(`delete`).onclick = deletePerson;
+					getCardsByPerson(person.id);
 				} else {
 					alert(`Пустой ответ от сервера`);
 				}
@@ -177,25 +177,25 @@ function getPersData(pers_id) {
 	});
 }
 //получение списка карт (брелоков) от сервера
-function getCardsByPers(pers_id) {
+function getCardsByPerson(person_id) {
 	$.ajax({
-		url: `/index.php/db/get_cards_by_pers`,
+		url: `/index.php/db/get_cards_by_person`,
 		type: `POST`,
 		data: {
-			holder_id: pers_id
+			holder_id: person_id
 		},
-		success: function(data) {
+		success: function(res) {
 			try {
 				let cards = document.getElementById(`cards`);
 				cards.innerHTML = ``;
-				if (data) {
+				if (res) {
 					document.getElementById(`card_selector`).hidden = true; //спрячем неизвестные карты
 					document.getElementById(`card`).disabled = true; //отключим меню неизвеснтых карт
-					data = JSON.parse(data);
+					let data = JSON.parse(res);
 					data.forEach(function(c) { //добавим каждую карту в список привязанных
 						cards.innerHTML = cards.innerHTML + `<div id="card${c.id}">${c.wiegand} <button type="button" onclick="delCard(${c.id});">Отвязать</button><br /></div>`
 					});
-					let li = document.getElementById(`pers${pers.id}`); //добавим пользователю метку наличия ключей
+					let li = document.getElementById(`person${person.id}`); //добавим пользователю метку наличия ключей
 					let c = li.querySelector(`.tree-content`);
 					if (c.innerHTML.indexOf(`(+) `) == -1) {
 						c.innerHTML = `(+) ${c.innerHTML}`;
@@ -221,13 +221,13 @@ function saveCard(card) {
 		url: `/index.php/db/add_card`,
 		type: `POST`,
 		data: {
-			card: card,
-			pers: pers.id
+			card_id: card,
+			person_id: person.id
 		},
 		success: function(res) {
 			try {
 				if (res == `ok`) {
-					getCardsByPers(pers.id);
+					getCardsByPerson(person.id);
 					alert(`Ключ успешно добавлен`);
 				} else {
 					alert(`Неизвестная ошибка`);
@@ -251,7 +251,7 @@ function delCard(id) {
 		url: `/index.php/db/delete_card`,
 		type: `POST`,
 		data: {
-			card: id
+			card_id: id
 		},
 		success: function(res) {
 			try {
@@ -264,7 +264,7 @@ function delCard(id) {
 						document.getElementById(`card_selector`).hidden = false;
 						document.getElementById(`card`).disabled = false;
 						getCards();
-						let li = document.getElementById(`pers${pers.id}`); //удалим у пользователя метку наличия ключей
+						let li = document.getElementById(`person${person.id}`); //удалим у пользователя метку наличия ключей
 						let c = li.querySelector(`.tree-content`);
 						if (c.innerHTML.indexOf(`(+) `) == 0) {
 							c.innerHTML = c.innerHTML.substring(4);

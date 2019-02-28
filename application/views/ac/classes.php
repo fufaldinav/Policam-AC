@@ -2,9 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?>
             <div id="main">
-                <div class="container">
-                    <div id="scrollable-container">
-                        <?php echo $table; ?>
-                    </div>
+                <div id="scrollable-container">
+                    <?php echo $table; ?>
                 </div>
             </div>

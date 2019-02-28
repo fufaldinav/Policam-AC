@@ -1,14 +1,14 @@
 //удалить из базы
-function del(id) {
+function deleteDivision(div_id) {
 	if (!confirm(`Подтвердите удаление.`)) {
 		return;
 	}
 	//отправим JSON
 	$.ajax({
-		url: `/index.php/db/delete_class`,
+		url: `/index.php/db/delete_div`,
 		type: `POST`,
 		data: {
-			class: id
+			div_id: div_id
 		},
 		success: function(res) {
 			try {
@@ -29,7 +29,7 @@ function del(id) {
 	});
 }
 //сохранить в базу
-function save(id) {
+function saveDivision(org_id) {
 	let number = document.getElementById(`number`).value;
 	let letter = document.getElementById(`letter`).value;
 	if (!number || !letter) {
@@ -37,17 +37,17 @@ function save(id) {
 		return;
 	}
 	$.ajax({
-		url: `/index.php/db/save_class`,
+		url: `/index.php/db/save_div`,
 		type: `POST`,
 		data: {
 			number: number,
 			letter: letter,
-			school: id
+			org_id: org_id
 		},
 		success: function(res) {
 			if (res) {
-				let c = JSON.parse(res);
-				alert(`Класс ${c.number} "${c.letter}" успешно сохранен`);
+				let div = JSON.parse(res);
+				alert(`Класс ${div.number} "${div.letter}" успешно сохранен`);
 				location.reload();
 			} else {
 				alert(`Пустой ответ от сервера`);

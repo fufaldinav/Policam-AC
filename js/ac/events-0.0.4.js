@@ -10,9 +10,9 @@ function getServerTime() {
 	$.ajax({
 		url: `/index.php/util/get_time`,
 		type: `GET`,
-		success: function(data) {
+		success: function(res) {
 			try {
-				time = data;
+				time = res;
 			} catch (e) {
 				sendError(e);
 				alert(`Ошибка: ${e.name}: ${e.message}`);
@@ -33,9 +33,9 @@ function getNewMsgs(events, time) {
 			events: events,
 			time: time
 		},
-		success: function(data) {
+		success: function(res) {
 			try {
-				data = JSON.parse(data);
+				let data = JSON.parse(res);
 				time = data.time;
 				if (!document.getElementById(`card`).disabled) { //если меню неизвестных карт активно
 					if (data.msgs.length > 0) {

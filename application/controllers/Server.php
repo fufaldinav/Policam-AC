@@ -53,7 +53,7 @@ class Server extends CI_Controller
 
 			write_file($path, "TYPE: $type || SN: $sn || Неизвестный контроллер\n", 'a');
 
-			return false;
+			return null;
 		}
 
 		header('Content-Type: application/json');

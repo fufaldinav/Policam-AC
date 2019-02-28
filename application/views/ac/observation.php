@@ -21,9 +21,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <?php echo lang('o');?><br />
                         <input id="o" name="o" size="30" type="text" readonly />
                     </div>
-                    <div id="info-class" class="info-item">
+                    <div id="info-div" class="info-item">
                         <?php echo lang('class');?><br />
-                        <input id="class" name="class" size="3" type="text" readonly />
+                        <input id="div" name="div" size="3" type="text" readonly />
                     </div>
                     <div id="info-birthday" class="info-item">
                         <?php echo lang('birthday');?><br />

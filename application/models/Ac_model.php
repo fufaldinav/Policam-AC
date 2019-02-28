@@ -17,18 +17,18 @@ class Ac_model extends CI_Model
 	/**
 	 * Получение информации о человеке
 	 *
-	 * @param			int							$pers_id
+	 * @param			int							$person_id
 	 * @return		mixed[]|null
 	 */
-	public function get_pers($pers_id)
+	public function get_person($person_id)
 	{
 		$this->db->select('address, birthday, f, i, o, phone');
-		$this->db->select("personal.id AS 'id'");
-		$this->db->select("class_id AS 'class'");
+		$this->db->select("persons.id AS 'id'");
+		$this->db->select("div_id AS 'div'");
 		$this->db->select("photo.hash AS 'photo'");
-		$this->db->where('personal.id', $pers_id);
-		$this->db->join('photo', 'photo.id = personal.photo_id', 'left');
-		$query = $this->db->get('personal');
+		$this->db->where('persons.id', $person_id);
+		$this->db->join('photo', 'photo.id = persons.photo_id', 'left');
+		$query = $this->db->get('persons');
 
 		if ($query->num_rows() > 0) {
 			return $query->row();
@@ -43,10 +43,10 @@ class Ac_model extends CI_Model
 	 * @param			int							$user_id
 	 * @return		mixed[]|null
 	 */
-	public function get_school_by_user($user_id)
+	public function get_org_by_user($user_id)
 	{
 		$this->db->where('users.id', $user_id);
-		$this->db->join('schools', 'schools.id = users.school_id', 'inner');
+		$this->db->join('organizations', 'organizations.id = users.org_id', 'inner');
 		$query = $this->db->get('users');
 
 		if ($query->num_rows() > 0) {
@@ -62,15 +62,15 @@ class Ac_model extends CI_Model
 	 * @param			int							$card_id
 	 * @return		mixed[]|null
 	 */
-	public function get_pers_by_card($card_id)
+	public function get_person_by_card($card_id)
 	{
 		$this->db->select('address, birthday, f, i, o, phone');
-		$this->db->select("personal.id AS 'id'");
-		$this->db->select("class_id AS 'class'");
+		$this->db->select("persons.id AS 'id'");
+		$this->db->select("div_id AS 'div'");
 		$this->db->select("photo.hash AS 'photo'");
 		$this->db->where('cards.id', $card_id);
-		$this->db->join('personal', 'personal.id = cards.holder_id', 'inner');
-		$this->db->join('photo', 'photo.id = personal.photo_id', 'left');
+		$this->db->join('persons', 'persons.id = cards.holder_id', 'inner');
+		$this->db->join('photo', 'photo.id = persons.photo_id', 'left');
 		$query = $this->db->get('cards');
 
 		if ($query->num_rows() > 0) {
@@ -83,22 +83,22 @@ class Ac_model extends CI_Model
 	/**
 	 * Получение списка людей из класса
 	 *
-	 * @param			int				$class_id
+	 * @param			int				$div_id
 	 * @param			bool			$full_info
 	 * @return		mixed[]
 	 */
-	public function get_personal_by_class($class_id, $full_info = null)
+	public function get_persons_by_div($div_id, $full_info = null)
 	{
 		if ($full_info === true) {
 			$this->db->select('*');
 		} else {
 			$this->db->select('f, i, o');
 		}
-		$this->db->select('personal.id AS "id"');
-		$this->db->join('personal', 'personal.class_id = classes.id', 'left');
-		$this->db->where('classes.id', $class_id);
+		$this->db->select('persons.id AS "id"');
+		$this->db->join('persons', 'persons.div_id = divisions.id', 'left');
+		$this->db->where('divisions.id', $div_id);
 		$this->db->order_by('f ASC, i ASC, o ASC');
-		$query = $this->db->get('classes');
+		$query = $this->db->get('divisions');
 
 		return $query->result();
 	}
@@ -106,13 +106,13 @@ class Ac_model extends CI_Model
 	/**
 	 * Получение информации о классе
 	 *
-	 * @param			int							$class_id
+	 * @param			int							$div_id
 	 * @return		mixed[]|null
 	 */
-	public function get_class_by_id($class_id)
+	public function get_div_by_id($div_id)
 	{
-		$this->db->where('id', $class_id);
-		$query = $this->db->get('classes');
+		$this->db->where('id', $div_id);
+		$query = $this->db->get('divisions');
 
 		if ($query->num_rows() > 0) {
 			return $query->row();
@@ -124,14 +124,14 @@ class Ac_model extends CI_Model
 	/**
 	 * Получение информации о классах конкретной школы
 	 *
-	 * @param			int							$school_id
+	 * @param			int							$org_id
 	 * @return		mixed[]|null
 	 */
-	public function get_classes_by_school($school_id)
+	public function get_divisions_by_org($org_id)
 	{
-		$this->db->where('school_id', $school_id);
+		$this->db->where('org_id', $org_id);
 		$this->db->order_by('number ASC, letter ASC');
-		$query = $this->db->get('classes');
+		$query = $this->db->get('divisions');
 
 		if ($query->num_rows() > 0) {
 			return $query->result();
@@ -143,12 +143,12 @@ class Ac_model extends CI_Model
 	/**
 	 * Получение информации о контроллерах конкретной школы
 	 *
-	 * @param			int							$school_id
+	 * @param			int							$org_id
 	 * @return		mixed[]|null
 	 */
-	public function get_controllers_by_school($school_id)
+	public function get_controllers_by_org($org_id)
 	{
-		$this->db->where('school_id', $school_id);
+		$this->db->where('org_id', $org_id);
 		$query = $this->db->get('controllers');
 
 		if ($query->num_rows() > 0) {
@@ -161,33 +161,33 @@ class Ac_model extends CI_Model
 	/**
 	 * Получение списка людей и привязаных к ним карт
 	 *
-	 * @param			int							$school_id
+	 * @param			int							$org_id
 	 * @return		mixed[]|null
 	 */
-	public function get_pers_and_cards_by_school($school_id)
+	public function get_persons_and_cards_by_org($org_id) //TODO переработать
 	{
 		$this->db->select('number, letter, f, i, o');
-		$this->db->select("personal.id AS 'id'");
+		$this->db->select("persons.id AS 'id'");
 		$this->db->select("cards.id AS 'card_id'");
-		$this->db->where('classes.school_id', $school_id);
-		$this->db->join('personal', 'personal.class_id = classes.id', 'left');
-		$this->db->join('cards', 'cards.holder_id = personal.id', 'left');
+		$this->db->where('divisions.org_id', $org_id);
+		$this->db->join('persons', 'persons.div_id = divisions.id', 'left');
+		$this->db->join('cards', 'cards.holder_id = persons.id', 'left');
 		$this->db->group_by('id'); //чтобы не дублировались записи с несколькими ключами
 		$this->db->order_by('number ASC, letter ASC, f ASC, i ASC');
-		$query = $this->db->get('classes');
+		$query = $this->db->get('divisions');
 
 
 
 		if ($query->num_rows() > 0) {
-			$classes = [];
+			$divisions = [];
 
 			foreach ($query->result() as $row) {
-				$classes[$row->number.$row->letter][] = $row; //number + letter для сортировки дерева 1А -> 1Б -> 2А etc.
+				$divisions[$row->number.$row->letter][] = $row; //number + letter для сортировки дерева 1А -> 1Б -> 2А etc.
 			}
 
-			ksort($classes);
+			ksort($divisions);
 
-			return $classes;
+			return $divisions;
 		} else {
 			return null;
 		}
@@ -224,8 +224,8 @@ class Ac_model extends CI_Model
 		$this->db->where('id', $card_id);
 		$query = $this->db->get('cards');
 
-		$school_id = $this->get_school_by_user($this->user_id)->school_id;
-		$controllers = $this->get_controllers_by_school($school_id);
+		$org_id = $this->get_org_by_user($this->user_id)->org_id;
+		$controllers = $this->get_controllers_by_org($org_id);
 
 		$wiegand = $query->row()->wiegand;
 
@@ -244,8 +244,8 @@ class Ac_model extends CI_Model
 	 */
 	public function delete_card($card_id)
 	{
-		$school_id = $this->ac_model->get_school_by_user($this->user_id)->school_id;
-		$controllers = $this->ac_model->get_controllers_by_school($school_id);
+		$org_id = $this->ac_model->get_org_by_user($this->user_id)->org_id;
+		$controllers = $this->ac_model->get_controllers_by_org($org_id);
 
 		$this->db->where('id', $card_id);
 		$wiegand = $this->db->get('cards')->row()->wiegand;
@@ -277,9 +277,9 @@ class Ac_model extends CI_Model
 			$time = now('Asia/Yekaterinburg');
 		}
 
-		$school_id = $this->get_school_by_user($this->user_id)->school_id;
+		$org_id = $this->get_org_by_user($this->user_id)->org_id;
 
-		$controllers = $this->get_controllers_by_school($school_id);
+		$controllers = $this->get_controllers_by_org($org_id);
 
 		if ($controllers) {
 			session_write_close();
@@ -318,36 +318,36 @@ class Ac_model extends CI_Model
 	/**
 	 * Удалить фото из БД и диска
 	 *
-	 * @param			int					$personal_id		Опционально, если не указан, найти ID по фото
+	 * @param			int					$person_id		Опционально, если не указан, найти ID по фото
 	 * @param			string			$photo_hash			Опционально, если не указан, фото по ID человека
 	 * @return		bool|null
 	 */
-	public function delete_photo($personal_id = null, $photo_hash = null)
+	public function delete_photo($person_id = null, $photo_hash = null)
 	{
-		if ($personal_id === null && $photo_hash === null) {
+		if ($person_id === null && $photo_hash === null) {
 			return null;
 		}
 
-		if ($personal_id === null) {
-			$this->db->select('personal.id AS "id"');
+		if ($person_id === null) {
+			$this->db->select('persons.id AS "id"');
 			$this->db->where('photo.hash', $photo_hash);
-			$this->db->join('personal', 'personal.photo_id = photo.id', 'left');
+			$this->db->join('persons', 'persons.photo_id = photo.id', 'left');
 			$query = $this->db->get('photo');
 
-			$personal_id = $query->row()->id;
+			$person_id = $query->row()->id;
 		}
 
 		if ($photo_hash === null) {
 			$this->db->select('hash');
-			$this->db->where('personal.id', $personal_id);
-			$this->db->join('photo', 'photo.id = personal.photo_id', 'left');
-			$query = $this->db->get('personal');
+			$this->db->where('persons.id', $person_id);
+			$this->db->join('photo', 'photo.id = persons.photo_id', 'left');
+			$query = $this->db->get('persons');
 
 			$photo_hash = $query->row()->hash;
 		}
 
-		$this->db->where('id', $personal_id);
-		$this->db->update('personal', ['photo_id' => null]);
+		$this->db->where('id', $person_id);
+		$this->db->update('persons', ['photo_id' => null]);
 
 		$this->db->delete('photo', ['hash' => $photo_hash]);
 
@@ -381,22 +381,22 @@ class Ac_model extends CI_Model
 	/**
 	 * Удалить фото из БД и диска
 	 *
-	 * @param			int				$school_id
+	 * @param			int				$org_id
 	 * @return		string									Строка в формате 'N (адресс при наличии)'
 	 */
-	public function render_school_name($school_id)
+	public function render_org_name($org_id)
 	{ //TODO check
-		$this->db->where('id', $school_id);
-		$query = $this->db->get('schools');
+		$this->db->where('id', $org_id);
+		$query = $this->db->get('organizations');
 
-		$school = $query->row()->number;
+		$org_name = $query->row()->number;
 		if ($query->row()->address) {
-			$school .= ' (';
-			$school .= $query->row()->address;
-			$school .= ')';
+			$org_name .= ' (';
+			$org_name .= $query->row()->address;
+			$org_name .= ')';
 		}
 
-		return $school;
+		return $org_name;
 	}
 
 	/**
@@ -463,10 +463,10 @@ class Ac_model extends CI_Model
 		$html .= '</a>';
 
 		if ($this->ion_auth->in_group(2)) {
-			$html .= '<a class="nav" href="/ac/add_pers">';
+			$html .= '<a class="nav" href="/ac/add_person">';
 			$html .= lang('adding');
 			$html .= '</a>';
-			$html .= '<a class="nav" href="/ac/edit_pers">';
+			$html .= '<a class="nav" href="/ac/edit_persons">';
 			$html .= lang('editing');
 			$html .= '</a>';
 			$html .= '<a class="nav" href="/ac/classes">';
@@ -488,10 +488,10 @@ class Ac_model extends CI_Model
 	{
 		$this->db->select('cards.wiegand AS "wiegand"');
 		$this->db->where('controllers.id', $controller_id);
-		$this->db->join('schools', 'schools.id = controllers.school_id', 'left');
-		$this->db->join('classes', 'classes.school_id = schools.id', 'left');
-		$this->db->join('personal', 'personal.class_id = classes.id', 'left');
-		$this->db->join('cards', 'cards.holder_id = personal.id', 'left');
+		$this->db->join('organizations', 'organizations.id = controllers.org_id', 'left');
+		$this->db->join('divisions', 'divisions.org_id = organizations.id', 'left');
+		$this->db->join('persons', 'persons.div_id = divisions.id', 'left');
+		$this->db->join('cards', 'cards.holder_id = persons.id', 'left');
 		$query = $this->db->get('controllers');
 
 		$cards = $query->result();

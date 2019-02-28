@@ -23,9 +23,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <?php echo lang('o');?><br />
                         <input maxlength="20" id="o" name="o" size="30" type="text" />
                     </div>
-                    <div id="info-class" class="info-item">
+                    <div id="info-div" class="info-item">
                         <?php echo lang('class');?><br />
-                        <?php echo form_dropdown('class', $classes, '0', $class_attr);?>
+                        <?php echo form_dropdown('div', $divisions, '0', $div_attr);?>
                     </div>
                     <div id="info-birthday" class="info-item">
                         <?php echo lang('birthday');?><br />
@@ -44,10 +44,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <?php echo form_dropdown('card', $cards, '0', $card_attr);?>
                     </div>
                     <div id="info-button1" class="info-item">
-                        <button type="button" onclick="savePersInfo();"><?php echo lang('save');?></button>
+                        <button type="button" onclick="savePersonInfo();"><?php echo lang('save');?></button>
                     </div>
                     <div id="info-button2" class="info-item">
-                        <button type="button" onclick="clearPersInfo();"><?php echo lang('clear');?></button>
+                        <button type="button" onclick="clearPersonInfo();"><?php echo lang('clear');?></button>
                     </div>
                 </div>
             </div>
