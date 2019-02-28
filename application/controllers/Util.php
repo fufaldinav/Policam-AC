@@ -2,10 +2,13 @@
 
 /**
  * Class Util
- * @property		Ac_model		$ac
+ * @property  Ac_model  $ac
  */
 class Util extends CI_Controller
 {
+	/**
+	* @var  int
+	*/
 	private $user_id;
 
 	public function __construct()

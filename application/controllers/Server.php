@@ -2,7 +2,7 @@
 
 /**
  * Class Server
- * @property		Ac_model		$ac
+ * @property  Ac_model  $ac
  */
 class Server extends CI_Controller
 {

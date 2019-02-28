@@ -2,10 +2,13 @@
 
 /**
  * Class Db
- * @property		Ac_model		$ac
+ * @property  Ac_model  $ac
  */
 class Db extends CI_Controller
 {
+	/**
+	* @var  int
+	*/
 	private $user_id;
 
 	public function __construct()

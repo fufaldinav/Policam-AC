@@ -2,10 +2,13 @@
 
 /**
  * Class Ac
- * @property		Ac_model		$ac
+ * @property  Ac_model  $ac
  */
 class Ac extends CI_Controller
 {
+	/**
+	* @var  int
+	*/
 	private $user_id;
 
 	public function __construct()
@@ -190,7 +193,7 @@ class Ac extends CI_Controller
 	}
 
 	/**
-	 * Управление классами 
+	 * Управление классами
 	 */
 	public function classes()
 	{

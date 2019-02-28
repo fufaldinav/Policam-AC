@@ -2,6 +2,9 @@
 
 class Ac_model extends CI_Model
 {
+	/**
+	* @var int
+	*/
 	private $user_id;
 
 	public function __construct()
