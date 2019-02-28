@@ -430,16 +430,8 @@ class Ac_model extends CI_Model
 
 		foreach ($arr as $str) {
 			switch ($str) {
-				case 'main':
-					$str .= '-0.0.5';
-					break;
-
-				case 'edit_pers':
-					$str .= '-0.0.5';
-					break;
-
 				default:
-					$str .= '-0.0.4';
+					$str .= '-0.0.5';
 					break;
 			}
 
