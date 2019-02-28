@@ -6,11 +6,6 @@
  */
 class Util extends CI_Controller
 {
-	/**
-	* @var  int
-	*/
-	private $user_id;
-
 	public function __construct()
 	{
 		parent::__construct();
