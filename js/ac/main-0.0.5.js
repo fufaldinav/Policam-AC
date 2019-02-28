@@ -4,7 +4,7 @@ function sendError(message) {
 		url: `/index.php/util/save_js_errors`,
 		type: `POST`,
 		data: {
-			data: message
+			error: message
 		}
 	});
 }
@@ -15,10 +15,10 @@ function getCards(id) {
 	$.ajax({
 		url: `/index.php/db/get_cards`,
 		type: `GET`,
-		success: function(data) {
+		success: function(res) {
 			try {
-				if (data) {
-					data = JSON.parse(data);
+				if (res) {
+					let data = JSON.parse(res);
 					while (card.length > 0) { //удалить все элементы из меню карт
 						card.remove(card.length - 1);
 					}
@@ -71,13 +71,13 @@ function handleFiles(files) {
 			try {
 				if (res && res !== `0`) {
 					document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/' + res + '.jpg)';
-					pers.photo = res;
+					person.photo = res;
 					document.getElementById(`photo`).hidden = true;
 					document.getElementById(`photo_del`).hidden = false;
 					document.getElementById(`photo_del`).onclick = deletePhoto;
 				} else {
 					document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/0.jpg)';
-					pers.photo = null;
+					person.photo = null;
 				}
 			} catch (e) {
 				sendError(e);
@@ -99,8 +99,8 @@ function deletePhoto() {
 		url: `/index.php/util/delete_photo`,
 		type: `POST`,
 		data: {
-			id: pers.id,
-			photo: pers.photo
+			person_id: person.id,
+			photo: person.photo
 		},
 		success: function(res) {
 			try {
@@ -112,7 +112,7 @@ function deletePhoto() {
 					};
 					document.getElementById(`photo`).hidden = false;
 					document.getElementById(`photo`).value = null;
-					pers.photo = null;
+					person.photo = null;
 				} else {
 					alert(`Неизвестная ошибка`);
 				}

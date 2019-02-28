@@ -1,7 +1,7 @@
 let time, events = [4, 5]; //где 4,5 - события разрешенного входа/выхода
 
 document.addEventListener("DOMContentLoaded", function() {
-	getClasses();
+	getDivisions();
 	time = getServerTime();
 	getNewMsgs(events, time);
 });
@@ -10,8 +10,8 @@ document.addEventListener("DOMContentLoaded", function() {
 function getServerTime() {
 	$.ajax({
 		url: `/index.php/util/get_time`,
-		success: function(data) {
-			time = data;
+		success: function(res) {
+			time = res;
 		},
 		type: `GET`
 	});
@@ -26,14 +26,14 @@ function getNewMsgs(events, time) {
 			events: events,
 			time: time
 		},
-		success: function(data) {
+		success: function(res) {
 			try {
-				if (data) {
-					data = JSON.parse(data);
+				if (res) {
+					let data = JSON.parse(res);
 					time = data.time;
 					if (data.msgs.length > 0) {
 						let card = data.msgs[data.msgs.length - 1].card_id; //последний прочитанный ключ из БД
-						setPersData(card);
+						setPersonInfo(card);
 					}
 					setTimeout(function() {
 						getNewMsgs(events, time);
@@ -53,17 +53,17 @@ function getNewMsgs(events, time) {
 }
 
 //получение данных пользователя из БД
-function setPersData(card) {
+function setPersonInfo(card_id) {
 	$.ajax({
-		url: `/index.php/db/get_pers`,
+		url: `/index.php/db/get_person`,
 		type: `POST`,
 		data: {
-			card: card
+			card_id: card_id
 		},
-		success: function(data) {
+		success: function(res) {
 			try {
-				if (data) {
-					data = JSON.parse(data);
+				if (res) {
+					let data = JSON.parse(res);
 					Object.keys(data).map(function(k) { //перебор полученных данных
 						if (document.getElementById(k)) {
 							document.getElementById(k).value = data[k];
@@ -88,20 +88,20 @@ function setPersData(card) {
 	});
 }
 
-function getClasses() {
+function getDivisions() {
 	$.ajax({
-		url: `/index.php/db/get_classes`,
+		url: `/index.php/db/get_divisions`,
 		type: `GET`,
-		success: function(data) {
+		success: function(res) {
 			try {
-				if (data) {
-					data = JSON.parse(data);
-					let classList = ``;
-					data.forEach(function(c) {
-						classList += `<div id="class${c.id}" class="menu-item" onclick="getPersonal(${c.id});">${c.number} "${c.letter}"</div>`;
+				if (res) {
+					let data = JSON.parse(res);
+					let divisions = ``;
+					data.forEach(function(div) {
+						divisions += `<div id="div${div.id}" class="menu-item" onclick="getPersons(${div.id});">${div.number} "${div.letter}"</div>`;
 					});
 					let menu = document.getElementById(`menu`);
-					menu.innerHTML = classList;
+					menu.innerHTML = divisions;
 				} else {
 					alert(`Пустой ответ от сервера`);
 				}
@@ -116,20 +116,20 @@ function getClasses() {
 	});
 }
 
-function getPersonal(class_id) {
+function getPersons(div_id) {
 	$.ajax({
-		url: `/index.php/db/get_personal/${class_id}`,
+		url: `/index.php/db/get_persons/${div_id}`,
 		type: `GET`,
-		success: function(data) {
+		success: function(res) {
 			try {
-				if (data) {
-					data = JSON.parse(data);
-					let personal = `<div id="menu-button-back" class="menu-item" onclick="getClasses();">Назад</div>`;
-					data.forEach(function(pers) {
-						personal += `<div id="pers${pers.id}" class="menu-item" onclick="openEntraceOptions(${pers.id}, ${class_id});">${pers.f} ${pers.i}</div>`;
+				if (res) {
+					let data = JSON.parse(res);
+					let persons = `<div id="menu-button-back" class="menu-item" onclick="getDivisions();">Назад</div>`;
+					data.forEach(function(person) {
+						persons += `<div id="person${person.id}" class="menu-item" onclick="openEntraceOptions(${person.id}, ${div_id});">${person.f} ${person.i}</div>`;
 					});
 					let menu = document.getElementById(`menu`);
-					menu.innerHTML = personal;
+					menu.innerHTML = persons;
 				} else {
 					alert(`Пустой ответ от сервера`);
 				}
@@ -144,21 +144,21 @@ function getPersonal(class_id) {
 	});
 }
 
-function openEntraceOptions(pers_id, class_id) {
+function openEntraceOptions(person_id, div_id) {
 	let options = ``;
-	if (class_id === undefined) {
-		options += `<div id="menu-button-back" class="menu-item" onclick="getClasses();">Назад</div>`;
+	if (div_id === undefined) {
+		options += `<div id="menu-button-back" class="menu-item" onclick="getDivisions();">Назад</div>`;
 	} else {
-		options += `<div id="menu-button-back" class="menu-item" onclick="getPersonal(${class_id});">Назад</div>`;
+		options += `<div id="menu-button-back" class="menu-item" onclick="getPersons(${div_id});">Назад</div>`;
 	}
-	options += `<div id="menu-button-forgot" class="menu-item" onclick="sendInfo(1, ${pers_id})">Забыл</div>`;
-	options += `<div id="menu-button-lost" class="menu-item" onclick="sendInfo(2, ${pers_id})">Потерял</div>`;
-	options += `<div id="menu-button-broke" class="menu-item" onclick="sendInfo(3, ${pers_id})">Сломал</div>`;
+	options += `<div id="menu-button-forgot" class="menu-item" onclick="sendInfo(1, ${person_id})">Забыл</div>`;
+	options += `<div id="menu-button-lost" class="menu-item" onclick="sendInfo(2, ${person_id})">Потерял</div>`;
+	options += `<div id="menu-button-broke" class="menu-item" onclick="sendInfo(3, ${person_id})">Сломал</div>`;
 	let menu = document.getElementById(`menu`);
 	menu.innerHTML = options;
 }
 
-function sendInfo(type, pers_id) {
+function sendInfo(type, person_id) {
 	let msg;
 	switch (type) {
 		case 1:
@@ -179,12 +179,12 @@ function sendInfo(type, pers_id) {
 		type: `POST`,
 		data: {
 			type: type,
-			pers_id: pers_id
+			person_id: person_id
 		},
-		success: function(data) {
+		success: function(res) {
 			try {
-				if (data) {
-					alert(data);
+				if (res) {
+					alert(res);
 				} else {
 					alert(`Пустой ответ от сервера`);
 				}

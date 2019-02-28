@@ -13,7 +13,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <div id="header">
                 <div id="header-container">
                     <div id="header-left">
-                        <?php echo lang('school');?> <?php echo $school;?>
+                        <?php echo lang('school');?> <?php echo $org_name;?>
                     </div>
                     <div id="header-content">
                       <?php echo $nav;?>

@@ -115,7 +115,7 @@ body {
 		"photo f"
 		"photo i"
 		"photo o"
-		"class birthday"
+		"div birthday"
 		"address address"
 		"phone card";
 	grid-template-columns: 50%;
@@ -138,7 +138,7 @@ body {
 	justify-self: center;
 	text-align: center;
 }
-#info-class, #info-birthday, #info-phone, #info-card, #info-uid {
+#info-div, #info-birthday, #info-phone, #info-card, #info-uid {
 	justify-self: center;
 	text-align: center;
 }

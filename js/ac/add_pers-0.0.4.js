@@ -1,19 +1,19 @@
 let events = [2, 3]; //где 2,3 - события запрещенного входа/выхода
-let pers = {
+let person = {
 	'f': null,
 	'i': null,
 	'o': null,
 	'photo': null,
-	'class': null,
+	'div': null,
 	'birthday': null,
 	'address': null,
 	'phone': null,
 	'card': null
 }
 
-function savePersInfo() {
+function savePersonInfo() {
 	let checkValidity = true;
-	Object.keys(pers).map(function(k, index) {
+	Object.keys(person).map(function(k, index) {
 		let elem = document.getElementById(k);
 		if (elem.required && elem.value === ``) {
 			elem.classList.add(`no-data`);
@@ -22,28 +22,29 @@ function savePersInfo() {
 		if (k == `photo`) {
 			//TODO
 		} else if (elem.value) {
-			pers[k] = elem.value;
+			person[k] = elem.value;
 		} else {
-			pers[k] = null;
+			person[k] = null;
 		}
 	});
 	if (!checkValidity) {
 		alert(`Введены не все данные`);
 	} else {
+		console.log(person);
 		$.ajax({
-			url: `/index.php/db/save_pers`,
+			url: `/index.php/db/save_person`,
 			type: `POST`,
 			data: {
-				data: JSON.stringify(pers)
+				person: JSON.stringify(person)
 			},
 			success: function(res) {
 				try {
 					if (res) {
-						for (let k in pers) {
-							pers[k] = null;
+						for (let k in person) {
+							person[k] = null;
 						}
 						alert(`Пользователь №${res} успешно сохранен`);
-						clearPersInfo();
+						clearPersonInfo();
 					} else {
 						alert(`Пустой ответ от сервера`);
 					}
@@ -59,12 +60,12 @@ function savePersInfo() {
 	}
 }
 
-function clearPersInfo() {
+function clearPersonInfo() {
 	document.getElementById(`card`).value = 0; //поставить в карты "Не выбрано"
-	Object.keys(pers).map(function(k, index) {
+	Object.keys(person).map(function(k, index) {
 		let elem = document.getElementById(k);
-		if (k != `class`) { //обнулить значение всех полей, кроме Класс
-			pers[k] = null;
+		if (k != `div`) { //обнулить значение всех полей, кроме Класс
+			person[k] = null;
 			elem.value = null;
 		}
 	});

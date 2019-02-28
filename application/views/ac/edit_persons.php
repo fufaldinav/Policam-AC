@@ -26,9 +26,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <?php echo lang('o');?><br />
                             <input maxlength="20" id="o" name="o" size="30" type="text" readonly />
                         </div>
-                        <div id="info-class" class="info-item">
+                        <div id="info-div" class="info-item">
                             <?php echo lang('class');?><br />
-                            <?php echo form_dropdown('class', $classes, '0', $class_attr);?>
+                            <?php echo form_dropdown('div', $divisions, '0', $div_attr);?>
                         </div>
                         <div id="info-birthday" class="info-item">
                             <?php echo lang('birthday');?><br />

@@ -53,7 +53,7 @@ class Server extends CI_Controller
 
 			write_file($path, "TYPE: $type || SN: $sn || Неизвестный контроллер\n", 'a');
 
-			return false;
+			return null;
 		}
 
 		header('Content-Type: application/json');
@@ -191,8 +191,6 @@ class Server extends CI_Controller
 
 		write_file($path, "TYPE: $type || SN: $sn || $out_json_msg\n", 'a');
 	}
-
-
 
 	/*private function _wiegand_to_EM($str)
 	{

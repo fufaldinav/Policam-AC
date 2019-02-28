@@ -49,7 +49,7 @@ class Util extends CI_Controller
 		]);
 	}
 
-	public function save_photo()
+	public function save_photo() //TODO проверка уже имеющейся фото
 	{
 		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
@@ -64,7 +64,7 @@ class Util extends CI_Controller
 			if (isset($_FILES['file'])) {
 				$file = $_FILES['file'];
 				$error = '';
-				$path = '/var/www/img_ac/';
+				$IMG_PATH = '/var/www/img_ac';
 				$extensions = ['jpg', 'jpeg'];
 
 				$file_name = $file['name'];
@@ -78,9 +78,7 @@ class Util extends CI_Controller
 				$file_ext = strtolower($file_ext);
 				$file_hash = hash_file('md5', $file_tmp);
 
-				$file_path = $path;
-				$file_path .= $file_hash;
-				$file_path .= '.jpg';
+				$file_path = "$IMG_PATH/$file_hash.jpg";
 
 				if (!in_array($file_ext, $extensions)) {
 					$error = 'Extension not allowed: ' . $file_name . ' ' . $file_type;
@@ -98,7 +96,7 @@ class Util extends CI_Controller
 				if (!$error) {
 					$time = now('Asia/Yekaterinburg');
 
-					$this->db->where('personal_id', null);
+					$this->db->where('person_id', null);
 					$this->db->where('time <', $time - 86400);
 					$query = $this->db->get('photo');
 
@@ -122,10 +120,7 @@ class Util extends CI_Controller
 						$source_img = imagecreatefromjpeg($file_path);
 						list($width, $height) = getimagesize($file_path);
 
-						$file_path_s = $path;
-						$file_path_s .= 's/';
-						$file_path_s .= $file_hash;
-						$file_path_s .= '.jpg';
+						$file_path_s = "$IMG_PATH/s/$file_hash.jpg";
 
 						$d_w = $width / 240;
 						$d_h = $height / 320;
@@ -161,14 +156,14 @@ class Util extends CI_Controller
 			exit;
 		}
 
-		if ($this->input->post('id') || $this->input->post('photo')) {
-			$id = $this->input->post('id');
-			$photo = $this->input->post('photo');
-		} else {
-			return false;
+		$person_id = $this->input->post('person_id');
+		$photo = $this->input->post('photo');
+
+		if (!isset($person_id) && !isset($photo)) {
+			return null;
 		}
 
-		if ($this->ac_model->delete_photo($id, $photo)) {
+		if ($this->ac_model->delete_photo($person_id, $photo)) {
 			echo 'ok';
 		}
 	}
@@ -180,12 +175,20 @@ class Util extends CI_Controller
 			exit;
 		}
 
+		$LOG_PATH = '/var/www/logs';
+
+		if (!is_dir($LOG_PATH)) {
+			mkdir($LOG_PATH, 0777, true);
+		}
+
 		$this->load->helper('file');
 
-		if ($this->input->post('data')) {
-			$err = $this->input->post('data');
-		} elseif ($err === null) {
-			return false;
+		if ($err === null) {
+			$err = $this->input->post('error');
+		}
+
+		if (!isset($err)) {
+			return;
 		}
 
 		$time = now('Asia/Yekaterinburg');
@@ -194,22 +197,9 @@ class Util extends CI_Controller
 		$timestring = '%H:%i:%s';
 		$time = mdate($timestring, $time);
 
-		$path = '/var/www/logs';
+		$path = "$LOG_PATH/err-$date.txt";
 
-		if (!is_dir($path)) {
-			mkdir($path, 0777, true);
-		}
-
-		$path .= '/err-';
-		$path .= $date;
-		$path .= '.txt';
-
-		$message = $time;
-		$message .= ' ';
-		$message .= $err;
-		$message .= PHP_EOL;
-
-		write_file($path, $message, 'a');
+		write_file($path, "$time $err\n", 'a');
 	}
 
 	public function reload($controller_id = null)
@@ -256,47 +246,38 @@ class Util extends CI_Controller
 		}
 
 		$type = $this->input->post('type');
-		$pers_id = $this->input->post('pers_id');
+		$person_id = $this->input->post('person_id');
+
+		if (!isset($type) || !isset($person_id)) {
+			return null;
+		}
 
 		$response = lang('registred');
 
 		if ($type >= 1 && $type <= 3) {
-			$pers = $this->ac_model->get_pers($pers_id);
+			$pers = $this->ac_model->get_person($person_id);
 		}
 
 		if ($type == 1) {
-			$desc = $pers->id;
-			$desc .= ' ';
-			$desc .= $pers->f;
-			$desc .= ' ';
-			$desc .= $pers->i;
-			$desc .= ' forgot card';
+			$desc = $pers->id . ' ' . $pers->f . ' ' . $pers->i . ' forgot card';
 
 			if ($this->ac_model->add_user_event($type, $desc)) {
 				echo $response;
 			}
 		} elseif ($type == 2 || $type == 3) {
-			$cards = $this->ac_model->get_cards($pers_id);
+			$cards = $this->ac_model->get_cards($person_id);
 
-			if (!$cards) {
-				return false;
+			if (!isset($cards)) {
+				return null;
 			}
 
 			foreach ($cards as $card) {
 				$this->ac_model->delete_card($card->id);
 			}
 
-			$desc = $pers->id;
-			$desc .= ' ';
-			$desc .= $pers->f;
-			$desc .= ' ';
-			$desc .= $pers->i;
-			$desc .= ' lost/broke card';
+			$desc = $pers->id . ' ' . $pers->f . ' ' . $pers->i . ' lost/broke card';
 
-			$response .= ' ';
-			$response .= lang('and');
-			$response .= ' ';
-			$response .= lang('card_deleted');
+			$response .= ' ' . lang('and') . ' ' . lang('card_deleted');
 
 			if ($this->ac_model->add_user_event($type, $desc)) {
 				echo $response;
