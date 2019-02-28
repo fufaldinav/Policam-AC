@@ -1,6 +1,9 @@
-<?php
-defined('BASEPATH') or exit('No direct script access allowed');
+<?php defined('BASEPATH') or exit('No direct script access allowed');
 
+/**
+ * Class Ac
+ * @property		Ac_model		$ac
+ */
 class Ac extends CI_Controller
 {
 	private $user_id;
@@ -19,6 +22,9 @@ class Ac extends CI_Controller
 		}
 	}
 
+	/**
+	 * Наблюдение
+	 */
 	public function index()
 	{
 		if (!$this->ion_auth->logged_in()) {
@@ -39,6 +45,9 @@ class Ac extends CI_Controller
 		$this->load->view('ac/footer');
 	}
 
+	/**
+	 * Добавление человека
+	 */
 	public function add_person()
 	{
 		if (!$this->ion_auth->logged_in()) {
@@ -52,7 +61,9 @@ class Ac extends CI_Controller
 
 		$org_id = $this->ac_model->get_org_by_user($this->user_id)->id;
 
-		//классы
+		/**
+		 * Подразделения
+		 */
 		$data['divisions'] = [];
 
 		$divisions = $this->ac_model->get_divisions_by_org($org_id);
@@ -67,7 +78,9 @@ class Ac extends CI_Controller
 
 		$data['div_attr'] = 'id="div"';
 
-		//карты
+		/**
+		 * Карты
+		 */
 		$data['cards'] = [];
 
 		$cards = $this->ac_model->get_cards();
@@ -93,6 +106,9 @@ class Ac extends CI_Controller
 		$this->load->view('ac/footer');
 	}
 
+	/**
+	 * Редактирование людей
+	 */
 	public function edit_persons()
 	{
 		if (!$this->ion_auth->logged_in()) {
@@ -108,7 +124,9 @@ class Ac extends CI_Controller
 
 		$data['menu'] = '<ul class="tree-container">';
 
-		//классы
+		/**
+		 * Подразделения
+		 */
 		$data['divisions'] = [];
 
 		$divisions = $this->ac_model->get_divisions_by_org($org_id);
@@ -143,7 +161,9 @@ class Ac extends CI_Controller
 
 		$data['div_attr'] = 'id="div"';
 
-		//классы
+		/**
+		 * Карты
+		 */
 		$data['cards'] = [];
 
 		$cards = $this->ac_model->get_cards();
@@ -169,6 +189,9 @@ class Ac extends CI_Controller
 		$this->load->view('ac/footer');
 	}
 
+	/**
+	 * Управление классами 
+	 */
 	public function classes()
 	{
 		if (!$this->ion_auth->logged_in()) {

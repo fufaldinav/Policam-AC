@@ -1,5 +1,4 @@
-<?php
-defined('BASEPATH') or exit('No direct script access allowed');
+<?php defined('BASEPATH') or exit('No direct script access allowed');
 
 class Ac_model extends CI_Model
 {
@@ -17,8 +16,8 @@ class Ac_model extends CI_Model
 	/**
 	 * Получение информации о человеке
 	 *
-	 * @param			int							$person_id
-	 * @return		mixed[]|null
+	 * @param   int           $person_id
+	 * @return  mixed[]|null
 	 */
 	public function get_person($person_id)
 	{
@@ -38,10 +37,10 @@ class Ac_model extends CI_Model
 	}
 
 	/**
-	 * Получение информации о школе, к которой привязан пользователь
+	 * Получение информации о организации, к которой привязан пользователь
 	 *
-	 * @param			int							$user_id
-	 * @return		mixed[]|null
+	 * @param   int           $user_id
+	 * @return  mixed[]|null
 	 */
 	public function get_org_by_user($user_id)
 	{
@@ -59,8 +58,8 @@ class Ac_model extends CI_Model
 	/**
 	 * Получение информации о человеке, к которому привязана карта
 	 *
-	 * @param			int							$card_id
-	 * @return		mixed[]|null
+	 * @param   int           $card_id
+	 * @return  mixed[]|null
 	 */
 	public function get_person_by_card($card_id)
 	{
@@ -81,11 +80,11 @@ class Ac_model extends CI_Model
 	}
 
 	/**
-	 * Получение списка людей из класса
+	 * Получение списка людей из подразделения
 	 *
-	 * @param			int				$div_id
-	 * @param			bool			$full_info
-	 * @return		mixed[]
+	 * @param   int      $div_id
+	 * @param   bool     $full_info
+	 * @return  mixed[]
 	 */
 	public function get_persons_by_div($div_id, $full_info = null)
 	{
@@ -104,10 +103,10 @@ class Ac_model extends CI_Model
 	}
 
 	/**
-	 * Получение информации о классе
+	 * Получение информации о подразделении
 	 *
-	 * @param			int							$div_id
-	 * @return		mixed[]|null
+	 * @param   int           $div_id
+	 * @return  mixed[]|null
 	 */
 	public function get_div_by_id($div_id)
 	{
@@ -122,10 +121,10 @@ class Ac_model extends CI_Model
 	}
 
 	/**
-	 * Получение информации о классах конкретной школы
+	 * Получение информации о подразделениях организации
 	 *
-	 * @param			int							$org_id
-	 * @return		mixed[]|null
+	 * @param   int           $org_id
+	 * @return  mixed[]|null
 	 */
 	public function get_divisions_by_org($org_id)
 	{
@@ -141,10 +140,10 @@ class Ac_model extends CI_Model
 	}
 
 	/**
-	 * Получение информации о контроллерах конкретной школы
+	 * Получение информации о контроллерах организации
 	 *
-	 * @param			int							$org_id
-	 * @return		mixed[]|null
+	 * @param   int           $org_id
+	 * @return  mixed[]|null
 	 */
 	public function get_controllers_by_org($org_id)
 	{
@@ -159,10 +158,10 @@ class Ac_model extends CI_Model
 	}
 
 	/**
-	 * Получение списка людей и привязаных к ним карт
+	 * Получение списка людей и привязаных к ним карт из организации
 	 *
-	 * @param			int							$org_id
-	 * @return		mixed[]|null
+	 * @param   int           $org_id
+	 * @return  mixed[]|null
 	 */
 	public function get_persons_and_cards_by_org($org_id) //TODO переработать
 	{
@@ -196,8 +195,8 @@ class Ac_model extends CI_Model
 	/**
 	 * Получение списка карт, привязаных к конкретному человеку или все неизвестные карты
 	 *
-	 * @param			int							$holder_id		Опционально, по-умолчанию -1 (список всех неизвестных карт)
-	 * @return		mixed[]|null
+	 * @param   int           $holder_id  Опционально, по-умолчанию -1 (список всех неизвестных карт)
+	 * @return  mixed[]|null
 	 */
 	public function get_cards($holder_id = -1)
 	{
@@ -213,10 +212,10 @@ class Ac_model extends CI_Model
 	}
 
 	/**
-	 * Добавить карты в память контроллеров
+	 * Добавление карты в память контроллеров
 	 *
-	 * @param			int			$card_id
-	 * @return		bool
+	 * @param   int   $card_id
+	 * @return  int
 	 */
 	public function add_card($card_id)
 	{
@@ -229,18 +228,19 @@ class Ac_model extends CI_Model
 
 		$wiegand = $query->row()->wiegand;
 
+		$counter = 0;
 		foreach ($controllers as $c) {
-			$this->add_cards_to_controller($wiegand, $c->id);
+			$counter += $this->add_cards_to_controller($wiegand, $c->id);
 		}
 
-		return true;
+		return $counter;
 	}
 
 	/**
-	 * Удалить карты из памяти контроллеров
+	 * Удаление карты из памяти контроллеров
 	 *
-	 * @param			int			$card_id
-	 * @return		bool
+	 * @param   int   $card_id
+	 * @return  bool
 	 */
 	public function delete_card($card_id)
 	{
@@ -266,7 +266,7 @@ class Ac_model extends CI_Model
 	/**
 	 * Реализация long polling
 	 *
-	 * @return		array
+	 * @return  mixed[]
 	 */
 	public function start_polling()
 	{
@@ -316,11 +316,11 @@ class Ac_model extends CI_Model
 	}
 
 	/**
-	 * Удалить фото из БД и диска
+	 * Удаление фото из БД и диска
 	 *
-	 * @param			int					$person_id		Опционально, если не указан, найти ID по фото
-	 * @param			string			$photo_hash			Опционально, если не указан, фото по ID человека
-	 * @return		bool|null
+	 * @param   int        $person_id   Опционально, если не указан, найти ID по фото
+	 * @param   string     $photo_hash  Опционально, если не указан, фото по ID человека
+	 * @return  bool|null
 	 */
 	public function delete_photo($person_id = null, $photo_hash = null)
 	{
@@ -379,10 +379,10 @@ class Ac_model extends CI_Model
 	}
 
 	/**
-	 * Удалить фото из БД и диска
+	 * Рендер имени организации
 	 *
-	 * @param			int				$org_id
-	 * @return		string									Строка в формате 'N (адресс при наличии)'
+	 * @param   int     $org_id
+	 * @return  string  Строка в формате 'N (адресс при наличии)'
 	 */
 	public function render_org_name($org_id)
 	{ //TODO check
@@ -402,8 +402,8 @@ class Ac_model extends CI_Model
 	/**
 	 * Рендер строки подключения CSS
 	 *
-	 * @param			string[]		$arr
-	 * @return		string
+	 * @param   string[]  $arr
+	 * @return  string
 	 */
 	public function render_css($arr)
 	{
@@ -421,8 +421,8 @@ class Ac_model extends CI_Model
 	/**
 	 * Рендер строки подключения JavaScript
 	 *
-	 * @param			string[]		$arr
-	 * @return		string
+	 * @param   string[]  $arr
+	 * @return  string
 	 */
 	public function render_js($arr)
 	{
@@ -446,7 +446,7 @@ class Ac_model extends CI_Model
 	/**
 	 * Рендер навигационных кнопок
 	 *
-	 * @return	string
+	 * @return  string
 	 */
 	public function render_nav()
 	{
@@ -471,10 +471,10 @@ class Ac_model extends CI_Model
 
 	/**
 	 * Отправляет все карты (частями максимум 10 карт за раз) в контроллер,
-	 * предварительно получив список карт людей, принадлежащих школе контроллера
+	 * предварительно получив список карт людей, принадлежащих организации определенного контроллера
 	 *
-	 * @param			int		$controller_id
-	 * @return		int		Вернет количество сообщений, отправленных на контроллер
+	 * @param   int  $controller_id
+	 * @return  int  Вернет количество сообщений, отправленных на контроллер
 	 */
 	public function add_all_cards_to_controller($controller_id)
 	{
@@ -507,9 +507,9 @@ class Ac_model extends CI_Model
 	/**
 	 * Добавление карт в контроллер
 	 *
-	 * @param			string[]|string		$cards
-	 * @param			int								$controller_id
-	 * @return		int
+	 * @param   string[]|string  $cards
+	 * @param   int              $controller_id
+	 * @return  int
 	 */
 	public function add_cards_to_controller($cards, $controller_id)
 	{
@@ -533,9 +533,9 @@ class Ac_model extends CI_Model
 	/**
 	 * Удаление карт из контроллера
 	 *
-	 * @param			string[]|string		$cards
-	 * @param			int								$controller_id
-	 * @return		int
+	 * @param   string[]|string  $cards
+	 * @param   int              $controller_id
+	 * @return  int
 	 */
 	public function del_cards_from_controller($cards, $controller_id)
 	{
@@ -560,8 +560,8 @@ class Ac_model extends CI_Model
 	/**
 	 * Удаление всех карт из контроллера
 	 *
-	 * @param			int		$controller_id
-	 * @return		int
+	 * @param   int  $controller_id
+	 * @return  int
 	 */
 	public function clear_cards($controller_id)
 	{
@@ -571,11 +571,11 @@ class Ac_model extends CI_Model
 	/**
 	 * Установить параметры открытия
 	 *
-	 * @param			int		$controller_id
-	 * @param			int		$open_time				Время открытия в 0.1 сек
-	 * @param			int		$open_control			Опционально, контроль открытия в 0.1 сек
-	 * @param			int		$close_control		Опционально, контроль закрытия в 0.1 сек
-	 * @return		int
+	 * @param   int  $controller_id
+	 * @param   int  $open_time      Время открытия в 0.1 сек
+	 * @param   int  $open_control   Опционально, контроль открытия в 0.1 сек
+	 * @param   int  $close_control  Опционально, контроль закрытия в 0.1 сек
+	 * @return  int
 	 */
 	public function set_door_params($controller_id, $open_time, $open_control = 0, $close_control = 0)
 	{
@@ -592,10 +592,10 @@ class Ac_model extends CI_Model
 	/**
 	 * Добавление задания для отправки на контроллер
 	 *
-	 * @param			int		$operation				Операция, отправляемая на контроллер
-	 * @param			int		$controller_id
-	 * @param			int		$data							Опционально, дополнительные данные
-	 * @return		int
+	 * @param   int  $operation      Операция, отправляемая на контроллер
+	 * @param   int  $controller_id
+	 * @param   int  $data           Опционально, дополнительные данные
+	 * @return  int
 	 */
 	public function add_task($operation, $controller_id, $data = null)
 	{
@@ -623,10 +623,10 @@ class Ac_model extends CI_Model
 	}
 
 	/**
-	 * Удалить задания, отправленные на контроллер
+	 * Удаление задания, отправленного на контроллер
 	 *
-	 * @param			int		$id
-	 * @return		int
+	 * @param   int  $id
+	 * @return  int
 	 */
 	public function del_task($id)
 	{
@@ -637,10 +637,10 @@ class Ac_model extends CI_Model
 	}
 
 	/**
-	 * Получить последнее задания для отправки на контроллер
+	 * Получение последнего задания для отправки на контроллер
 	 *
-	 * @param			int							$controller_id
-	 * @return		mixed[]|bool
+	 * @param   int           $controller_id
+	 * @return  mixed[]|bool
 	 */
 	public function get_last_task($controller_id)
 	{
@@ -656,11 +656,11 @@ class Ac_model extends CI_Model
 	}
 
 	/**
-	 * Сохранить полученое от пользователя событие
+	 * Сохранение полученого от пользователя события
 	 *
-	 * @param			int				$type		Тип события
-	 * @param			string		$desc		Описание события
-	 * @return		int
+	 * @param   int     $type  Тип события
+	 * @param   string  $desc  Описание события
+	 * @return  int
 	 */
 	public function add_user_event($type, $desc)
 	{
@@ -679,8 +679,8 @@ class Ac_model extends CI_Model
 	/**
 	 * Установить время последней связи с картой
 	 *
-	 * @param		int		$card_id					Тип события
-	 * @param		int		$controller_id		Описание события
+	 * @param  int  $card_id        Тип события
+	 * @param  int  $controller_id  Описание события
 	 */
 	public function set_card_last_conn($card_id, $controller_id)
 	{

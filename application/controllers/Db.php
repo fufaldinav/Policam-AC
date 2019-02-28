@@ -1,6 +1,9 @@
-<?php
-defined('BASEPATH') or exit('No direct script access allowed');
+<?php defined('BASEPATH') or exit('No direct script access allowed');
 
+/**
+ * Class Db
+ * @property		Ac_model		$ac
+ */
 class Db extends CI_Controller
 {
 	private $user_id;
@@ -19,13 +22,9 @@ class Db extends CI_Controller
 		}
 	}
 
-	public function index()
-	{
-		if (!$this->ion_auth->logged_in()) {
-			redirect('auth/login');
-		}
-	}
-
+	/**
+	 * Сохранение нового человека
+	 */
 	public function save_person()
 	{
 		if (!$this->ion_auth->logged_in()) {
@@ -77,6 +76,9 @@ class Db extends CI_Controller
 		echo $person_id;
 	}
 
+	/**
+	 * Обновление информации о человеке
+	 */
 	public function update_person()
 	{
 		if (!$this->ion_auth->logged_in()) {
@@ -126,6 +128,9 @@ class Db extends CI_Controller
 		echo $person['id'];
 	}
 
+	/**
+	 * Удаление человека
+	 */
 	public function delete_person()
 	{
 		if (!$this->ion_auth->logged_in()) {
@@ -162,6 +167,9 @@ class Db extends CI_Controller
 		}
 	}
 
+	/**
+	 * Добавление карты
+	 */
 	public function add_card()
 	{
 		if (!$this->ion_auth->logged_in()) {
@@ -191,6 +199,9 @@ class Db extends CI_Controller
 		}
 	}
 
+	/**
+	 * Удаление карты
+	 */
 	public function delete_card()
 	{
 		if (!$this->ion_auth->logged_in()) {
@@ -213,6 +224,9 @@ class Db extends CI_Controller
 		}
 	}
 
+	/**
+	 * Сохранение нового подразделения
+	 */
 	public function save_div()
 	{
 		if (!$this->ion_auth->logged_in()) {
@@ -245,6 +259,9 @@ class Db extends CI_Controller
 		}
 	}
 
+	/**
+	 * Удаление подразделения
+	 */
 	public function delete_div()
 	{
 		if (!$this->ion_auth->logged_in()) {
@@ -272,6 +289,9 @@ class Db extends CI_Controller
 		}
 	}
 
+	/**
+	 * Получение информации о подразделении
+	 */
 	public function get_divisions()
 	{
 		if (!$this->ion_auth->logged_in()) {
@@ -286,6 +306,11 @@ class Db extends CI_Controller
 		echo json_encode($divisions);
 	}
 
+	/**
+	 * Получение информации о людях в подразделении
+	 *
+	 * @param  int  $div_id
+	 */
 	public function get_persons($div_id)
 	{
 		if (!$this->ion_auth->logged_in()) {
@@ -298,6 +323,9 @@ class Db extends CI_Controller
 		echo json_encode($persons);
 	}
 
+	/**
+	 * Получение информации о человеке
+	 */
 	public function get_person()
 	{
 		if (!$this->ion_auth->logged_in()) {
@@ -323,6 +351,9 @@ class Db extends CI_Controller
 		}
 	}
 
+	/**
+	 * Получение информации о картах
+	 */
 	public function get_cards()
 	{
 		if (!$this->ion_auth->logged_in()) {
@@ -341,6 +372,9 @@ class Db extends CI_Controller
 		echo json_encode($query->result());
 	}
 
+	/**
+	 * Получение информации о картах конкретного человека
+	 */
 	public function get_cards_by_person()
 	{
 		if (!$this->ion_auth->logged_in()) {

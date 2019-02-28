@@ -1,6 +1,9 @@
-<?php
-defined('BASEPATH') or exit('No direct script access allowed');
+<?php defined('BASEPATH') or exit('No direct script access allowed');
 
+/**
+ * Class Server
+ * @property		Ac_model		$ac
+ */
 class Server extends CI_Controller
 {
 	public function __construct()
@@ -10,6 +13,9 @@ class Server extends CI_Controller
 		$this->load->model('ac_model');
 	}
 
+	/**
+	 * Обработчик сообщений от контроллеров 
+	 */
 	public function index()
 	{
 		$LOG_PATH = '/var/www/logs';
