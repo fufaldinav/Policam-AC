@@ -31,7 +31,7 @@ class Ac extends CI_Controller
 
 		$header['org_name'] = $this->ac_model->render_org_name($org_id);
 		$header['css'] = $this->ac_model->render_css(['ac']);
-		$header['js'] = $this->ac_model->render_js(['main', 'ac']);
+		$header['js'] = $this->ac_model->render_js(['main', 'observ']);
 		$header['nav'] = $this->ac_model->render_nav();
 
 		$this->load->view('ac/header', $header);
@@ -85,7 +85,7 @@ class Ac extends CI_Controller
 
 		$header['org_name'] = $this->ac_model->render_org_name($org_id);
 		$header['css'] = $this->ac_model->render_css(['ac']);
-		$header['js'] = $this->ac_model->render_js(['main', 'events', 'add_pers']);
+		$header['js'] = $this->ac_model->render_js(['main', 'events', 'add_person']);
 		$header['nav'] = $this->ac_model->render_nav();
 
 		$this->load->view('ac/header', $header);
@@ -161,7 +161,7 @@ class Ac extends CI_Controller
 
 		$header['org_name'] = $this->ac_model->render_org_name($org_id);
 		$header['css'] = $this->ac_model->render_css(['ac', 'edit_persons']);
-		$header['js'] = $this->ac_model->render_js(['main', 'events', 'edit_pers', 'tree']);
+		$header['js'] = $this->ac_model->render_js(['main', 'events', 'edit_persons', 'tree']);
 		$header['nav'] = $this->ac_model->render_nav();
 
 		$this->load->view('ac/header', $header);
