@@ -1,5 +1,26 @@
-<?php defined('BASEPATH') or exit('No direct script access allowed');
+<?php
+/**
+ * Name:    Ac Model
+ * Author:  Artem Fufaldin
+ *          artem.fufaldin@gmail.com
+ * @m2jest1c
+ *
+ * Created:  01.12.2018
+ *
+ * Description:  Приложение для систем контроля и управления доступом.
+ *
+ * Requirements: PHP7.0 or above
+ *
+ * @package    Policam-AC
+ * @author     Artem Fufaldin
+ * @link       http://github.com/m2jest1c/Policam-AC
+ * @filesource
+ */
+defined('BASEPATH') or exit('No direct script access allowed');
 
+/**
+ * Class Ac Model
+ */
 class Ac_model extends CI_Model
 {
 	/**
