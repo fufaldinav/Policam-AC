@@ -34,42 +34,11 @@ class Db extends CI_Controller
 			exit;
 		}
 
+		$this->load->model('ac/person_model', 'person');
+
 		$person = json_decode($this->input->post('person'), true);
 
-		if (isset($person['photo'])) {
-			$this->db->select('id');
-			$this->db->where('hash', $person['photo']);
-			$query = $this->db->get('photo');
-			$photo_id = $query->row()->id;
-		}
-
-
-		$data = [
-			'div_id' => $person['div'],
-			'f' => $person['f'],
-			'i' => $person['i'],
-			'o' => (isset($person['o'])) ? $person['o'] : null,
-			'birthday' => $person['birthday'],
-			'address' => (isset($person['address'])) ? $person['address'] : null,
-			'phone' => (isset($person['phone'])) ? $person['phone'] : null,
-			'photo_id' => (isset($photo_id)) ? $photo_id : null
-		];
-
-		$this->db->insert('persons', $data);
-
-		$person_id = $this->db->insert_id();
-
-		if (isset($photo_id)) {
-			$this->db->where('id', $photo_id);
-			$this->db->update('photo', ['person_id' => $person_id]);
-		}
-
-		if ($person['card'] > 0) {
-			$this->db->where('id', $person['card']);
-			$this->db->update('cards', ['holder_id' => $person_id]);
-
-			$this->ac_model->add_card($person['card']);
-		}
+		$person_id = $this->person->save($person);
 
 		echo $person_id;
 	}
