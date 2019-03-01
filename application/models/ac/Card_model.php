@@ -36,12 +36,16 @@ class Card_model extends CI_Model
 	/**
 	* Получение информации о карте
 	*
-	* @return  mixed[]
+	* @param   int      $id
+	* @return  object
 	*/
-	public function get()
+	public function get($id = null)
 	{
-		$this->db->select('*');
-		$this->db->where('id', $this->id);
+		if ($id === null) {
+			$id = $this->id;
+		}
+
+		$this->db->where('id', $id);
 		$query = $this->db->get('cards');
 
 		return $query->row();
@@ -55,8 +59,9 @@ class Card_model extends CI_Model
 	*/
 	public function get_all($controller_id = null)
 	{
-		$this->db->select('*');
-		$this->db->where('controller_id', $controller_id);
+		if (isset($controller_id)) {
+			$this->db->where('controller_id', $controller_id);
+		}
 		$query = $this->db->get('cards');
 
 		return $query->result();

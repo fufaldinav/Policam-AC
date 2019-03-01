@@ -28,6 +28,11 @@ class Person_model extends CI_Model
 	*/
 	public $id;
 
+	/**
+	* @var mixed[]
+	*/
+	private $person;
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -36,12 +41,16 @@ class Person_model extends CI_Model
 	/**
 	* Получение информации о человеке
 	*
+	* @param   int      $id
 	* @return  mixed[]
 	*/
-	public function get()
+	public function get($id = null)
 	{
-		$this->db->select('*');
-		$this->db->where('id', $this->id);
+		if ($id === null) {
+			$id = $this->id;
+		}
+
+		$this->db->where('id', $id);
 		$query = $this->db->get('persons');
 
 		return $query->row();
@@ -55,8 +64,9 @@ class Person_model extends CI_Model
 	*/
 	public function get_all($div_id = null)
 	{
-		$this->db->select('*');
-		$this->db->where('div_id', $div_id);
+		if ($div_id !== null) {
+			$this->db->where('div_id', $div_id);
+		}
 		$query = $this->db->get('persons');
 
 		return $query->result();
@@ -65,45 +75,54 @@ class Person_model extends CI_Model
 	/**
 	* Сохранение информации о человеке
 	*
-	* @param   mixed[]  $person
+	* @param   object  $person
 	* @return  int
 	*/
-	public function save($person)
+	public function add($person)
 	{
-		if (isset($person['photo'])) {
-			$this->load->model('ac/photo_model', 'photo');
-
-			$this->photo->hash = $person['photo'];
-			$photo_id = $this->photo->get()->id;
-		}
-
 		$data = [
-			'div_id' => $person['div'],
-			'f' => $person['f'],
-			'i' => $person['i'],
-			'o' => (isset($person['o'])) ? $person['o'] : null,
-			'birthday' => $person['birthday'],
-			'address' => (isset($person['address'])) ? $person['address'] : null,
-			'phone' => (isset($person['phone'])) ? $person['phone'] : null,
-			'photo_id' => (isset($photo_id)) ? $photo_id : null
+			'div_id' => $person->div,
+			'f' => $person->f,
+			'i' => $person->i,
+			'o' => $person->o,
+			'birthday' => $person->birthday,
+			'address' => $person->address,
+			'phone' => $person->phone,
+			'photo_id' => $person->photo
 		];
 
 		$this->db->insert('persons', $data);
 
 		$person_id = $this->db->insert_id();
 
-		if (isset($photo_id)) {
-			$this->photo->id = $photo_id;
+		if ($person->photo !== null) {
+			$this->load->model('ac/photo_model', 'photo');
+			
+			$this->photo->id = $person->photo;
 			$this->photo->set_person($person_id);
 		}
 
-		if ($person['card'] > 0) {
+		if ($person->card > 0) {
 			$this->load->model('ac/card_model', 'card');
 
-			$this->card->id = $person['card'];
+			$this->card->id = $person->card;
 			$this->card->set_holder($person_id);
 		}
 
 		return $person_id;
+	}
+
+	/**
+	* Сохранение информации о человеке
+	*
+	* @param   int  $person_id
+	* @return  int
+	*/
+	public function delete_photo($person_id)
+	{
+		$this->db->where('id', $person_id);
+		$this->db->update('persons', ['photo_id' => null]);
+
+		return $this->db->affected_rows();
 	}
 }
