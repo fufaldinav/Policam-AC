@@ -13,6 +13,9 @@ class Db extends CI_Controller
 		$this->load->helper('language');
 
 		$this->load->model('ac_model');
+		$this->load->model('ac/card_model', 'card');
+		$this->load->model('ac/person_model', 'person');
+		$this->load->model('ac/photo_model', 'photo');
 		$this->lang->load('ac');
 
 		if ($this->ion_auth->logged_in()) {
@@ -23,7 +26,7 @@ class Db extends CI_Controller
 	/**
 	 * Сохранение нового человека
 	 */
-	public function save_person()
+	public function add_person()
 	{
 		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
@@ -34,11 +37,20 @@ class Db extends CI_Controller
 			exit;
 		}
 
-		$this->load->model('ac/person_model', 'person');
+		$person = json_decode($this->input->post('person'));
 
-		$person = json_decode($this->input->post('person'), true);
+		$this->person->set($person);
+		$person_id = $this->person->add();
 
-		$person_id = $this->person->save($person);
+		if ($person->photo !== null) {
+			$this->photo->id = $person->photo;
+			$this->photo->set_person($person_id);
+		}
+
+		if ($person->card > 0) {
+			$this->card->id = $person->card;
+			$this->card->add($person_id);
+		}
 
 		echo $person_id;
 	}
@@ -57,42 +69,22 @@ class Db extends CI_Controller
 			exit;
 		}
 
-		$person = json_decode($this->input->post('person'), true);
+		$person = json_decode($this->input->post('person'));
 
-		if (isset($person['photo'])) {
-			$this->db->select('id');
-			$this->db->where('hash', $person['photo']);
-			$query = $this->db->get('photo');
-			$photo_id = $query->row()->id;
+		$this->person->set($person);
+		$count = $this->person->update($person->id);
+
+		if ($person->photo !== null) {
+			$this->photo->id = $person->photo;
+			$this->photo->set_person($person->id);
 		}
 
-		$data = [
-			'div_id' => $person['div'],
-			'f' => $person['f'],
-			'i' => $person['i'],
-			'o' => (isset($person['o'])) ? $person['o'] : null,
-			'birthday' => $person['birthday'],
-			'address' => (isset($person['address'])) ? $person['address'] : null,
-			'phone' => (isset($person['phone'])) ? $person['phone'] : null,
-			'photo_id' => (isset($photo_id)) ? $photo_id : null
-		];
-
-		$this->db->where('id', $person['id']);
-		$this->db->update('persons', $data);
-
-		if (isset($photo_id)) {
-			$this->db->where('id', $photo_id);
-			$this->db->update('photo', ['person_id' => $person['id']]);
+		if ($person->card > 0) {
+			$this->card->id = $person->card;
+			$this->card->add($person->id);
 		}
 
-		if ($person['card'] > 0) {
-			$this->db->where('id', $person['card']);
-			$this->db->update('cards', ['holder_id' => $person['id']]);
-
-			$this->ac_model->add_card($person['card']);
-		}
-
-		echo $person['id'];
+		echo $count;
 	}
 
 	/**
@@ -111,27 +103,19 @@ class Db extends CI_Controller
 
 		$person_id = $this->input->post('person_id');
 
-		if (!isset($person_id)) {
-			return null;
-		}
-
-		$cards = $this->ac_model->get_cards($person_id);
-
+		$cards = $this->card->get_by_holder($person_id);
 		if ($cards) {
 			foreach ($cards as $card) {
-				$this->ac_model->delete_card($card->id);
+				$this->card->delete($card->id);
 			}
 		}
 
-		$this->ac_model->delete_photo($person_id);
-
-		$this->db->delete('persons', ['id' => $person_id]);
-
-		if ($this->db->affected_rows() > 0) {
-			echo $person_id;
-		} else {
-			return null;
+		$photo = $this->photo->get_by_person($person_id);
+		if ($photo) {
+			$this->photo->delete($photo->id);
 		}
+
+		echo $this->person->delete($person_id);
 	}
 
 	/**

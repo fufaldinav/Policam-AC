@@ -65,85 +65,9 @@ class Util extends CI_Controller
 
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			if (isset($_FILES['file'])) {
-				$file = $_FILES['file'];
-				$error = '';
-				$IMG_PATH = '/var/www/img_ac';
-				$extensions = ['jpg', 'jpeg'];
+				$this->load->model('ac/photo_model', 'photo');
 
-				$file_name = $file['name'];
-				$file_tmp = $file['tmp_name'];
-				$file_type = $file['type'];
-				$file_size = $file['size'];
-
-
-				$file_ext = explode('.', $file['name']);
-				$file_ext = end($file_ext);
-				$file_ext = strtolower($file_ext);
-				$file_hash = hash_file('md5', $file_tmp);
-
-				$file_path = "$IMG_PATH/$file_hash.jpg";
-
-				if (!in_array($file_ext, $extensions)) {
-					$error = 'Extension not allowed: ' . $file_name . ' ' . $file_type;
-				}
-
-				if ($file_size > 20971520) {
-					$error = 'File size exceeds limit: ' . $file_name . ' ' . $file_type;
-				}
-
-				if ($file_size == 0) {
-					$error = 'Wrong file or file not exists';
-				}
-
-				$response = [];
-				if (!$error) {
-					$time = now('Asia/Yekaterinburg');
-
-					$this->db->where('person_id', null);
-					$this->db->where('time <', $time - 86400);
-					$query = $this->db->get('photo');
-
-					foreach ($query->result() as $row) {
-						$this->ac_model->delete_photo(null, $row->hash);
-					}
-
-					$this->db->where('hash', $file_hash);
-					$query = $this->db->get('photo');
-
-					if ($query->num_rows() > 0) {
-						$this->db->where('hash', $file_hash);
-						$this->db->update('photo', ['time' => $time]);
-					} else {
-						$this->db->insert('photo', ['hash' => $file_hash, 'time' => $time]);
-					}
-
-					try {
-						move_uploaded_file($file_tmp, $file_path);
-						//сохранение уменьшенной копии
-						$source_img = imagecreatefromjpeg($file_path);
-						list($width, $height) = getimagesize($file_path);
-
-						$file_path_s = "$IMG_PATH/s/$file_hash.jpg";
-
-						$d_w = $width / 240;
-						$d_h = $height / 320;
-						$d = max([$d_w, $d_h]);
-						$new_w = $width / $d;
-						$new_h = $height / $d;
-						$dest_img = imagecreatetruecolor($new_w, $new_h);
-						imagecopyresized($dest_img, $source_img, 0, 0, 0, 0, $new_w, $new_h, $width, $height);
-						imagejpeg($dest_img, $file_path_s);
-						echo $file_hash;
-					} catch (Exception $e) {
-						$this->save_js_errors($e);
-						echo '0';
-					}
-				}
-
-				if ($error) {
-					$this->save_js_errors($error);
-					echo '0';
-				}
+				echo json_encode($this->photo->save($_FILES['file']));
 			}
 		}
 	}
@@ -162,14 +86,14 @@ class Util extends CI_Controller
 			exit;
 		}
 
-		$person_id = $this->input->post('person_id');
-		$photo = $this->input->post('photo');
+		$photo_id = $this->input->post('photo_id');
 
-		if (!isset($person_id) && !isset($photo)) {
+		if ($photo_id === null) {
 			return null;
 		}
 
-		if ($this->ac_model->delete_photo($person_id, $photo)) {
+		$this->load->model('ac/photo_model', 'photo');
+		if ($this->photo->delete($photo_id)) {
 			echo 'ok';
 		}
 	}
