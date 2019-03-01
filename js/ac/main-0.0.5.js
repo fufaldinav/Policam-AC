@@ -69,15 +69,23 @@ function handleFiles(files) {
 		data: formData,
 		success: function(res) {
 			try {
-				if (res && res !== `0`) {
-					document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/' + res + '.jpg)';
-					person.photo = res;
-					document.getElementById(`photo`).hidden = true;
-					document.getElementById(`photo_del`).hidden = false;
-					document.getElementById(`photo_del`).onclick = deletePhoto;
+				if (res) {
+					let data = JSON.parse(res);
+					if (data.error === ``) {
+						document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/' + data.hash + '.jpg)';
+						person.photo = data.id;
+						document.getElementById(`photo`).hidden = true;
+						document.getElementById(`photo_del`).hidden = false;
+						document.getElementById(`photo_del`).onclick = deletePhoto;
+					// } else if (data.error === ``) {
+					// 	document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/0.jpg)';
+					// 	person.photo = null;
+					} else {
+						document.getElementById(`photo`).value = null;
+						alert(data.error);
+					}
 				} else {
-					document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/0.jpg)';
-					person.photo = null;
+					alert(`Неизвестная ошибка`);
 				}
 			} catch (e) {
 				sendError(e);
@@ -100,7 +108,7 @@ function deletePhoto() {
 		type: `POST`,
 		data: {
 			person_id: person.id,
-			photo: person.photo
+			photo_id: person.photo
 		},
 		success: function(res) {
 			try {

@@ -30,9 +30,8 @@ function savePersonInfo() {
 	if (!checkValidity) {
 		alert(`Введены не все данные`);
 	} else {
-		console.log(person);
 		$.ajax({
-			url: `/index.php/db/save_person`,
+			url: `/index.php/db/add_person`,
 			type: `POST`,
 			data: {
 				person: JSON.stringify(person)

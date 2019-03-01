@@ -39,8 +39,12 @@ function updatePersonInfo() {
 			success: function(res) {
 				try {
 					if (res) {
+						if (res > 0) {
+							alert(`Пользователь успешно сохранен`);
+						} else {
+							alert(`Не сохранено или данные совпали`);
+						}
 						getCardsByPerson(res);
-						alert(`Пользователь №${res} успешно сохранен`);
 					} else {
 						alert(`Пустой ответ от сервера`);
 					}
