@@ -5,7 +5,7 @@
  *          artem.fufaldin@gmail.com
  * @m2jest1c
  *
- * Created:  01.12.2018
+ * Created:  01.03.2019
  *
  * Description:  Приложение для систем контроля и управления доступом.
  *
@@ -31,7 +31,7 @@ class Person_model extends CI_Model
 	/**
 	* @var mixed[]
 	*/
-	private $person;
+	private $data;
 
 	public function __construct()
 	{
@@ -73,14 +73,53 @@ class Person_model extends CI_Model
 	}
 
 	/**
-	* Сохранение информации о человеке
+	* Добавление нового человека
 	*
-	* @param   object  $person
 	* @return  int
 	*/
-	public function add($person)
+	public function add()
 	{
-		$data = [
+		$this->db->insert('persons', $this->data);
+		$person_id = $this->db->insert_id();
+
+		return $person_id;
+	}
+
+	/**
+	* Обновление информации о человеке
+	*
+	* @param   int  $id
+	* @return  int
+	*/
+	public function update($id)
+	{
+		$this->db->where('id', $id);
+		$this->db->update('persons', $this->data);
+
+		return $this->db->affected_rows();
+	}
+
+	/**
+	* Удаление человека
+	*
+	* @param   int  $id
+	* @return  int
+	*/
+	public function delete($id)
+	{
+		$this->db->delete('persons', ['id' => $id]);
+
+		return $this->db->affected_rows();
+	}
+
+	/**
+	* Установить информацию о человеке
+	*
+	* @param  object  $person
+	*/
+	public function set($person)
+	{
+		$this->data = [
 			'div_id' => $person->div,
 			'f' => $person->f,
 			'i' => $person->i,
@@ -90,30 +129,10 @@ class Person_model extends CI_Model
 			'phone' => $person->phone,
 			'photo_id' => $person->photo
 		];
-
-		$this->db->insert('persons', $data);
-
-		$person_id = $this->db->insert_id();
-
-		if ($person->photo !== null) {
-			$this->load->model('ac/photo_model', 'photo');
-			
-			$this->photo->id = $person->photo;
-			$this->photo->set_person($person_id);
-		}
-
-		if ($person->card > 0) {
-			$this->load->model('ac/card_model', 'card');
-
-			$this->card->id = $person->card;
-			$this->card->set_holder($person_id);
-		}
-
-		return $person_id;
 	}
 
 	/**
-	* Сохранение информации о человеке
+	* Удалить инфомации о фотографии у человека
 	*
 	* @param   int  $person_id
 	* @return  int

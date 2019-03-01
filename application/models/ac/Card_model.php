@@ -5,7 +5,7 @@
  *          artem.fufaldin@gmail.com
  * @m2jest1c
  *
- * Created:  01.12.2018
+ * Created:  01.03.2019
  *
  * Description:  Приложение для систем контроля и управления доступом.
  *
@@ -52,6 +52,24 @@ class Card_model extends CI_Model
 	}
 
 	/**
+	* Получение списка карт, привязаных к конкретному человеку или все неизвестные карты
+	*
+	* @param   int           $holder_id  Опционально, по-умолчанию -1 (список всех неизвестных карт)
+	* @return  mixed[]|null
+	*/
+	public function get_by_holder($holder_id = -1)
+	{
+		$this->db->where('holder_id', $holder_id);
+		$query = $this->db->get('cards');
+
+		if ($query->num_rows() > 0) {
+			return $query->result();
+		} else {
+			return null;
+		}
+	}
+
+	/**
 	* Получение информации о всех картах
 	*
 	* @param   int      $controller_id
@@ -68,12 +86,12 @@ class Card_model extends CI_Model
 	}
 
 	/**
-	* Установить владельца карты
+	* Добавление карты
 	*
 	* @param   int  $person_id
 	* @return  int
 	*/
-	public function set_holder($person_id)
+	public function add($person_id)
 	{
 		$this->db->where('id', $this->id);
 		$this->db->update('cards', ['holder_id' => $person_id]);
@@ -81,6 +99,23 @@ class Card_model extends CI_Model
 		return $this->db->affected_rows();
 
 		//TODO запись карт в контроллер
-		//$this->ac_model->add_card($this->id);
+		//$this->controller->add_card($this->id);
+	}
+
+	/**
+	 * Удаление карты
+	 *
+	 * @param   int   $card_id
+	 * @return  int
+	 */
+	public function delete($card_id)
+	{
+		$this->db->where('id', $card_id);
+		$this->db->update('cards', ['holder_id' => -1]);
+
+		return $this->db->affected_rows();
+
+		//TODO удаление карт из контроллера
+		//$this->controller->delete_card($this->id);
 	}
 }

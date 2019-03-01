@@ -5,7 +5,7 @@
  *          artem.fufaldin@gmail.com
  * @m2jest1c
  *
- * Created:  01.12.2018
+ * Created:  01.03.2019
  *
  * Description:  Приложение для систем контроля и управления доступом.
  *
@@ -29,7 +29,7 @@ class Photo_model extends CI_Model
 	public $id;
 
 	/**
-	* @var int
+	* Каталог с фото
 	*/
 	const IMG_PATH = '/var/www/img_ac';
 
@@ -59,8 +59,8 @@ class Photo_model extends CI_Model
 	/**
 	* Получение информации о фотографии
 	*
-	* @param   string   $hash
-	* @return  mixed[]
+	* @param   string        $hash
+	* @return  mixed[]|null
 	*/
 	public function get_by_hash($hash)
 	{
@@ -74,6 +74,23 @@ class Photo_model extends CI_Model
 		}
 	}
 
+		/**
+		* Получение информации о фотографии
+		*
+		* @param   int           $person_id
+		* @return  mixed[]|null
+		*/
+		public function get_by_person($person_id)
+		{
+			$this->db->where('person_id', $person_id);
+			$query = $this->db->get('photo');
+
+			if ($query->num_rows() > 0) {
+				return $query->row();
+			} else {
+				return null;
+			}
+		}
 	/**
 	* Установить владельца фотографии
 	*
@@ -163,11 +180,11 @@ class Photo_model extends CI_Model
 				return $response;
 			} catch (Exception $e) {
 				$response['error'] = $e;
-				$this->ac_model->save_js_errors($e);
+				//$this->ac_model->save_js_errors($e);
 				return $response;
 			}
 		} else {
-			$this->ac_model->save_js_errors($response['error']);
+			//$this->ac_model->save_js_errors($response['error']);
 			return $response;
 		}
 	}
@@ -203,7 +220,7 @@ class Photo_model extends CI_Model
 
 			return true;
 		} catch (Exception $e) {
-			$this->ac_model->save_js_errors($e);
+			//$this->ac_model->save_js_errors($e);
 			return null;
 		}
 	}
