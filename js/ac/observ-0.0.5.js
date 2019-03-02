@@ -55,11 +55,8 @@ function getNewMsgs(events, time) {
 //получение данных пользователя из БД
 function setPersonInfo(card_id) {
 	$.ajax({
-		url: `/index.php/db/get_person`,
-		type: `POST`,
-		data: {
-			card_id: card_id
-		},
+		url: `/index.php/db/get_person_by_card/${card_id}`,
+		type: `GET`,
 		success: function(res) {
 			try {
 				if (res) {

@@ -74,8 +74,10 @@ class Util extends CI_Controller
 
 	/**
 	 * Удаление фотографии
+	 *
+	 * @param  int  $photo_id
 	 */
-	public function delete_photo()
+	public function delete_photo($photo_id)
 	{
 		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
@@ -84,12 +86,6 @@ class Util extends CI_Controller
 		if (!$this->ion_auth->in_group(2)) {
 			header('HTTP/1.1 403 Forbidden');
 			exit;
-		}
-
-		$photo_id = $this->input->post('photo_id');
-
-		if ($photo_id === null) {
-			return null;
 		}
 
 		$this->load->model('ac/photo_model', 'photo');

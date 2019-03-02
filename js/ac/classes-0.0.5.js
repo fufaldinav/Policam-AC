@@ -5,11 +5,8 @@ function deleteDivision(div_id) {
 	}
 	//отправим JSON
 	$.ajax({
-		url: `/index.php/db/delete_div`,
-		type: `POST`,
-		data: {
-			div_id: div_id
-		},
+		url: `/index.php/db/delete_div/${div_id}`,
+		type: `GET`,
 		success: function(res) {
 			try {
 				if (res == `ok`) {

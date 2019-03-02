@@ -24,7 +24,7 @@ class Db extends CI_Controller
 	}
 
 	/**
-	 * Сохранение нового человека
+	 * Добавление нового человека
 	 */
 	public function add_person()
 	{
@@ -83,8 +83,10 @@ class Db extends CI_Controller
 
 	/**
 	 * Удаление человека
+	 *
+	 * @param  int  $person_id
 	 */
-	public function delete_person()
+	public function delete_person($person_id)
 	{
 		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
@@ -94,8 +96,6 @@ class Db extends CI_Controller
 			header('HTTP/1.1 403 Forbidden');
 			exit;
 		}
-
-		$person_id = $this->input->post('person_id');
 
 		$cards = $this->card->get_by_holder($person_id);
 		if ($cards) {
@@ -114,8 +114,11 @@ class Db extends CI_Controller
 
 	/**
 	 * Добавление карты
+	 *
+	 * @param  int  $card_id
+	 * @param  int  $person_id
 	 */
-	public function add_card()
+	public function add_card($card_id, $person_id)
 	{
 		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
@@ -126,28 +129,17 @@ class Db extends CI_Controller
 			exit;
 		}
 
-		$card_id = $this->input->post('card_id');
-		$person_id = $this->input->post('person_id');
-
-
-		if (isset($card_id) && isset($person_id)) {
-			$this->db->where('id', $card_id);
-			$this->db->update('cards', ['holder_id' => $person_id]);
-
-			if ($this->ac_model->add_card($card_id)) {
-				echo 'ok';
-			} else {
-				return null;
-			}
-		} else {
-			return null;
+		if ($this->card->set_holder($card_id, $person_id) > 0) {
+			echo 'ok';
 		}
 	}
 
 	/**
 	 * Удаление карты
+	 *
+	 * @param  int  $card_id
 	 */
-	public function delete_card()
+	public function delete_card($card_id)
 	{
 		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
@@ -158,13 +150,7 @@ class Db extends CI_Controller
 			exit;
 		}
 
-		$card_id = $this->input->post('card_id');
-
-		if (!isset($card_id)) {
-			return null;
-		}
-
-		if ($this->ac_model->delete_card($card_id)) {
+		if ($this->card->delete($card_id)) {
 			echo 'ok';
 		}
 	}
@@ -206,8 +192,10 @@ class Db extends CI_Controller
 
 	/**
 	 * Удаление подразделения
+	 *
+	 * @param  int  $div_id
 	 */
-	public function delete_div()
+	public function delete_div($div_id)
 	{
 		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
@@ -216,12 +204,6 @@ class Db extends CI_Controller
 		if (!$this->ion_auth->in_group(2)) {
 			header('HTTP/1.1 403 Forbidden');
 			exit;
-		}
-
-		$div_id = $this->input->post('div_id');
-
-		if (!isset($div_id)) {
-			return null;
 		}
 
 		$this->db->where('id', $div_id);
@@ -263,37 +245,45 @@ class Db extends CI_Controller
 			exit;
 		}
 
-		$persons = $this->ac_model->get_persons_by_div($div_id, $full_info = false);
+		$persons = $this->person->get_all($div_id);
 
 		echo json_encode($persons);
 	}
 
 	/**
 	 * Получение информации о человеке
+	 *
+	 * @param  int  $person_id
 	 */
-	public function get_person()
+	public function get_person($person_id)
 	{
 		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
 		}
 
-		$card_id = $this->input->post('card_id');
-		$person_id = $this->input->post('person_id');
+		$person = $this->person->get($person_id);
 
-		if (!isset($person_id)) {
-			$person = $this->ac_model->get_person_by_card($card_id);
-			$div = $this->ac_model->get_div_by_id($person->div);
-			$person->div = $div->number . ' "' . $div->letter . '"';
-		} else {
-			$person = $this->ac_model->get_person($person_id);
+		echo json_encode($person);
+	}
+
+	/**
+	 * Получение информации о человеке
+	 *
+	 * @param  int  $card_id
+	 */
+	public function get_person_by_card($card_id)
+	{
+		if (!$this->ion_auth->logged_in()) {
+			header("HTTP/1.1 401 Unauthorized");
+			exit;
 		}
 
-		if ($person) {
-			echo json_encode($person);
-		} else {
-			return null;
-		}
+		$card = $this->card->get($card_id);
+
+		$person = $this->person->get($card->holder_id);
+
+		echo json_encode($person);
 	}
 
 	/**
@@ -319,8 +309,10 @@ class Db extends CI_Controller
 
 	/**
 	 * Получение информации о картах конкретного человека
+	 *
+	 * @param  int  $holder_id
 	 */
-	public function get_cards_by_person()
+	public function get_cards_by_person($holder_id)
 	{
 		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
@@ -329,12 +321,6 @@ class Db extends CI_Controller
 		if (!$this->ion_auth->in_group(2)) {
 			header('HTTP/1.1 403 Forbidden');
 			exit;
-		}
-
-		$holder_id = $this->input->post('holder_id');
-
-		if (!isset($holder_id)) {
-			return null;
 		}
 
 		$cards = $this->ac_model->get_cards($holder_id);

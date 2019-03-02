@@ -65,11 +65,8 @@ function deletePerson() {
 		return;
 	}
 	$.ajax({
-		url: `/index.php/db/delete_person`,
-		type: `POST`,
-		data: {
-			person_id: person.id
-		},
+		url: `/index.php/db/delete_person/${person.id}`,
+		type: `GET`,
 		success: function(res) {
 			try {
 				if (res) {
@@ -127,11 +124,8 @@ function deletePerson() {
 //получение данных пользователя из БД
 function getPersonInfo(person_id) {
 	$.ajax({
-		url: `/index.php/db/get_person`,
-		type: `POST`,
-		data: {
-			person_id: person_id
-		},
+		url: `/index.php/db/get_person/${person_id}`,
+		type: `GET`,
 		success: function(res) {
 			try {
 				if (res) {
@@ -183,11 +177,8 @@ function getPersonInfo(person_id) {
 //получение списка карт (брелоков) от сервера
 function getCardsByPerson(person_id) {
 	$.ajax({
-		url: `/index.php/db/get_cards_by_person`,
-		type: `POST`,
-		data: {
-			holder_id: person_id
-		},
+		url: `/index.php/db/get_cards_by_person/${person_id}`,
+		type: `GET`,
 		success: function(res) {
 			try {
 				let cards = document.getElementById(`cards`);
@@ -220,14 +211,10 @@ function getCardsByPerson(person_id) {
 	});
 }
 //добавление карты в БД
-function saveCard(card) {
+function saveCard(card_id) {
 	$.ajax({
-		url: `/index.php/db/add_card`,
-		type: `POST`,
-		data: {
-			card_id: card,
-			person_id: person.id
-		},
+		url: `/index.php/db/add_card/${card_id}/${person.id}`,
+		type: `GET`,
 		success: function(res) {
 			try {
 				if (res == `ok`) {
@@ -247,16 +234,13 @@ function saveCard(card) {
 	});
 }
 //удаление карты из БД
-function delCard(id) {
+function delCard(card_id) {
 	if (!confirm(`Подтвердите удаление.`)) {
 		return;
 	}
 	$.ajax({
-		url: `/index.php/db/delete_card`,
-		type: `POST`,
-		data: {
-			card_id: id
-		},
+		url: `/index.php/db/delete_card/${card_id}`,
+		type: `GET`,
 		success: function(res) {
 			try {
 				if (res == `ok`) {

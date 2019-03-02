@@ -104,12 +104,8 @@ function deletePhoto() {
 		return;
 	}
 	$.ajax({
-		url: `/index.php/util/delete_photo`,
-		type: `POST`,
-		data: {
-			person_id: person.id,
-			photo_id: person.photo
-		},
+		url: `/index.php/util/delete_photo/${person.photo}`,
+		type: `GET`,
 		success: function(res) {
 			try {
 				if (res == `ok`) {
