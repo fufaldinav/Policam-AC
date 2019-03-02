@@ -22,16 +22,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 */
 class Controller_model extends CI_Model
 {
-	/**
-	* @var int
-	*/
-	public $id;
-
-	/**
-	* @var mixed[]
-	*/
-	private $data;
-
 	public function __construct()
 	{
 		parent::__construct();
@@ -40,16 +30,12 @@ class Controller_model extends CI_Model
 	/**
 	* Получение информации о контроллере
 	*
-	* @param   int      $id
+	* @param   int      $controller_id
 	* @return  mixed[]
 	*/
-	public function get($id = null)
+	public function get($controller_id)
 	{
-		if ($id === null) {
-			$id = $this->id;
-		}
-
-		$this->db->where('id', $id);
+		$this->db->where('id', $controller_id);
 		$query = $this->db->get('controllers');
 
 		return $query->row();
@@ -74,12 +60,13 @@ class Controller_model extends CI_Model
 	/**
 	* Добавление нового контроллера
 	*
+	* @param   object  $controller
 	* @return  int
 	*/
-	public function add()
+	public function add($controller)
 	{
-		$this->db->insert('controllers', $this->data);
-		$org_id = $this->db->insert_id();
+		$this->db->insert('controllers', $this->set($controller));
+		$controller_id = $this->db->insert_id();
 
 		return $controller_id;
 	}
@@ -87,13 +74,13 @@ class Controller_model extends CI_Model
 	/**
 	* Обновление информации о контроллере
 	*
-	* @param   int  $id
+	* @param   object  $controller
 	* @return  int
 	*/
-	public function update($id)
+	public function update($controller)
 	{
-		$this->db->where('id', $id);
-		$this->db->update('controllers', $this->data);
+		$this->db->where('id', $controller->id);
+		$this->db->update('controllers', $this->set($controller));
 
 		return $this->db->affected_rows();
 	}
@@ -101,12 +88,12 @@ class Controller_model extends CI_Model
 	/**
 	* Удаление контроллера
 	*
-	* @param   int  $id
+	* @param   int  $controller_id
 	* @return  int
 	*/
-	public function delete($id)
+	public function delete($controller_id)
 	{
-		$this->db->delete('controllers', ['id' => $id]);
+		$this->db->delete('controllers', ['id' => $controller_id]);
 
 		return $this->db->affected_rows();
 	}
@@ -114,12 +101,15 @@ class Controller_model extends CI_Model
 	/**
 	* Установить информацию о контроллере
 	*
-	* @param  object  $org
+	* @param   object   $controller
+	* @return  mixed[]
 	*/
-	public function set($org)
+	public function set($controller)
 	{
 		$this->data = [
 
 		];
+
+		return $data;
 	}
 }

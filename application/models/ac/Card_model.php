@@ -30,12 +30,12 @@ class Card_model extends CI_Model
 	/**
 	* Получение информации о карте
 	*
-	* @param   int      $id
+	* @param   int      $person_id
 	* @return  object
 	*/
-	public function get($id = null)
+	public function get($person_id = null)
 	{
-		$this->db->where('id', $id);
+		$this->db->where('id', $person_id);
 		$query = $this->db->get('cards');
 
 		return $query->row();

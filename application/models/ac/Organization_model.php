@@ -22,16 +22,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 */
 class Organization_model extends CI_Model
 {
-	/**
-	* @var int
-	*/
-	public $id;
-
-	/**
-	* @var mixed[]
-	*/
-	private $data;
-
 	public function __construct()
 	{
 		parent::__construct();
@@ -40,16 +30,12 @@ class Organization_model extends CI_Model
 	/**
 	* Получение информации о организации
 	*
-	* @param   int      $id
+	* @param   int      $org_id
 	* @return  mixed[]
 	*/
-	public function get($id = null)
+	public function get($org_id)
 	{
-		if ($id === null) {
-			$id = $this->id;
-		}
-
-		$this->db->where('id', $id);
+		$this->db->where('id', $org_id);
 		$query = $this->db->get('organizations');
 
 		return $query->row();
@@ -74,26 +60,26 @@ class Organization_model extends CI_Model
 	/**
 	* Добавление новой организации
 	*
+	* @param   object  $org
 	* @return  int
 	*/
-	public function add()
+	public function add($org)
 	{
-		$this->db->insert('organizations', $this->data);
-		$org_id = $this->db->insert_id();
+		$this->db->insert('organizations', $this->set($org));
 
-		return $org_id;
+		return $this->db->insert_id();
 	}
 
 	/**
 	* Обновление информации об организациях
 	*
-	* @param   int  $id
+	* @param   object  $org
 	* @return  int
 	*/
-	public function update($id)
+	public function update($org)
 	{
 		$this->db->where('id', $id);
-		$this->db->update('organizations', $this->data);
+		$this->db->update('organizations', $this->set($org));
 
 		return $this->db->affected_rows();
 	}
@@ -101,12 +87,12 @@ class Organization_model extends CI_Model
 	/**
 	* Удаление организации
 	*
-	* @param   int  $id
+	* @param   int  $org_id
 	* @return  int
 	*/
-	public function delete($id)
+	public function delete($org_id)
 	{
-		$this->db->delete('organizations', ['id' => $id]);
+		$this->db->delete('organizations', ['id' => $org_id]);
 
 		return $this->db->affected_rows();
 	}
@@ -114,12 +100,15 @@ class Organization_model extends CI_Model
 	/**
 	* Установить информацию об организации
 	*
-	* @param  object  $org
+	* @param   object   $org
+	* @return  mixed[]
 	*/
 	public function set($org)
 	{
 		$this->data = [
 
 		];
+
+		return $data;
 	}
 }

@@ -22,16 +22,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 */
 class Division_model extends CI_Model
 {
-	/**
-	* @var int
-	*/
-	public $id;
-
-	/**
-	* @var mixed[]
-	*/
-	private $data;
-
 	public function __construct()
 	{
 		parent::__construct();
@@ -40,16 +30,12 @@ class Division_model extends CI_Model
 	/**
 	* Получение информации о подразделении
 	*
-	* @param   int      $id
+	* @param   int      $div_id
 	* @return  mixed[]
 	*/
-	public function get($id = null)
+	public function get($div_id)
 	{
-		if ($id === null) {
-			$id = $this->id;
-		}
-
-		$this->db->where('id', $id);
+		$this->db->where('id', $div_id);
 		$query = $this->db->get('divisions');
 
 		return $query->row();
@@ -74,11 +60,12 @@ class Division_model extends CI_Model
 	/**
 	* Добавление нового подразделения
 	*
+	* @param   object  $div
 	* @return  int
 	*/
-	public function add()
+	public function add($div)
 	{
-		$this->db->insert('divisions', $this->data);
+		$this->db->insert('divisions', $this->set($div));
 		$div_id = $this->db->insert_id();
 
 		return $div_id;
@@ -87,13 +74,13 @@ class Division_model extends CI_Model
 	/**
 	* Обновление информации о подразделении
 	*
-	* @param   int  $id
+	* @param   object  $div
 	* @return  int
 	*/
-	public function update($id)
+	public function update($div)
 	{
-		$this->db->where('id', $id);
-		$this->db->update('divisions', $this->data);
+		$this->db->where('id', $div->id);
+		$this->db->update('divisions', $this->set($div));
 
 		return $this->db->affected_rows();
 	}
@@ -101,12 +88,12 @@ class Division_model extends CI_Model
 	/**
 	* Удаление подразделения
 	*
-	* @param   int  $id
+	* @param   int  $div_id
 	* @return  int
 	*/
-	public function delete($id)
+	public function delete($div_id)
 	{
-		$this->db->delete('divisions', ['id' => $id]);
+		$this->db->delete('divisions', ['id' => $div_id]);
 
 		return $this->db->affected_rows();
 	}
@@ -114,12 +101,15 @@ class Division_model extends CI_Model
 	/**
 	* Установить информацию о подразделении
 	*
-	* @param  object  $div
+	* @param   object   $div
+	* @return  mixed[]
 	*/
 	public function set($div)
 	{
-		$this->data = [
+		$data = [
 
 		];
+
+		return $data;
 	}
 }
