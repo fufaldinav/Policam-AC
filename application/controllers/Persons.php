@@ -1,12 +1,12 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
- * Class Person
+ * Class Persons
  * @property  Card_model    $card
  * @property  Person_model  $person
  * @property  Photo_model   $photo
  */
-class Person extends CI_Controller
+class Persons extends CI_Controller
 {
 	public function __construct()
 	{
