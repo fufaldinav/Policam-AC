@@ -13,7 +13,7 @@ let person = {
 //обновление информации пользователя в БД
 function updatePersonInfo() {
 	let checkValidity = true;
-	Object.keys(person).map(function(k, index) {
+	Object.keys(person).map(function(k) {
 		let elem = document.getElementById(k);
 		if (elem.required && elem.value === ``) {
 			elem.classList.add(`no-data`);
@@ -44,7 +44,7 @@ function updatePersonInfo() {
 						} else {
 							alert(`Не сохранено или данные совпали`);
 						}
-						getCardsByPerson(res);
+						getCardsByPerson(person.id);
 					} else {
 						alert(`Пустой ответ от сервера`);
 					}
@@ -70,7 +70,7 @@ function deletePerson() {
 		success: function(res) {
 			try {
 				if (res) {
-					Object.keys(person).map(function(k, index) { //перебор элементов формы
+					Object.keys(person).map(function(k) { //перебор элементов формы
 						let elem = document.getElementById(k);
 						if (k == `card`) { //поставить в карты "Не выбрано"
 							elem.value = 0;
@@ -130,7 +130,7 @@ function getPersonInfo(person_id) {
 			try {
 				if (res) {
 					let data = JSON.parse(res);
-					Object.keys(data).map(function(k, index) { //перебор полученных данных
+					Object.keys(data).map(function(k) { //перебор полученных данных
 						person[k] = data[k];
 						if (document.getElementById(k)) { //существует ли элемент с id = свойство объекта, т.к. могут быть "посторонние" данные
 							if (k == `photo`) { //отобразим поле загрузки фото

@@ -57,4 +57,5 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         </div>
                     </div>
                 <input id="id" name="id" type="text" hidden readonly />
+								<input id="type" name="type" type="text" hidden readonly />
             </div>
