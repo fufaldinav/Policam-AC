@@ -12,7 +12,7 @@ class Ac extends CI_Controller
 
 		$this->load->helper('language');
 
-		$this->load->model('ac_model');
+		$this->load->model('ac_model', 'ac');
 		$this->lang->load('ac');
 
 		if ($this->ion_auth->logged_in()) {
@@ -31,12 +31,12 @@ class Ac extends CI_Controller
 			redirect('auth');
 		}
 
-		$org_id = $this->ac_model->get_org_by_user($this->user_id)->id;
+		$org_id = $this->ac->get_org_by_user($this->user_id)->id;
 
-		$header['org_name'] = $this->ac_model->render_org_name($org_id);
-		$header['css'] = $this->ac_model->render_css(['ac']);
-		$header['js'] = $this->ac_model->render_js(['main', 'observ']);
-		$header['nav'] = $this->ac_model->render_nav();
+		$header['org_name'] = $this->ac->render_org_name($org_id);
+		$header['css'] = $this->ac->render_css(['ac']);
+		$header['js'] = $this->ac->render_js(['main', 'observ']);
+		$header['nav'] = $this->ac->render_nav();
 
 		$this->load->view('ac/header', $header);
 		$this->load->view('ac/observation');
@@ -57,14 +57,14 @@ class Ac extends CI_Controller
 
 		$this->load->helper('form');
 
-		$org_id = $this->ac_model->get_org_by_user($this->user_id)->id;
+		$org_id = $this->ac->get_org_by_user($this->user_id)->id;
 
 		/**
 		 * Подразделения
 		 */
 		$data['divisions'] = [];
 
-		$divisions = $this->ac_model->get_divisions_by_org($org_id);
+		$divisions = $this->ac->get_divisions_by_org($org_id);
 
 		if (!$divisions) {
 			$data['divisions']['0'] = lang('missing');
@@ -81,7 +81,7 @@ class Ac extends CI_Controller
 		 */
 		$data['cards'] = [];
 
-		$cards = $this->ac_model->get_cards();
+		$cards = $this->ac->get_cards();
 
 		if (!$cards) {
 			$data['cards']['0'] = lang('missing');
@@ -94,10 +94,10 @@ class Ac extends CI_Controller
 
 		$data['card_attr'] = 'id="card"';
 
-		$header['org_name'] = $this->ac_model->render_org_name($org_id);
-		$header['css'] = $this->ac_model->render_css(['ac']);
-		$header['js'] = $this->ac_model->render_js(['main', 'events', 'add_person']);
-		$header['nav'] = $this->ac_model->render_nav();
+		$header['org_name'] = $this->ac->render_org_name($org_id);
+		$header['css'] = $this->ac->render_css(['ac']);
+		$header['js'] = $this->ac->render_js(['main', 'events', 'add_person']);
+		$header['nav'] = $this->ac->render_nav();
 
 		$this->load->view('ac/header', $header);
 		$this->load->view('ac/add_person', $data);
@@ -118,7 +118,7 @@ class Ac extends CI_Controller
 
 		$this->load->helper('form');
 
-		$org_id = $this->ac_model->get_org_by_user($this->user_id)->id;
+		$org_id = $this->ac->get_org_by_user($this->user_id)->id;
 
 		$data['menu'] = '<ul class="tree-container">';
 
@@ -127,12 +127,12 @@ class Ac extends CI_Controller
 		 */
 		$data['divisions'] = [];
 
-		$divisions = $this->ac_model->get_divisions_by_org($org_id);
+		$divisions = $this->ac->get_divisions_by_org($org_id);
 
 		if (!$divisions) {
 			$data['divisions']['0'] = lang('missing');
 		} else {
-			$persons = $this->ac_model->get_persons_and_cards_by_org($org_id);
+			$persons = $this->ac->get_persons_and_cards_by_org($org_id);
 			$last_k = count($divisions) - 1;
 			foreach ($divisions as $k => $div) {
 				$data['divisions'][$div->id] = $div->number . ' "' . $div->letter . '"';
@@ -164,7 +164,7 @@ class Ac extends CI_Controller
 		 */
 		$data['cards'] = [];
 
-		$cards = $this->ac_model->get_cards();
+		$cards = $this->ac->get_cards();
 
 		if (!$cards) {
 			$data['cards']['0'] = lang('missing');
@@ -177,10 +177,10 @@ class Ac extends CI_Controller
 
 		$data['card_attr'] = 'id="card" disabled';
 
-		$header['org_name'] = $this->ac_model->render_org_name($org_id);
-		$header['css'] = $this->ac_model->render_css(['ac', 'edit_persons']);
-		$header['js'] = $this->ac_model->render_js(['main', 'events', 'edit_persons', 'tree']);
-		$header['nav'] = $this->ac_model->render_nav();
+		$header['org_name'] = $this->ac->render_org_name($org_id);
+		$header['css'] = $this->ac->render_css(['ac', 'edit_persons']);
+		$header['js'] = $this->ac->render_js(['main', 'events', 'edit_persons', 'tree']);
+		$header['nav'] = $this->ac->render_nav();
 
 		$this->load->view('ac/header', $header);
 		$this->load->view('ac/edit_persons', $data);
@@ -201,7 +201,7 @@ class Ac extends CI_Controller
 
 		$this->load->library('table');
 
-		$org_id = $this->ac_model->get_org_by_user($this->user_id)->org_id;
+		$org_id = $this->ac->get_org_by_user($this->user_id)->org_id;
 
 		$this->db->where('org_id', $org_id);
 		$this->db->order_by('number ASC, letter ASC');
@@ -224,10 +224,10 @@ class Ac extends CI_Controller
 
 		$data['table'] = $this->table->generate();
 
-		$header['org_name'] = $this->ac_model->render_org_name($org_id);
-		$header['css'] = $this->ac_model->render_css(['ac', 'tables']);
-		$header['js'] = $this->ac_model->render_js(['classes']);
-		$header['nav'] = $this->ac_model->render_nav();
+		$header['org_name'] = $this->ac->render_org_name($org_id);
+		$header['css'] = $this->ac->render_css(['ac', 'tables']);
+		$header['js'] = $this->ac->render_js(['classes']);
+		$header['nav'] = $this->ac->render_nav();
 
 		$this->load->view('ac/header', $header);
 		$this->load->view('ac/classes', $data);

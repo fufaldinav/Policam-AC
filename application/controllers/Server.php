@@ -10,11 +10,11 @@ class Server extends CI_Controller
 	{
 		parent::__construct();
 
-		$this->load->model('ac_model');
+		$this->load->model('ac_model', 'ac');
 	}
 
 	/**
-	 * Обработчик сообщений от контроллеров 
+	 * Обработчик сообщений от контроллеров
 	 */
 	public function index()
 	{
@@ -71,7 +71,7 @@ class Server extends CI_Controller
 			//
 			if (!isset($inc_m['operation']) && isset($inc_m['success'])) {
 				if ($inc_m['success'] == 1) {
-					$this->ac_model->del_task($inc_m['id']);
+					$this->ac->del_task($inc_m['id']);
 				}
 			}
 			//
@@ -111,7 +111,7 @@ class Server extends CI_Controller
 						$out_m['granted'] = 1;
 					}
 
-					$this->ac_model->set_card_last_conn($card_id, $controller_id);
+					$this->ac->set_card_last_conn($card_id, $controller_id);
 				} else {
 					$data = [
 						'wiegand' => $inc_m['card'],
@@ -147,7 +147,7 @@ class Server extends CI_Controller
 					if ($query->num_rows() > 0) {
 						$card_id = $query->row()->id;
 
-						$this->ac_model->set_card_last_conn($card_id, $controller_id);
+						$this->ac->set_card_last_conn($card_id, $controller_id);
 					} else {
 						$data = [
 							'wiegand' => $event['card'],
@@ -181,7 +181,7 @@ class Server extends CI_Controller
 		}
 
 		//запрос заданий из БД
-		$task = $this->ac_model->get_last_task($controller_id);
+		$task = $this->ac->get_last_task($controller_id);
 
 		if ($task) {
 			$out_msg['messages'][] = json_decode($task->json);

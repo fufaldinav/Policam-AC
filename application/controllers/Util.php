@@ -13,7 +13,8 @@ class Util extends CI_Controller
 
 		$this->load->helper('language');
 
-		$this->load->model('ac_model');
+		$this->load->model('ac_model', 'ac');
+		$this->load->model('ac/util_model', 'util');
 		$this->lang->load('ac');
 
 		if ($this->ion_auth->logged_in()) {
@@ -105,7 +106,7 @@ class Util extends CI_Controller
 			exit;
 		}
 		if (isset($controller_id)) {
-			echo $this->ac_model->add_all_cards_to_controller($controller_id);
+			echo $this->ac->add_all_cards_to_controller($controller_id);
 			echo ' заданий записано'; //TODO
 		} else {
 			echo 'Не выбран контроллер'; //TODO
@@ -129,7 +130,7 @@ class Util extends CI_Controller
 			exit;
 		}
 		if (isset($controller_id) && isset($open_time)) {
-			echo $this->ac_model->set_door_params($controller_id, $open_time);
+			echo $this->ac->set_door_params($controller_id, $open_time);
 			echo ' заданий записано'; //TODO
 		} else {
 			echo 'Не выбран контроллер или не задано время открытия'; //TODO
@@ -156,31 +157,31 @@ class Util extends CI_Controller
 		$response = lang('registred');
 
 		if ($type >= 1 && $type <= 3) {
-			$pers = $this->ac_model->get_person($person_id);
+			$pers = $this->ac->get_person($person_id);
 		}
 
 		if ($type == 1) {
 			$desc = $pers->id . ' ' . $pers->f . ' ' . $pers->i . ' forgot card';
 
-			if ($this->ac_model->add_user_event($type, $desc)) {
+			if ($this->ac->add_user_event($type, $desc)) {
 				echo $response;
 			}
 		} elseif ($type == 2 || $type == 3) {
-			$cards = $this->ac_model->get_cards($person_id);
+			$cards = $this->ac->get_cards($person_id);
 
 			if (!isset($cards)) {
 				return null;
 			}
 
 			foreach ($cards as $card) {
-				$this->ac_model->delete_card($card->id);
+				$this->ac->delete_card($card->id);
 			}
 
 			$desc = $pers->id . ' ' . $pers->f . ' ' . $pers->i . ' lost/broke card';
 
 			$response .= ' ' . lang('and') . ' ' . lang('card_deleted');
 
-			if ($this->ac_model->add_user_event($type, $desc)) {
+			if ($this->ac->add_user_event($type, $desc)) {
 				echo $response;
 			}
 		} else {
