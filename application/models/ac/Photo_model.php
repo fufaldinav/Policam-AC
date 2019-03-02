@@ -3,7 +3,6 @@
  * Name:    Photo Model
  * Author:  Artem Fufaldin
  *          artem.fufaldin@gmail.com
- * @m2jest1c
  *
  * Created:  01.03.2019
  *

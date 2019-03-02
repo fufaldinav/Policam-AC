@@ -3,7 +3,6 @@
  * Name:    Division Model
  * Author:  Artem Fufaldin
  *          artem.fufaldin@gmail.com
- * @m2jest1c
  *
  * Created:  02.03.2019
  *

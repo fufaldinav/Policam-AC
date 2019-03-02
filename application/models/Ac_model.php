@@ -3,7 +3,6 @@
  * Name:    Ac Model
  * Author:  Artem Fufaldin
  *          artem.fufaldin@gmail.com
- * @m2jest1c
  *
  * Created:  01.12.2018
  *
