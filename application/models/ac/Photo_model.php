@@ -190,7 +190,7 @@ class Photo_model extends CI_Model
 		$photo = $this->get($photo_id);
 
 		if ($photo->person_id !== null) {
-			$this->load->model('ac/person_model', 'person');
+			$this->load->model('ac/person_model', 'person'); //TODO таблица связей
 
 			$this->person->delete_photo($photo->person_id);
 		}

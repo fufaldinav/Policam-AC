@@ -61,7 +61,7 @@ function handleFiles(files) {
 	formData.append(`file`, files[0]);
 	//отправим JSON
 	$.ajax({
-		url: `/index.php/util/save_photo`,
+		url: `/index.php/photos/save`,
 		type: `POST`,
 		method: `POST`,
 		contentType: false,
@@ -101,11 +101,11 @@ function deletePhoto() {
 		return;
 	}
 	$.ajax({
-		url: `/index.php/util/delete_photo/${person.photo}`,
+		url: `/index.php/photos/delete/${person.photo}`,
 		type: `GET`,
 		success: function(res) {
 			try {
-				if (res == `ok`) {
+				if (res) {
 					document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/0.jpg)';
 					document.getElementById(`photo_del`).hidden = true;
 					document.getElementById(`photo_del`).onclick = function() {

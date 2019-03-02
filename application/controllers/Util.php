@@ -3,6 +3,7 @@
 /**
  * Class Util
  * @property  Ac_model  $ac
+ * @property  Util_model  $util
  */
 class Util extends CI_Controller
 {
@@ -47,51 +48,6 @@ class Util extends CI_Controller
 			'msgs' => $this->ac_model->start_polling(),
 			'time' => now('Asia/Yekaterinburg')
 		]);
-	}
-
-	/**
-	 * Сохранение фотографии
-	 */
-	public function save_photo() //TODO проверка уже имеющейся фото
-	{
-		if (!$this->ion_auth->logged_in()) {
-			header("HTTP/1.1 401 Unauthorized");
-			exit;
-		}
-		if (!$this->ion_auth->in_group(2)) {
-			header('HTTP/1.1 403 Forbidden');
-			exit;
-		}
-
-		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-			if (isset($_FILES['file'])) {
-				$this->load->model('ac/photo_model', 'photo');
-
-				echo json_encode($this->photo->save($_FILES['file']));
-			}
-		}
-	}
-
-	/**
-	 * Удаление фотографии
-	 *
-	 * @param  int  $photo_id
-	 */
-	public function delete_photo($photo_id)
-	{
-		if (!$this->ion_auth->logged_in()) {
-			header("HTTP/1.1 401 Unauthorized");
-			exit;
-		}
-		if (!$this->ion_auth->in_group(2)) {
-			header('HTTP/1.1 403 Forbidden');
-			exit;
-		}
-
-		$this->load->model('ac/photo_model', 'photo');
-		if ($this->photo->delete($photo_id)) {
-			echo 'ok';
-		}
 	}
 
 	/**
