@@ -72,11 +72,11 @@ class Persons extends CI_Controller
 		$count = $this->person->update($person);
 
 		if ($person->photo !== null) {
-			$this->photo->set_person($person->photo, $person->id);
+			$count += $this->photo->set_person($person->photo, $person->id);
 		}
 
 		if ($person->card > 0) {
-			$this->card->set_holder($person->card, $person->id);
+			$count += $this->card->set_holder($person->card, $person->id);
 		}
 
 		echo $count;
@@ -126,6 +126,25 @@ class Persons extends CI_Controller
 		}
 
 		$person = $this->person->get($person_id);
+
+		echo json_encode($person);
+	}
+
+	/**
+	 * Получение информации о человеке
+	 *
+	 * @param  int  $card_id
+	 */
+	public function get_by_card($card_id)
+	{
+		if (!$this->ion_auth->logged_in()) {
+			header("HTTP/1.1 401 Unauthorized");
+			exit;
+		}
+
+		$card = $this->card->get($card_id);
+
+		$person = $this->person->get($card->holder_id);
 
 		echo json_encode($person);
 	}

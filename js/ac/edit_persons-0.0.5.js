@@ -9,7 +9,8 @@ let person = {
 	'address': null,
 	'phone': null,
 	'card': null
-}
+};
+
 //обновление информации пользователя в БД
 function updatePersonInfo() {
 	let checkValidity = true;
@@ -31,7 +32,7 @@ function updatePersonInfo() {
 		alert(`Введены не все данные`);
 	} else {
 		$.ajax({
-			url: `/index.php/db/update_person`,
+			url: `/index.php/persons/update`,
 			type: `POST`,
 			data: {
 				person: JSON.stringify(person)
@@ -65,11 +66,11 @@ function deletePerson() {
 		return;
 	}
 	$.ajax({
-		url: `/index.php/db/delete_person/${person.id}`,
+		url: `/index.php/persons/delete/${person.id}`,
 		type: `GET`,
 		success: function(res) {
 			try {
-				if (res) {
+				if (res > 0) {
 					Object.keys(person).map(function(k) { //перебор элементов формы
 						let elem = document.getElementById(k);
 						if (k == `card`) { //поставить в карты "Не выбрано"
@@ -107,7 +108,7 @@ function deletePerson() {
 					document.getElementById(`delete`).onclick = function() {
 						return false;
 					};
-					alert(`Пользователь №${res} успешно удален`);
+					alert(`Пользователь успешно удален`);
 				} else {
 					alert(`Пустой ответ от сервера`);
 				}
@@ -124,7 +125,7 @@ function deletePerson() {
 //получение данных пользователя из БД
 function getPersonInfo(person_id) {
 	$.ajax({
-		url: `/index.php/db/get_person/${person_id}`,
+		url: `/index.php/persons/get/${person_id}`,
 		type: `GET`,
 		success: function(res) {
 			try {

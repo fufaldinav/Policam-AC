@@ -9,7 +9,7 @@ let person = {
 	'address': null,
 	'phone': null,
 	'card': null
-}
+};
 
 function savePersonInfo() {
 	let checkValidity = true;
@@ -31,7 +31,7 @@ function savePersonInfo() {
 		alert(`Введены не все данные`);
 	} else {
 		$.ajax({
-			url: `/index.php/db/add_person`,
+			url: `/index.php/persons/add`,
 			type: `POST`,
 			data: {
 				person: JSON.stringify(person)
