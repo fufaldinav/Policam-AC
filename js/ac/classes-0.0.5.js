@@ -1,3 +1,9 @@
+let div = {
+	'number': null,
+	'letter': null,
+	'org_id': null
+};
+
 //удалить из базы
 function deleteDivision(div_id) {
 	if (!confirm(`Подтвердите удаление.`)) {
@@ -5,11 +11,11 @@ function deleteDivision(div_id) {
 	}
 	//отправим JSON
 	$.ajax({
-		url: `/index.php/db/delete_div/${div_id}`,
+		url: `/index.php/divisions/delete/${div_id}`,
 		type: `GET`,
 		success: function(res) {
 			try {
-				if (res == `ok`) {
+				if (res > 0) {
 					alert(`Успешное удаление`);
 					location.reload();
 				} else {
@@ -27,19 +33,18 @@ function deleteDivision(div_id) {
 }
 //сохранить в базу
 function saveDivision(org_id) {
-	let number = document.getElementById(`number`).value;
-	let letter = document.getElementById(`letter`).value;
+	div.number = document.getElementById(`number`).value;
+	div.letter = document.getElementById(`letter`).value;
+	div.org_id = org_id;
 	if (!number || !letter) {
 		alert(`Введены не все данные`);
 		return;
 	}
 	$.ajax({
-		url: `/index.php/db/save_div`,
+		url: `/index.php/divisions/add`,
 		type: `POST`,
 		data: {
-			number: number,
-			letter: letter,
-			org_id: org_id
+			div: JSON.stringify(div)
 		},
 		success: function(res) {
 			if (res) {

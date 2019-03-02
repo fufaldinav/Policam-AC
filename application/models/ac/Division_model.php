@@ -52,6 +52,8 @@ class Division_model extends CI_Model
 		if ($org_id !== null) {
 			$this->db->where('org_id', $org_id);
 		}
+		$this->db->order_by('number', 'ASC');
+		$this->db->order_by('letter', 'ASC');
 		$query = $this->db->get('divisions');
 
 		return $query->result();
@@ -107,7 +109,9 @@ class Division_model extends CI_Model
 	public function set($div)
 	{
 		$data = [
-
+			'number' => $div->number,
+			'letter' => $div->letter,
+			'org_id' => $div->org_id
 		];
 
 		return $data;

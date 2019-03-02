@@ -87,7 +87,7 @@ function setPersonInfo(card_id) {
 
 function getDivisions() {
 	$.ajax({
-		url: `/index.php/db/get_divisions`,
+		url: `/index.php/divisions/get_all`,
 		type: `GET`,
 		success: function(res) {
 			try {
