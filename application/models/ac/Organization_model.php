@@ -52,6 +52,7 @@ class Organization_model extends CI_Model
 		if ($user_id !== null) {
 			$this->db->where('user_id', $user_id);
 		}
+		$this->db->order_by('number', 'ASC');
 		$query = $this->db->get('organizations');
 
 		return $query->result();

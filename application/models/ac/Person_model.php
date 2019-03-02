@@ -55,6 +55,9 @@ class Person_model extends CI_Model
 		if ($div_id !== null) {
 			$this->db->where('div_id', $div_id);
 		}
+		$this->db->order_by('f', 'ASC');
+		$this->db->order_by('i', 'ASC');
+		$this->db->order_by('o', 'ASC');
 		$query = $this->db->get('persons');
 
 		return $query->result();
