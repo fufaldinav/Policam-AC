@@ -25,7 +25,7 @@ class Util_model extends CI_Model
 	/**
 	* @var int
 	*/
-	private $user_id;
+	const TIMER = 10;
 
 	public function __construct()
 	{
@@ -35,43 +35,54 @@ class Util_model extends CI_Model
 	/**
 	 * Реализация long polling
 	 *
+	 * @property  Organization_model  $organization
+	 * @property  Controller_model    $controller
+	 * @param  int    $time
+	 * @param  int[]  $events
 	 * @return  mixed[]
 	 */
-	public function start_polling()
+	public function start_polling($time, $events)
 	{
-		$events = $this->input->post('events');
-		$time = $this->input->post('time');
+		$this->load->model('ac/organization_model', 'organization');
+		$this->load->model('ac/controller_model', 'controller');
 
 		if (!is_numeric($time)) {
 			$time = now('Asia/Yekaterinburg');
 		}
 
-		$org_id = $this->get_org_by_user($this->user_id)->org_id;
+		$user_id = $this->ion_auth->user()->row()->id;
 
-		$controllers = $this->get_controllers_by_org($org_id);
+		$organizations = $this->organization->get_all($user_id);
+
+		$controllers = [];
+
+		foreach ($organizations as $org) {
+			$controllers = array_merge($controllers, $this->controller->get_all($org->id));
+		}
 
 		if ($controllers) {
 			session_write_close();
 			set_time_limit(0);
 
-			$timer = 10;
+			$timer = self::TIMER;
 			while ($timer > 0) {
+				$c_ids = [];
 				foreach ($controllers as $c) {
-					$c_array[] = $c->id;
+					$c_ids[] = $c->id;
 				}
-				$this->db->where_in('controller_id', $c_array);
+				$this->db->where_in('controller_id', $c_ids);
 				$this->db->order_by('time', 'DESC');
 				$this->db->where_in('event', $events);
 				$this->db->where('server_time >', $time);
 				$query = $this->db->get('events');
 
 				if ($query->num_rows() > 0) {
-					$msgs = [];
+					$response = [];
 					foreach ($query->result() as $row) {
-						$msgs[] = $row;
+						$response[] = $row;
 					}
 
-					return $msgs;
+					return $response;
 				}
 
 				$timer--;

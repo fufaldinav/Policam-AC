@@ -45,8 +45,11 @@ class Util extends CI_Controller
 			exit;
 		}
 
+		$time = $this->input->post('time');
+		$events = $this->input->post('events');
+
 		echo json_encode([
-			'msgs' => $this->ac_model->start_polling(),
+			'msgs' => $this->util->start_polling($time, $events),
 			'time' => now('Asia/Yekaterinburg')
 		]);
 	}
