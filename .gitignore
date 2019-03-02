@@ -43,3 +43,5 @@ img/ac/s/*.db
 
 logs/*
 !logs/index.html
+
+application/controllers/Test.php
