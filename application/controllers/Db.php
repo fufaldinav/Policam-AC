@@ -39,17 +39,14 @@ class Db extends CI_Controller
 
 		$person = json_decode($this->input->post('person'));
 
-		$this->person->set($person);
-		$person_id = $this->person->add();
+		$person_id = $this->person->add($person);
 
 		if ($person->photo !== null) {
-			$this->photo->id = $person->photo;
-			$this->photo->set_person($person_id);
+			$this->photo->set_person($person->photo, $person_id);
 		}
 
 		if ($person->card > 0) {
-			$this->card->id = $person->card;
-			$this->card->add($person_id);
+			$this->card->set_holder($person->card, $person_id);
 		}
 
 		echo $person_id;
@@ -71,17 +68,14 @@ class Db extends CI_Controller
 
 		$person = json_decode($this->input->post('person'));
 
-		$this->person->set($person);
-		$count = $this->person->update($person->id);
+		$count = $this->person->update($person);
 
 		if ($person->photo !== null) {
-			$this->photo->id = $person->photo;
-			$this->photo->set_person($person->id);
+			$this->photo->set_person($person->photo, $person->id);
 		}
 
 		if ($person->card > 0) {
-			$this->card->id = $person->card;
-			$this->card->add($person->id);
+			$this->card->set_holder($person->card, $person->id);
 		}
 
 		echo $count;

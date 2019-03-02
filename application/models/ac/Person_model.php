@@ -23,16 +23,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 */
 class Person_model extends CI_Model
 {
-	/**
-	* @var int
-	*/
-	public $id;
-
-	/**
-	* @var mixed[]
-	*/
-	private $data;
-
 	public function __construct()
 	{
 		parent::__construct();
@@ -46,10 +36,6 @@ class Person_model extends CI_Model
 	*/
 	public function get($id = null)
 	{
-		if ($id === null) {
-			$id = $this->id;
-		}
-
 		$this->db->where('id', $id);
 		$query = $this->db->get('persons');
 
@@ -75,11 +61,12 @@ class Person_model extends CI_Model
 	/**
 	* Добавление нового человека
 	*
+	* @param   object  $person
 	* @return  int
 	*/
-	public function add()
+	public function add($person)
 	{
-		$this->db->insert('persons', $this->data);
+		$this->db->insert('persons', $this->set($person));
 		$person_id = $this->db->insert_id();
 
 		return $person_id;
@@ -88,13 +75,13 @@ class Person_model extends CI_Model
 	/**
 	* Обновление информации о человеке
 	*
-	* @param   int  $id
+	* @param   object  $person
 	* @return  int
 	*/
-	public function update($id)
+	public function update($person)
 	{
-		$this->db->where('id', $id);
-		$this->db->update('persons', $this->data);
+		$this->db->where('id', $person->id);
+		$this->db->update('persons', $this->set($person));
 
 		return $this->db->affected_rows();
 	}
@@ -115,11 +102,12 @@ class Person_model extends CI_Model
 	/**
 	* Установить информацию о человеке
 	*
-	* @param  object  $person
+	* @param   object   $person
+	* @return  mixed[]
 	*/
 	public function set($person)
 	{
-		$this->data = [
+		$data = [
 			'div_id' => $person->div,
 			'f' => $person->f,
 			'i' => $person->i,
@@ -129,6 +117,8 @@ class Person_model extends CI_Model
 			'phone' => $person->phone,
 			'photo_id' => $person->photo
 		];
+
+		return $data;
 	}
 
 	/**

@@ -24,11 +24,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Photo_model extends CI_Model
 {
 	/**
-	* @var int
-	*/
-	public $id;
-
-	/**
 	* Каталог с фото
 	*/
 	const IMG_PATH = '/var/www/img_ac';
@@ -46,10 +41,6 @@ class Photo_model extends CI_Model
 	*/
 	public function get($id)
 	{
-		if ($id === null) {
-			$id = $this->id;
-		}
-
 		$this->db->where('id', $id);
 		$query = $this->db->get('photo');
 
@@ -94,12 +85,13 @@ class Photo_model extends CI_Model
 	/**
 	* Установить владельца фотографии
 	*
+	* @param   int  $photo_id
 	* @param   int  $person_id
 	* @return  int
 	*/
-	public function set_person($person_id)
+	public function set_person($photo_id, $person_id)
 	{
-		$this->db->where('id', $this->id);
+		$this->db->where('id', $photo_id);
 		$this->db->update('photo', ['person_id' => $person_id]);
 
 		return $this->db->affected_rows();

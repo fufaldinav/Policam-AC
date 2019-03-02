@@ -23,11 +23,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 */
 class Card_model extends CI_Model
 {
-	/**
-	* @var int
-	*/
-	public $id;
-
 	public function __construct()
 	{
 		parent::__construct();
@@ -41,10 +36,6 @@ class Card_model extends CI_Model
 	*/
 	public function get($id = null)
 	{
-		if ($id === null) {
-			$id = $this->id;
-		}
-
 		$this->db->where('id', $id);
 		$query = $this->db->get('cards');
 
@@ -88,12 +79,13 @@ class Card_model extends CI_Model
 	/**
 	* Добавление карты
 	*
+	* @param   int  $card_id
 	* @param   int  $person_id
 	* @return  int
 	*/
-	public function add($person_id)
+	public function set_holder($card_id, $person_id)
 	{
-		$this->db->where('id', $this->id);
+		$this->db->where('id', $card_id);
 		$this->db->update('cards', ['holder_id' => $person_id]);
 
 		return $this->db->affected_rows();
