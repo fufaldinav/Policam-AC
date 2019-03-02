@@ -2,7 +2,8 @@
 
 /**
  * Class Divisions
- * @property  Division_model    $division
+ * @property Division_model $division
+ * @property Organization_model $organization
  */
 class Divisions extends CI_Controller
 {
@@ -13,6 +14,7 @@ class Divisions extends CI_Controller
 		$this->load->helper('language');
 
 		$this->load->model('ac/division_model', 'division');
+		$this->load->model('ac/organization_model', 'organization');
 	}
 
 	/**
@@ -25,9 +27,15 @@ class Divisions extends CI_Controller
 			exit;
 		}
 
-		$org_id = $this->ion_auth->user()->row()->org_id; //TODO
+		$user_id = $this->ion_auth->user()->row()->id; //TODO
+		$organizations = $this->organization->get_all($user_id);
 
-		echo json_encode($this->division->get_all($org_id));
+		$divisions = [];
+		foreach ($organizations as $org) {
+			$divisions = array_merge($divisions, $this->division->get_all($org->id));
+		}
+		
+		echo json_encode($divisions);
 	}
 
 	/**

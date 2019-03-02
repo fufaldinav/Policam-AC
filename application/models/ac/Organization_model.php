@@ -52,8 +52,9 @@ class Organization_model extends CI_Model
 		if ($user_id !== null) {
 			$this->db->where('user_id', $user_id);
 		}
+		$this->db->join('organizations', 'organizations.id = organizations_users.org_id', 'left');
 		$this->db->order_by('number', 'ASC');
-		$query = $this->db->get('organizations');
+		$query = $this->db->get('organizations_users');
 
 		return $query->result();
 	}
