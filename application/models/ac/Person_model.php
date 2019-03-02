@@ -35,6 +35,9 @@ class Person_model extends CI_Model
 	*/
 	public function get($person_id)
 	{
+		$this->db->select('id, address, birthday, f, i, o, phone, type');
+		$this->db->select("div_id AS 'div'");
+		$this->db->select("photo_id AS 'photo'");
 		$this->db->where('id', $person_id);
 		$query = $this->db->get('persons');
 

@@ -72,14 +72,11 @@ function handleFiles(files) {
 				if (res) {
 					let data = JSON.parse(res);
 					if (data.error === ``) {
-						document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/' + data.hash + '.jpg)';
+						document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/' + data.id + '.jpg)';
 						person.photo = data.id;
 						document.getElementById(`photo`).hidden = true;
 						document.getElementById(`photo_del`).hidden = false;
 						document.getElementById(`photo_del`).onclick = deletePhoto;
-					// } else if (data.error === ``) {
-					// 	document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/0.jpg)';
-					// 	person.photo = null;
 					} else {
 						document.getElementById(`photo`).value = null;
 						alert(data.error);
