@@ -24,6 +24,8 @@ class Photo_model extends CI_Model
 {
 	/**
 	* Каталог с фото
+	*
+	* @var string
 	*/
 	const IMG_PATH = '/var/www/img_ac';
 
@@ -35,12 +37,12 @@ class Photo_model extends CI_Model
 	/**
 	* Получение информации о фотографии
 	*
-	* @param   int      $id
+	* @param   int      $photo_id
 	* @return  mixed[]
 	*/
-	public function get($id)
+	public function get($photo_id)
 	{
-		$this->db->where('id', $id);
+		$this->db->where('id', $photo_id);
 		$query = $this->db->get('photo');
 
 		return $query->row();
@@ -99,7 +101,7 @@ class Photo_model extends CI_Model
 	/**
 	 * Сохранение фотографии
 	 *
-	 * @param   mixed[]
+	 * @param   mixed[]  $file
 	 * @return  string
 	 */
 	public function save($file) //TODO проверка уже имеющейся фото

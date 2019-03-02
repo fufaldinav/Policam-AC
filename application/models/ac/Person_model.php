@@ -30,12 +30,12 @@ class Person_model extends CI_Model
 	/**
 	* Получение информации о человеке
 	*
-	* @param   int      $id
+	* @param   int      $person_id
 	* @return  mixed[]
 	*/
-	public function get($id = null)
+	public function get($person_id)
 	{
-		$this->db->where('id', $id);
+		$this->db->where('id', $person_id);
 		$query = $this->db->get('persons');
 
 		return $query->row();
@@ -88,12 +88,12 @@ class Person_model extends CI_Model
 	/**
 	* Удаление человека
 	*
-	* @param   int  $id
+	* @param   int  $person_id
 	* @return  int
 	*/
-	public function delete($id)
+	public function delete($person_id)
 	{
-		$this->db->delete('persons', ['id' => $id]);
+		$this->db->delete('persons', ['id' => $person_id]);
 
 		return $this->db->affected_rows();
 	}
