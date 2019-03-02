@@ -13,7 +13,7 @@ function sendError(message) {
 function getCards(id) {
 	let card = document.getElementById(`card`);
 	$.ajax({
-		url: `/index.php/db/get_cards`,
+		url: `/index.php/cards/get_all`,
 		type: `GET`,
 		success: function(res) {
 			try {

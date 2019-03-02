@@ -178,7 +178,7 @@ function getPersonInfo(person_id) {
 //получение списка карт (брелоков) от сервера
 function getCardsByPerson(person_id) {
 	$.ajax({
-		url: `/index.php/db/get_cards_by_person/${person_id}`,
+		url: `/index.php/cards/get_by_person/${person_id}`,
 		type: `GET`,
 		success: function(res) {
 			try {
@@ -214,7 +214,7 @@ function getCardsByPerson(person_id) {
 //добавление карты в БД
 function saveCard(card_id) {
 	$.ajax({
-		url: `/index.php/db/add_card/${card_id}/${person.id}`,
+		url: `/index.php/cards/add/${card_id}/${person.id}`,
 		type: `GET`,
 		success: function(res) {
 			try {
@@ -240,12 +240,12 @@ function delCard(card_id) {
 		return;
 	}
 	$.ajax({
-		url: `/index.php/db/delete_card/${card_id}`,
+		url: `/index.php/cards/delete/${card_id}`,
 		type: `GET`,
 		success: function(res) {
 			try {
 				if (res == `ok`) {
-					let card = document.getElementById(`card${id}`);
+					let card = document.getElementById(`card${card_id}`);
 					card.remove(); //удалим карту из списка привязанных
 					let cardsHtml = document.getElementById(`cards`).innerHTML;
 					cardsHtml = (cardsHtml.trim) ? cardsHtml.trim() : cardsHtml.replace(/^\s+/, ``);
