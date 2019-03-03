@@ -10,8 +10,6 @@ class Cards extends CI_Controller
 	{
 		parent::__construct();
 
-		$this->load->helper('language');
-
 		$this->load->model('ac/card_model', 'card');
 	}
 

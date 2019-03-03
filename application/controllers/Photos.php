@@ -10,8 +10,6 @@ class Photos extends CI_Controller
 	{
 		parent::__construct();
 
-		$this->load->helper('language');
-
 		$this->load->model('ac/photo_model', 'photo');
 	}
 

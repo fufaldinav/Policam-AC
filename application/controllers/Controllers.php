@@ -10,8 +10,6 @@ class Controllers extends CI_Controller
 	{
 		parent::__construct();
 
-		$this->load->helper('language');
-
 		$this->load->model('ac/controller_model', 'controller');
 	}
 

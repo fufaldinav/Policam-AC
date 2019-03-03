@@ -11,8 +11,6 @@ class Divisions extends CI_Controller
 	{
 		parent::__construct();
 
-		$this->load->helper('language');
-
 		$this->load->model('ac/division_model', 'division');
 		$this->load->model('ac/organization_model', 'organization');
 	}

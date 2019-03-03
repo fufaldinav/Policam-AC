@@ -12,16 +12,9 @@ class Persons extends CI_Controller
 	{
 		parent::__construct();
 
-		$this->load->helper('language');
-
 		$this->load->model('ac/card_model', 'card');
 		$this->load->model('ac/person_model', 'person');
 		$this->load->model('ac/photo_model', 'photo');
-		$this->lang->load('ac');
-
-		if ($this->ion_auth->logged_in()) {
-			$this->user_id = $this->ion_auth->user()->row()->id;
-		}
 	}
 
 	/**
