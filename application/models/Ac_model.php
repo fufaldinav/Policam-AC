@@ -47,9 +47,9 @@ class Ac_model extends CI_Model
 	 */
 	public function get_org_by_user($user_id)
 	{
-		$this->db->where('users.id', $user_id);
-		$this->db->join('organizations', 'organizations.id = users.org_id', 'inner');
-		$query = $this->db->get('users');
+		$this->db->where('user_id', $user_id);
+		$this->db->join('organizations', 'organizations.id = organizations_users.org_id', 'left');
+		$query = $this->db->get('organizations_users');
 
 		if ($query->num_rows() > 0) {
 			return $query->row();

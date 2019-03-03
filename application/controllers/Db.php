@@ -297,9 +297,9 @@ class Db extends CI_Controller
 			exit;
 		}
 
-		$org_id = $this->ion_auth->user()->row()->org_id;
+		$org = $this->ac_model->get_org_by_user($this->ion_auth->user()->row()->id);
 
-		$divisions = $this->ac_model->get_divisions_by_org($org_id);
+		$divisions = $this->ac_model->get_divisions_by_org($org->id);
 
 		echo json_encode($divisions);
 	}
