@@ -16,10 +16,6 @@ class Util extends CI_Controller
 		$this->load->model('ac_model', 'ac');
 		$this->load->model('ac/util_model', 'util');
 		$this->lang->load('ac');
-
-		if ($this->ion_auth->logged_in()) {
-			$this->user_id = $this->ion_auth->user()->row()->id;
-		}
 	}
 
 	/**
@@ -98,6 +94,10 @@ class Util extends CI_Controller
 	 */
 	public function card_problem()
 	{
+		$this->load->model('ac/card_model', 'card');
+		$this->load->model('ac/person_model', 'person');
+		$this->load->model('ac/util_model', 'util');
+
 		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
@@ -113,17 +113,17 @@ class Util extends CI_Controller
 		$response = lang('registred');
 
 		if ($type >= 1 && $type <= 3) {
-			$pers = $this->ac->get_person($person_id);
+			$pers = $this->person->get($person_id);
 		}
 
 		if ($type == 1) {
 			$desc = $pers->id . ' ' . $pers->f . ' ' . $pers->i . ' forgot card';
 
-			if ($this->ac->add_user_event($type, $desc)) {
+			if ($this->util->add_user_event($type, $desc)) {
 				echo $response;
 			}
 		} elseif ($type == 2 || $type == 3) {
-			$cards = $this->ac->get_cards($person_id);
+			$cards = $this->card->get_by_holder($person_id);
 
 			if (!isset($cards)) {
 				return null;
@@ -137,7 +137,7 @@ class Util extends CI_Controller
 
 			$response .= ' ' . lang('and') . ' ' . lang('card_deleted');
 
-			if ($this->ac->add_user_event($type, $desc)) {
+			if ($this->util->add_user_event($type, $desc)) {
 				echo $response;
 			}
 		} else {
