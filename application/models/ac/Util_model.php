@@ -22,22 +22,32 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Util_model extends CI_Model
 {
 	/**
-	* Время ожидания данных в секундах
+	* Таймаут одного long poll
 	*
-	* @var int
+	* @var int $timeout
 	*/
-	const TIMER = 10;
+	private $timeout;
 
 	/**
 	* Каталог с логами
 	*
-	* @var string
+	* @var string $log_path
 	*/
-	const LOG_PATH = '/var/www/logs';
+	private $log_path;
 
 	public function __construct()
 	{
 		parent::__construct();
+
+		$this->config->load('ac', true);
+
+		$this->log_path = $this->config->item('log_path', 'ac');
+
+		if (!is_dir($this->log_path)) {
+			mkdir($this->log_path, 0755, true);
+		}
+
+		$this->timeout = $this->config->item('long_poll_timeout', 'ac');
 	}
 
 	/**
@@ -72,7 +82,7 @@ class Util_model extends CI_Model
 			session_write_close();
 			set_time_limit(0);
 
-			$timer = self::TIMER;
+			$timer = $this->timeout;
 			while ($timer > 0) {
 				$c_ids = [];
 				foreach ($ctrls as $c) {
@@ -223,12 +233,6 @@ class Util_model extends CI_Model
 	 */
 	public function save_errors($err)
 	{
-		$LOG_PATH = self::LOG_PATH;
-
-		if (!is_dir($LOG_PATH)) {
-			mkdir($LOG_PATH, 0777, true);
-		}
-
 		$this->load->helper('file');
 
 		$time = now('Asia/Yekaterinburg');
@@ -237,7 +241,7 @@ class Util_model extends CI_Model
 		$timestring = '%H:%i:%s';
 		$time = mdate($timestring, $time);
 
-		$path = "$LOG_PATH/err-$date.txt";
+		$path = $this->log_path . '/err-' . $date . '.txt';
 
 		write_file($path, "$time $err\n", 'a');
 	}

@@ -6,12 +6,27 @@
  */
 class Server extends CI_Controller
 {
+	/**
+	* Каталог с логами
+	*
+	* @var string $log_path
+	*/
+	private $log_path;
+
 	public function __construct()
 	{
 		parent::__construct();
 
 		$this->load->model('ac/card_model', 'card');
 		$this->load->model('ac/task_model', 'task');
+
+		$this->config->load('ac', true);
+
+		$this->log_path = $this->config->item('log_path', 'ac');
+
+		if (!is_dir($this->log_path)) {
+			mkdir($this->log_path, 0755, true);
+		}
 	}
 
 	/**
@@ -19,12 +34,6 @@ class Server extends CI_Controller
 	 */
 	public function index()
 	{
-		$LOG_PATH = '/var/www/logs';
-
-		if (!is_dir($LOG_PATH)) {
-			mkdir($LOG_PATH, 0644, true);
-		}
-
 		$this->load->helper('file');
 		$this->load->helper('date');
 
@@ -56,7 +65,7 @@ class Server extends CI_Controller
 			$this->db->where('id', $ctrl_id);
 			$this->db->update('controllers', $data);
 		} else {
-			$path = "$LOG_PATH/inc-$log_date.txt";
+			$path = $this->log_path . '/inc-' . $log_date . '.txt';
 
 			write_file($path, "TYPE: $type || SN: $sn || Неизвестный контроллер\n", 'a');
 
@@ -191,10 +200,10 @@ class Server extends CI_Controller
 		$out_json_msg = json_encode($out_msg);
 		echo $out_json_msg;
 
-		$path = "$LOG_PATH/inc-$log_date.txt";
+		$path = $this->log_path . '/inc-' . $log_date . '.txt';
 		write_file($path, "TYPE: $type || SN: $sn || $inc_json_msg\n", 'a');
 
-		$path = "$LOG_PATH/out-$log_date.txt";
+		$path = $this->log_path . '/out-' . $log_date . '.txt';
 
 		write_file($path, "TYPE: $type || SN: $sn || $out_json_msg\n", 'a');
 	}

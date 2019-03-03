@@ -24,13 +24,21 @@ class Photo_model extends CI_Model
 	/**
 	* Каталог с фото
 	*
-	* @var string
+	* @var string $img_path
 	*/
-	const IMG_PATH = '/var/www/img_ac';
+	private $img_path;
 
 	public function __construct()
 	{
 		parent::__construct();
+
+		$this->config->load('ac', true);
+
+		$this->img_path = $this->config->item('img_path', 'ac');
+
+		if (!is_dir($this->img_path)) {
+			mkdir($this->img_path, 0755, true);
+		}
 	}
 
 	/**
@@ -154,7 +162,7 @@ class Photo_model extends CI_Model
 			$this->clear_old();
 
 			try {
-				$file_path = self::IMG_PATH . '/' . $photo->id . '.jpg';
+				$file_path = $this->img_path . '/' . $photo->id . '.jpg';
 				move_uploaded_file($file_tmp, $file_path);
 				//сохранение уменьшенной копии
 				$source_img = imagecreatefromjpeg($file_path);
@@ -165,7 +173,7 @@ class Photo_model extends CI_Model
 				$new_img = imagecreatetruecolor($new_width, $new_height);
 				imagecopyresized($new_img, $source_img, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
 
-				$file_path = self::IMG_PATH . '/s/' . $photo->id . '.jpg';
+				$file_path = $this->img_path . '/s/' . $photo->id . '.jpg';
 				imagejpeg($new_img, $file_path);
 
 				return $response;
@@ -201,12 +209,12 @@ class Photo_model extends CI_Model
 		$this->db->delete('photo', ['id' => $photo->id]);
 
 		try {
-			$file_path = self::IMG_PATH . '/' . $photo->id . '.jpg';
+			$file_path = $this->img_path . '/' . $photo->id . '.jpg';
 			if (file_exists($file_path)) {
 				unlink($file_path);
 			}
 
-			$file_path = self::IMG_PATH . '/s/' . $photo->id . '.jpg';
+			$file_path = $this->img_path . '/s/' . $photo->id . '.jpg';
 			if (file_exists($file_path)) {
 				unlink($file_path);
 			}
