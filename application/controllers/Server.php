@@ -11,6 +11,7 @@ class Server extends CI_Controller
 		parent::__construct();
 
 		$this->load->model('ac_model', 'ac');
+		$this->load->model('ac/task_model', 'task');
 	}
 
 	/**
@@ -71,7 +72,7 @@ class Server extends CI_Controller
 			//
 			if (!isset($inc_m['operation']) && isset($inc_m['success'])) {
 				if ($inc_m['success'] == 1) {
-					$this->ac->del_task($inc_m['id']);
+					$this->task->delete($inc_m['id']);
 				}
 			}
 			//
@@ -181,7 +182,7 @@ class Server extends CI_Controller
 		}
 
 		//запрос заданий из БД
-		$task = $this->ac->get_last_task($controller_id);
+		$task = $this->task->get_last($controller_id);
 
 		if ($task) {
 			$out_msg['messages'][] = json_decode($task->json);
