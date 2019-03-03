@@ -42,6 +42,24 @@ class Ctrl_model extends CI_Model
 	}
 
 	/**
+	* Получение информации о контроллере
+	*
+	* @param string $sn Серийный номер контроллера
+	* @return mixed[]
+	*/
+	public function get_by_sn($sn)
+	{
+		$this->db->where('sn', $sn);
+		$query = $this->db->get('controllers');
+
+		if ($query->num_rows() > 0) {
+			return $query->row();
+		} else {
+			return null;
+		}
+	}
+
+	/**
 	* Получение информации о всех контроллерах организации
 	*
 	* @param int|null $org_id ID организации, по-умолчанию все контроллеры в БД
@@ -106,9 +124,10 @@ class Ctrl_model extends CI_Model
 	*/
 	public function set($ctrl)
 	{
-		$this->data = [
+		$data = [
 			'name' => $ctrl->name,
 			'online' => $ctrl->online,
+			'last_conn' => $ctrl->last_conn,
 			'org_id' => $ctrl->org_id
 		];
 
