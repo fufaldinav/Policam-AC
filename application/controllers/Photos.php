@@ -2,7 +2,7 @@
 
 /**
  * Class Photos
- * @property  Photo_model    $photo
+ * @property Photo_model $photo
  */
 class Photos extends CI_Controller
 {
@@ -37,7 +37,7 @@ class Photos extends CI_Controller
 	/**
 	 * Удаление фотографии
 	 *
-	 * @param  int  $photo_id
+	 * @param int $photo_id ID фотографии
 	 */
 	public function delete($photo_id)
 	{

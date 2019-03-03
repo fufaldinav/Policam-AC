@@ -1,8 +1,8 @@
 <?php
 /**
- * Name:    Util Model
- * Author:  Artem Fufaldin
- *          artem.fufaldin@gmail.com
+ * Name:   Util Model
+ * Author: Artem Fufaldin
+ *         artem.fufaldin@gmail.com
  *
  * Created:  02.03.2019
  *
@@ -10,10 +10,9 @@
  *
  * Requirements: PHP7.0 or above
  *
- * @package    Policam-AC
- * @author     Artem Fufaldin
- * @link       http://github.com/m2jest1c/Policam-AC
- * @filesource
+ * @package Policam-AC
+ * @author  Artem Fufaldin
+ * @link    http://github.com/m2jest1c/Policam-AC
  */
 defined('BASEPATH') or exit('No direct script access allowed');
 
@@ -23,11 +22,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Util_model extends CI_Model
 {
 	/**
+	* Время ожидания данных в секундах
+	*
 	* @var int
 	*/
 	const TIMER = 10;
 
 	/**
+	* Каталог с логами
+	*
 	* @var string
 	*/
 	const LOG_PATH = '/var/www/logs';
@@ -40,11 +43,11 @@ class Util_model extends CI_Model
 	/**
 	 * Реализация long polling
 	 *
-	 * @property  Organization_model  $organization
-	 * @property  Controller_model    $controller
-	 * @param  int    $time
-	 * @param  int[]  $events
-	 * @return  mixed[]
+	 * @property Organization_model $organization
+	 * @property Controller_model $controller
+	 * @param int $time Время последнего запроса
+	 * @param int[] $events ID событий
+	 * @return mixed[]
 	 */
 	public function start_polling($time, $events)
 	{
@@ -103,18 +106,17 @@ class Util_model extends CI_Model
 	/**
 	 * Рендер имени организации
 	 *
-	 * @param   int     $org_id
-	 * @return  string  Строка в формате 'N (адресс при наличии)'
+	 * @param int $org_id ID организации
+	 * @return string Строка в формате 'номер (адресс при наличии)'
 	 */
-	public function render_org_name($org_id)
-	{ //TODO check
-		$this->db->where('id', $org_id);
-		$query = $this->db->get('organizations');
+	public function render_org_name($org_id)  //TODO check
+	{
+		$org = $this->organization->get($org_id);
 
-		$org_name = $query->row()->number;
+		$org_name = $org->number;
 		if ($query->row()->address) {
 			$org_name .= ' (';
-			$org_name .= $query->row()->address;
+			$org_name .= $org->address;
 			$org_name .= ')';
 		}
 
@@ -124,8 +126,8 @@ class Util_model extends CI_Model
 	/**
 	 * Рендер строки подключения CSS
 	 *
-	 * @param   string[]  $arr
-	 * @return  string
+	 * @param string[] $arr Список имен CSS файлов
+	 * @return string
 	 */
 	public function render_css($arr)
 	{
@@ -143,8 +145,8 @@ class Util_model extends CI_Model
 	/**
 	 * Рендер строки подключения JavaScript
 	 *
-	 * @param   string[]  $arr
-	 * @return  string
+	 * @param string[] $arr Список имен JS файлов
+	 * @return string
 	 */
 	public function render_js($arr)
 	{
@@ -168,7 +170,7 @@ class Util_model extends CI_Model
 	/**
 	 * Рендер навигационных кнопок
 	 *
-	 * @return  string
+	 * @return string
 	 */
 	public function render_nav()
 	{
@@ -194,9 +196,9 @@ class Util_model extends CI_Model
 	/**
 	 * Сохранение полученого от пользователя события
 	 *
-	 * @param   int     $type  Тип события
-	 * @param   string  $desc  Описание события
-	 * @return  int
+	 * @param int $type    Тип события
+	 * @param string $desc Описание события
+	 * @return int
 	 */
 	public function add_user_event($type, $desc)
 	{

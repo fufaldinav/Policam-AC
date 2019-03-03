@@ -2,7 +2,7 @@
 
 /**
  * Class Cards
- * @property  Card_model    $card
+ * @property Card_model $card
  */
 class Cards extends CI_Controller
 {
@@ -16,8 +16,8 @@ class Cards extends CI_Controller
 	/**
 	 * Добавление карты
 	 *
-	 * @param  int  $card_id
-	 * @param  int  $person_id
+	 * @param int $card_id   ID карты
+	 * @param int $person_id ID человека
 	 */
 	public function add($card_id, $person_id)
 	{
@@ -38,7 +38,7 @@ class Cards extends CI_Controller
 	/**
 	 * Удаление карты
 	 *
-	 * @param  int  $card_id
+	 * @param int $card_id ID карты
 	 */
 	public function delete($card_id)
 	{
@@ -76,7 +76,7 @@ class Cards extends CI_Controller
 	/**
 	 * Получение информации о картах конкретного человека
 	 *
-	 * @param  int  $holder_id
+	 * @param int $holder_id ID человека
 	 */
 	public function get_by_person($holder_id)
 	{

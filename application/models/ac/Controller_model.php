@@ -1,8 +1,8 @@
 <?php
 /**
- * Name:    Controller Model
- * Author:  Artem Fufaldin
- *          artem.fufaldin@gmail.com
+ * Name:   Controller Model
+ * Author: Artem Fufaldin
+ *         artem.fufaldin@gmail.com
  *
  * Created:  02.03.2019
  *
@@ -10,10 +10,9 @@
  *
  * Requirements: PHP7.0 or above
  *
- * @package    Policam-AC
- * @author     Artem Fufaldin
- * @link       http://github.com/m2jest1c/Policam-AC
- * @filesource
+ * @package Policam-AC
+ * @author  Artem Fufaldin
+ * @link    http://github.com/m2jest1c/Policam-AC
  */
 defined('BASEPATH') or exit('No direct script access allowed');
 
@@ -30,8 +29,8 @@ class Controller_model extends CI_Model
 	/**
 	* Получение информации о контроллере
 	*
-	* @param   int      $controller_id
-	* @return  mixed[]
+	* @param int $controller_id ID контроллера
+	* @return mixed[]
 	*/
 	public function get($controller_id)
 	{
@@ -42,10 +41,10 @@ class Controller_model extends CI_Model
 	}
 
 	/**
-	* Получение информации о всех контроллерах
+	* Получение информации о всех контроллерах организации
 	*
-	* @param   int      $org_id
-	* @return  mixed[]
+	* @param int|null $org_id ID организации, по-умолчанию все контроллеры в БД
+	* @return mixed[]
 	*/
 	public function get_all($org_id = null)
 	{
@@ -60,8 +59,8 @@ class Controller_model extends CI_Model
 	/**
 	* Добавление нового контроллера
 	*
-	* @param   object  $controller
-	* @return  int
+	* @param object $controller Контроллер
+	* @return int
 	*/
 	public function add($controller)
 	{
@@ -74,8 +73,8 @@ class Controller_model extends CI_Model
 	/**
 	* Обновление информации о контроллере
 	*
-	* @param   object  $controller
-	* @return  int
+	* @param object $controller Контроллер
+	* @return int
 	*/
 	public function update($controller)
 	{
@@ -88,8 +87,8 @@ class Controller_model extends CI_Model
 	/**
 	* Удаление контроллера
 	*
-	* @param   int  $controller_id
-	* @return  int
+	* @param int $controller_id ID контроллера
+	* @return int
 	*/
 	public function delete($controller_id)
 	{
@@ -101,13 +100,15 @@ class Controller_model extends CI_Model
 	/**
 	* Установить информацию о контроллере
 	*
-	* @param   object   $controller
-	* @return  mixed[]
+	* @param object $controller Контроллер
+	* @return mixed[]
 	*/
 	public function set($controller)
 	{
 		$this->data = [
-			//TODO
+			'name' => $controller->name,
+			'online' => $controller->online,
+			'org_id' => $controller->org_id
 		];
 
 		return $data;
@@ -136,8 +137,8 @@ class Controller_model extends CI_Model
 	/**
 	 * Добавление карт в контроллер
 	 *
-	 * @param int $controller_id
-	 * @param string[]|string $cards
+	 * @param int $controller_id     ID контроллера
+	 * @param string[]|string $cards Карты (код)
 	 * @return int
 	 */
 	public function add_cards($controller_id, $cards)
@@ -161,8 +162,8 @@ class Controller_model extends CI_Model
 	/**
 	 * Удаление карт из контроллера
 	 *
-	 * @param int $controller_id
-	 * @param string[]|string $cards
+	 * @param int $controller_id     ID контроллера
+	 * @param string[]|string $cards Карты (код)
 	 * @return int
 	 */
 	public function delete_cards($controller_id, $cards)
@@ -187,7 +188,7 @@ class Controller_model extends CI_Model
 	/**
 	 * Удаление всех карт из контроллера
 	 *
-	 * @param int $controller_id
+	 * @param int $controller_id ID контроллера
 	 * @return int
 	 */
 	public function clear_cards($controller_id)

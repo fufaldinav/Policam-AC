@@ -32,7 +32,7 @@ class Divisions extends CI_Controller
 		foreach ($organizations as $org) {
 			$divisions = array_merge($divisions, $this->division->get_all($org->id));
 		}
-		
+
 		echo json_encode($divisions);
 	}
 
@@ -60,7 +60,7 @@ class Divisions extends CI_Controller
 	/**
 	 * Удаление подразделения
 	 *
-	 * @param  int  $div_id
+	 * @param int $div_id ID подразделения
 	 */
 	public function delete($div_id)
 	{

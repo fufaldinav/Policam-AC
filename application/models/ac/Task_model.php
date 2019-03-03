@@ -1,8 +1,8 @@
 <?php
 /**
- * Name:    Task Model
- * Author:  Artem Fufaldin
- *          artem.fufaldin@gmail.com
+ * Name:   Task Model
+ * Author: Artem Fufaldin
+ *         artem.fufaldin@gmail.com
  *
  * Created:  02.03.2019
  *
@@ -10,10 +10,9 @@
  *
  * Requirements: PHP7.0 or above
  *
- * @package    Policam-AC
- * @author     Artem Fufaldin
- * @link       http://github.com/m2jest1c/Policam-AC
- * @filesource
+ * @package Policam-AC
+ * @author  Artem Fufaldin
+ * @link    http://github.com/m2jest1c/Policam-AC
  */
 defined('BASEPATH') or exit('No direct script access allowed');
 

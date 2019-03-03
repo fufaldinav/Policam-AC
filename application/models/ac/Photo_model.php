@@ -1,8 +1,8 @@
 <?php
 /**
- * Name:    Photo Model
- * Author:  Artem Fufaldin
- *          artem.fufaldin@gmail.com
+ * Name:   Photo Model
+ * Author: Artem Fufaldin
+ *         artem.fufaldin@gmail.com
  *
  * Created:  01.03.2019
  *
@@ -10,10 +10,9 @@
  *
  * Requirements: PHP7.0 or above
  *
- * @package    Policam-AC
- * @author     Artem Fufaldin
- * @link       http://github.com/m2jest1c/Policam-AC
- * @filesource
+ * @package Policam-AC
+ * @author  Artem Fufaldin
+ * @link    http://github.com/m2jest1c/Policam-AC
  */
 defined('BASEPATH') or exit('No direct script access allowed');
 
@@ -37,8 +36,8 @@ class Photo_model extends CI_Model
 	/**
 	* Получение информации о фотографии
 	*
-	* @param   int      $photo_id
-	* @return  mixed[]
+	* @param int $photo_id ID фотографии
+	* @return mixed[]
 	*/
 	public function get($photo_id)
 	{
@@ -51,8 +50,8 @@ class Photo_model extends CI_Model
 	/**
 	* Получение информации о фотографии
 	*
-	* @param   string        $hash
-	* @return  mixed[]|null
+	* @param string $hash Хэш-сумма фотографии
+	* @return mixed[]|null
 	*/
 	public function get_by_hash($hash)
 	{
@@ -66,29 +65,29 @@ class Photo_model extends CI_Model
 		}
 	}
 
-		/**
-		* Получение информации о фотографии
-		*
-		* @param   int           $person_id
-		* @return  mixed[]|null
-		*/
-		public function get_by_person($person_id)
-		{
-			$this->db->where('person_id', $person_id);
-			$query = $this->db->get('photo');
+	/**
+	* Получение информации о фотографии
+	*
+	* @param int $person_id ID человека
+	* @return mixed[]|null
+	*/
+	public function get_by_person($person_id)
+	{
+		$this->db->where('person_id', $person_id);
+		$query = $this->db->get('photo');
 
-			if ($query->num_rows() > 0) {
-				return $query->row();
-			} else {
-				return null;
-			}
+		if ($query->num_rows() > 0) {
+			return $query->row();
+		} else {
+			return null;
 		}
+	}
 	/**
 	* Установить владельца фотографии
 	*
-	* @param   int  $photo_id
-	* @param   int  $person_id
-	* @return  int
+	* @param int $photo_id ID фотографии
+	* @param int $person_id ID человека
+	* @return int
 	*/
 	public function set_person($photo_id, $person_id)
 	{
@@ -101,8 +100,8 @@ class Photo_model extends CI_Model
 	/**
 	 * Сохранение фотографии
 	 *
-	 * @param   mixed[]  $file
-	 * @return  string
+	 * @param mixed[] $file Файл фотографии
+	 * @return string
 	 */
 	public function save($file) //TODO проверка уже имеющейся фото за человеком
 	{
@@ -184,8 +183,8 @@ class Photo_model extends CI_Model
 	/**
 	 * Удаление фото из БД и диска
 	 *
-	 * @param   int        $photo_id
-	 * @return  bool|null
+	 * @param int $photo_id ID фотографии
+	 * @return bool|null
 	 */
 	public function delete($photo_id)
 	{

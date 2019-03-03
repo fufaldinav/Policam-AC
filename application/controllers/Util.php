@@ -2,8 +2,8 @@
 
 /**
  * Class Util
- * @property  Ac_model  $ac
- * @property  Util_model  $util
+ * @property Ac_model $ac
+ * @property Util_model $util
  */
 class Util extends CI_Controller
 {
@@ -15,7 +15,7 @@ class Util extends CI_Controller
 
 		$this->load->model('ac/other_model', 'other'); //TODO
 		$this->load->model('ac/util_model', 'util');
-		
+
 		$this->lang->load('ac');
 	}
 
@@ -54,7 +54,7 @@ class Util extends CI_Controller
 	/**
 	 * Сохранение ошибок от клиентов
 	 *
-	 * @param string|null $err Текст ошибки
+	 * @param string|null $err Текст ошибки, по-умолчанию получить POST-запрос
 	 */
 	public function save_js_errors($err = null)
 	{

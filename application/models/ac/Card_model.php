@@ -1,8 +1,8 @@
 <?php
 /**
- * Name:    Card Model
- * Author:  Artem Fufaldin
- *          artem.fufaldin@gmail.com
+ * Name:   Card Model
+ * Author: Artem Fufaldin
+ *         artem.fufaldin@gmail.com
  *
  * Created:  01.03.2019
  *
@@ -10,10 +10,9 @@
  *
  * Requirements: PHP7.0 or above
  *
- * @package    Policam-AC
- * @author     Artem Fufaldin
- * @link       http://github.com/m2jest1c/Policam-AC
- * @filesource
+ * @package Policam-AC
+ * @author  Artem Fufaldin
+ * @link    http://github.com/m2jest1c/Policam-AC
  */
 defined('BASEPATH') or exit('No direct script access allowed');
 
@@ -30,8 +29,8 @@ class Card_model extends CI_Model
 	/**
 	* Получение информации о карте
 	*
-	* @param   int      $card_id
-	* @return  object
+	* @param int $card_id ID карты
+	* @return object
 	*/
 	public function get($card_id)
 	{
@@ -42,10 +41,10 @@ class Card_model extends CI_Model
 	}
 
 	/**
-	* Получение списка карт, привязаных к конкретному человеку или все неизвестные карты
+	* Получение списка карт, привязаных к конкретному человеку
 	*
-	* @param   int           $holder_id  Опционально, по-умолчанию -1 (список всех неизвестных карт)
-	* @return  mixed[]|null
+	* @param int $holder_id ID человека, по-умолчанию -1 (список всех неизвестных карт)
+	* @return mixed[]|null
 	*/
 	public function get_by_holder($holder_id = -1)
 	{
@@ -60,10 +59,10 @@ class Card_model extends CI_Model
 	}
 
 	/**
-	* Получение информации о всех картах
+	* Получение информации о всех картах контроллера
 	*
-	* @param   int      $controller_id
-	* @return  mixed[]
+	* @param int|null $controller_id ID контроллера, по-умолчанию все карты
+	* @return mixed[]
 	*/
 	public function get_all($controller_id = null)
 	{
@@ -78,9 +77,9 @@ class Card_model extends CI_Model
 	/**
 	* Добавление карты
 	*
-	* @param   int  $card_id
-	* @param   int  $person_id
-	* @return  int
+	* @param int $card_id   ID карты
+	* @param int $person_id ID человека
+	* @return int
 	*/
 	public function set_holder($card_id, $person_id)
 	{
@@ -114,8 +113,8 @@ class Card_model extends CI_Model
 	/**
 	 * Удаление карты
 	 *
-	 * @param   int   $card_id
-	 * @return  int
+	 * @param int $card_id ID карты
+	 * @return int
 	 */
 	public function delete($card_id)
 	{

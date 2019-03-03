@@ -1,8 +1,8 @@
 <?php
 /**
- * Name:    Person Model
- * Author:  Artem Fufaldin
- *          artem.fufaldin@gmail.com
+ * Name:   Person Model
+ * Author: Artem Fufaldin
+ *         artem.fufaldin@gmail.com
  *
  * Created:  01.03.2019
  *
@@ -10,10 +10,9 @@
  *
  * Requirements: PHP7.0 or above
  *
- * @package    Policam-AC
- * @author     Artem Fufaldin
- * @link       http://github.com/m2jest1c/Policam-AC
- * @filesource
+ * @package Policam-AC
+ * @author  Artem Fufaldin
+ * @link    http://github.com/m2jest1c/Policam-AC
  */
 defined('BASEPATH') or exit('No direct script access allowed');
 
@@ -30,8 +29,8 @@ class Person_model extends CI_Model
 	/**
 	* Получение информации о человеке
 	*
-	* @param   int      $person_id
-	* @return  mixed[]
+	* @param int $person_id ID человека
+	* @return mixed[]
 	*/
 	public function get($person_id)
 	{
@@ -45,10 +44,10 @@ class Person_model extends CI_Model
 	}
 
 	/**
-	* Получение информации о всех людях
+	* Получение информации о всех людях подразделения
 	*
-	* @param   int      $div_id
-	* @return  mixed[]
+	* @param int|null $div_id ID подразделения, по-умолчанию все люди в БД
+	* @return mixed[]
 	*/
 	public function get_all($div_id = null)
 	{
@@ -66,8 +65,8 @@ class Person_model extends CI_Model
 	/**
 	* Добавление нового человека
 	*
-	* @param   object  $person
-	* @return  int
+	* @param object $person Человек
+	* @return int
 	*/
 	public function add($person)
 	{
@@ -80,8 +79,8 @@ class Person_model extends CI_Model
 	/**
 	* Обновление информации о человеке
 	*
-	* @param   object  $person
-	* @return  int
+	* @param object $person Человек
+	* @return int
 	*/
 	public function update($person)
 	{
@@ -94,8 +93,8 @@ class Person_model extends CI_Model
 	/**
 	* Удаление человека
 	*
-	* @param   int  $person_id
-	* @return  int
+	* @param int $person_id ID человека
+	* @return int
 	*/
 	public function delete($person_id)
 	{
@@ -107,8 +106,8 @@ class Person_model extends CI_Model
 	/**
 	* Установить информацию о человеке
 	*
-	* @param   object   $person
-	* @return  mixed[]
+	* @param object $person Человек
+	* @return mixed[]
 	*/
 	public function set($person)
 	{
@@ -129,8 +128,8 @@ class Person_model extends CI_Model
 	/**
 	* Удалить инфомации о фотографии у человека
 	*
-	* @param   int  $person_id
-	* @return  int
+	* @param int $person_id ID человека
+	* @return int
 	*/
 	public function delete_photo($person_id)
 	{

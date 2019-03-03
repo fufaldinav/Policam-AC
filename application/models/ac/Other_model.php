@@ -1,8 +1,8 @@
 <?php
 /**
- * Name:    Other Model
- * Author:  Artem Fufaldin
- *          artem.fufaldin@gmail.com
+ * Name:   Other Model
+ * Author: Artem Fufaldin
+ *         artem.fufaldin@gmail.com
  *
  * Created:  02.03.2019
  *
@@ -10,10 +10,9 @@
  *
  * Requirements: PHP7.0 or above
  *
- * @package    Policam-AC
- * @author     Artem Fufaldin
- * @link       http://github.com/m2jest1c/Policam-AC
- * @filesource
+ * @package Policam-AC
+ * @author  Artem Fufaldin
+ * @link    http://github.com/m2jest1c/Policam-AC
  */
 defined('BASEPATH') or exit('No direct script access allowed');
 
@@ -30,8 +29,8 @@ class Other_model extends CI_Model
 	/**
 	 * Получение списка людей и привязаных к ним карт из организации
 	 *
-	 * @param   int           $org_id
-	 * @return  mixed[]|null
+	 * @param int $org_id ID организации
+	 * @return mixed[]|null
 	 */
 	public function get_persons_and_cards_by_org($org_id) //TODO переработать
 	{
@@ -65,8 +64,8 @@ class Other_model extends CI_Model
 	/**
 	 * Добавление карты в память контроллеров
 	 *
-	 * @param   int   $card_id
-	 * @return  int
+	 * @param int $card_id ID карты
+	 * @return int
 	 */
 	public function add_card($card_id)
 	{
@@ -96,8 +95,8 @@ class Other_model extends CI_Model
 	/**
 	 * Удаление карты из памяти контроллеров
 	 *
-	 * @param   int   $card_id
-	 * @return  bool
+	 * @param int $card_id ID карты
+	 * @return bool
 	 */
 	public function delete_card($card_id)
 	{
@@ -130,8 +129,8 @@ class Other_model extends CI_Model
 	 * Отправляет все карты (частями максимум 10 карт за раз) в контроллер,
 	 * предварительно получив список карт людей, принадлежащих организации определенного контроллера
 	 *
-	 * @param   int  $controller_id
-	 * @return  int  Вернет количество сообщений, отправленных на контроллер
+	 * @param int $controller_id ID контроллера
+	 * @return int
 	 */
 	public function add_all_cards_to_controller($controller_id)
 	{

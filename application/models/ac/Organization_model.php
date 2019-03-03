@@ -1,8 +1,8 @@
 <?php
 /**
- * Name:    Organization Model
- * Author:  Artem Fufaldin
- *          artem.fufaldin@gmail.com
+ * Name:   Organization Model
+ * Author: Artem Fufaldin
+ *         artem.fufaldin@gmail.com
  *
  * Created:  02.03.2019
  *
@@ -10,10 +10,9 @@
  *
  * Requirements: PHP7.0 or above
  *
- * @package    Policam-AC
- * @author     Artem Fufaldin
- * @link       http://github.com/m2jest1c/Policam-AC
- * @filesource
+ * @package Policam-AC
+ * @author  Artem Fufaldin
+ * @link    http://github.com/m2jest1c/Policam-AC
  */
 defined('BASEPATH') or exit('No direct script access allowed');
 
@@ -30,8 +29,8 @@ class Organization_model extends CI_Model
 	/**
 	* Получение информации о организации
 	*
-	* @param   int      $org_id
-	* @return  mixed[]
+	* @param int $org_id ID организации
+	* @return mixed[]
 	*/
 	public function get($org_id)
 	{
@@ -42,10 +41,10 @@ class Organization_model extends CI_Model
 	}
 
 	/**
-	* Получение информации о всех организациях
+	* Получение информации о всех организациях пользователя
 	*
-	* @param   int      $user_id
-	* @return  mixed[]
+	* @param int|null $user_id ID пользователя, по-умолчанию все организации
+	* @return mixed[]
 	*/
 	public function get_all($user_id = null)
 	{
@@ -62,8 +61,8 @@ class Organization_model extends CI_Model
 	/**
 	* Добавление новой организации
 	*
-	* @param   object  $org
-	* @return  int
+	* @param object $org Организация
+	* @return int
 	*/
 	public function add($org)
 	{
@@ -75,8 +74,8 @@ class Organization_model extends CI_Model
 	/**
 	* Обновление информации об организациях
 	*
-	* @param   object  $org
-	* @return  int
+	* @param object $org Организация
+	* @return int
 	*/
 	public function update($org)
 	{
@@ -89,7 +88,7 @@ class Organization_model extends CI_Model
 	/**
 	* Удаление организации
 	*
-	* @param   int  $org_id
+	* @param int $org_id ID организации
 	* @return  int
 	*/
 	public function delete($org_id)
@@ -102,13 +101,15 @@ class Organization_model extends CI_Model
 	/**
 	* Установить информацию об организации
 	*
-	* @param   object   $org
-	* @return  mixed[]
+	* @param object $org Организация
+	* @return mixed[]
 	*/
 	public function set($org)
 	{
 		$this->data = [
-
+			'number' => $org->number,
+			'addres' => $org->address,
+			'type' => $org->type
 		];
 
 		return $data;

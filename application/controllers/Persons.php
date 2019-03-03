@@ -2,9 +2,9 @@
 
 /**
  * Class Persons
- * @property  Card_model    $card
- * @property  Person_model  $person
- * @property  Photo_model   $photo
+ * @property Card_model $card
+ * @property Person_model $person
+ * @property Photo_model $photo
  */
 class Persons extends CI_Controller
 {
@@ -78,7 +78,7 @@ class Persons extends CI_Controller
 	/**
 	 * Удаление человека
 	 *
-	 * @param  int  $person_id
+	 * @param int $person_id ID человека
 	 */
 	public function delete($person_id)
 	{
@@ -109,7 +109,7 @@ class Persons extends CI_Controller
 	/**
 	 * Получение информации о человеке
 	 *
-	 * @param  int  $person_id
+	 * @param int $person_id
 	 */
 	public function get($person_id)
 	{
@@ -126,7 +126,7 @@ class Persons extends CI_Controller
 	/**
 	 * Получение информации о человеке
 	 *
-	 * @param  int  $card_id
+	 * @param int $card_id
 	 */
 	public function get_by_card($card_id)
 	{
@@ -145,7 +145,7 @@ class Persons extends CI_Controller
 	/**
 	 * Получение информации о людях в подразделении
 	 *
-	 * @param  int  $div_id
+	 * @param int $div_id
 	 */
 	public function get_all($div_id)
 	{

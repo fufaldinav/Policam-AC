@@ -1,8 +1,8 @@
 <?php
 /**
- * Name:    Division Model
- * Author:  Artem Fufaldin
- *          artem.fufaldin@gmail.com
+ * Name:   Division Model
+ * Author: Artem Fufaldin
+ *         artem.fufaldin@gmail.com
  *
  * Created:  02.03.2019
  *
@@ -10,10 +10,9 @@
  *
  * Requirements: PHP7.0 or above
  *
- * @package    Policam-AC
- * @author     Artem Fufaldin
- * @link       http://github.com/m2jest1c/Policam-AC
- * @filesource
+ * @package Policam-AC
+ * @author  Artem Fufaldin
+ * @link    http://github.com/m2jest1c/Policam-AC
  */
 defined('BASEPATH') or exit('No direct script access allowed');
 
@@ -30,8 +29,8 @@ class Division_model extends CI_Model
 	/**
 	* Получение информации о подразделении
 	*
-	* @param   int      $div_id
-	* @return  mixed[]
+	* @param int $div_id ID подразделения
+	* @return mixed[]
 	*/
 	public function get($div_id)
 	{
@@ -42,10 +41,10 @@ class Division_model extends CI_Model
 	}
 
 	/**
-	* Получение информации о всех подразделениях
+	* Получение информации о всех подразделениях организации
 	*
-	* @param   int      $org_id
-	* @return  mixed[]
+	* @param int|null $org_id ID организации, по-умолчанию все подразделения
+	* @return mixed[]
 	*/
 	public function get_all($org_id = null)
 	{
@@ -62,8 +61,8 @@ class Division_model extends CI_Model
 	/**
 	* Добавление нового подразделения
 	*
-	* @param   object  $div
-	* @return  int
+	* @param object $div Подразделение
+	* @return int
 	*/
 	public function add($div)
 	{
@@ -76,8 +75,8 @@ class Division_model extends CI_Model
 	/**
 	* Обновление информации о подразделении
 	*
-	* @param   object  $div
-	* @return  int
+	* @param object $div Подразделение
+	* @return int
 	*/
 	public function update($div)
 	{
@@ -90,8 +89,8 @@ class Division_model extends CI_Model
 	/**
 	* Удаление подразделения
 	*
-	* @param   int  $div_id
-	* @return  int
+	* @param int $div_id ID подразделения
+	* @return int
 	*/
 	public function delete($div_id)
 	{
@@ -103,8 +102,8 @@ class Division_model extends CI_Model
 	/**
 	* Установить информацию о подразделении
 	*
-	* @param   object   $div
-	* @return  mixed[]
+	* @param object $div Подразделение
+	* @return mixed[]
 	*/
 	public function set($div)
 	{
