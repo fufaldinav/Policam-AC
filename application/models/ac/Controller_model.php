@@ -107,9 +107,93 @@ class Controller_model extends CI_Model
 	public function set($controller)
 	{
 		$this->data = [
-
+			//TODO
 		];
 
 		return $data;
+	}
+
+	/**
+	 * Установить параметры открытия
+	 *
+	 * @param int $controller_id ID контроллера
+	 * @param int $open_time     Время открытия в 0.1 сек
+	 * @param int $open_control  Контроль открытия в 0.1 сек, по-умолчанию 0 - без контроля
+	 * @param int $close_control Контроль закрытия в 0.1 сек, по-умолчанию 0 - без контроля
+	 * @return int
+	 */
+	public function set_door_params($controller_id, $open_time, $open_control = 0, $close_control = 0)
+	{
+		$this->load->model('ac/task_model', 'task');
+
+		$data = '"open":' . $open_time;
+		$data .= ',"open_control":' . $open_control;
+		$data .= ',"close_control":' . $close_control;
+
+		return $this->task->add('set_door_params', $controller_id, $data);
+	}
+
+	/**
+	 * Добавление карт в контроллер
+	 *
+	 * @param int $controller_id
+	 * @param string[]|string $cards
+	 * @return int
+	 */
+	public function add_cards($controller_id, $cards)
+	{
+		$this->load->model('ac/task_model', 'task');
+
+		$data = '"cards": [';
+		if (is_array($cards)) {
+			foreach ($cards as $card) {
+				$data .= '{"card":"' . $card . '","flags":32,"tz":255},';
+			}
+			$data = substr($data, 0, -1);
+		} else {
+			$data .= '{"card":"' . $cards . '","flags":32,"tz":255}';
+		}
+		$data .= ']';
+
+		return $this->task->add('add_cards', $controller_id, $data);
+	}
+
+	/**
+	 * Удаление карт из контроллера
+	 *
+	 * @param int $controller_id
+	 * @param string[]|string $cards
+	 * @return int
+	 */
+	public function delete_cards($controller_id, $cards)
+	{
+		$this->load->model('ac/task_model', 'task');
+
+		$data = '"cards": [';
+		if (is_array($cards)) {
+			foreach ($cards as $card) {
+				$data .= '{"card":"' . $card . '"},';
+			}
+			$data = substr($data, 0, -1);
+		} else {
+			$data .= '{"card":"' . $cards . '"}';
+		}
+		$data .= ']';
+
+		return $this->task->add('del_cards', $controller_id, $data);
+	}
+
+
+	/**
+	 * Удаление всех карт из контроллера
+	 *
+	 * @param int $controller_id
+	 * @return int
+	 */
+	public function clear_cards($controller_id)
+	{
+		$this->load->model('ac/task_model', 'task');
+
+		return $this->task->add('clear_cards', $controller_id, $data);
 	}
 }
