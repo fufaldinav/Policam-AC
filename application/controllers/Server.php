@@ -10,7 +10,7 @@ class Server extends CI_Controller
 	{
 		parent::__construct();
 
-		$this->load->model('ac_model', 'ac');
+		$this->load->model('ac/card_model', 'card');
 		$this->load->model('ac/task_model', 'task');
 	}
 
@@ -112,7 +112,7 @@ class Server extends CI_Controller
 						$out_m['granted'] = 1;
 					}
 
-					$this->ac->set_card_last_conn($card_id, $controller_id);
+					$this->card->set_last_conn($card_id, $controller_id);
 				} else {
 					$data = [
 						'wiegand' => $inc_m['card'],
@@ -148,7 +148,7 @@ class Server extends CI_Controller
 					if ($query->num_rows() > 0) {
 						$card_id = $query->row()->id;
 
-						$this->ac->set_card_last_conn($card_id, $controller_id);
+						$this->card->set_last_conn($card_id, $controller_id);
 					} else {
 						$data = [
 							'wiegand' => $event['card'],

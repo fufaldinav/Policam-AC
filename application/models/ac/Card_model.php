@@ -96,6 +96,22 @@ class Card_model extends CI_Model
 	}
 
 	/**
+	 * Установить время последней связи с картой
+	 *
+	 * @param int $card_id       ID карты
+	 * @param int $controller_id ID контроллера
+	 */
+	public function set_last_conn($card_id, $controller_id)
+	{
+		$data = [
+			'last_conn' => now('Asia/Yekaterinburg'),
+			'controller_id' => $controller_id
+		];
+		$this->db->where('id', $card_id);
+		$this->db->update('cards', $data);
+	}
+
+	/**
 	 * Удаление карты
 	 *
 	 * @param   int   $card_id
