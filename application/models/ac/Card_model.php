@@ -84,13 +84,15 @@ class Card_model extends CI_Model
 	*/
 	public function set_holder($card_id, $person_id)
 	{
+		$this->load->model('ac/controller', 'controller');
+
 		$this->db->where('id', $card_id);
 		$this->db->update('cards', ['holder_id' => $person_id]);
 
 		return $this->db->affected_rows();
 
-		//TODO запись карт в контроллер
-		//$this->controller->add_card($this->id);
+		//TODO добавление карты в контроллера
+		//$this->controller->add_cards($controller_id, $card);
 	}
 
 	/**
@@ -101,12 +103,14 @@ class Card_model extends CI_Model
 	 */
 	public function delete($card_id)
 	{
+		$this->load->model('ac/controller', 'controller');
+
 		$this->db->where('id', $card_id);
 		$this->db->update('cards', ['holder_id' => -1]);
 
 		return $this->db->affected_rows();
 
-		//TODO удаление карт из контроллера
-		//$this->controller->delete_card($this->id);
+		//TODO удаление карты из контроллера
+		//$this->controller->delete_cards($controller_id, $card);
 	}
 }

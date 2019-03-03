@@ -195,8 +195,10 @@ class Util_model extends CI_Model
 	 */
 	public function add_user_event($type, $desc)
 	{
+		$user_id = $this->ion_auth->user()->row()->id; //TODO
+
 		$data =	[
-			'user_id' => $this->user_id,
+			'user_id' => $user_id,
 			'type' => $type,
 			'description' => $desc,
 			'time' => now('Asia/Yekaterinburg')
