@@ -13,8 +13,9 @@ class Util extends CI_Controller
 
 		$this->load->helper('language');
 
-		$this->load->model('ac_model', 'ac');
+		$this->load->model('ac/other_model', 'other'); //TODO
 		$this->load->model('ac/util_model', 'util');
+		
 		$this->lang->load('ac');
 	}
 
@@ -53,7 +54,7 @@ class Util extends CI_Controller
 	/**
 	 * Сохранение ошибок от клиентов
 	 *
-	 * @param  string  $err  Опционально, иначе обработка POST-запроса
+	 * @param string|null $err Текст ошибки
 	 */
 	public function save_js_errors($err = null)
 	{
@@ -62,31 +63,11 @@ class Util extends CI_Controller
 			exit;
 		}
 
-		$LOG_PATH = '/var/www/logs';
-
-		if (!is_dir($LOG_PATH)) {
-			mkdir($LOG_PATH, 0777, true);
-		}
-
-		$this->load->helper('file');
-
 		if ($err === null) {
 			$err = $this->input->post('error');
 		}
 
-		if (!isset($err)) {
-			return;
-		}
-
-		$time = now('Asia/Yekaterinburg');
-		$datestring = '%Y-%m-%d';
-		$date = mdate($datestring, $time);
-		$timestring = '%H:%i:%s';
-		$time = mdate($timestring, $time);
-
-		$path = "$LOG_PATH/err-$date.txt";
-
-		write_file($path, "$time $err\n", 'a');
+		$this->util->save_errors($err);
 	}
 
 	/**
@@ -130,7 +111,7 @@ class Util extends CI_Controller
 			}
 
 			foreach ($cards as $card) {
-				$this->ac->delete_card($card->id);
+				$this->other->delete_card($card->id);
 			}
 
 			$desc = $pers->id . ' ' . $pers->f . ' ' . $pers->i . ' lost/broke card';

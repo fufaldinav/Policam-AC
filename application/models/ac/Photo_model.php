@@ -106,6 +106,8 @@ class Photo_model extends CI_Model
 	 */
 	public function save($file) //TODO проверка уже имеющейся фото за человеком
 	{
+		$this->load->model('ac/util_model', 'util');
+
 		$response = [
 			'id' => 0,
 			'error' => ''
@@ -170,11 +172,11 @@ class Photo_model extends CI_Model
 				return $response;
 			} catch (Exception $e) {
 				$response['error'] = $e;
-				//$this->ac_model->save_js_errors($e);
+				$this->util->save_errors($e);
 				return $response;
 			}
 		} else {
-			//$this->ac_model->save_js_errors($response['error']);
+			$this->util->save_errors($e);
 			return $response;
 		}
 	}
@@ -187,6 +189,8 @@ class Photo_model extends CI_Model
 	 */
 	public function delete($photo_id)
 	{
+		$this->load->model('ac/util_model', 'util');
+
 		$photo = $this->get($photo_id);
 
 		if ($photo->person_id !== null) {
@@ -210,7 +214,7 @@ class Photo_model extends CI_Model
 
 			return true;
 		} catch (Exception $e) {
-			//$this->ac_model->save_js_errors($e);
+			$this->util->save_errors($e);
 			return null;
 		}
 	}

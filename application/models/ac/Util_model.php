@@ -27,6 +27,11 @@ class Util_model extends CI_Model
 	*/
 	const TIMER = 10;
 
+	/**
+	* @var string
+	*/
+	const LOG_PATH = '/var/www/logs';
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -50,7 +55,7 @@ class Util_model extends CI_Model
 			$time = now('Asia/Yekaterinburg');
 		}
 
-		$user_id = $this->ion_auth->user()->row()->id;
+		$user_id = $this->ion_auth->user()->row()->id; //TODO
 
 		$organizations = $this->organization->get_all($user_id);
 
@@ -207,5 +212,31 @@ class Util_model extends CI_Model
 		$this->db->insert('users_events', $data);
 
 		return $this->db->affected_rows();
+	}
+
+	/**
+	 * Сохранение ошибок
+	 *
+	 * @param string $err Текст ошибки
+	 */
+	public function save_errors($err)
+	{
+		$LOG_PATH = self::LOG_PATH;
+
+		if (!is_dir($LOG_PATH)) {
+			mkdir($LOG_PATH, 0777, true);
+		}
+
+		$this->load->helper('file');
+
+		$time = now('Asia/Yekaterinburg');
+		$datestring = '%Y-%m-%d';
+		$date = mdate($datestring, $time);
+		$timestring = '%H:%i:%s';
+		$time = mdate($timestring, $time);
+
+		$path = "$LOG_PATH/err-$date.txt";
+
+		write_file($path, "$time $err\n", 'a');
 	}
 }

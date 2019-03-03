@@ -84,7 +84,7 @@ class Card_model extends CI_Model
 	*/
 	public function set_holder($card_id, $person_id)
 	{
-		$this->load->model('ac/controller', 'controller');
+		$this->load->model('ac/controller_model', 'controller');
 
 		$this->db->where('id', $card_id);
 		$this->db->update('cards', ['holder_id' => $person_id]);
@@ -119,7 +119,7 @@ class Card_model extends CI_Model
 	 */
 	public function delete($card_id)
 	{
-		$this->load->model('ac/controller', 'controller');
+		$this->load->model('ac/controller_model', 'controller');
 
 		$this->db->where('id', $card_id);
 		$this->db->update('cards', ['holder_id' => -1]);
