@@ -4,9 +4,9 @@
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *
- * Created:  01.03.2019
+ * Created: 01.03.2019
  *
- * Description:  Приложение для систем контроля и управления доступом.
+ * Description: Приложение для систем контроля и управления доступом.
  *
  * Requirements: PHP7.0 or above
  *

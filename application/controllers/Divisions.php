@@ -2,8 +2,8 @@
 
 /**
  * Class Divisions
- * @property Division_model $division
- * @property Organization_model $organization
+ * @property Div_model $div
+ * @property Org_model $org
  */
 class Divisions extends CI_Controller
 {
@@ -11,8 +11,8 @@ class Divisions extends CI_Controller
 	{
 		parent::__construct();
 
-		$this->load->model('ac/division_model', 'division');
-		$this->load->model('ac/organization_model', 'organization');
+		$this->load->model('ac/div_model', 'div');
+		$this->load->model('ac/org_model', 'org');
 	}
 
 	/**
@@ -26,14 +26,14 @@ class Divisions extends CI_Controller
 		}
 
 		$user_id = $this->ion_auth->user()->row()->id; //TODO
-		$organizations = $this->organization->get_all($user_id);
+		$orgs = $this->org->get_all($user_id);
 
-		$divisions = [];
-		foreach ($organizations as $org) {
-			$divisions = array_merge($divisions, $this->division->get_all($org->id));
+		$divs = [];
+		foreach ($orgs as $org) {
+			$divs = array_merge($divs, $this->div->get_all($org->id));
 		}
 
-		echo json_encode($divisions);
+		echo json_encode($divs);
 	}
 
 	/**
@@ -52,9 +52,9 @@ class Divisions extends CI_Controller
 
 		$div = json_decode($this->input->post('div'));
 
-		$div_id = $this->division->add($div);
+		$div_id = $this->div->add($div);
 
-		echo json_encode($this->division->get($div_id));
+		echo json_encode($this->div->get($div_id));
 	}
 
 	/**
@@ -73,6 +73,6 @@ class Divisions extends CI_Controller
 			exit;
 		}
 
-		echo $this->division->delete($div_id);
+		echo $this->div->delete($div_id);
 	}
 }

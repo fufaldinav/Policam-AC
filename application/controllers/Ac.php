@@ -14,8 +14,8 @@ class Ac extends CI_Controller
 
 		$this->load->model('ac/other_model', 'other'); //TODO
 		$this->load->model('ac/card_model', 'card');
-		$this->load->model('ac/division_model', 'division');
-		$this->load->model('ac/organization_model', 'organization');
+		$this->load->model('ac/div_model', 'div');
+		$this->load->model('ac/org_model', 'org');
 		$this->load->model('ac/util_model', 'util');
 
 		$this->lang->load('ac');
@@ -33,7 +33,7 @@ class Ac extends CI_Controller
 		}
 
 		$user_id = $this->ion_auth->user()->row()->id; //TODO
-		$orgs = $this->organization->get_all($user_id); //TODO
+		$orgs = $this->org->get_all($user_id); //TODO
 		$org = array_shift($orgs); //TODO
 
 		$header['org_name'] = $this->util->render_org_name($org->id);
@@ -61,21 +61,21 @@ class Ac extends CI_Controller
 		$this->load->helper('form');
 
 		$user_id = $this->ion_auth->user()->row()->id; //TODO
-		$orgs = $this->organization->get_all($user_id); //TODO
+		$orgs = $this->org->get_all($user_id); //TODO
 		$org = array_shift($orgs); //TODO
 
 		/**
 		 * Подразделения
 		 */
-		$data['divisions'] = [];
+		$data['divs'] = [];
 
-		$divisions = $this->division->get_all($org->id);
+		$divs = $this->div->get_all($org->id);
 
-		if (!$divisions) {
-			$data['divisions']['0'] = lang('missing');
+		if (!$divs) {
+			$data['divs']['0'] = lang('missing');
 		} else {
-			foreach ($divisions as $div) {
-				$data['divisions'][$div->id] = $div->number . ' "' . $div->letter . '"';
+			foreach ($divs as $div) {
+				$data['divs'][$div->id] = $div->number . ' "' . $div->letter . '"';
 			}
 		}
 
@@ -124,7 +124,7 @@ class Ac extends CI_Controller
 		$this->load->helper('form');
 
 		$user_id = $this->ion_auth->user()->row()->id; //TODO
-		$orgs = $this->organization->get_all($user_id); //TODO
+		$orgs = $this->org->get_all($user_id); //TODO
 		$org = array_shift($orgs); //TODO
 
 		$data['menu'] = '<ul class="tree-container">';
@@ -132,21 +132,21 @@ class Ac extends CI_Controller
 		/**
 		 * Подразделения
 		 */
-		$data['divisions'] = [];
+		$data['divs'] = [];
 
-		$divisions = $this->division->get_all($org->id);
+		$divs = $this->div->get_all($org->id);
 
-		if (!$divisions) {
-			$data['divisions']['0'] = lang('missing');
+		if (!$divs) {
+			$data['divs']['0'] = lang('missing');
 		} else {
 			$persons = $this->other->get_persons_and_cards_by_org($org->id);
-			$last_k = count($divisions) - 1;
-			foreach ($divisions as $k => $div) {
-				$data['divisions'][$div->id] = $div->number . ' "' . $div->letter . '"';
+			$last_k = count($divs) - 1;
+			foreach ($divs as $k => $div) {
+				$data['divs'][$div->id] = $div->number . ' "' . $div->letter . '"';
 				$data['menu'] .= '<li class="tree-node tree-is-root tree-expand-closed' . (($k == $last_k) ? ' tree-is-last' : '') . '">'
 											. '<div class="tree-expand"></div>'
 											. '<div class="tree-content tree-expand-content">'
-											. $data['divisions'][$div->id]
+											. $data['divs'][$div->id]
 											. '</div>'
 											. '<ul class="tree-container">';
 				$cur_div = $persons[$div->number.$div->letter]; //number + letter для сортировки дерева 1А -> 1Б -> 2А etc.
@@ -209,7 +209,7 @@ class Ac extends CI_Controller
 		$this->load->library('table');
 
 		$user_id = $this->ion_auth->user()->row()->id; //TODO
-		$orgs = $this->organization->get_all($user_id); //TODO
+		$orgs = $this->org->get_all($user_id); //TODO
 		$org = array_shift($orgs); //TODO
 
 		$this->db->where('org_id', $org->id);

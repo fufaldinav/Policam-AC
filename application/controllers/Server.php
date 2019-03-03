@@ -50,10 +50,10 @@ class Server extends CI_Controller
 		if ($query->num_rows() > 0) {
 			$active = $query->row()->active;
 			$online = $query->row()->online;
-			$controller_id = $query->row()->id;
+			$ctrl_id = $query->row()->id;
 
 			$data = ['last_conn' => $time];
-			$this->db->where('id', $controller_id);
+			$this->db->where('id', $ctrl_id);
 			$this->db->update('controllers', $data);
 		} else {
 			$path = "$LOG_PATH/inc-$log_date.txt";
@@ -91,7 +91,7 @@ class Server extends CI_Controller
 					'conn_fw' => $inc_m['conn_fw'],
 					'ip' => $inc_m['controller_ip']
 				];
-				$this->db->where('id', $controller_id);
+				$this->db->where('id', $ctrl_id);
 				$this->db->update('controllers', $data);
 			}
 			//
@@ -112,12 +112,12 @@ class Server extends CI_Controller
 						$out_m['granted'] = 1;
 					}
 
-					$this->card->set_last_conn($card_id, $controller_id);
+					$this->card->set_last_conn($card_id, $ctrl_id);
 				} else {
 					$data = [
 						'wiegand' => $inc_m['card'],
 						'last_conn' => $time,
-						'controller_id' => $controller_id,
+						'controller_id' => $ctrl_id,
 						'holder_id' => -1
 					];
 					$this->db->insert('cards', $data);
@@ -148,12 +148,12 @@ class Server extends CI_Controller
 					if ($query->num_rows() > 0) {
 						$card_id = $query->row()->id;
 
-						$this->card->set_last_conn($card_id, $controller_id);
+						$this->card->set_last_conn($card_id, $ctrl_id);
 					} else {
 						$data = [
 							'wiegand' => $event['card'],
 							'last_conn' => $time,
-							'controller_id' => $controller_id,
+							'controller_id' => $ctrl_id,
 							'holder_id' => -1
 						];
 						$this->db->insert('cards', $data);
@@ -162,7 +162,7 @@ class Server extends CI_Controller
 					}
 
 					$events[] = [
-						'controller_id' => $controller_id,
+						'controller_id' => $ctrl_id,
 						'event' => $event['event'],
 						'flag' => $event['flag'],
 						'time' => $event_time,
@@ -182,7 +182,7 @@ class Server extends CI_Controller
 		}
 
 		//запрос заданий из БД
-		$task = $this->task->get_last($controller_id);
+		$task = $this->task->get_last($ctrl_id);
 
 		if ($task) {
 			$out_msg['messages'][] = json_decode($task->json);

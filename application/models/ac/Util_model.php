@@ -4,9 +4,9 @@
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *
- * Created:  02.03.2019
+ * Created: 02.03.2019
  *
- * Description:  Приложение для систем контроля и управления доступом.
+ * Description: Приложение для систем контроля и управления доступом.
  *
  * Requirements: PHP7.0 or above
  *
@@ -43,16 +43,16 @@ class Util_model extends CI_Model
 	/**
 	 * Реализация long polling
 	 *
-	 * @property Organization_model $organization
-	 * @property Controller_model $controller
+	 * @property Org_model $org
+	 * @property Ctrl_model $ctrl
 	 * @param int $time Время последнего запроса
 	 * @param int[] $events ID событий
 	 * @return mixed[]
 	 */
 	public function start_polling($time, $events)
 	{
-		$this->load->model('ac/organization_model', 'organization');
-		$this->load->model('ac/controller_model', 'controller');
+		$this->load->model('ac/org_model', 'org');
+		$this->load->model('ac/ctrl_model', 'ctrl');
 
 		if (!is_numeric($time)) {
 			$time = now('Asia/Yekaterinburg');
@@ -60,22 +60,22 @@ class Util_model extends CI_Model
 
 		$user_id = $this->ion_auth->user()->row()->id; //TODO
 
-		$organizations = $this->organization->get_all($user_id);
+		$orgs = $this->org->get_all($user_id);
 
-		$controllers = [];
+		$ctrls = [];
 
-		foreach ($organizations as $org) {
-			$controllers = array_merge($controllers, $this->controller->get_all($org->id));
+		foreach ($orgs as $org) {
+			$ctrls = array_merge($ctrls, $this->ctrl->get_all($org->id));
 		}
 
-		if ($controllers) {
+		if ($ctrls) {
 			session_write_close();
 			set_time_limit(0);
 
 			$timer = self::TIMER;
 			while ($timer > 0) {
 				$c_ids = [];
-				foreach ($controllers as $c) {
+				foreach ($ctrls as $c) {
 					$c_ids[] = $c->id;
 				}
 				$this->db->where_in('controller_id', $c_ids);
@@ -111,7 +111,7 @@ class Util_model extends CI_Model
 	 */
 	public function render_org_name($org_id)  //TODO check
 	{
-		$org = $this->organization->get($org_id);
+		$org = $this->org->get($org_id);
 
 		$org_name = $org->number;
 		if ($org->address) {

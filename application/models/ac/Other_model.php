@@ -4,9 +4,9 @@
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *
- * Created:  02.03.2019
+ * Created: 02.03.2019
  *
- * Description:  Приложение для систем контроля и управления доступом.
+ * Description: Приложение для систем контроля и управления доступом.
  *
  * Requirements: PHP7.0 or above
  *
@@ -47,15 +47,15 @@ class Other_model extends CI_Model
 
 
 		if ($query->num_rows() > 0) {
-			$divisions = [];
+			$divs = [];
 
 			foreach ($query->result() as $row) {
-				$divisions[$row->number.$row->letter][] = $row; //number + letter для сортировки дерева 1А -> 1Б -> 2А etc.
+				$divs[$row->number.$row->letter][] = $row; //number + letter для сортировки дерева 1А -> 1Б -> 2А etc.
 			}
 
-			ksort($divisions);
+			ksort($divs);
 
-			return $divisions;
+			return $divs;
 		} else {
 			return null;
 		}
@@ -69,24 +69,24 @@ class Other_model extends CI_Model
 	 */
 	public function add_card($card_id)
 	{
-		$this->load->model('ac/controller_model', 'controller');
-		$this->load->model('ac/organization_model', 'organization');
+		$this->load->model('ac/ctrl_model', 'ctrl');
+		$this->load->model('ac/org_model', 'org');
 
 		$this->db->select('wiegand, controller_id');
 		$this->db->where('id', $card_id);
 		$query = $this->db->get('cards');
 
 		$user_id = $this->ion_auth->user()->row()->id; //TODO
-		$orgs = $this->organization->get_all($user_id); //TODO
+		$orgs = $this->org->get_all($user_id); //TODO
 		$org = array_shift($orgs); //TODO
 
-		$controllers = $this->controller->get_all($org->id);
+		$ctrls = $this->ctrl->get_all($org->id);
 
 		$wiegand = $query->row()->wiegand;
 
 		$counter = 0;
-		foreach ($controllers as $c) {
-			$counter += $this->controller->add_cards($c->id, $wiegand);
+		foreach ($ctrls as $c) {
+			$counter += $this->ctrl->add_cards($c->id, $wiegand);
 		}
 
 		return $counter;
@@ -100,14 +100,14 @@ class Other_model extends CI_Model
 	 */
 	public function delete_card($card_id)
 	{
-		$this->load->model('ac/controller_model', 'controller');
-		$this->load->model('ac/organization_model', 'organization');
+		$this->load->model('ac/ctrl_model', 'ctrl');
+		$this->load->model('ac/org_model', 'org');
 
 		$user_id = $this->ion_auth->user()->row()->id; //TODO
-		$orgs = $this->organization->get_all($user_id); //TODO
+		$orgs = $this->org->get_all($user_id); //TODO
 		$org = array_shift($orgs); //TODO
 
-		$controllers = $this->controller->get_all($org->id);
+		$ctrls = $this->ctrl->get_all($org->id);
 
 		$this->db->where('id', $card_id);
 		$wiegand = $this->db->get('cards')->row()->wiegand;
@@ -116,8 +116,8 @@ class Other_model extends CI_Model
 		$this->db->update('cards', ['holder_id' => -1]);
 
 		if ($this->db->affected_rows()) {
-			foreach ($controllers as $c) {
-				$this->controller->delete_cards($c->id, $wiegand);
+			foreach ($ctrls as $c) {
+				$this->ctrl->delete_cards($c->id, $wiegand);
 			}
 			return true;
 		} else {
@@ -129,15 +129,15 @@ class Other_model extends CI_Model
 	 * Отправляет все карты (частями максимум 10 карт за раз) в контроллер,
 	 * предварительно получив список карт людей, принадлежащих организации определенного контроллера
 	 *
-	 * @param int $controller_id ID контроллера
+	 * @param int $ctrl_id ID контроллера
 	 * @return int
 	 */
-	public function add_all_cards_to_controller($controller_id)
+	public function add_all_cards_to_controller($ctrl_id)
 	{
-		$this->load->model('ac/controller_model', 'controller');
+		$this->load->model('ac/ctrl_model', 'ctrl');
 
 		$this->db->select('cards.wiegand AS "wiegand"');
-		$this->db->where('controllers.id', $controller_id);
+		$this->db->where('controllers.id', $ctrl_id);
 		$this->db->join('organizations', 'organizations.id = controllers.org_id', 'left');
 		$this->db->join('divisions', 'divisions.org_id = organizations.id', 'left');
 		$this->db->join('persons', 'persons.div_id = divisions.id', 'left');
@@ -152,10 +152,10 @@ class Other_model extends CI_Model
 		for ($i = 0; $i < $count; $i++) {
 			$data[] = $cards[$i]->wiegand;
 			if ($i > 0 && ($i % 10) == 0) {
-				$counter += $this->controller->add_cards($controller_id, $data);
+				$counter += $this->ctrl->add_cards($ctrl_id, $data);
 				$data = [];
 			} elseif ($i == ($count - 1)) {
-				$counter += $this->controller->add_cards($controller_id, $data);
+				$counter += $this->ctrl->add_cards($ctrl_id, $data);
 			}
 		}
 

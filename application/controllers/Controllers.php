@@ -2,7 +2,7 @@
 
 /**
  * Class Controllers
- * @property Controller_model $card
+ * @property Ctrl_model $card
  */
 class Controllers extends CI_Controller
 {
@@ -10,16 +10,16 @@ class Controllers extends CI_Controller
 	{
 		parent::__construct();
 
-		$this->load->model('ac/controller_model', 'controller');
+		$this->load->model('ac/ctrl_model', 'ctrl');
 	}
 
 	/**
 	 * Установка времени открытия
 	 *
-	 * @param int|null $controller_id ID контроллера
+	 * @param int|null $ctrl_id ID контроллера
 	 * @param int|null $open_time     Время открытия
 	 */
-	public function set_door_params($controller_id = null, $open_time = null)
+	public function set_door_params($ctrl_id = null, $open_time = null)
 	{
 		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
@@ -29,8 +29,8 @@ class Controllers extends CI_Controller
 			header('HTTP/1.1 403 Forbidden');
 			exit;
 		}
-		if (isset($controller_id) && isset($open_time)) {
-			echo $this->controller->set_door_params($controller_id, $open_time);
+		if (isset($ctrl_id) && isset($open_time)) {
+			echo $this->ctrl->set_door_params($ctrl_id, $open_time);
 			echo ' заданий записано'; //TODO перевод
 		} else {
 			echo 'Не выбран контроллер или не задано время открытия'; //TODO перевод
@@ -40,9 +40,9 @@ class Controllers extends CI_Controller
 	/**
 	 * Выгрузка всех карт в контроллер
 	 *
-	 * @param int|null $controller_id ID контроллера
+	 * @param int|null $ctrl_id ID контроллера
 	 */
-	public function reload_cards($controller_id = null)
+	public function reload_cards($ctrl_id = null)
 	{
 		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
@@ -52,8 +52,8 @@ class Controllers extends CI_Controller
 			header('HTTP/1.1 403 Forbidden');
 			exit;
 		}
-		if (isset($controller_id)) {
-			echo $this->ac->add_all_cards_to_controller($controller_id);
+		if (isset($ctrl_id)) {
+			echo $this->ac->add_all_cards_to_controller($ctrl_id);
 			echo ' заданий записано'; //TODO
 		} else {
 			echo 'Не выбран контроллер'; //TODO

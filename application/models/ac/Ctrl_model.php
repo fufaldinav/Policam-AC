@@ -1,12 +1,12 @@
 <?php
 /**
- * Name:   Controller Model
+ * Name:   Ctrl Model
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *
- * Created:  02.03.2019
+ * Created: 02.03.2019
  *
- * Description:  Приложение для систем контроля и управления доступом.
+ * Description: Приложение для систем контроля и управления доступом.
  *
  * Requirements: PHP7.0 or above
  *
@@ -17,9 +17,9 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
-* Class Controller Model
+* Class Ctrl Model
 */
-class Controller_model extends CI_Model
+class Ctrl_model extends CI_Model
 {
 	public function __construct()
 	{
@@ -29,12 +29,12 @@ class Controller_model extends CI_Model
 	/**
 	* Получение информации о контроллере
 	*
-	* @param int $controller_id ID контроллера
+	* @param int $ctrl_id ID контроллера
 	* @return mixed[]
 	*/
-	public function get($controller_id)
+	public function get($ctrl_id)
 	{
-		$this->db->where('id', $controller_id);
+		$this->db->where('id', $ctrl_id);
 		$query = $this->db->get('controllers');
 
 		return $query->row();
@@ -59,27 +59,27 @@ class Controller_model extends CI_Model
 	/**
 	* Добавление нового контроллера
 	*
-	* @param object $controller Контроллер
+	* @param object $ctrl Контроллер
 	* @return int
 	*/
-	public function add($controller)
+	public function add($ctrl)
 	{
-		$this->db->insert('controllers', $this->set($controller));
-		$controller_id = $this->db->insert_id();
+		$this->db->insert('controllers', $this->set($ctrl));
+		$ctrl_id = $this->db->insert_id();
 
-		return $controller_id;
+		return $ctrl_id;
 	}
 
 	/**
 	* Обновление информации о контроллере
 	*
-	* @param object $controller Контроллер
+	* @param object $ctrl Контроллер
 	* @return int
 	*/
-	public function update($controller)
+	public function update($ctrl)
 	{
-		$this->db->where('id', $controller->id);
-		$this->db->update('controllers', $this->set($controller));
+		$this->db->where('id', $ctrl->id);
+		$this->db->update('controllers', $this->set($ctrl));
 
 		return $this->db->affected_rows();
 	}
@@ -87,12 +87,12 @@ class Controller_model extends CI_Model
 	/**
 	* Удаление контроллера
 	*
-	* @param int $controller_id ID контроллера
+	* @param int $ctrl_id ID контроллера
 	* @return int
 	*/
-	public function delete($controller_id)
+	public function delete($ctrl_id)
 	{
-		$this->db->delete('controllers', ['id' => $controller_id]);
+		$this->db->delete('controllers', ['id' => $ctrl_id]);
 
 		return $this->db->affected_rows();
 	}
@@ -100,15 +100,15 @@ class Controller_model extends CI_Model
 	/**
 	* Установить информацию о контроллере
 	*
-	* @param object $controller Контроллер
+	* @param object $ctrl Контроллер
 	* @return mixed[]
 	*/
-	public function set($controller)
+	public function set($ctrl)
 	{
 		$this->data = [
-			'name' => $controller->name,
-			'online' => $controller->online,
-			'org_id' => $controller->org_id
+			'name' => $ctrl->name,
+			'online' => $ctrl->online,
+			'org_id' => $ctrl->org_id
 		];
 
 		return $data;
@@ -117,13 +117,13 @@ class Controller_model extends CI_Model
 	/**
 	 * Установить параметры открытия
 	 *
-	 * @param int $controller_id ID контроллера
+	 * @param int $ctrl_id ID контроллера
 	 * @param int $open_time     Время открытия в 0.1 сек
 	 * @param int $open_control  Контроль открытия в 0.1 сек, по-умолчанию 0 - без контроля
 	 * @param int $close_control Контроль закрытия в 0.1 сек, по-умолчанию 0 - без контроля
 	 * @return int
 	 */
-	public function set_door_params($controller_id, $open_time, $open_control = 0, $close_control = 0)
+	public function set_door_params($ctrl_id, $open_time, $open_control = 0, $close_control = 0)
 	{
 		$this->load->model('ac/task_model', 'task');
 
@@ -131,17 +131,17 @@ class Controller_model extends CI_Model
 		$data .= ',"open_control":' . $open_control;
 		$data .= ',"close_control":' . $close_control;
 
-		return $this->task->add('set_door_params', $controller_id, $data);
+		return $this->task->add('set_door_params', $ctrl_id, $data);
 	}
 
 	/**
 	 * Добавление карт в контроллер
 	 *
-	 * @param int $controller_id     ID контроллера
+	 * @param int $ctrl_id     ID контроллера
 	 * @param string[]|string $cards Карты (код)
 	 * @return int
 	 */
-	public function add_cards($controller_id, $cards)
+	public function add_cards($ctrl_id, $cards)
 	{
 		$this->load->model('ac/task_model', 'task');
 
@@ -156,17 +156,17 @@ class Controller_model extends CI_Model
 		}
 		$data .= ']';
 
-		return $this->task->add('add_cards', $controller_id, $data);
+		return $this->task->add('add_cards', $ctrl_id, $data);
 	}
 
 	/**
 	 * Удаление карт из контроллера
 	 *
-	 * @param int $controller_id     ID контроллера
+	 * @param int $ctrl_id     ID контроллера
 	 * @param string[]|string $cards Карты (код)
 	 * @return int
 	 */
-	public function delete_cards($controller_id, $cards)
+	public function delete_cards($ctrl_id, $cards)
 	{
 		$this->load->model('ac/task_model', 'task');
 
@@ -181,20 +181,20 @@ class Controller_model extends CI_Model
 		}
 		$data .= ']';
 
-		return $this->task->add('del_cards', $controller_id, $data);
+		return $this->task->add('del_cards', $ctrl_id, $data);
 	}
 
 
 	/**
 	 * Удаление всех карт из контроллера
 	 *
-	 * @param int $controller_id ID контроллера
+	 * @param int $ctrl_id ID контроллера
 	 * @return int
 	 */
-	public function clear_cards($controller_id)
+	public function clear_cards($ctrl_id)
 	{
 		$this->load->model('ac/task_model', 'task');
 
-		return $this->task->add('clear_cards', $controller_id, $data);
+		return $this->task->add('clear_cards', $ctrl_id, $data);
 	}
 }

@@ -4,9 +4,9 @@
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *
- * Created:  02.03.2019
+ * Created: 02.03.2019
  *
- * Description:  Приложение для систем контроля и управления доступом.
+ * Description: Приложение для систем контроля и управления доступом.
  *
  * Requirements: PHP7.0 or above
  *
@@ -30,11 +30,11 @@ class Task_model extends CI_Model
 	 * Добавление задания для отправки на контроллер
 	 *
 	 * @param int $operation     Операция, отправляемая на контроллер
-	 * @param int $controller_id ID контроллера
+	 * @param int $ctrl_id ID контроллера
 	 * @param int|null $data     Дополнительные данные
 	 * @return int
 	 */
-	public function add($operation, $controller_id, $data = null)
+	public function add($operation, $ctrl_id, $data = null)
 	{
 		$id = mt_rand(500000, 999999999);
 
@@ -46,7 +46,7 @@ class Task_model extends CI_Model
 
 		$data =	[
 			'id' => $id,
-			'controller_id' => $controller_id,
+			'controller_id' => $ctrl_id,
 			'json' => $json,
 			'time' => now('Asia/Yekaterinburg')
 		];
@@ -73,12 +73,12 @@ class Task_model extends CI_Model
 	/**
 	 * Получение последнего задания для отправки на контроллер
 	 *
-	 * @param int $controller_id ID контроллера
+	 * @param int $ctrl_id ID контроллера
 	 * @return mixed[]|bool
 	 */
-	public function get_last($controller_id)
+	public function get_last($ctrl_id)
 	{
-		$this->db->where('controller_id', $controller_id);
+		$this->db->where('controller_id', $ctrl_id);
 		$this->db->order_by('time', 'ASC');
 		$query = $this->db->get('tasks');
 

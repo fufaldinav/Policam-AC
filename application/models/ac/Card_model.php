@@ -4,9 +4,9 @@
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *
- * Created:  01.03.2019
+ * Created: 01.03.2019
  *
- * Description:  Приложение для систем контроля и управления доступом.
+ * Description: Приложение для систем контроля и управления доступом.
  *
  * Requirements: PHP7.0 or above
  *
@@ -61,13 +61,13 @@ class Card_model extends CI_Model
 	/**
 	* Получение информации о всех картах контроллера
 	*
-	* @param int|null $controller_id ID контроллера, по-умолчанию все карты
+	* @param int|null $ctrl_id ID контроллера, по-умолчанию все карты
 	* @return mixed[]
 	*/
-	public function get_all($controller_id = null)
+	public function get_all($ctrl_id = null)
 	{
-		if (isset($controller_id)) {
-			$this->db->where('controller_id', $controller_id);
+		if (isset($ctrl_id)) {
+			$this->db->where('controller_id', $ctrl_id);
 		}
 		$query = $this->db->get('cards');
 
@@ -83,7 +83,7 @@ class Card_model extends CI_Model
 	*/
 	public function set_holder($card_id, $person_id)
 	{
-		$this->load->model('ac/controller_model', 'controller');
+		$this->load->model('ac/ctrl_model', 'ctrl');
 
 		$this->db->where('id', $card_id);
 		$this->db->update('cards', ['holder_id' => $person_id]);
@@ -91,20 +91,20 @@ class Card_model extends CI_Model
 		return $this->db->affected_rows();
 
 		//TODO добавление карты в контроллера
-		//$this->controller->add_cards($controller_id, $card);
+		//$this->ctrl->add_cards($ctrl_id, $card);
 	}
 
 	/**
 	 * Установить время последней связи с картой
 	 *
-	 * @param int $card_id       ID карты
-	 * @param int $controller_id ID контроллера
+	 * @param int $card_id ID карты
+	 * @param int $ctrl_id ID контроллера
 	 */
-	public function set_last_conn($card_id, $controller_id)
+	public function set_last_conn($card_id, $ctrl_id)
 	{
 		$data = [
 			'last_conn' => now('Asia/Yekaterinburg'),
-			'controller_id' => $controller_id
+			'controller_id' => $ctrl_id
 		];
 		$this->db->where('id', $card_id);
 		$this->db->update('cards', $data);
@@ -118,7 +118,7 @@ class Card_model extends CI_Model
 	 */
 	public function delete($card_id)
 	{
-		$this->load->model('ac/controller_model', 'controller');
+		$this->load->model('ac/ctrl_model', 'ctrl');
 
 		$this->db->where('id', $card_id);
 		$this->db->update('cards', ['holder_id' => -1]);
@@ -126,6 +126,6 @@ class Card_model extends CI_Model
 		return $this->db->affected_rows();
 
 		//TODO удаление карты из контроллера
-		//$this->controller->delete_cards($controller_id, $card);
+		//$this->ctrl->delete_cards($ctrl_id, $card);
 	}
 }

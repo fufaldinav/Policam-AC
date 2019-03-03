@@ -1,12 +1,12 @@
 <?php
 /**
- * Name:   Organization Model
+ * Name:   Org Model
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *
- * Created:  02.03.2019
+ * Created: 02.03.2019
  *
- * Description:  Приложение для систем контроля и управления доступом.
+ * Description: Приложение для систем контроля и управления доступом.
  *
  * Requirements: PHP7.0 or above
  *
@@ -17,9 +17,9 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
-* Class Organization Model
+* Class Org Model
 */
-class Organization_model extends CI_Model
+class Org_model extends CI_Model
 {
 	public function __construct()
 	{
