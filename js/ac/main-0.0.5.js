@@ -13,7 +13,7 @@ function sendError(message) {
 function getCards(id) {
 	let card = document.getElementById(`card`);
 	$.ajax({
-		url: `/index.php/db/get_cards`,
+		url: `/index.php/cards/get_all`,
 		type: `GET`,
 		success: function(res) {
 			try {
@@ -61,7 +61,7 @@ function handleFiles(files) {
 	formData.append(`file`, files[0]);
 	//отправим JSON
 	$.ajax({
-		url: `/index.php/util/save_photo`,
+		url: `/index.php/photos/save`,
 		type: `POST`,
 		method: `POST`,
 		contentType: false,
@@ -69,15 +69,20 @@ function handleFiles(files) {
 		data: formData,
 		success: function(res) {
 			try {
-				if (res && res !== `0`) {
-					document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/' + res + '.jpg)';
-					person.photo = res;
-					document.getElementById(`photo`).hidden = true;
-					document.getElementById(`photo_del`).hidden = false;
-					document.getElementById(`photo_del`).onclick = deletePhoto;
+				if (res) {
+					let data = JSON.parse(res);
+					if (data.error === ``) {
+						document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/' + data.id + '.jpg)';
+						person.photo = data.id;
+						document.getElementById(`photo`).hidden = true;
+						document.getElementById(`photo_del`).hidden = false;
+						document.getElementById(`photo_del`).onclick = deletePhoto;
+					} else {
+						document.getElementById(`photo`).value = null;
+						alert(data.error);
+					}
 				} else {
-					document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/0.jpg)';
-					person.photo = null;
+					alert(`Неизвестная ошибка`);
 				}
 			} catch (e) {
 				sendError(e);
@@ -96,15 +101,11 @@ function deletePhoto() {
 		return;
 	}
 	$.ajax({
-		url: `/index.php/util/delete_photo`,
-		type: `POST`,
-		data: {
-			person_id: person.id,
-			photo: person.photo
-		},
+		url: `/index.php/photos/delete/${person.photo}`,
+		type: `GET`,
 		success: function(res) {
 			try {
-				if (res == `ok`) {
+				if (res) {
 					document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/0.jpg)';
 					document.getElementById(`photo_del`).hidden = true;
 					document.getElementById(`photo_del`).onclick = function() {

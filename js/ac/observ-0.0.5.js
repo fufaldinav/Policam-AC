@@ -55,11 +55,8 @@ function getNewMsgs(events, time) {
 //получение данных пользователя из БД
 function setPersonInfo(card_id) {
 	$.ajax({
-		url: `/index.php/db/get_person`,
-		type: `POST`,
-		data: {
-			card_id: card_id
-		},
+		url: `/index.php/persons/get_by_card/${card_id}`,
+		type: `GET`,
 		success: function(res) {
 			try {
 				if (res) {
@@ -90,7 +87,7 @@ function setPersonInfo(card_id) {
 
 function getDivisions() {
 	$.ajax({
-		url: `/index.php/db/get_divisions`,
+		url: `/index.php/divisions/get_all`,
 		type: `GET`,
 		success: function(res) {
 			try {
@@ -118,7 +115,7 @@ function getDivisions() {
 
 function getPersons(div_id) {
 	$.ajax({
-		url: `/index.php/db/get_persons/${div_id}`,
+		url: `/index.php/persons/get_all/${div_id}`,
 		type: `GET`,
 		success: function(res) {
 			try {

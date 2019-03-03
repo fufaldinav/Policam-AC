@@ -9,11 +9,12 @@ let person = {
 	'address': null,
 	'phone': null,
 	'card': null
-}
+};
+
 //обновление информации пользователя в БД
 function updatePersonInfo() {
 	let checkValidity = true;
-	Object.keys(person).map(function(k, index) {
+	Object.keys(person).map(function(k) {
 		let elem = document.getElementById(k);
 		if (elem.required && elem.value === ``) {
 			elem.classList.add(`no-data`);
@@ -31,7 +32,7 @@ function updatePersonInfo() {
 		alert(`Введены не все данные`);
 	} else {
 		$.ajax({
-			url: `/index.php/db/update_person`,
+			url: `/index.php/persons/update`,
 			type: `POST`,
 			data: {
 				person: JSON.stringify(person)
@@ -39,8 +40,12 @@ function updatePersonInfo() {
 			success: function(res) {
 				try {
 					if (res) {
-						getCardsByPerson(res);
-						alert(`Пользователь №${res} успешно сохранен`);
+						if (res > 0) {
+							alert(`Пользователь успешно сохранен`);
+						} else {
+							alert(`Не сохранено или данные совпали`);
+						}
+						getCardsByPerson(person.id);
 					} else {
 						alert(`Пустой ответ от сервера`);
 					}
@@ -61,15 +66,12 @@ function deletePerson() {
 		return;
 	}
 	$.ajax({
-		url: `/index.php/db/delete_person`,
-		type: `POST`,
-		data: {
-			person_id: person.id
-		},
+		url: `/index.php/persons/delete/${person.id}`,
+		type: `GET`,
 		success: function(res) {
 			try {
-				if (res) {
-					Object.keys(person).map(function(k, index) { //перебор элементов формы
+				if (res > 0) {
+					Object.keys(person).map(function(k) { //перебор элементов формы
 						let elem = document.getElementById(k);
 						if (k == `card`) { //поставить в карты "Не выбрано"
 							elem.value = 0;
@@ -106,7 +108,7 @@ function deletePerson() {
 					document.getElementById(`delete`).onclick = function() {
 						return false;
 					};
-					alert(`Пользователь №${res} успешно удален`);
+					alert(`Пользователь успешно удален`);
 				} else {
 					alert(`Пустой ответ от сервера`);
 				}
@@ -123,16 +125,13 @@ function deletePerson() {
 //получение данных пользователя из БД
 function getPersonInfo(person_id) {
 	$.ajax({
-		url: `/index.php/db/get_person`,
-		type: `POST`,
-		data: {
-			person_id: person_id
-		},
+		url: `/index.php/persons/get/${person_id}`,
+		type: `GET`,
 		success: function(res) {
 			try {
 				if (res) {
 					let data = JSON.parse(res);
-					Object.keys(data).map(function(k, index) { //перебор полученных данных
+					Object.keys(data).map(function(k) { //перебор полученных данных
 						person[k] = data[k];
 						if (document.getElementById(k)) { //существует ли элемент с id = свойство объекта, т.к. могут быть "посторонние" данные
 							if (k == `photo`) { //отобразим поле загрузки фото
@@ -179,11 +178,8 @@ function getPersonInfo(person_id) {
 //получение списка карт (брелоков) от сервера
 function getCardsByPerson(person_id) {
 	$.ajax({
-		url: `/index.php/db/get_cards_by_person`,
-		type: `POST`,
-		data: {
-			holder_id: person_id
-		},
+		url: `/index.php/cards/get_by_person/${person_id}`,
+		type: `GET`,
 		success: function(res) {
 			try {
 				let cards = document.getElementById(`cards`);
@@ -216,14 +212,10 @@ function getCardsByPerson(person_id) {
 	});
 }
 //добавление карты в БД
-function saveCard(card) {
+function saveCard(card_id) {
 	$.ajax({
-		url: `/index.php/db/add_card`,
-		type: `POST`,
-		data: {
-			card_id: card,
-			person_id: person.id
-		},
+		url: `/index.php/cards/add/${card_id}/${person.id}`,
+		type: `GET`,
 		success: function(res) {
 			try {
 				if (res == `ok`) {
@@ -243,20 +235,17 @@ function saveCard(card) {
 	});
 }
 //удаление карты из БД
-function delCard(id) {
+function delCard(card_id) {
 	if (!confirm(`Подтвердите удаление.`)) {
 		return;
 	}
 	$.ajax({
-		url: `/index.php/db/delete_card`,
-		type: `POST`,
-		data: {
-			card_id: id
-		},
+		url: `/index.php/cards/delete/${card_id}`,
+		type: `GET`,
 		success: function(res) {
 			try {
 				if (res == `ok`) {
-					let card = document.getElementById(`card${id}`);
+					let card = document.getElementById(`card${card_id}`);
 					card.remove(); //удалим карту из списка привязанных
 					let cardsHtml = document.getElementById(`cards`).innerHTML;
 					cardsHtml = (cardsHtml.trim) ? cardsHtml.trim() : cardsHtml.replace(/^\s+/, ``);

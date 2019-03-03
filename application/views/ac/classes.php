@@ -1,8 +1,8 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+	defined('BASEPATH') OR exit('No direct script access allowed');
 ?>
-            <div id="main">
-                <div id="scrollable-container">
-                    <?php echo $table; ?>
-                </div>
-            </div>
+		<div id="main">
+			<div id="scrollable-container">
+				<?php echo $table; ?>
+			</div>
+		</div>
