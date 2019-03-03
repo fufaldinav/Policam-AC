@@ -2,7 +2,9 @@
 
 /**
  * Class Util
- * @property Ac_model $ac
+ * @property Card_model $card
+ * @property Person_model $person
+ * @property Other_model $other
  * @property Util_model $util
  */
 class Util extends CI_Controller
@@ -77,7 +79,6 @@ class Util extends CI_Controller
 	{
 		$this->load->model('ac/card_model', 'card');
 		$this->load->model('ac/person_model', 'person');
-		$this->load->model('ac/util_model', 'util');
 
 		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");

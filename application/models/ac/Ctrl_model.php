@@ -18,6 +18,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
 * Class Ctrl Model
+* @property Task_model $task
 */
 class Ctrl_model extends CI_Model
 {

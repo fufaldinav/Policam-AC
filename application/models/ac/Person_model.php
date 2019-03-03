@@ -17,7 +17,7 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
-* Class Ac Model
+* Class Person Model
 */
 class Person_model extends CI_Model
 {

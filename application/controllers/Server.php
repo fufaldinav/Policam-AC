@@ -2,7 +2,8 @@
 
 /**
  * Class Server
- * @property Ac_model $ac
+ * @property Card_model $card
+ * @property Task_model $task
  */
 class Server extends CI_Controller
 {

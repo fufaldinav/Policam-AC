@@ -2,7 +2,11 @@
 
 /**
  * Class Ac
- * @property Ac_model $ac
+ * @property Other_model $other
+ * @property Card_model $card
+ * @property Div_model $div
+ * @property Org_model $org
+ * @property Util_model $util
  */
 class Ac extends CI_Controller
 {

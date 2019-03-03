@@ -17,7 +17,9 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
-* Class Ac Model
+* Class Photo Model
+* @property Person_model $person
+* @property Util_model $util
 */
 class Photo_model extends CI_Model
 {
