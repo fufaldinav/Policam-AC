@@ -114,7 +114,7 @@ class Util_model extends CI_Model
 		$org = $this->organization->get($org_id);
 
 		$org_name = $org->number;
-		if ($query->row()->address) {
+		if ($org->address) {
 			$org_name .= ' (';
 			$org_name .= $org->address;
 			$org_name .= ')';
