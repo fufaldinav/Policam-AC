@@ -55,8 +55,6 @@ class Util_model extends CI_Model
 	/**
 	 * Реализация long polling
 	 *
-	 * @property Org_model $org
-	 * @property Ctrl_model $ctrl
 	 * @param int $time Время последнего запроса
 	 * @param int[] $events ID событий
 	 * @return mixed[]
@@ -113,96 +111,6 @@ class Util_model extends CI_Model
 		}
 
 		return [];
-	}
-
-	/**
-	 * Рендер имени организации
-	 *
-	 * @param int $org_id ID организации
-	 * @return string Строка в формате 'номер (адресс при наличии)'
-	 */
-	public function render_org_name($org_id)  //TODO check
-	{
-		$org = $this->org->get($org_id);
-
-		$org_name = $org->number;
-		if ($org->address) {
-			$org_name .= ' (';
-			$org_name .= $org->address;
-			$org_name .= ')';
-		}
-
-		return $org_name;
-	}
-
-	/**
-	 * Рендер строки подключения CSS
-	 *
-	 * @param string[] $arr Список имен CSS файлов
-	 * @return string
-	 */
-	public function render_css($arr)
-	{
-		$result = '';
-
-		foreach ($arr as $str) {
-			$result .= '<link rel="stylesheet" href="/css/';
-			$result .= $str;
-			$result .= '.css" />';
-		}
-
-		return $result;
-	}
-
-	/**
-	 * Рендер строки подключения JavaScript
-	 *
-	 * @param string[] $arr Список имен JS файлов
-	 * @return string
-	 */
-	public function render_js($arr)
-	{
-		$result = '<script src="/js/jquery-3.3.1.min.js"></script>';
-
-		foreach ($arr as $str) {
-			switch ($str) {
-				default:
-					$str .= '-0.0.5';
-					break;
-			}
-
-			$result .= '<script src="/js/ac/';
-			$result .= $str;
-			$result .= '.js"></script>';
-		}
-
-		return $result;
-	}
-
-	/**
-	 * Рендер навигационных кнопок
-	 *
-	 * @return string
-	 */
-	public function render_nav()
-	{
-		$html = '<a class="nav" href="/">';
-		$html .= lang('observ');
-		$html .= '</a>';
-
-		if ($this->ion_auth->in_group(2)) {
-			$html .= '<a class="nav" href="/ac/add_person">';
-			$html .= lang('adding');
-			$html .= '</a>';
-			$html .= '<a class="nav" href="/ac/edit_persons">';
-			$html .= lang('editing');
-			$html .= '</a>';
-			$html .= '<a class="nav" href="/ac/classes">';
-			$html .= lang('classes');
-			$html .= '</a>';
-		}
-
-		return $html;
 	}
 
 	/**

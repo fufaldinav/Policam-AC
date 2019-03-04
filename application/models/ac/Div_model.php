@@ -55,7 +55,11 @@ class Div_model extends CI_Model
 		$this->db->order_by('letter', 'ASC');
 		$query = $this->db->get('divisions');
 
-		return $query->result();
+		if ($query->num_rows() > 0) {
+			return $query->result();
+		} else {
+			return null;
+		}
 	}
 
 	/**

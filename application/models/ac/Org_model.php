@@ -59,6 +59,24 @@ class Org_model extends CI_Model
 	}
 
 	/**
+	 * Получить полное имя организации
+	 *
+	 * @param int $org_id ID организации
+	 * @return string Строка в формате 'номер (адресс при наличии)'
+	 */
+	public function get_full_name($org_id)  //TODO check
+	{
+		$org = $this->get($org_id);
+
+		$org_name = $org->number;
+		if ($org->address) {
+			$org_name .= ' (' . $org->address . ')';
+		}
+
+		return $org_name;
+	}
+
+	/**
 	* Добавление новой организации
 	*
 	* @param object $org Организация

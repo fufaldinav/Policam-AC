@@ -28,7 +28,7 @@
 				</div>
 				<div id="info-div" class="info-item">
 					<?php echo lang('class');?><br />
-					<?php echo form_dropdown('div', $divs, '0', $div_attr);?>
+					<?php echo form_dropdown('div', $divs, '0', $divs_attr);?>
 				</div>
 				<div id="info-birthday" class="info-item">
 					<?php echo lang('birthday');?><br />
@@ -46,7 +46,7 @@
 					<?php echo lang('card');?><br />
 					<div id="cards"></div>
 					<div id="card_selector">
-						<?php echo form_dropdown('card_menu', $cards, '0', $card_attr);?>
+						<?php echo form_dropdown('card_menu', $cards, '0', $cards_attr);?>
 					</div>
 				</div>
 				<div id="info-button1" class="info-item">
