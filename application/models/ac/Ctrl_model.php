@@ -18,6 +18,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
 * Class Ctrl Model
+* @property Task_model $task
 */
 class Ctrl_model extends CI_Model
 {
@@ -38,6 +39,24 @@ class Ctrl_model extends CI_Model
 		$query = $this->db->get('controllers');
 
 		return $query->row();
+	}
+
+	/**
+	* Получение информации о контроллере
+	*
+	* @param string $sn Серийный номер контроллера
+	* @return mixed[]
+	*/
+	public function get_by_sn($sn)
+	{
+		$this->db->where('sn', $sn);
+		$query = $this->db->get('controllers');
+
+		if ($query->num_rows() > 0) {
+			return $query->row();
+		} else {
+			return null;
+		}
 	}
 
 	/**
@@ -105,9 +124,10 @@ class Ctrl_model extends CI_Model
 	*/
 	public function set($ctrl)
 	{
-		$this->data = [
+		$data = [
 			'name' => $ctrl->name,
 			'online' => $ctrl->online,
+			'last_conn' => $ctrl->last_conn,
 			'org_id' => $ctrl->org_id
 		];
 

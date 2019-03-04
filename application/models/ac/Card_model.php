@@ -17,7 +17,8 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
-* Class Ac Model
+* Class Card Model
+* @property Ctrl_model $ctrl
 */
 class Card_model extends CI_Model
 {
@@ -38,6 +39,24 @@ class Card_model extends CI_Model
 		$query = $this->db->get('cards');
 
 		return $query->row();
+	}
+
+	/**
+	* Получение информации о карте
+	*
+	* @param string $code Код карты
+	* @return object
+	*/
+	public function get_by_code($code)
+	{
+		$this->db->where('wiegand', $code);
+		$query = $this->db->get('cards');
+
+		if ($query->num_rows() > 0) {
+			return $query->row();
+		} else {
+			return null;
+		}
 	}
 
 	/**
@@ -111,6 +130,33 @@ class Card_model extends CI_Model
 	}
 
 	/**
+	* Добавление новой карты
+	*
+	* @param object $card Карта
+	* @return int
+	*/
+	public function add($card)
+	{
+		$this->db->insert('cards', $this->set($card));
+
+		return $this->db->insert_id();
+	}
+
+	/**
+	* Обновление информации о карте
+	*
+	* @param object $card Карта
+	* @return int
+	*/
+	public function update($card)
+	{
+		$this->db->where('id', $card->id);
+		$this->db->update('cards', $this->set($card));
+
+		return $this->db->affected_rows();
+	}
+
+	/**
 	 * Удаление карты
 	 *
 	 * @param int $card_id ID карты
@@ -127,5 +173,23 @@ class Card_model extends CI_Model
 
 		//TODO удаление карты из контроллера
 		//$this->ctrl->delete_cards($ctrl_id, $card);
+	}
+
+	/**
+	* Установить информацию о карте
+	*
+	* @param object $card Карта
+	* @return mixed[]
+	*/
+	public function set($card)
+	{
+		$data = [
+			'wiegand' => $card->wiegand,
+			'last_conn' => $card->last_conn,
+			'controller_id' => $card->controller_id,
+			'holder_id' => $card->holder_id
+		];
+
+		return $data;
 	}
 }

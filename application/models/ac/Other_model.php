@@ -18,6 +18,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
  * Class Other Model
+ * @property Ctrl_model $ctrl
+ * @property Org_model $org
  */
 class Other_model extends CI_Model
 {
