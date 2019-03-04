@@ -1,6 +1,6 @@
 <?php
 /**
- * Name:   Ctrl Model
+ * Name:   Policam AC Ctrl Model
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *

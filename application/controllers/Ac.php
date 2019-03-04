@@ -2,12 +2,10 @@
 
 /**
  * Class Ac
- * @property Other_model $other
  * @property Card_model $card
  * @property Div_model $div
  * @property Org_model $org
  * @property Person_model $person
- * @property Util_model $util
  */
 class Ac extends CI_Controller
 {
@@ -17,12 +15,10 @@ class Ac extends CI_Controller
 
 		$this->load->helper('language');
 
-		$this->load->model('ac/other_model', 'other'); //TODO
 		$this->load->model('ac/card_model', 'card');
 		$this->load->model('ac/div_model', 'div');
 		$this->load->model('ac/org_model', 'org');
 		$this->load->model('ac/person_model', 'person');
-		$this->load->model('ac/util_model', 'util');
 
 		$this->lang->load('ac');
 	}

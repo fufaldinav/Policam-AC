@@ -2,7 +2,7 @@
 
 /**
  * Class Controllers
- * @property Ctrl_model $card
+ * @property Ctrl_model $ctrl
  */
 class Controllers extends CI_Controller
 {

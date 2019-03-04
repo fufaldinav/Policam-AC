@@ -1,6 +1,6 @@
 <?php
 /**
- * Name:   Server Model
+ * Name:   Policam AC Server Model
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *

@@ -1,3 +1,4 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed');?>
 		<div id="footer">
 			<div id="footer-container">
 				<div id="footer-left">

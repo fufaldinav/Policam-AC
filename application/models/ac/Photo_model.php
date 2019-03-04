@@ -1,6 +1,6 @@
 <?php
 /**
- * Name:   Photo Model
+ * Name:   Policam AC Photo Model
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *

@@ -1,6 +1,6 @@
 <?php
 /**
- * Name:   Person Model
+ * Name:   Policam AC Person Model
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *

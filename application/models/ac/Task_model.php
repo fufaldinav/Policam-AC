@@ -1,6 +1,6 @@
 <?php
 /**
- * Name:   Task Model
+ * Name:   Policam AC Task Model
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *

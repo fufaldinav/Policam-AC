@@ -1,6 +1,6 @@
 <?php
 /**
- * Name:   Div Model
+ * Name:   Policam AC Div Model
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *

@@ -1,6 +1,6 @@
 <?php
 /**
- * Name:   Org Model
+ * Name:   Policam AC Org Model
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *

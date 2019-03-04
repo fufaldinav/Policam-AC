@@ -1,6 +1,6 @@
 <?php
 /**
- * Name:   Card Model
+ * Name:   Policam AC Card Model
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *
