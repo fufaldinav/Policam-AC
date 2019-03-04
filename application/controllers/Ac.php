@@ -213,27 +213,11 @@ class Ac extends CI_Controller
 		$orgs = $this->org->get_all($user_id); //TODO
 		$org = array_shift($orgs); //TODO
 
-		$this->db->where('org_id', $org->id);
-		$this->db->order_by('number ASC, letter ASC');
-		$query = $this->db->get('divisions');
+		$data = [];
 
-		$this->table->set_heading(lang('number'), lang('letter'), '');
+		$data['divs'] = $this->div->get_all($org->id);
 
-		$delete = '<button onclick="saveDivision(' . $org->id . ')">' . lang('save') . '</button>';
-
-		$this->table->add_row(
-			'<input id="number" type="text" size="2" maxlength="2" required />',
-			'<input id="letter" type="text" size="1" maxlength="1" required />',
-			$delete
-		);
-
-		foreach ($query->result() as $row) {
-			$delete = '<button onclick="deleteDivision(' . $row->id . ')">' . lang('delete') . '</button>';
-			$this->table->add_row($row->number, $row->letter, $delete);
-		}
-
-		$data['table'] = $this->table->generate();
-
+		$header = [];
 		$header['org_name'] = $this->org->get_full_name($org->id);
 		$header['css_list'] = ['ac', 'tables'];
 		$header['js_list'] = ['classes'];
