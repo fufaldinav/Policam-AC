@@ -6,6 +6,7 @@
  * @property Card_model $card
  * @property Div_model $div
  * @property Org_model $org
+ * @property Person_model $person
  * @property Util_model $util
  */
 class Ac extends CI_Controller
@@ -20,6 +21,7 @@ class Ac extends CI_Controller
 		$this->load->model('ac/card_model', 'card');
 		$this->load->model('ac/div_model', 'div');
 		$this->load->model('ac/org_model', 'org');
+		$this->load->model('ac/person_model', 'person');
 		$this->load->model('ac/util_model', 'util');
 
 		$this->lang->load('ac');
@@ -40,6 +42,7 @@ class Ac extends CI_Controller
 		$orgs = $this->org->get_all($user_id); //TODO
 		$org = array_shift($orgs); //TODO
 
+		$header = [];
 		$header['org_name'] = $this->org->get_full_name($org->id);
 		$header['css_list'] = ['ac'];
 		$header['js_list'] = ['main', 'observ'];
@@ -67,31 +70,33 @@ class Ac extends CI_Controller
 		$orgs = $this->org->get_all($user_id); //TODO
 		$org = array_shift($orgs); //TODO
 
+		$data = [];
+
 		/**
 		 * Подразделения
 		 */
-		$data['divs'] = [];
+		$data['divs_list'] = [];
+		$data['divs_attr'] = 'id="div"';
 
 		$divs = $this->div->get_all($org->id);
 
-		if (!$divs) {
-			$data['divs']['0'] = lang('missing');
+		if ($divs === null) {
+			$data['divs_list']['0'] = lang('missing');
 		} else {
 			foreach ($divs as $div) {
-				$data['divs'][$div->id] = $div->number . ' "' . $div->letter . '"';
+				$data['divs_list'][$div->id] = $div->number . ' "' . $div->letter . '"';
 			}
 		}
-
-		$data['divs_attr'] = 'id="div"';
 
 		/**
 		 * Карты
 		 */
 		$data['cards'] = [];
+		$data['cards_attr'] = 'id="card"';
 
 		$cards = $this->card->get_by_holder(-1);
 
-		if (!$cards) {
+		if ($cards === null) {
 			$data['cards']['0'] = lang('missing');
 		} else {
 			$data['cards']['0'] = lang('not_selected');
@@ -100,8 +105,7 @@ class Ac extends CI_Controller
 			}
 		}
 
-		$data['cards_attr'] = 'id="card"';
-
+		$header = [];
 		$header['org_name'] = $this->org->get_full_name($org->id);
 		$header['css_list'] = ['ac'];
 		$header['js_list'] = ['main', 'events', 'add_person'];
@@ -129,63 +133,52 @@ class Ac extends CI_Controller
 		$orgs = $this->org->get_all($user_id); //TODO
 		$org = array_shift($orgs); //TODO
 
-		$data['menu'] = '<ul class="tree-container">';
+		$data = [];
 
 		/**
 		 * Подразделения
 		 */
-		$data['divs'] = [];
+		$data['divs_list'] = [];
+		$data['divs_attr'] = 'id="div"';
 
 		$divs = $this->div->get_all($org->id);
 
 		if ($divs === null) {
-			$data['divs']['0'] = lang('missing');
-		} else {
-			$persons = $this->other->get_persons_and_cards_by_org($org->id);
-			$last_k = count($divs) - 1;
-			foreach ($divs as $k => $div) {
-				$data['divs'][$div->id] = $div->number . ' "' . $div->letter . '"';
-				$data['menu'] .= '<li class="tree-node tree-is-root tree-expand-closed' . (($k == $last_k) ? ' tree-is-last' : '') . '">'
-											. '<div class="tree-expand"></div>'
-											. '<div class="tree-content tree-expand-content">'
-											. $data['divs'][$div->id]
-											. '</div>'
-											. '<ul class="tree-container">';
-				$cur_div = $persons[$div->number.$div->letter]; //number + letter для сортировки дерева 1А -> 1Б -> 2А etc.
-				$last_n = count($cur_div) - 1;
-				foreach ($cur_div as $n => $p) {
-					$data['menu'] .= '<li id="person' . $p->id . '" class="tree-node tree-expand-leaf' . (($n == $last_n) ? ' tree-is-last' : '') . '">'
-												. '<div class="tree-expand"></div>'
-												. '<div class="tree-content">'
-												. (($p->card_id) ? '(+) ' : '')
-												. '<a class="person" href="#' . $p->id . '" onClick="getPersonInfo(' . $p->id . ')">' . $p->f . ' ' . $p->i . '</a>'
-												. '</div>'
-												. '</li>';
-				}
-				$data['menu'] .= '</ul></li>';
-			}
+			$data['divs_list']['0'] = lang('missing');
 		}
 
-		$data['divs_attr'] = 'id="div"';
+		foreach ($divs as &$div) {
+			$data['divs_list'][$div->id] = $div->number . ' "' . $div->letter . '"';
+			$div->persons = $this->person->get_all($div->id);
+
+			foreach ($div->persons as &$person) {
+	 			$person->cards = $this->card->get_by_holder($person->id);
+	 		}
+			unset($person);
+
+		}
+		unset($div);
+
+		$data['divs_menu'] = $divs;
 
 		/**
 		 * Карты
 		 */
 		$data['cards'] = [];
+		$data['cards_attr'] = 'id="card" disabled';
 
 		$cards = $this->card->get_by_holder(-1);
 
-		if (!$cards) {
+		if ($cards === null) {
 			$data['cards']['0'] = lang('missing');
 		} else {
 			$data['cards']['0'] = lang('not_selected');
-			foreach ($cards as $row) {
-				$data['cards'][$row->id] = $row->wiegand;
+			foreach ($cards as $card) {
+				$data['cards'][$card->id] = $card->wiegand;
 			}
 		}
 
-		$data['cards_attr'] = 'id="card" disabled';
-
+		$header = [];
 		$header['org_name'] = $this->org->get_full_name($org->id);
 		$header['css_list'] = ['ac', 'edit_persons'];
 		$header['js_list'] = ['main', 'events', 'edit_persons', 'tree'];

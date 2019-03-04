@@ -25,7 +25,7 @@
 				</div>
 				<div id="info-div" class="info-item">
 					<?php echo lang('class');?><br />
-					<?php echo form_dropdown('div', $divs, '0', $divs_attr);?>
+					<?php echo form_dropdown('div', $divs_list, '0', $divs_attr);?>
 				</div>
 				<div id="info-birthday" class="info-item">
 					<?php echo lang('birthday');?><br />
