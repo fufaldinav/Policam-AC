@@ -52,10 +52,10 @@ class Server_model extends CI_Model
 	/**
 	* Обработка входящего сообщения
 	*
-	* @param string $msg Входящее сообщение
-	* @return object|null
+	* @param string $inc_json_msg Входящее JSON сообщение
+	* @return string|null Сообщение в формате JSON или NULL, если сообщение было от неизвестного контроллера
 	*/
-	public function handle_msg($msg)
+	public function handle_msg($inc_json_msg)
 	{
 		$this->load->helper('file');
 		$this->load->helper('date');
@@ -73,7 +73,7 @@ class Server_model extends CI_Model
 		$decoded_msg = json_decode($inc_json_msg);
 		$type = $decoded_msg->type;
 		$sn = $decoded_msg->sn;
-		$inc_messages = $decoded_msg->messages;
+		$inc_msgs = $decoded_msg->messages;
 
 		$ctrl = $this->ctrl->get_by_sn($sn);
 
@@ -92,7 +92,7 @@ class Server_model extends CI_Model
 		}
 
 		//чтение json сообщения
-		foreach ($inc_messages as $inc_m) {
+		foreach ($inc_msgs as $inc_m) {
 			//
 			//простой ответ
 			//
@@ -173,7 +173,7 @@ class Server_model extends CI_Model
 						$card->controller_id = $ctrl->id;
 						$card->holder_id = -1;
 
-						$card_id = $this->card->add($card);
+						$card->id = $this->card->add($card);
 					}
 
 					$events[] = [
@@ -182,7 +182,7 @@ class Server_model extends CI_Model
 						'flag' => $event->flag,
 						'time' => human_to_unix($event->time),
 						'server_time' => $time,
-						'card_id' => $card_id
+						'card_id' => $card->id
 					];
 
 					$events_count++;
@@ -204,17 +204,18 @@ class Server_model extends CI_Model
 			$out_msg->messages[] = json_decode($task->json);
 		}
 
-		$path = $this->log_path . '/out-' . $log_date . '.txt';
-		write_file($path, "TYPE: $type || SN: $sn || ". json_encode($out_msg) ."\n", 'a');
+		$out_json_msg = json_encode($out_msg);
 
-		return $out_msg;
+		$path = $this->log_path . '/out-' . $log_date . '.txt';
+		write_file($path, "TYPE: $type || SN: $sn || ". $out_json_msg ."\n", 'a');
+
+		return $out_json_msg;
 	}
 
 	/**
 	* Сохранение событий
 	*
-	* @param mixed[] $events
-	* @return string
+	* @param mixed[] $events События для сохранения в БД
 	*/
 	public function save_events($events)
 	{
