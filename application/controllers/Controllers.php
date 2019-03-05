@@ -40,8 +40,8 @@ class Controllers extends CI_Controller
 	/**
 	 * Установка времени открытия
 	 *
-	 * @param int|null $ctrl_id ID контроллера
-	 * @param int|null $open_time     Время открытия
+	 * @param int|null $ctrl_id   ID контроллера
+	 * @param int|null $open_time Время открытия
 	 */
 	public function set_door_params($ctrl_id = null, $open_time = null)
 	{
