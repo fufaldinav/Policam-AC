@@ -3,8 +3,10 @@
 /**
  * Class Util
  * @property Card_model $card
+ * @property Ctrl_model $ctrl
+ * @property Div_model $div
+ * @property Org_model $org
  * @property Person_model $person
- * @property Other_model $other
  * @property Util_model $util
  */
 class Util extends CI_Controller
@@ -15,7 +17,6 @@ class Util extends CI_Controller
 
 		$this->load->helper('language');
 
-		$this->load->model('ac/other_model', 'other'); //TODO
 		$this->load->model('ac/util_model', 'util');
 
 		$this->lang->load('ac');
@@ -78,6 +79,9 @@ class Util extends CI_Controller
 	public function card_problem()
 	{
 		$this->load->model('ac/card_model', 'card');
+		$this->load->model('ac/ctrl_model', 'ctrl');
+		$this->load->model('ac/div_model', 'div');
+		$this->load->model('ac/org_model', 'org');
 		$this->load->model('ac/person_model', 'person');
 
 		if (!$this->ion_auth->logged_in()) {
@@ -88,34 +92,39 @@ class Util extends CI_Controller
 		$type = $this->input->post('type');
 		$person_id = $this->input->post('person_id');
 
-		if (!isset($type) || !isset($person_id)) {
+		if ($type === null || $person_id === null) {
 			return null;
 		}
 
 		$response = lang('registred');
 
-		if ($type >= 1 && $type <= 3) {
-			$pers = $this->person->get($person_id);
-		}
+		$person = $this->person->get($person_id);
 
 		if ($type == 1) {
-			$desc = $pers->id . ' ' . $pers->f . ' ' . $pers->i . ' forgot card';
+			$desc = $person->id . ' ' . $person->f . ' ' . $person->i . ' forgot card';
 
 			if ($this->util->add_user_event($type, $desc)) {
 				echo $response;
 			}
 		} elseif ($type == 2 || $type == 3) {
-			$cards = $this->card->get_by_holder($person_id);
+			$cards = $this->card->get_by_holder($person->id);
 
-			if (!isset($cards)) {
+			if ($cards === null) {
 				return null;
 			}
 
+			$div = $this->div->get($person->div_id);
+			$org = $this->org->get($div->org_id);
+			$ctrls = $this->ctrl->get_all($org->id);
+
 			foreach ($cards as $card) {
-				$this->other->delete_card($card->id);
+
+				foreach ($ctrls as $ctrl) {
+					$this->ctrl->delete_cards($ctrl->id, $card->wiegand);
+				}
 			}
 
-			$desc = $pers->id . ' ' . $pers->f . ' ' . $pers->i . ' lost/broke card';
+			$desc = $person->id . ' ' . $person->f . ' ' . $person->i . ' lost/broke card';
 
 			$response .= ' ' . lang('and') . ' ' . lang('card_deleted');
 
