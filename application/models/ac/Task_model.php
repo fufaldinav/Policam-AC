@@ -29,9 +29,9 @@ class Task_model extends CI_Model
 	/**
 	 * Добавление задания для отправки на контроллер
 	 *
-	 * @param int $operation     Операция, отправляемая на контроллер
-	 * @param int $ctrl_id ID контроллера
-	 * @param int|null $data     Дополнительные данные
+	 * @param int $operation  Операция, отправляемая на контроллер
+	 * @param int $ctrl_id    ID контроллера
+	 * @param int|null $data  Дополнительные данные
 	 * @return int
 	 */
 	public function add($operation, $ctrl_id, $data = null)
