@@ -9,6 +9,21 @@
  */
 class Ac extends CI_Controller
 {
+	/**
+	* @var int $user_id
+	*/
+	private $user_id;
+
+	/**
+	* @var mixed[] $orgs
+	*/
+	private $orgs;
+
+	/**
+	* @var mixed[] $first_org
+	*/
+	private $first_org;
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -21,6 +36,10 @@ class Ac extends CI_Controller
 		$this->load->model('ac/person_model', 'person');
 
 		$this->lang->load('ac');
+
+		$this->user_id = $this->ion_auth->user()->row()->id; //TODO
+		$this->orgs = $this->org->get_all($this->user_id); //TODO
+		$this->first_org = array_shift($this->orgs); //TODO
 	}
 
 	/**
@@ -34,12 +53,8 @@ class Ac extends CI_Controller
 			redirect('auth');
 		}
 
-		$user_id = $this->ion_auth->user()->row()->id; //TODO
-		$orgs = $this->org->get_all($user_id); //TODO
-		$org = array_shift($orgs); //TODO
-
 		$header = [];
-		$header['org_name'] = $this->org->get_full_name($org->id);
+		$header['org_name'] = $this->org->get_full_name($this->first_org->id);
 		$header['css_list'] = ['ac'];
 		$header['js_list'] = ['main', 'observ'];
 
@@ -62,10 +77,6 @@ class Ac extends CI_Controller
 
 		$this->load->helper('form');
 
-		$user_id = $this->ion_auth->user()->row()->id; //TODO
-		$orgs = $this->org->get_all($user_id); //TODO
-		$org = array_shift($orgs); //TODO
-
 		$data = [];
 
 		/**
@@ -74,7 +85,7 @@ class Ac extends CI_Controller
 		$data['divs_list'] = [];
 		$data['divs_attr'] = 'id="div"';
 
-		$divs = $this->div->get_all($org->id);
+		$divs = $this->div->get_all($this->first_org->id);
 
 		if ($divs === null) {
 			$data['divs_list']['0'] = lang('missing');
@@ -102,7 +113,7 @@ class Ac extends CI_Controller
 		}
 
 		$header = [];
-		$header['org_name'] = $this->org->get_full_name($org->id);
+		$header['org_name'] = $this->org->get_full_name($this->first_org->id);
 		$header['css_list'] = ['ac'];
 		$header['js_list'] = ['main', 'events', 'add_person'];
 
@@ -125,10 +136,6 @@ class Ac extends CI_Controller
 
 		$this->load->helper('form');
 
-		$user_id = $this->ion_auth->user()->row()->id; //TODO
-		$orgs = $this->org->get_all($user_id); //TODO
-		$org = array_shift($orgs); //TODO
-
 		$data = [];
 
 		/**
@@ -137,7 +144,7 @@ class Ac extends CI_Controller
 		$data['divs_list'] = [];
 		$data['divs_attr'] = 'id="div"';
 
-		$divs = $this->div->get_all($org->id);
+		$divs = $this->div->get_all($this->first_org->id);
 
 		if ($divs === null) {
 			$data['divs_list']['0'] = lang('missing');
@@ -175,7 +182,7 @@ class Ac extends CI_Controller
 		}
 
 		$header = [];
-		$header['org_name'] = $this->org->get_full_name($org->id);
+		$header['org_name'] = $this->org->get_full_name($this->first_org->id);
 		$header['css_list'] = ['ac', 'edit_persons'];
 		$header['js_list'] = ['main', 'events', 'edit_persons', 'tree'];
 
@@ -198,16 +205,12 @@ class Ac extends CI_Controller
 
 		$this->load->library('table');
 
-		$user_id = $this->ion_auth->user()->row()->id; //TODO
-		$orgs = $this->org->get_all($user_id); //TODO
-		$org = array_shift($orgs); //TODO
-
 		$data = [];
 
-		$data['divs'] = $this->div->get_all($org->id);
+		$data['divs'] = $this->div->get_all($this->first_org->id);
 
 		$header = [];
-		$header['org_name'] = $this->org->get_full_name($org->id);
+		$header['org_name'] = $this->org->get_full_name($this->first_org->id);
 		$header['css_list'] = ['ac', 'tables'];
 		$header['js_list'] = ['classes'];
 
