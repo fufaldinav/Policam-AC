@@ -2,15 +2,39 @@
 
 /**
  * Class Controllers
+ * @property Card_model $card
  * @property Ctrl_model $ctrl
+ * @property Div_model $div
+ * @property Org_model $org
+ * @property Person_model $person
  */
 class Controllers extends CI_Controller
 {
+	/**
+	* @var int $user_id
+	*/
+	private $user_id;
+
+	/**
+	* @var mixed[] $orgs
+	*/
+	private $orgs;
+
+	/**
+	* @var mixed[] $first_org
+	*/
+	private $first_org;
+
 	public function __construct()
 	{
 		parent::__construct();
 
 		$this->load->model('ac/ctrl_model', 'ctrl');
+		$this->load->model('ac/org_model', 'org');
+
+		$this->user_id = $this->ion_auth->user()->row()->id; //TODO
+		$this->orgs = $this->org->get_all($this->user_id); //TODO
+		$this->first_org = array_shift($this->orgs); //TODO
 	}
 
 	/**
@@ -42,6 +66,31 @@ class Controllers extends CI_Controller
 	 *
 	 * @param int|null $ctrl_id ID контроллера
 	 */
+	public function clear($ctrl_id = null) {
+		if (!$this->ion_auth->logged_in()) {
+			header("HTTP/1.1 401 Unauthorized");
+			exit;
+		}
+		if (!$this->ion_auth->is_admin()) {
+			header('HTTP/1.1 403 Forbidden');
+			exit;
+		}
+
+		if ($ctrl_id === null) {
+			echo 'Не выбран контроллер'; //TODO
+		} elseif ($this->first_org === null) {
+			echo 'Нет организаций'; //TODO
+		} else {
+			echo $this->ctrl->clear_cards($ctrl_id);
+			echo ' заданий записано'; //TODO
+		}
+	}
+
+	/**
+	 * Выгрузка всех карт в контроллер
+	 *
+	 * @param int|null $ctrl_id ID контроллера
+	 */
 	public function reload_cards($ctrl_id = null)
 	{
 		if (!$this->ion_auth->logged_in()) {
@@ -52,11 +101,44 @@ class Controllers extends CI_Controller
 			header('HTTP/1.1 403 Forbidden');
 			exit;
 		}
-		if (isset($ctrl_id)) {
-			echo $this->ac->add_all_cards_to_controller($ctrl_id);
-			echo ' заданий записано'; //TODO
-		} else {
+
+		if ($ctrl_id === null) {
 			echo 'Не выбран контроллер'; //TODO
+		} elseif ($this->first_org === null) {
+			echo 'Нет организаций'; //TODO
+		} else {
+			$cards = [];
+			$this->load->model('ac/card_model', 'card');
+			$this->load->model('ac/div_model', 'div');
+			$this->load->model('ac/person_model', 'person');
+
+			$divs = $this->div->get_all($this->first_org->id);
+
+			foreach ($divs as &$div) {
+				$div->persons = $this->person->get_all($div->id);
+
+				foreach ($div->persons as &$person) {
+					$person->cards = $this->card->get_by_holder($person->id);
+
+					if ($person->cards !== null) {
+						$cards = array_merge($cards, $person->cards);
+					}
+				}
+			}
+
+			$card_count = count($cards);
+			$counter = 0;
+			$codes = [];
+			for ($i = 0; $i < $card_count; $i++) {
+				$codes[] = $cards[$i]->wiegand;
+
+				if (($i > 0 && ($i % 10 == 0)) || $i == ($card_count - 1)) {
+					$counter += $this->ctrl->add_cards($ctrl_id, $codes);
+					$codes = [];
+				}
+			}
+
+			echo $counter . ' заданий записано'; //TODO
 		}
 	}
 }

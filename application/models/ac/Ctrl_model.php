@@ -215,6 +215,6 @@ class Ctrl_model extends CI_Model
 	{
 		$this->load->model('ac/task_model', 'task');
 
-		return $this->task->add('clear_cards', $ctrl_id, $data);
+		return $this->task->add('clear_cards', $ctrl_id);
 	}
 }
