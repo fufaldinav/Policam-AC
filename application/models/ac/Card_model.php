@@ -28,29 +28,16 @@ class Card_model extends CI_Model
 	}
 
 	/**
-	* Получение информации о карте
+	* Получение информации о карте по ID
 	*
 	* @param int $card_id ID карты
-	* @return object
+	* @return object|null Карта или NULL - отсутствует
 	*/
 	public function get($card_id)
 	{
-		$this->db->where('id', $card_id);
-		$query = $this->db->get('cards');
-
-		return $query->row();
-	}
-
-	/**
-	* Получение информации о карте
-	*
-	* @param string $code Код карты
-	* @return object
-	*/
-	public function get_by_code($code)
-	{
-		$this->db->where('wiegand', $code);
-		$query = $this->db->get('cards');
+		$query = $this->db
+			->where('id', $card_id)
+			->get('cards');
 
 		if ($query->num_rows() > 0) {
 			return $query->row();
@@ -60,14 +47,54 @@ class Card_model extends CI_Model
 	}
 
 	/**
-	* Получение списка карт, привязаных к конкретному человеку
+	* Получение информации о карте по коду
+	*
+	* @param string $code Код карты
+	* @return object|null Карта или NULL - отсутствует
+	*/
+	public function get_by_code($code)
+	{
+		$query = $this->db
+			->where('wiegand', $code)
+			->get('cards');
+
+		if ($query->num_rows() > 0) {
+			return $query->row();
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	* Получение списка карт по человеку
 	*
 	* @param int $holder_id ID человека, по-умолчанию -1 (список всех неизвестных карт)
-	* @return mixed[]|null
+	* @return object[]|null Массив с картами или NULL - отсутствует
 	*/
 	public function get_by_holder($holder_id = -1)
 	{
-		$this->db->where('holder_id', $holder_id);
+		$query = $this->db
+			->where('holder_id', $holder_id)
+			->get('cards');
+
+		if ($query->num_rows() > 0) {
+			return $query->result();
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	* Получение информации о всех картах
+	*
+	* @param int|null $ctrl_id ID контроллера
+	* @return object[]|null Массив с картами или NULL - отсутствует
+	*/
+	public function get_all($ctrl_id = null)
+	{
+		if (isset($ctrl_id)) {
+			$this->db->where('controller_id', $ctrl_id);
+		}
 		$query = $this->db->get('cards');
 
 		if ($query->num_rows() > 0) {
@@ -78,36 +105,25 @@ class Card_model extends CI_Model
 	}
 
 	/**
-	* Получение информации о всех картах контроллера
-	*
-	* @param int|null $ctrl_id ID контроллера, по-умолчанию все карты
-	* @return mixed[]
-	*/
-	public function get_all($ctrl_id = null)
-	{
-		if (isset($ctrl_id)) {
-			$this->db->where('controller_id', $ctrl_id);
-		}
-		$query = $this->db->get('cards');
-
-		return $query->result();
-	}
-
-	/**
-	* Добавление карты
+	* Закрепление карты за человеком
 	*
 	* @param int $card_id   ID карты
 	* @param int $person_id ID человека
-	* @return int
+	* @return bool TRUE - успешно, FALSE - ошибка
 	*/
 	public function set_holder($card_id, $person_id)
 	{
 		$this->load->model('ac/ctrl_model', 'ctrl');
 
-		$this->db->where('id', $card_id);
-		$this->db->update('cards', ['holder_id' => $person_id]);
+		$this->db
+			->where('id', $card_id)
+			->update('cards', ['holder_id' => $person_id]);
 
-		return $this->db->affected_rows();
+		if ($this->db->affected_rows() > 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -115,6 +131,7 @@ class Card_model extends CI_Model
 	 *
 	 * @param int $card_id ID карты
 	 * @param int $ctrl_id ID контроллера
+	 * @return bool TRUE - успешно, FALSE - ошибка
 	 */
 	public function set_last_conn($card_id, $ctrl_id)
 	{
@@ -122,15 +139,22 @@ class Card_model extends CI_Model
 			'last_conn' => now('Asia/Yekaterinburg'),
 			'controller_id' => $ctrl_id
 		];
-		$this->db->where('id', $card_id);
-		$this->db->update('cards', $data);
+		$this->db
+			->where('id', $card_id)
+			->update('cards', $data);
+
+		if ($this->db->affected_rows() > 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
 	* Добавление новой карты
 	*
 	* @param object $card Карта
-	* @return int
+	* @return int ID новой карты
 	*/
 	public function add($card)
 	{
@@ -143,37 +167,47 @@ class Card_model extends CI_Model
 	* Обновление информации о карте
 	*
 	* @param object $card Карта
-	* @return int
+	* @return bool TRUE - успешно, FALSE - ошибка
 	*/
 	public function update($card)
 	{
-		$this->db->where('id', $card->id);
-		$this->db->update('cards', $this->set($card));
+		$this->db
+			->where('id', $card->id)
+			->update('cards', $this->set($card));
 
-		return $this->db->affected_rows();
+		if ($this->db->affected_rows() > 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
 	 * Удаление карты
 	 *
 	 * @param int $card_id ID карты
-	 * @return int
+	 * @return bool TRUE - успешно, FALSE - ошибка
 	 */
 	public function delete($card_id)
 	{
 		$this->load->model('ac/ctrl_model', 'ctrl');
 
-		$this->db->where('id', $card_id);
-		$this->db->update('cards', ['holder_id' => -1]);
+		$this->db
+			->where('id', $card_id)
+			->update('cards', ['holder_id' => -1]);
 
-		return $this->db->affected_rows();
+		if ($this->db->affected_rows() > 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
 	* Установить информацию о карте
 	*
 	* @param object $card Карта
-	* @return mixed[]
+	* @return mixed[] Массив с параметрами карты
 	*/
 	public function set($card)
 	{

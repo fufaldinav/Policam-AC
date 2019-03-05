@@ -30,30 +30,36 @@ class Div_model extends CI_Model
 	* Получение информации о подразделении
 	*
 	* @param int $div_id ID подразделения
-	* @return mixed[]
+	* @return object|null Подразделение или NULL - отсутствует
 	*/
 	public function get($div_id)
 	{
-		$this->db->where('id', $div_id);
-		$query = $this->db->get('divisions');
+		$query = $this->db
+			->where('id', $div_id)
+			->get('divisions');
 
-		return $query->row();
+		if ($query->num_rows() > 0) {
+			return $query->row();
+		} else {
+			return null;
+		}
 	}
 
 	/**
-	* Получение информации о всех подразделениях организации
+	* Получение информации о всех подразделениях
 	*
-	* @param int|null $org_id ID организации, по-умолчанию все подразделения
-	* @return mixed[]
+	* @param int|null $org_id ID организации
+	* @return object[]|null Массив с подразделениями или NULL - отсутствует
 	*/
 	public function get_all($org_id = null)
 	{
 		if ($org_id !== null) {
 			$this->db->where('org_id', $org_id);
 		}
-		$this->db->order_by('number', 'ASC');
-		$this->db->order_by('letter', 'ASC');
-		$query = $this->db->get('divisions');
+		$query = $this->db
+			->order_by('number', 'ASC')
+			->order_by('letter', 'ASC')
+			->get('divisions');
 
 		if ($query->num_rows() > 0) {
 			return $query->result();
@@ -66,48 +72,56 @@ class Div_model extends CI_Model
 	* Добавление нового подразделения
 	*
 	* @param object $div Подразделение
-	* @return int
+	* @return int ID нового подразделения
 	*/
 	public function add($div)
 	{
 		$this->db->insert('divisions', $this->set($div));
-		$div_id = $this->db->insert_id();
 
-		return $div_id;
+		return $this->db->insert_id();
 	}
 
 	/**
 	* Обновление информации о подразделении
 	*
 	* @param object $div Подразделение
-	* @return int
+	* @return bool TRUE - успешно, FALSE - ошибка
 	*/
 	public function update($div)
 	{
-		$this->db->where('id', $div->id);
-		$this->db->update('divisions', $this->set($div));
+		$this->db
+			->where('id', $div->id)
+			->update('divisions', $this->set($div));
 
-		return $this->db->affected_rows();
+		if ($this->db->affected_rows() > 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
 	* Удаление подразделения
 	*
 	* @param int $div_id ID подразделения
-	* @return int
+	* @return bool TRUE - успешно, FALSE - ошибка
 	*/
 	public function delete($div_id)
 	{
 		$this->db->delete('divisions', ['id' => $div_id]);
 
-		return $this->db->affected_rows();
+		if ($this->db->affected_rows() > 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
 	* Установить информацию о подразделении
 	*
 	* @param object $div Подразделение
-	* @return mixed[]
+	* @return mixed[] Массив с параметрами контроллера
 	*/
 	public function set($div)
 	{

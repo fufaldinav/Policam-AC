@@ -15,30 +15,24 @@ function getCards(id) {
 	$.ajax({
 		url: `/index.php/cards/get_all`,
 		type: `GET`,
-		success: function(res) {
-			try {
-				if (res) {
-					let data = JSON.parse(res);
-					while (card.length > 0) { //удалить все элементы из меню карт
-						card.remove(card.length - 1);
-					}
-					if (data.length == 0) { //если нет неизвестных карт
-						addOption(card, 0, `Отсутствует`);
-					} else { //иначе заполним меню картами
-						addOption(card, 0, `Не выбрана`); //первый пункт
-						data.forEach(function(c) {
-							addOption(card, c.id, c.wiegand);
-						});
-					}
-					if (id) { //если передавали id, то установим карту как текущую
-						card.value = id;
-					}
-				} else {
-					alert(`Пустой ответ от сервера`);
+		success: function(data) {
+			if (data) {
+				while (card.length > 0) { //удалить все элементы из меню карт
+					card.remove(card.length - 1);
 				}
-			} catch (e) {
-				sendError(e);
-				alert(`Ошибка: ${e.name}: ${e.message}`);
+				if (data.length == 0) { //если нет неизвестных карт
+					addOption(card, 0, `Отсутствует`);
+				} else { //иначе заполним меню картами
+					addOption(card, 0, `Не выбрана`); //первый пункт
+					data.forEach(function(c) {
+						addOption(card, c.id, c.wiegand);
+					});
+				}
+				if (id) { //если передавали id, то установим карту как текущую
+					card.value = id;
+				}
+			} else {
+				alert(`Пустой ответ от сервера`);
 			}
 		},
 		error: function() {
@@ -59,7 +53,6 @@ function addOption(p, v, t) {
 function handleFiles(files) {
 	let formData = new FormData();
 	formData.append(`file`, files[0]);
-	//отправим JSON
 	$.ajax({
 		url: `/index.php/photos/save`,
 		type: `POST`,
@@ -67,26 +60,20 @@ function handleFiles(files) {
 		contentType: false,
 		processData: false,
 		data: formData,
-		success: function(res) {
-			try {
-				if (res) {
-					let data = JSON.parse(res);
-					if (data.error === ``) {
-						document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/' + data.id + '.jpg)';
-						person.photo = data.id;
-						document.getElementById(`photo`).hidden = true;
-						document.getElementById(`photo_del`).hidden = false;
-						document.getElementById(`photo_del`).onclick = deletePhoto;
-					} else {
-						document.getElementById(`photo`).value = null;
-						alert(data.error);
-					}
+		success: function(data) {
+			if (data) {
+				if (data.error === ``) {
+					document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/' + data.id + '.jpg)';
+					person.photo = data.id;
+					document.getElementById(`photo`).hidden = true;
+					document.getElementById(`photo_del`).hidden = false;
+					document.getElementById(`photo_del`).onclick = deletePhoto;
 				} else {
-					alert(`Неизвестная ошибка`);
+					document.getElementById(`photo`).value = null;
+					alert(data.error);
 				}
-			} catch (e) {
-				sendError(e);
-				alert(`Ошибка: ${e.name}: ${e.message}`);
+			} else {
+				alert(`Неизвестная ошибка`);
 			}
 		},
 		error: function() {
@@ -104,22 +91,17 @@ function deletePhoto() {
 		url: `/index.php/photos/delete/${person.photo}`,
 		type: `GET`,
 		success: function(res) {
-			try {
-				if (res) {
-					document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/0.jpg)';
-					document.getElementById(`photo_del`).hidden = true;
-					document.getElementById(`photo_del`).onclick = function() {
-						return false;
-					};
-					document.getElementById(`photo`).hidden = false;
-					document.getElementById(`photo`).value = null;
-					person.photo = null;
-				} else {
-					alert(`Неизвестная ошибка`);
-				}
-			} catch (e) {
-				sendError(e);
-				alert(`Ошибка: ${e.name}: ${e.message}`);
+			if (res) {
+				document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/0.jpg)';
+				document.getElementById(`photo_del`).hidden = true;
+				document.getElementById(`photo_del`).onclick = function() {
+					return false;
+				};
+				document.getElementById(`photo`).hidden = false;
+				document.getElementById(`photo`).value = null;
+				person.photo = null;
+			} else {
+				alert(`Неизвестная ошибка`);
 			}
 		},
 		error: function() {

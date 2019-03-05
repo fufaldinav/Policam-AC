@@ -32,7 +32,7 @@ class Task_model extends CI_Model
 	 * @param int $operation  Операция, отправляемая на контроллер
 	 * @param int $ctrl_id    ID контроллера
 	 * @param int|null $data  Дополнительные данные
-	 * @return int
+	 * @return bool TRUE - успешно, FALSE - ошибка
 	 */
 	public function add($operation, $ctrl_id, $data = null)
 	{
@@ -53,34 +53,44 @@ class Task_model extends CI_Model
 
 		$this->db->insert('tasks', $data);
 
-		return $this->db->affected_rows();
+		if ($this->db->affected_rows() > 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
 	 * Удаление задания, отправленного на контроллер
 	 *
 	 * @param int $task_id ID задания
-	 * @return int
+	 * @return bool TRUE - успешно, FALSE - ошибка
 	 */
 	public function delete($task_id)
 	{
-		$this->db->where('id', $task_id);
-		$this->db->delete('tasks');
+		$this->db
+			->where('id', $task_id)
+			->delete('tasks');
 
-		return $this->db->affected_rows();
+		if ($this->db->affected_rows() > 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
 	 * Получение последнего задания для отправки на контроллер
 	 *
 	 * @param int $ctrl_id ID контроллера
-	 * @return mixed[]|bool
+	 * @return object|null Задание или NULL - отсутствует
 	 */
 	public function get_last($ctrl_id)
 	{
-		$this->db->where('controller_id', $ctrl_id);
-		$this->db->order_by('time', 'ASC');
-		$query = $this->db->get('tasks');
+		$query = $this->db
+			->where('controller_id', $ctrl_id)
+			->order_by('time', 'ASC')
+			->get('tasks');
 
 		if ($query->num_rows() > 0) {
 			return $query->row();

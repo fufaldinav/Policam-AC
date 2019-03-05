@@ -13,7 +13,7 @@
 						<tr>
 							<td><input id="number" type="text" size="2" maxlength="2" required=""></td>
 							<td><input id="letter" type="text" size="1" maxlength="1" required=""></td>
-							<td><button onclick="saveDivision(<?php echo $div->org_id;?>)"><?php echo lang('save');?></button></td>
+							<td><button onclick="saveDivision(<?php echo $org_id;?>)"><?php echo lang('save');?></button></td>
 						</tr>
 						<?php foreach ($divs as $div):?>
 						<tr>

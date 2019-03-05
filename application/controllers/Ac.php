@@ -207,6 +207,8 @@ class Ac extends CI_Controller
 
 		$data = [];
 
+		$data['org_id'] = $this->first_org->id;
+
 		$data['divs'] = $this->div->get_all($this->first_org->id);
 
 		$header = [];

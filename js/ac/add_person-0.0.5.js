@@ -36,21 +36,12 @@ function savePersonInfo() {
 			data: {
 				person: JSON.stringify(person)
 			},
-			success: function(res) {
-				try {
-					if (res) {
-						for (let k in person) {
-							person[k] = null;
-						}
-						alert(`Пользователь №${res} успешно сохранен`);
-						clearPersonInfo();
-					} else {
-						alert(`Пустой ответ от сервера`);
-					}
-				} catch (e) {
-					sendError(e);
-					alert(`Ошибка: ${e.name}: ${e.message}`);
+			success: function(person_id) {
+				for (let k in person) {
+					person[k] = null;
 				}
+				alert(`Пользователь №${person_id} успешно сохранен`);
+				clearPersonInfo();
 			},
 			error: function() {
 				alert(`Неизвестная ошибка`);

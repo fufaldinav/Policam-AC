@@ -10,10 +10,10 @@ document.addEventListener("DOMContentLoaded", function() {
 function getServerTime() {
 	$.ajax({
 		url: `/index.php/util/get_time`,
-		success: function(res) {
-			time = res;
-		},
-		type: `GET`
+		type: `GET`,
+		success: function(data) {
+			time = data;
+		}
 	});
 }
 
@@ -26,10 +26,9 @@ function getNewMsgs(events, time) {
 			events: events,
 			time: time
 		},
-		success: function(res) {
-			try {
-				if (res) {
-					let data = JSON.parse(res);
+		success: function(data) {
+			if (data) {
+				try {
 					time = data.time;
 					if (data.msgs.length > 0) {
 						let card = data.msgs[data.msgs.length - 1].card_id; //последний прочитанный ключ из БД
@@ -38,12 +37,12 @@ function getNewMsgs(events, time) {
 					setTimeout(function() {
 						getNewMsgs(events, time);
 					}, 10);
-				} else {
-					alert(`Пустой ответ от сервера`);
+				} catch (e) {
+					sendError(e);
+					alert(`Ошибка: ${e.name}: ${e.message}`);
 				}
-			} catch (e) {
-				sendError(e);
-				alert(`Ошибка: ${e.name}: ${e.message}`);
+			} else {
+				alert(`Пустой ответ от сервера`);
 			}
 		},
 		error: function() {
@@ -57,26 +56,20 @@ function setPersonInfo(card_id) {
 	$.ajax({
 		url: `/index.php/persons/get_by_card/${card_id}`,
 		type: `GET`,
-		success: function(res) {
-			try {
-				if (res) {
-					let data = JSON.parse(res);
-					Object.keys(data).map(function(k) { //перебор полученных данных
-						if (document.getElementById(k)) {
-							document.getElementById(k).value = data[k];
-						}
-					});
-					let photo = document.getElementById(`photo_bg`);
-					if (!data.photo) {
-						data.photo = `0`;
+		success: function(data) {
+			if (data) {
+				Object.keys(data).map(function(k) { //перебор полученных данных
+					if (document.getElementById(k)) {
+						document.getElementById(k).value = data[k];
 					}
-					photo.style.backgroundImage = 'url(/img/ac/s/' + data.photo + '.jpg)';
-				} else {
-					alert(`Пустой ответ от сервера`);
+				});
+				let photo = document.getElementById(`photo_bg`);
+				if (!data.photo) {
+					data.photo = `0`;
 				}
-			} catch (e) {
-				sendError(e);
-				alert(`Ошибка: ${e.name}: ${e.message}`);
+				photo.style.backgroundImage = 'url(/img/ac/s/' + data.photo + '.jpg)';
+			} else {
+				alert(`Пустой ответ от сервера`);
 			}
 		},
 		error: function() {
@@ -89,22 +82,16 @@ function getDivisions() {
 	$.ajax({
 		url: `/index.php/divisions/get_all`,
 		type: `GET`,
-		success: function(res) {
-			try {
-				if (res) {
-					let data = JSON.parse(res);
-					let divisions = ``;
-					data.forEach(function(div) {
-						divisions += `<div id="div${div.id}" class="menu-item" onclick="getPersons(${div.id});">${div.number} "${div.letter}"</div>`;
-					});
-					let menu = document.getElementById(`menu`);
-					menu.innerHTML = divisions;
-				} else {
-					alert(`Пустой ответ от сервера`);
-				}
-			} catch (e) {
-				sendError(e);
-				alert(`Ошибка: ${e.name}: ${e.message}`);
+		success: function(data) {
+			if (data) {
+				let divisions = ``;
+				data.forEach(function(div) {
+					divisions += `<div id="div${div.id}" class="menu-item" onclick="getPersons(${div.id});">${div.number} "${div.letter}"</div>`;
+				});
+				let menu = document.getElementById(`menu`);
+				menu.innerHTML = divisions;
+			} else {
+				alert(`Пустой ответ от сервера`);
 			}
 		},
 		error: function() {
@@ -117,22 +104,16 @@ function getPersons(div_id) {
 	$.ajax({
 		url: `/index.php/persons/get_all/${div_id}`,
 		type: `GET`,
-		success: function(res) {
-			try {
-				if (res) {
-					let data = JSON.parse(res);
-					let persons = `<div id="menu-button-back" class="menu-item" onclick="getDivisions();">Назад</div>`;
-					data.forEach(function(person) {
-						persons += `<div id="person${person.id}" class="menu-item" onclick="openEntraceOptions(${person.id}, ${div_id});">${person.f} ${person.i}</div>`;
-					});
-					let menu = document.getElementById(`menu`);
-					menu.innerHTML = persons;
-				} else {
-					alert(`Пустой ответ от сервера`);
-				}
-			} catch (e) {
-				sendError(e);
-				alert(`Ошибка: ${e.name}: ${e.message}`);
+		success: function(data) {
+			if (data) {
+				let persons = `<div id="menu-button-back" class="menu-item" onclick="getDivisions();">Назад</div>`;
+				data.forEach(function(person) {
+					persons += `<div id="person${person.id}" class="menu-item" onclick="openEntraceOptions(${person.id}, ${div_id});">${person.f} ${person.i}</div>`;
+				});
+				let menu = document.getElementById(`menu`);
+				menu.innerHTML = persons;
+			} else {
+				alert(`Пустой ответ от сервера`);
 			}
 		},
 		error: function() {
@@ -179,15 +160,10 @@ function sendInfo(type, person_id) {
 			person_id: person_id
 		},
 		success: function(res) {
-			try {
-				if (res) {
-					alert(res);
-				} else {
-					alert(`Пустой ответ от сервера`);
-				}
-			} catch (e) {
-				sendError(e);
-				alert(`Ошибка: ${e.name}: ${e.message}`);
+			if (res) {
+				alert(res);
+			} else {
+				alert(`Пустой ответ от сервера`);
 			}
 		},
 		error: function() {

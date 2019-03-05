@@ -5,17 +5,17 @@
 					<?php echo lang('missing');?>
 				<?php else:?>
 				<ul class="tree-container">
-					<?php $last_k = count($divs_menu) - 1;?>
+					<?php $last_div = count($divs_menu) - 1;?>
 					<?php foreach ($divs_menu as $k => $div):?>
-					<li class="tree-node tree-is-root tree-expand-closed <?php echo $k == $last_k ? 'tree-is-last' : '';?>">
+					<li class="tree-node tree-is-root tree-expand-closed <?php echo $k == $last_div ? 'tree-is-last' : '';?>">
 						<div class="tree-expand"></div>
 						<div class="tree-content tree-expand-content">
 							<?php echo $div->number . ' "' . $div->letter . '"';?>
 						</div>
 						<ul class="tree-container">
-							<?php $last_n = count($div->persons) - 1;?>
+							<?php $last_person = count($div->persons) - 1;?>
 							<?php foreach ($div->persons as $n => $person):?>
-							<li id="person<?php echo $person->id?>" class="tree-node tree-expand-leaf <?php echo $n == $last_n ? 'tree-is-last' : '';?>">
+							<li id="person<?php echo $person->id?>" class="tree-node tree-expand-leaf <?php echo $n == $last_person ? 'tree-is-last' : '';?>">
 								<div class="tree-expand"></div>
 								<div class="tree-content">
 									<?php echo $person->cards !== null ? '(+) ' : ''?>

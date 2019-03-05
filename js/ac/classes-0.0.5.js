@@ -9,21 +9,15 @@ function deleteDivision(div_id) {
 	if (!confirm(`Подтвердите удаление.`)) {
 		return;
 	}
-	//отправим JSON
 	$.ajax({
 		url: `/index.php/divisions/delete/${div_id}`,
 		type: `GET`,
 		success: function(res) {
-			try {
-				if (res > 0) {
-					alert(`Успешное удаление`);
-					location.reload();
-				} else {
-					alert(`Неизвестная ошибка`);
-				}
-			} catch (e) {
-				alert(`Ошибка удаления: ${e.name}: ${e.message}`);
-				sendError(e);
+			if (res) {
+				alert(`Успешное удаление`);
+				location.reload();
+			} else {
+				alert(`Неизвестная ошибка`);
 			}
 		},
 		error: function() {
@@ -46,14 +40,9 @@ function saveDivision(org_id) {
 		data: {
 			div: JSON.stringify(div)
 		},
-		success: function(res) {
-			if (res) {
-				let div = JSON.parse(res);
-				alert(`Класс ${div.number} "${div.letter}" успешно сохранен`);
-				location.reload();
-			} else {
-				alert(`Пустой ответ от сервера`);
-			}
+		success: function(div) {
+			alert(`Класс ${div.number} "${div.letter}" успешно сохранен`);
+			location.reload();
 		},
 		error: function() {
 			alert(`Неизвестная ошибка`);

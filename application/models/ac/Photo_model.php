@@ -44,29 +44,16 @@ class Photo_model extends CI_Model
 	}
 
 	/**
-	* Получение информации о фотографии
+	* Получение информации о фотографии по ID
 	*
 	* @param int $photo_id ID фотографии
-	* @return mixed[]
+	* @return object|null Фотография или NULL - отсутствует
 	*/
 	public function get($photo_id)
 	{
-		$this->db->where('id', $photo_id);
-		$query = $this->db->get('photo');
-
-		return $query->row();
-	}
-
-	/**
-	* Получение информации о фотографии
-	*
-	* @param string $hash Хэш-сумма фотографии
-	* @return mixed[]|null
-	*/
-	public function get_by_hash($hash)
-	{
-		$this->db->where('hash', $hash);
-		$query = $this->db->get('photo');
+		$query = $this->db
+			->where('id', $photo_id)
+			->get('photo');
 
 		if ($query->num_rows() > 0) {
 			return $query->row();
@@ -76,15 +63,35 @@ class Photo_model extends CI_Model
 	}
 
 	/**
-	* Получение информации о фотографии
+	* Получение информации о фотографии по хэшу
+	*
+	* @param string $hash Хэш-сумма фотографии
+	* @return object|null Фотография или NULL - отсутствует
+	*/
+	public function get_by_hash($hash)
+	{
+		$query = $this->db
+			->where('hash', $hash)
+			->get('photo');
+
+		if ($query->num_rows() > 0) {
+			return $query->row();
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	* Получение информации о фотографии по человеку
 	*
 	* @param int $person_id ID человека
-	* @return mixed[]|null
+	* @return object|null Фотография или NULL - отсутствует
 	*/
 	public function get_by_person($person_id)
 	{
-		$this->db->where('person_id', $person_id);
-		$query = $this->db->get('photo');
+		$query = $this->db
+			->where('person_id', $person_id)
+			->get('photo');
 
 		if ($query->num_rows() > 0) {
 			return $query->row();
@@ -97,14 +104,19 @@ class Photo_model extends CI_Model
 	*
 	* @param int $photo_id ID фотографии
 	* @param int $person_id ID человека
-	* @return int
+	* @return bool TRUE - успешно, FALSE - ошибка
 	*/
 	public function set_person($photo_id, $person_id)
 	{
-		$this->db->where('id', $photo_id);
-		$this->db->update('photo', ['person_id' => $person_id]);
+		$this->db
+			->where('id', $photo_id)
+			->update('photo', ['person_id' => $person_id]);
 
-		return $this->db->affected_rows();
+		if ($this->db->affected_rows() > 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -115,8 +127,6 @@ class Photo_model extends CI_Model
 	 */
 	public function save($file) //TODO проверка уже имеющейся фото за человеком
 	{
-		$this->load->model('ac/util_model', 'util');
-
 		$response = [
 			'id' => 0,
 			'error' => ''
@@ -156,8 +166,9 @@ class Photo_model extends CI_Model
 				$this->db->insert('photo', ['hash' => $file_hash, 'time' => $time]);
 				$photo = $this->get($this->db->insert_id());
 			} else {
-				$this->db->where('hash', $file_hash);
-				$this->db->update('photo', ['time' => $time]);
+				$this->db
+					->where('hash', $file_hash)
+					->update('photo', ['time' => $time]);
 			}
 			$response['id'] = $photo->id;
 
@@ -181,10 +192,12 @@ class Photo_model extends CI_Model
 				return $response;
 			} catch (Exception $e) {
 				$response['error'] = $e;
+				$this->load->model('ac/util_model', 'util');
 				$this->util->save_errors($e);
 				return $response;
 			}
 		} else {
+			$this->load->model('ac/util_model', 'util');
 			$this->util->save_errors($e);
 			return $response;
 		}
@@ -194,16 +207,14 @@ class Photo_model extends CI_Model
 	 * Удаление фото из БД и диска
 	 *
 	 * @param int $photo_id ID фотографии
-	 * @return bool|null
+	 * @return bool TRUE - успешно, FALSE - ошибка
 	 */
 	public function delete($photo_id)
 	{
-		$this->load->model('ac/util_model', 'util');
-
 		$photo = $this->get($photo_id);
 
 		if ($photo->person_id !== null) {
-			$this->load->model('ac/person_model', 'person'); //TODO таблица связей
+			$this->load->model('ac/person_model', 'person');
 
 			$this->person->delete_photo($photo->person_id);
 		}
@@ -223,8 +234,9 @@ class Photo_model extends CI_Model
 
 			return true;
 		} catch (Exception $e) {
+			$this->load->model('ac/util_model', 'util');
 			$this->util->save_errors($e);
-			return null;
+			return false;
 		}
 	}
 	/**
@@ -232,9 +244,10 @@ class Photo_model extends CI_Model
 	 */
 	public function clear_old()
 	{
-		$this->db->where('person_id', null);
-		$this->db->where('time <', now('Asia/Yekaterinburg') - 86400);
-		$query = $this->db->get('photo');
+		$query =  $this->db
+			->where('person_id', null)
+			->where('time <', now('Asia/Yekaterinburg') - 86400)
+			->get('photo');
 
 		foreach ($query->result() as $photo) {
 			$this->delete($photo->id);
