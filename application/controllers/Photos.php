@@ -19,17 +19,20 @@ class Photos extends CI_Controller
 	public function save()
 	{
 		if (!$this->ion_auth->logged_in()) {
-			header("HTTP/1.1 401 Unauthorized");
+			$this->output->set_header("HTTP/1.1 401 Unauthorized");
 			exit;
 		}
 		if (!$this->ion_auth->in_group(2)) {
-			header('HTTP/1.1 403 Forbidden');
+			$this->output->set_header('HTTP/1.1 403 Forbidden');
 			exit;
 		}
 
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			if (isset($_FILES['file'])) {
-				echo json_encode($this->photo->save($_FILES['file']));
+				$file = $_FILES['file'];
+				$this->output
+					->set_content_type('application/json')
+					->set_output(json_encode($this->photo->save($file)));
 			}
 		}
 	}
@@ -42,14 +45,14 @@ class Photos extends CI_Controller
 	public function delete($photo_id)
 	{
 		if (!$this->ion_auth->logged_in()) {
-			header("HTTP/1.1 401 Unauthorized");
+			$this->output->set_header("HTTP/1.1 401 Unauthorized");
 			exit;
 		}
 		if (!$this->ion_auth->in_group(2)) {
-			header('HTTP/1.1 403 Forbidden');
+			$this->output->set_header('HTTP/1.1 403 Forbidden');
 			exit;
 		}
 
-		echo $this->photo->delete($photo_id);
+		$this->output->set_output($this->photo->delete($photo_id));
 	}
 }

@@ -21,7 +21,7 @@ class Divisions extends CI_Controller
 	public function get_all()
 	{
 		if (!$this->ion_auth->logged_in()) {
-			header("HTTP/1.1 401 Unauthorized");
+			$this->output->set_header("HTTP/1.1 401 Unauthorized");
 			exit;
 		}
 
@@ -33,7 +33,9 @@ class Divisions extends CI_Controller
 			$divs = array_merge($divs, $this->div->get_all($org->id));
 		}
 
-		echo json_encode($divs);
+		$this->output
+			->set_content_type('application/json')
+			->set_output(json_encode($divs));
 	}
 
 	/**
@@ -42,11 +44,11 @@ class Divisions extends CI_Controller
 	public function add()
 	{
 		if (!$this->ion_auth->logged_in()) {
-			header("HTTP/1.1 401 Unauthorized");
+			$this->output->set_header("HTTP/1.1 401 Unauthorized");
 			exit;
 		}
 		if (!$this->ion_auth->in_group(2)) {
-			header('HTTP/1.1 403 Forbidden');
+			$this->output->set_header('HTTP/1.1 403 Forbidden');
 			exit;
 		}
 
@@ -54,7 +56,9 @@ class Divisions extends CI_Controller
 
 		$div_id = $this->div->add($div);
 
-		echo json_encode($this->div->get($div_id));
+		$this->output
+			->set_content_type('application/json')
+			->set_output(json_encode($this->div->get($div_id)));
 	}
 
 	/**
@@ -65,14 +69,14 @@ class Divisions extends CI_Controller
 	public function delete($div_id)
 	{
 		if (!$this->ion_auth->logged_in()) {
-			header("HTTP/1.1 401 Unauthorized");
+			$this->output->set_header("HTTP/1.1 401 Unauthorized");
 			exit;
 		}
 		if (!$this->ion_auth->in_group(2)) {
-			header('HTTP/1.1 403 Forbidden');
+			$this->output->set_header('HTTP/1.1 403 Forbidden');
 			exit;
 		}
 
-		echo $this->div->delete($div_id);
+		$this->output->set_output($this->div->delete($div_id));
 	}
 }

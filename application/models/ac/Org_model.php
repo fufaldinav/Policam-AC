@@ -30,46 +30,60 @@ class Org_model extends CI_Model
 	* Получение информации о организации
 	*
 	* @param int $org_id ID организации
-	* @return mixed[]
+	* @return object|null Организация или NULL - отсутствует
 	*/
 	public function get($org_id)
 	{
-		$this->db->where('id', $org_id);
-		$query = $this->db->get('organizations');
+		$query = $this->db
+			->where('id', $org_id)
+			->get('organizations');
 
-		return $query->row();
+		if ($query->num_rows() > 0) {
+			return $query->row();
+		} else {
+			return null;
+		}
 	}
 
 	/**
-	* Получение информации о всех организациях пользователя
+	* Получение информации о всех организациях
 	*
-	* @param int|null $user_id ID пользователя, по-умолчанию все организации
-	* @return mixed[]
+	* @param int|null $user_id ID пользователя
+	* @return object[]|null Массив с организациями или NULL - отсутствует
 	*/
 	public function get_all($user_id = null)
 	{
 		if ($user_id !== null) {
 			$this->db->where('user_id', $user_id);
 		}
-		$this->db->join('organizations', 'organizations.id = organizations_users.org_id', 'left');
-		$this->db->order_by('number', 'ASC');
-		$query = $this->db->get('organizations_users');
+		$query = $this->db
+			->join('organizations', 'organizations.id = organizations_users.org_id', 'left')
+			->order_by('number', 'ASC')
+			->get('organizations_users');
 
-		return $query->result();
+		if ($query->num_rows() > 0) {
+			return $query->result();
+		} else {
+			return null;
+		}
 	}
 
 	/**
 	 * Получить полное имя организации
 	 *
 	 * @param int $org_id ID организации
-	 * @return string Строка в формате 'номер (адресс при наличии)'
+	 * @return string|null Строка в формате 'номер (адресс при наличии)' или NULL - оргиназиция отсутствует
 	 */
 	public function get_full_name($org_id)  //TODO check
 	{
 		$org = $this->get($org_id);
 
+		if ($org === null) {
+			return null;
+		}
+
 		$org_name = $org->number;
-		if ($org->address) {
+		if ($org->address !== null) {
 			$org_name .= ' (' . $org->address . ')';
 		}
 
@@ -80,7 +94,7 @@ class Org_model extends CI_Model
 	* Добавление новой организации
 	*
 	* @param object $org Организация
-	* @return int
+	* @return int ID новой организации
 	*/
 	public function add($org)
 	{
@@ -93,34 +107,43 @@ class Org_model extends CI_Model
 	* Обновление информации об организациях
 	*
 	* @param object $org Организация
-	* @return int
+	* @return int TRUE - успешно, FALSE - ошибка
 	*/
 	public function update($org)
 	{
-		$this->db->where('id', $id);
-		$this->db->update('organizations', $this->set($org));
+		$this->db
+			->where('id', $id)
+			->update('organizations', $this->set($org));
 
-		return $this->db->affected_rows();
+		if ($this->db->affected_rows() > 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
 	* Удаление организации
 	*
 	* @param int $org_id ID организации
-	* @return  int
+	* @return bool TRUE - успешно, FALSE - ошибка
 	*/
 	public function delete($org_id)
 	{
 		$this->db->delete('organizations', ['id' => $org_id]);
 
-		return $this->db->affected_rows();
+		if ($this->db->affected_rows() > 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
 	* Установить информацию об организации
 	*
 	* @param object $org Организация
-	* @return mixed[]
+	* @return mixed[] Массив с параметрами организации
 	*/
 	public function set($org)
 	{

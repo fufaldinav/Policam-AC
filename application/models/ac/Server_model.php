@@ -37,7 +37,6 @@ class Server_model extends CI_Model
 
 		$this->load->model('ac/card_model', 'card');
 		$this->load->model('ac/ctrl_model', 'ctrl');
-		$this->load->model('ac/server_model', 'server');
 		$this->load->model('ac/task_model', 'task');
 
 		$this->config->load('ac', true);
@@ -53,7 +52,7 @@ class Server_model extends CI_Model
 	* Обработка входящего сообщения
 	*
 	* @param string $inc_json_msg Входящее JSON сообщение
-	* @return string|null Сообщение в формате JSON или NULL, если сообщение было от неизвестного контроллера
+	* @return string|null Сообщение в формате JSON или NULL - сообщение от неизвестного контроллера
 	*/
 	public function handle_msg($inc_json_msg)
 	{
@@ -216,9 +215,16 @@ class Server_model extends CI_Model
 	* Сохранение событий
 	*
 	* @param mixed[] $events События для сохранения в БД
+	* @return bool TRUE - успешно, FALSE - ошибка
 	*/
 	public function save_events($events)
 	{
 		$this->db->insert_batch('events', $events);
+
+		if ($this->db->affected_rows() > 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

@@ -55,9 +55,9 @@ class Util_model extends CI_Model
 	/**
 	 * Реализация long polling
 	 *
-	 * @param int $time Время последнего запроса
+	 * @param int $time     Время последнего запроса
 	 * @param int[] $events ID событий
-	 * @return mixed[]
+	 * @return mixed[] События от контроллера
 	 */
 	public function start_polling($time, $events)
 	{
@@ -69,8 +69,7 @@ class Util_model extends CI_Model
 		}
 
 		$user_id = $this->ion_auth->user()->row()->id; //TODO
-
-		$orgs = $this->org->get_all($user_id);
+		$orgs = $this->org->get_all($user_id); //TODO
 
 		$ctrls = [];
 
@@ -78,7 +77,7 @@ class Util_model extends CI_Model
 			$ctrls = array_merge($ctrls, $this->ctrl->get_all($org->id));
 		}
 
-		if ($ctrls) {
+		if (count($ctrls) > 0) {
 			session_write_close();
 			set_time_limit(0);
 
@@ -88,14 +87,16 @@ class Util_model extends CI_Model
 				foreach ($ctrls as $c) {
 					$c_ids[] = $c->id;
 				}
-				$this->db->where_in('controller_id', $c_ids);
-				$this->db->order_by('time', 'DESC');
-				$this->db->where_in('event', $events);
-				$this->db->where('server_time >', $time);
-				$query = $this->db->get('events');
+				$query = $this->db
+					->where('server_time >', $time)
+					->where_in('controller_id', $c_ids)
+					->where_in('event', $events)
+					->order_by('time', 'DESC')
+					->get('events');
 
 				if ($query->num_rows() > 0) {
 					$response = [];
+
 					foreach ($query->result() as $row) {
 						$response[] = $row;
 					}
@@ -118,7 +119,7 @@ class Util_model extends CI_Model
 	 *
 	 * @param int $type    Тип события
 	 * @param string $desc Описание события
-	 * @return int
+	 * @return bool TRUE - успешно, FALSE - ошибка
 	 */
 	public function add_user_event($type, $desc)
 	{
@@ -133,7 +134,11 @@ class Util_model extends CI_Model
 
 		$this->db->insert('users_events', $data);
 
-		return $this->db->affected_rows();
+		if ($this->db->affected_rows() > 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -152,7 +157,6 @@ class Util_model extends CI_Model
 		$time = mdate($timestring, $time);
 
 		$path = $this->log_path . '/err-' . $date . '.txt';
-
 		write_file($path, "$time $err\n", 'a');
 	}
 }

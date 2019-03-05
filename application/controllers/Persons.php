@@ -46,11 +46,11 @@ class Persons extends CI_Controller
 	public function add()
 	{
 		if (!$this->ion_auth->logged_in()) {
-			header("HTTP/1.1 401 Unauthorized");
+			$this->output->set_header("HTTP/1.1 401 Unauthorized");
 			exit;
 		}
 		if (!$this->ion_auth->in_group(2)) {
-			header('HTTP/1.1 403 Forbidden');
+			$this->output->set_header('HTTP/1.1 403 Forbidden');
 			exit;
 		}
 
@@ -73,7 +73,7 @@ class Persons extends CI_Controller
 			}
 		}
 
-		echo $person_id;
+		$this->output->set_output($person_id);
 	}
 
 	/**
@@ -82,24 +82,32 @@ class Persons extends CI_Controller
 	public function update()
 	{
 		if (!$this->ion_auth->logged_in()) {
-			header("HTTP/1.1 401 Unauthorized");
+			$this->output->set_header("HTTP/1.1 401 Unauthorized");
 			exit;
 		}
 		if (!$this->ion_auth->in_group(2)) {
-			header('HTTP/1.1 403 Forbidden');
+			$this->output->set_header('HTTP/1.1 403 Forbidden');
 			exit;
 		}
 
 		$person = json_decode($this->input->post('person'));
 
-		$count = $this->person->update($person);
+		$count = 0;
+
+		if ($this->person->update($person)) {
+			$count++;
+		}
 
 		if ($person->photo !== null) {
-			$count += $this->photo->set_person($person->photo, $person->id);
+			if ($this->photo->set_person($person->photo, $person->id)) {
+				$count++;
+			}
 		}
 
 		if ($person->card > 0) {
-			$count += $this->card->set_holder($person->card, $person->id);
+			if ($this->card->set_holder($person->card, $person->id)) {
+				$count++;
+			}
 
 			$card = $this->card->get($person->card);
 
@@ -109,7 +117,7 @@ class Persons extends CI_Controller
 			}
 		}
 
-		echo $count;
+		$this->output->set_output($count);
 	}
 
 	/**
@@ -120,11 +128,11 @@ class Persons extends CI_Controller
 	public function delete($person_id)
 	{
 		if (!$this->ion_auth->logged_in()) {
-			header("HTTP/1.1 401 Unauthorized");
+			$this->output->set_header("HTTP/1.1 401 Unauthorized");
 			exit;
 		}
 		if (!$this->ion_auth->in_group(2)) {
-			header('HTTP/1.1 403 Forbidden');
+			$this->output->set_header('HTTP/1.1 403 Forbidden');
 			exit;
 		}
 
@@ -147,59 +155,59 @@ class Persons extends CI_Controller
 			$this->photo->delete($photo->id);
 		}
 
-		echo $this->person->delete($person_id);
+		$this->output->set_output($this->person->delete($person_id));
 	}
 
 	/**
 	 * Получение информации о человеке
 	 *
-	 * @param int $person_id
+	 * @param int $person_id ID человека
 	 */
 	public function get($person_id)
 	{
 		if (!$this->ion_auth->logged_in()) {
-			header("HTTP/1.1 401 Unauthorized");
+			$this->output->set_header("HTTP/1.1 401 Unauthorized");
 			exit;
 		}
 
-		$person = $this->person->get($person_id);
-
-		echo json_encode($person);
+		$this->output
+			->set_content_type('application/json')
+			->set_output(json_encode($this->person->get($person_id)));
 	}
 
 	/**
 	 * Получение информации о человеке
 	 *
-	 * @param int $card_id
+	 * @param int $card_id ID карты
 	 */
 	public function get_by_card($card_id)
 	{
 		if (!$this->ion_auth->logged_in()) {
-			header("HTTP/1.1 401 Unauthorized");
+			$this->output->set_header("HTTP/1.1 401 Unauthorized");
 			exit;
 		}
 
 		$card = $this->card->get($card_id);
 
-		$person = $this->person->get($card->holder_id);
-
-		echo json_encode($person);
+		$this->output
+			->set_content_type('application/json')
+			->set_output(json_encode($this->person->get($card->holder_id)));
 	}
 
 	/**
 	 * Получение информации о людях в подразделении
 	 *
-	 * @param int $div_id
+	 * @param int $div_id ID подразделения
 	 */
 	public function get_all($div_id)
 	{
 		if (!$this->ion_auth->logged_in()) {
-			header("HTTP/1.1 401 Unauthorized");
+			$this->output->set_header("HTTP/1.1 401 Unauthorized");
 			exit;
 		}
 
-		$persons = $this->person->get_all($div_id);
-
-		echo json_encode($persons);
+		$this->output
+			->set_content_type('application/json')
+			->set_output(json_encode($this->person->get_all($div_id)));
 	}
 }

@@ -11,12 +11,7 @@ function getServerTime() {
 		url: `/index.php/util/get_time`,
 		type: `GET`,
 		success: function(res) {
-			try {
-				time = res;
-			} catch (e) {
-				sendError(e);
-				alert(`Ошибка: ${e.name}: ${e.message}`);
-			}
+			time = res;
 		},
 		error: function() {
 			alert(`Неизвестная ошибка`);
@@ -33,34 +28,28 @@ function getNewMsgs(events, time) {
 			events: events,
 			time: time
 		},
-		success: function(res) {
-			try {
-				let data = JSON.parse(res);
-				time = data.time;
-				if (!document.getElementById(`card`).disabled) { //если меню неизвестных карт активно
-					if (data.msgs.length > 0) {
-						let o = confirm(`Введен неизвестный ключ. Выбрать его в качестве нового ключа пользователя?`);
-						if (o) {
-							let card = data.msgs[data.msgs.length - 1].card_id; //последний прочитанный ключ из БД
-							getCards(card);
-						}
-					}
-				} else if (document.getElementById(`card_selector`).hidden) {
-					if (data.msgs.length > 0) {
-						let o = confirm(`Введен неизвестный ключ. Добавить его текущему пользователю?`);
-						if (o) {
-							let card = data.msgs[data.msgs.length - 1].card_id; //последний прочитанный ключ из БД
-							saveCard(card);
-						}
+		success: function(data) {
+			time = data.time;
+			if (!document.getElementById(`card`).disabled) { //если меню неизвестных карт активно
+				if (data.msgs.length > 0) {
+					let o = confirm(`Введен неизвестный ключ. Выбрать его в качестве нового ключа пользователя?`);
+					if (o) {
+						let card = data.msgs[data.msgs.length - 1].card_id; //последний прочитанный ключ из БД
+						getCards(card);
 					}
 				}
-				setTimeout(function() {
-					getNewMsgs(events, time);
-				}, 100);
-			} catch (e) {
-				sendError(e);
-				alert(`Ошибка: ${e.name}: ${e.message}`);
+			} else if (document.getElementById(`card_selector`).hidden) {
+				if (data.msgs.length > 0) {
+					let o = confirm(`Введен неизвестный ключ. Добавить его текущему пользователю?`);
+					if (o) {
+						let card = data.msgs[data.msgs.length - 1].card_id; //последний прочитанный ключ из БД
+						saveCard(card);
+					}
+				}
 			}
+			setTimeout(function() {
+				getNewMsgs(events, time);
+			}, 100);
 		},
 		error: function() {
 			alert(`Неизвестная ошибка`);
