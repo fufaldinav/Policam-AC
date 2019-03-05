@@ -107,8 +107,6 @@ class Card_model extends CI_Model
 		$this->db->where('id', $card_id);
 		$this->db->update('cards', ['holder_id' => $person_id]);
 
-		$this->ctrl->add_cards($ctrl_id, $card->wiegand);
-
 		return $this->db->affected_rows();
 	}
 
@@ -167,8 +165,6 @@ class Card_model extends CI_Model
 
 		$this->db->where('id', $card_id);
 		$this->db->update('cards', ['holder_id' => -1]);
-
-		$this->ctrl->delete_cards($ctrl_id, $card->wiegand);
 
 		return $this->db->affected_rows();
 	}

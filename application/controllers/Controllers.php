@@ -29,7 +29,7 @@ class Controllers extends CI_Controller
 			header('HTTP/1.1 403 Forbidden');
 			exit;
 		}
-		if (isset($ctrl_id) && isset($open_time)) {
+		if ($ctrl_id !== null && $open_time !== null) {
 			echo $this->ctrl->set_door_params($ctrl_id, $open_time);
 			echo ' заданий записано'; //TODO перевод
 		} else {

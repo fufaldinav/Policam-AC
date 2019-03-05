@@ -92,14 +92,14 @@ class Persons extends CI_Controller
 		}
 
 		$cards = $this->card->get_by_holder($person_id);
-		if ($cards) {
+		if ($cards !== null) {
 			foreach ($cards as $card) {
 				$this->card->delete($card->id);
 			}
 		}
 
 		$photo = $this->photo->get_by_person($person_id);
-		if ($photo) {
+		if ($photo !== null) {
 			$this->photo->delete($photo->id);
 		}
 
