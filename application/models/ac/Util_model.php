@@ -83,13 +83,13 @@ class Util_model extends CI_Model
 
 			$timer = $this->timeout;
 			while ($timer > 0) {
-				$c_ids = [];
-				foreach ($ctrls as $c) {
-					$c_ids[] = $c->id;
+				$ctrl_ids = [];
+				foreach ($ctrls as $ctrl) {
+					$ctrl_ids[] = $ctrl->id;
 				}
 				$query = $this->db
 					->where('server_time >', $time)
-					->where_in('controller_id', $c_ids)
+					->where_in('controller_id', $ctrl_ids)
 					->where_in('event', $events)
 					->order_by('time', 'DESC')
 					->get('events');
