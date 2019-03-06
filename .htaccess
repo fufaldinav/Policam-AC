@@ -1,8 +1,13 @@
 RewriteEngine On
+
+RewriteCond ${HTTPS} off
+RewriteCond ${THE_REQUEST} !/server [NC]
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php/$1 [L]
 
 <IfModule mod_env.c>
-    SetEnv CI_ENV development
+    SetEnv CI_ENV production
 </IfModule>
