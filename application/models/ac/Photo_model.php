@@ -184,7 +184,7 @@ class Photo_model extends CI_Model
 				$new_width = $width / $d;
 				$new_height = $height / $d;
 				$new_img = imagecreatetruecolor($new_width, $new_height);
-				imagecopyresized($new_img, $source_img, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
+				imagecopyresampled($new_img, $source_img, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
 
 				$file_path = $this->img_path . '/s/' . $photo->id . '.jpg';
 				imagejpeg($new_img, $file_path);
