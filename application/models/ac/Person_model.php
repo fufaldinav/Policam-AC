@@ -32,7 +32,7 @@ class Person_model extends CI_Model
 	* @param int $person_id ID человека
 	* @return object[]|null Человек или NULL - отсутствует
 	*/
-	public function get($person_id)
+	public function get(int $person_id)
 	{
 		$query = $this->db->select('id, address, birthday, f, i, o, phone, type')
 			->select("div_id AS 'div'")
@@ -53,7 +53,7 @@ class Person_model extends CI_Model
 	* @param int|null $div_id ID подразделения
 	* @return object[]|null Массив с людьми или NULL - отсутствует
 	*/
-	public function get_all($div_id = null)
+	public function get_all(int $div_id = null)
 	{
 		if ($div_id !== null) {
 			$this->db->where('div_id', $div_id);
@@ -77,7 +77,7 @@ class Person_model extends CI_Model
 	* @param object $person Человек
 	* @return int ID нового человека
 	*/
-	public function add($person)
+	public function add($person): int
 	{
 		$this->db->insert('persons', $this->set($person));
 
@@ -90,7 +90,7 @@ class Person_model extends CI_Model
 	* @param object $person Человек
 	* @return bool TRUE - успешно, FALSE - ошибка
 	*/
-	public function update($person)
+	public function update($person): bool
 	{
 		$this->db
 			->where('id', $person->id)
@@ -109,7 +109,7 @@ class Person_model extends CI_Model
 	* @param int $person_id ID человека
 	* @return bool TRUE - успешно, FALSE - ошибка
 	*/
-	public function delete($person_id)
+	public function delete(int $person_id): bool
 	{
 		$this->db->delete('persons', ['id' => $person_id]);
 
@@ -126,7 +126,7 @@ class Person_model extends CI_Model
 	* @param object $person Человек
 	* @return mixed[] Массив с параметрами человека
 	*/
-	public function set($person)
+	public function set($person): array
 	{
 		$data = [
 			'div_id' => $person->div,
@@ -148,7 +148,7 @@ class Person_model extends CI_Model
 	* @param int $person_id ID человека
 	* @return bool TRUE - успешно, FALSE - ошибка
 	*/
-	public function delete_photo($person_id)
+	public function delete_photo(int $person_id): bool
 	{
 		$this->db
 			->where('id', $person_id)

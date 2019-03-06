@@ -32,7 +32,7 @@ class Div_model extends CI_Model
 	* @param int $div_id ID подразделения
 	* @return object|null Подразделение или NULL - отсутствует
 	*/
-	public function get($div_id)
+	public function get(int $div_id)
 	{
 		$query = $this->db
 			->where('id', $div_id)
@@ -51,7 +51,7 @@ class Div_model extends CI_Model
 	* @param int|null $org_id ID организации
 	* @return object[]|null Массив с подразделениями или NULL - отсутствует
 	*/
-	public function get_all($org_id = null)
+	public function get_all(int $org_id = null)
 	{
 		if ($org_id !== null) {
 			$this->db->where('org_id', $org_id);
@@ -74,7 +74,7 @@ class Div_model extends CI_Model
 	* @param object $div Подразделение
 	* @return int ID нового подразделения
 	*/
-	public function add($div)
+	public function add($div): int
 	{
 		$this->db->insert('divisions', $this->set($div));
 
@@ -87,7 +87,7 @@ class Div_model extends CI_Model
 	* @param object $div Подразделение
 	* @return bool TRUE - успешно, FALSE - ошибка
 	*/
-	public function update($div)
+	public function update($div): bool
 	{
 		$this->db
 			->where('id', $div->id)
@@ -106,7 +106,7 @@ class Div_model extends CI_Model
 	* @param int $div_id ID подразделения
 	* @return bool TRUE - успешно, FALSE - ошибка
 	*/
-	public function delete($div_id)
+	public function delete(int $div_id): bool
 	{
 		$this->db->delete('divisions', ['id' => $div_id]);
 
@@ -123,7 +123,7 @@ class Div_model extends CI_Model
 	* @param object $div Подразделение
 	* @return mixed[] Массив с параметрами контроллера
 	*/
-	public function set($div)
+	public function set($div): array
 	{
 		$data = [
 			'number' => $div->number,

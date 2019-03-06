@@ -54,7 +54,7 @@ class Server_model extends CI_Model
 	* @param string $inc_json_msg Входящее JSON сообщение
 	* @return string|null Сообщение в формате JSON или NULL - сообщение от неизвестного контроллера
 	*/
-	public function handle_msg($inc_json_msg)
+	public function handle_msg(string $inc_json_msg)
 	{
 		$this->load->helper('file');
 		$this->load->helper('date');
@@ -217,7 +217,7 @@ class Server_model extends CI_Model
 	* @param mixed[] $events События для сохранения в БД
 	* @return bool TRUE - успешно, FALSE - ошибка
 	*/
-	public function save_events($events)
+	public function save_events(array $events): bool
 	{
 		$this->db->insert_batch('events', $events);
 

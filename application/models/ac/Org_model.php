@@ -32,7 +32,7 @@ class Org_model extends CI_Model
 	* @param int $org_id ID организации
 	* @return object|null Организация или NULL - отсутствует
 	*/
-	public function get($org_id)
+	public function get(int $org_id)
 	{
 		$query = $this->db
 			->where('id', $org_id)
@@ -51,7 +51,7 @@ class Org_model extends CI_Model
 	* @param int|null $user_id ID пользователя
 	* @return object[]|null Массив с организациями или NULL - отсутствует
 	*/
-	public function get_all($user_id = null)
+	public function get_all(int $user_id = null)
 	{
 		if ($user_id !== null) {
 			$this->db->where('user_id', $user_id);
@@ -74,7 +74,7 @@ class Org_model extends CI_Model
 	 * @param int $org_id ID организации
 	 * @return string|null Строка в формате 'номер (адресс при наличии)' или NULL - оргиназиция отсутствует
 	 */
-	public function get_full_name($org_id)  //TODO check
+	public function get_full_name(int $org_id)  //TODO check
 	{
 		$org = $this->get($org_id);
 
@@ -96,7 +96,7 @@ class Org_model extends CI_Model
 	* @param object $org Организация
 	* @return int ID новой организации
 	*/
-	public function add($org)
+	public function add($org): int
 	{
 		$this->db->insert('organizations', $this->set($org));
 
@@ -109,7 +109,7 @@ class Org_model extends CI_Model
 	* @param object $org Организация
 	* @return int TRUE - успешно, FALSE - ошибка
 	*/
-	public function update($org)
+	public function update($org): int
 	{
 		$this->db
 			->where('id', $id)
@@ -128,7 +128,7 @@ class Org_model extends CI_Model
 	* @param int $org_id ID организации
 	* @return bool TRUE - успешно, FALSE - ошибка
 	*/
-	public function delete($org_id)
+	public function delete(int $org_id): bool
 	{
 		$this->db->delete('organizations', ['id' => $org_id]);
 
@@ -145,7 +145,7 @@ class Org_model extends CI_Model
 	* @param object $org Организация
 	* @return mixed[] Массив с параметрами организации
 	*/
-	public function set($org)
+	public function set($org): array
 	{
 		$this->data = [
 			'number' => $org->number,

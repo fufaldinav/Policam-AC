@@ -55,18 +55,16 @@ class Util_model extends CI_Model
 	/**
 	 * Реализация long polling
 	 *
-	 * @param int $time     Время последнего запроса
-	 * @param int[] $events ID событий
+	 * @param int|null $time Время последнего запроса
+	 * @param int[] $events  ID событий
 	 * @return mixed[] События от контроллера
 	 */
-	public function start_polling($time, $events)
+	public function start_polling(int $time = null, array $events): array
 	{
 		$this->load->model('ac/org_model', 'org');
 		$this->load->model('ac/ctrl_model', 'ctrl');
 
-		if (!is_numeric($time)) {
-			$time = now('Asia/Yekaterinburg');
-		}
+		$time = $time ?? now('Asia/Yekaterinburg');
 
 		$user_id = $this->ion_auth->user()->row()->id; //TODO
 		$orgs = $this->org->get_all($user_id); //TODO
@@ -121,7 +119,7 @@ class Util_model extends CI_Model
 	 * @param string $desc Описание события
 	 * @return bool TRUE - успешно, FALSE - ошибка
 	 */
-	public function add_user_event($type, $desc)
+	public function add_user_event(int $type, string $desc): bool
 	{
 		$user_id = $this->ion_auth->user()->row()->id; //TODO
 
@@ -146,7 +144,7 @@ class Util_model extends CI_Model
 	 *
 	 * @param string $err Текст ошибки
 	 */
-	public function save_errors($err)
+	public function save_errors(string $err)
 	{
 		$this->load->helper('file');
 

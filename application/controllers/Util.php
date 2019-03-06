@@ -56,11 +56,9 @@ class Util extends CI_Controller
 	 *
 	 * @param string|null $err Текст ошибки или NULL - получить POST-запрос
 	 */
-	public function save_js_errors($err = null)
+	public function save_js_errors(string $err = null)
 	{
-		if ($err === null) {
-			$err = $this->input->post('error');
-		}
+		$err = $err ?? $this->input->post('error');
 
 		$this->util->save_errors($err);
 	}
@@ -109,7 +107,7 @@ class Util extends CI_Controller
 				$this->card->set_holder($card->id, -1);
 
 				foreach ($ctrls as $ctrl) {
-					$this->ctrl->delete_cards($ctrl->id, $card->wiegand);
+					$this->ctrl->delete_cards($ctrl->id, [$card->wiegand]);
 				}
 			}
 

@@ -70,7 +70,7 @@ class Persons extends CI_Controller
 
 			$ctrls = $this->ctrl->get_all($this->first_org->id);
 			foreach ($ctrls as $ctrl) {
-				$this->ctrl->add_cards($ctrl->id, $card->wiegand);
+				$this->ctrl->add_cards($ctrl->id, [$card->wiegand]);
 			}
 		}
 
@@ -110,7 +110,7 @@ class Persons extends CI_Controller
 
 			$ctrls = $this->ctrl->get_all($this->first_org->id);
 			foreach ($ctrls as $ctrl) {
-				$this->ctrl->add_cards($ctrl->id, $card->wiegand);
+				$this->ctrl->add_cards($ctrl->id, [$card->wiegand]);
 			}
 		}
 
@@ -122,7 +122,7 @@ class Persons extends CI_Controller
 	 *
 	 * @param int $person_id ID человека
 	 */
-	public function delete($person_id)
+	public function delete(int $person_id)
 	{
 		if (!$this->ion_auth->in_group(2)) {
 			header('HTTP/1.1 403 Forbidden');
@@ -138,7 +138,7 @@ class Persons extends CI_Controller
 				$this->card->delete($card->id);
 
 				foreach ($ctrls as $ctrl) {
-					$this->ctrl->delete_cards($ctrl->id, $card->wiegand);
+					$this->ctrl->delete_cards($ctrl->id, [$card->wiegand]);
 				}
 			}
 		}
@@ -156,7 +156,7 @@ class Persons extends CI_Controller
 	 *
 	 * @param int $person_id ID человека
 	 */
-	public function get($person_id)
+	public function get(int $person_id)
 	{
 		header('Content-Type: application/json');
 
@@ -170,7 +170,7 @@ class Persons extends CI_Controller
 	 *
 	 * @param int $card_id ID карты
 	 */
-	public function get_by_card($card_id)
+	public function get_by_card(int $card_id)
 	{
 		$card = $this->card->get($card_id);
 
@@ -186,7 +186,7 @@ class Persons extends CI_Controller
 	 *
 	 * @param int $div_id ID подразделения
 	 */
-	public function get_all($div_id)
+	public function get_all(int $div_id)
 	{
 		header('Content-Type: application/json');
 
