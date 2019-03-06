@@ -107,7 +107,7 @@ class Util extends CI_Controller
 				$this->card->set_holder($card->id, -1);
 
 				foreach ($ctrls as $ctrl) {
-					$this->ctrl->delete_cards($ctrl->id, $card->wiegand);
+					$this->ctrl->delete_cards($ctrl->id, [$card->wiegand]);
 				}
 			}
 

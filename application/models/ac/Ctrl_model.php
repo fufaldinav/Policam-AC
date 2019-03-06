@@ -179,23 +179,21 @@ class Ctrl_model extends CI_Model
 	/**
 	 * Добавление карт в контроллер
 	 *
-	 * @param int $ctrl_id           ID контроллера
-	 * @param string[]|string $codes Коды карт
+	 * @param int $ctrl_id    ID контроллера
+	 * @param string[] $codes Коды карт
 	 * @return bool TRUE - успешно, FALSE - ошибка
 	 */
-	public function add_cards($ctrl_id, $codes)
+	public function add_cards(int $ctrl_id, array $codes): bool
 	{
 		$this->load->model('ac/task_model', 'task');
 
 		$data = '"cards": [';
-		if (is_array($codes)) {
-			foreach ($codes as $code) {
-				$data .= '{"card":"' . $code . '","flags":32,"tz":255},';
-			}
-			$data = substr($data, 0, -1);
-		} else {
-			$data .= '{"card":"' . $codes . '","flags":32,"tz":255}';
+
+		foreach ($codes as $code) {
+			$data .= '{"card":"' . $code . '","flags":32,"tz":255},';
 		}
+		$data = substr($data, 0, -1);
+
 		$data .= ']';
 
 		if ($this->task->add('add_cards', $ctrl_id, $data)) {
@@ -208,23 +206,21 @@ class Ctrl_model extends CI_Model
 	/**
 	 * Удаление карт из контроллера
 	 *
-	 * @param int $ctrl_id           ID контроллера
-	 * @param string[]|string $codes Коды карт
+	 * @param int $ctrl_id    ID контроллера
+	 * @param string[] $codes Коды карт
 	 * @return bool TRUE - успешно, FALSE - ошибка
 	 */
-	public function delete_cards($ctrl_id, $codes)
+	public function delete_cards(int $ctrl_id, array $codes): bool
 	{
 		$this->load->model('ac/task_model', 'task');
 
 		$data = '"cards": [';
-		if (is_array($codes)) {
-			foreach ($codes as $code) {
-				$data .= '{"card":"' . $code . '"},';
-			}
-			$data = substr($data, 0, -1);
-		} else {
-			$data .= '{"card":"' . $codes . '"}';
+
+		foreach ($codes as $code) {
+			$data .= '{"card":"' . $code . '"},';
 		}
+		$data = substr($data, 0, -1);
+
 		$data .= ']';
 
 		if ($this->task->add('del_cards', $ctrl_id, $data)) {

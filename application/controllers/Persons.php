@@ -70,7 +70,7 @@ class Persons extends CI_Controller
 
 			$ctrls = $this->ctrl->get_all($this->first_org->id);
 			foreach ($ctrls as $ctrl) {
-				$this->ctrl->add_cards($ctrl->id, $card->wiegand);
+				$this->ctrl->add_cards($ctrl->id, [$card->wiegand]);
 			}
 		}
 
@@ -110,7 +110,7 @@ class Persons extends CI_Controller
 
 			$ctrls = $this->ctrl->get_all($this->first_org->id);
 			foreach ($ctrls as $ctrl) {
-				$this->ctrl->add_cards($ctrl->id, $card->wiegand);
+				$this->ctrl->add_cards($ctrl->id, [$card->wiegand]);
 			}
 		}
 
@@ -138,7 +138,7 @@ class Persons extends CI_Controller
 				$this->card->delete($card->id);
 
 				foreach ($ctrls as $ctrl) {
-					$this->ctrl->delete_cards($ctrl->id, $card->wiegand);
+					$this->ctrl->delete_cards($ctrl->id, [$card->wiegand]);
 				}
 			}
 		}
