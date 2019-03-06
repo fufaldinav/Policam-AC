@@ -58,9 +58,7 @@ class Util extends CI_Controller
 	 */
 	public function save_js_errors(string $err = null)
 	{
-		if ($err === null) {
-			$err = $this->input->post('error');
-		}
+		$err = $err ?? $this->input->post('error');
 
 		$this->util->save_errors($err);
 	}

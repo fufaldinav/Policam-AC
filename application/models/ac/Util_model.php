@@ -64,9 +64,7 @@ class Util_model extends CI_Model
 		$this->load->model('ac/org_model', 'org');
 		$this->load->model('ac/ctrl_model', 'ctrl');
 
-		if (!is_numeric($time)) {
-			$time = now('Asia/Yekaterinburg');
-		}
+		$time = $time ?? now('Asia/Yekaterinburg');
 
 		$user_id = $this->ion_auth->user()->row()->id; //TODO
 		$orgs = $this->org->get_all($user_id); //TODO
