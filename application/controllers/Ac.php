@@ -30,36 +30,66 @@ class Ac extends CI_Controller
 
 		$this->load->helper('language');
 
+		if (!$this->ion_auth->logged_in()) {
+			redirect('auth/login');
+		}
+		$this->lang->load('ac');
+
 		$this->load->model('ac/card_model', 'card');
 		$this->load->model('ac/div_model', 'div');
 		$this->load->model('ac/org_model', 'org');
 		$this->load->model('ac/person_model', 'person');
 
-		$this->lang->load('ac');
+		$this->load->helper('form');
 
-		$this->user_id = $this->ion_auth->user()->row()->id; //TODO
+		$this->user_id = $this->ion_auth->user()->row()->id;
 		$this->orgs = $this->org->get_all($this->user_id); //TODO
 		$this->first_org = array_shift($this->orgs); //TODO
 	}
 
 	/**
-	 * Наблюдение
+	 * Главная
 	 */
 	public function index()
 	{
-		if (!$this->ion_auth->logged_in()) {
-			redirect('auth/login');
-		} elseif ($this->ion_auth->is_admin()) {
+		if ($this->ion_auth->is_admin()) {
 			redirect('auth');
+		} else {
+			redirect('ac/observ');
+		}
+	}
+
+	/**
+	 * Наблюдение
+	 */
+	public function observ()
+	{
+		/**
+		 * Подразделения
+		 */
+		$data = [
+			'divs_list' => [],
+			'divs_attr' => 'id="div" disabled'
+		];
+
+		$divs = $this->div->get_all($this->first_org->id);
+
+		if ($divs === null) {
+			$data['divs_list'][] = lang('missing');
+		} else {
+			foreach ($divs as $div) {
+				$data['divs_list'][$div->id] = $div->number . ' "' . $div->letter . '"';
+			}
 		}
 
-		$header = [];
-		$header['org_name'] = $this->org->get_full_name($this->first_org->id);
-		$header['css_list'] = ['ac'];
-		$header['js_list'] = ['main', 'observ'];
+		$header = [
+			'org_name' => $this->org->get_full_name($this->first_org->id) ?? lang('missing'),
+			'css_list' => ['ac'],
+			'js_list' => ['main', 'observ']
+		];
 
 		$this->load->view('ac/header', $header);
-		$this->load->view('ac/observation');
+		$this->load->view('ac/observation', $data);
 		$this->load->view('ac/footer');
 	}
 
@@ -68,27 +98,22 @@ class Ac extends CI_Controller
 	 */
 	public function add_person()
 	{
-		if (!$this->ion_auth->logged_in()) {
-			redirect('auth/login');
-		}
 		if (!$this->ion_auth->in_group(2)) {
-			redirect('/');
+			redirect('ac/observ');
 		}
-
-		$this->load->helper('form');
-
-		$data = [];
 
 		/**
 		 * Подразделения
 		 */
-		$data['divs_list'] = [];
-		$data['divs_attr'] = 'id="div"';
+		$data = [
+			'divs_list' => [],
+			'divs_attr' => 'id="div"'
+		];
 
 		$divs = $this->div->get_all($this->first_org->id);
 
 		if ($divs === null) {
-			$data['divs_list']['0'] = lang('missing');
+			$data['divs_list'][] = lang('missing');
 		} else {
 			foreach ($divs as $div) {
 				$data['divs_list'][$div->id] = $div->number . ' "' . $div->letter . '"';
@@ -104,18 +129,19 @@ class Ac extends CI_Controller
 		$cards = $this->card->get_by_holder(-1);
 
 		if ($cards === null) {
-			$data['cards']['0'] = lang('missing');
+			$data['cards'][] = lang('missing');
 		} else {
-			$data['cards']['0'] = lang('not_selected');
+			$data['cards'][] = lang('not_selected');
 			foreach ($cards as $row) {
 				$data['cards'][$row->id] = $row->wiegand;
 			}
 		}
 
-		$header = [];
-		$header['org_name'] = $this->org->get_full_name($this->first_org->id);
-		$header['css_list'] = ['ac'];
-		$header['js_list'] = ['main', 'events', 'add_person'];
+		$header = [
+			'org_name' => $this->org->get_full_name($this->first_org->id) ?? lang('missing'),
+			'css_list' => ['ac'],
+			'js_list' => ['add_person', 'events', 'main']
+		];
 
 		$this->load->view('ac/header', $header);
 		$this->load->view('ac/add_person', $data);
@@ -127,27 +153,24 @@ class Ac extends CI_Controller
 	 */
 	public function edit_persons()
 	{
-		if (!$this->ion_auth->logged_in()) {
-			redirect('auth/login');
-		}
 		if (!$this->ion_auth->in_group(2)) {
-			redirect('/');
+			redirect('ac/observ');
 		}
-
-		$this->load->helper('form');
-
-		$data = [];
 
 		/**
 		 * Подразделения
 		 */
-		$data['divs_list'] = [];
-		$data['divs_attr'] = 'id="div"';
+		$data = [
+			'divs_list' => [],
+			'divs_attr' => 'id="div" disabled'
+		];
 
-		$divs = $this->div->get_all($this->first_org->id);
+		$divs = $this->div->get_all($this->first_org->id) ?? [];
 
-		if ($divs === null) {
-			$data['divs_list']['0'] = lang('missing');
+		$data['divs_menu'] = $divs;
+
+		if (count($divs) == 0) {
+			$data['divs_list'][] = lang('missing');
 		}
 
 		foreach ($divs as &$div) {
@@ -162,8 +185,6 @@ class Ac extends CI_Controller
 		}
 		unset($div);
 
-		$data['divs_menu'] = $divs;
-
 		/**
 		 * Карты
 		 */
@@ -173,18 +194,19 @@ class Ac extends CI_Controller
 		$cards = $this->card->get_by_holder(-1);
 
 		if ($cards === null) {
-			$data['cards']['0'] = lang('missing');
+			$data['cards'][] = lang('missing');
 		} else {
-			$data['cards']['0'] = lang('not_selected');
+			$data['cards'][] = lang('not_selected');
 			foreach ($cards as $card) {
 				$data['cards'][$card->id] = $card->wiegand;
 			}
 		}
 
-		$header = [];
-		$header['org_name'] = $this->org->get_full_name($this->first_org->id);
-		$header['css_list'] = ['ac', 'edit_persons'];
-		$header['js_list'] = ['main', 'events', 'edit_persons', 'tree'];
+		$header = [
+			'org_name' => $this->org->get_full_name($this->first_org->id) ?? lang('missing'),
+			'css_list' => ['ac', 'edit_persons'],
+			'js_list' => ['main', 'events', 'edit_persons', 'tree']
+		];
 
 		$this->load->view('ac/header', $header);
 		$this->load->view('ac/edit_persons', $data);
@@ -196,25 +218,22 @@ class Ac extends CI_Controller
 	 */
 	public function classes()
 	{
-		if (!$this->ion_auth->logged_in()) {
-			redirect('auth/login');
-		}
 		if (!$this->ion_auth->in_group(2)) {
-			redirect('/');
+			redirect('ac/observ');
 		}
 
 		$this->load->library('table');
 
-		$data = [];
+		$data = [
+			'org_id' => $this->first_org->id,
+			'divs' => $this->div->get_all($this->first_org->id) ?? []
+		];
 
-		$data['org_id'] = $this->first_org->id;
-
-		$data['divs'] = $this->div->get_all($this->first_org->id);
-
-		$header = [];
-		$header['org_name'] = $this->org->get_full_name($this->first_org->id);
-		$header['css_list'] = ['ac', 'tables'];
-		$header['js_list'] = ['classes'];
+		$header = [
+			'org_name' => $this->org->get_full_name($this->first_org->id) ?? lang('missing'),
+			'css_list' => ['ac', 'tables'],
+			'js_list' => ['classes']
+		];
 
 		$this->load->view('ac/header', $header);
 		$this->load->view('ac/classes', $data);

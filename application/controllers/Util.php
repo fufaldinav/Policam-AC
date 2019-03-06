@@ -15,11 +15,16 @@ class Util extends CI_Controller
 	{
 		parent::__construct();
 
-		$this->load->helper('language');
+		if (!$this->ion_auth->logged_in()) {
+			header("HTTP/1.1 401 Unauthorized");
+			exit;
+		}
+
+		$this->lang->load('ac');
 
 		$this->load->model('ac/util_model', 'util');
 
-		$this->lang->load('ac');
+		$this->load->helper('language');
 	}
 
 	/**
@@ -27,12 +32,7 @@ class Util extends CI_Controller
 	 */
 	public function get_time()
 	{
-		if (!$this->ion_auth->logged_in()) {
-			$this->output->set_header("HTTP/1.1 401 Unauthorized");
-			exit;
-		}
-
-		$this->output->set_output(time());
+		echo time();
 	}
 
 	/**
@@ -40,20 +40,15 @@ class Util extends CI_Controller
 	 */
 	public function get_events()
 	{
-		if (!$this->ion_auth->logged_in()) {
-			$this->output->set_header("HTTP/1.1 401 Unauthorized");
-			exit;
-		}
-
 		$time = $this->input->post('time');
 		$events = $this->input->post('events');
 
-		$this->output
-			->set_content_type('application/json')
-			->set_output(json_encode([
+		header('Content-Type: application/json');
+
+		echo json_encode([
 				'msgs' => $this->util->start_polling($time, $events),
 				'time' => now('Asia/Yekaterinburg')
-			]));
+		]);
 	}
 
 	/**
@@ -63,11 +58,6 @@ class Util extends CI_Controller
 	 */
 	public function save_js_errors($err = null)
 	{
-		if (!$this->ion_auth->logged_in()) {
-			$this->output->set_header("HTTP/1.1 401 Unauthorized");
-			exit;
-		}
-
 		if ($err === null) {
 			$err = $this->input->post('error');
 		}
@@ -86,11 +76,6 @@ class Util extends CI_Controller
 		$this->load->model('ac/org_model', 'org');
 		$this->load->model('ac/person_model', 'person');
 
-		if (!$this->ion_auth->logged_in()) {
-			$this->output->set_header("HTTP/1.1 401 Unauthorized");
-			exit;
-		}
-
 		$type = $this->input->post('type');
 		$person_id = $this->input->post('person_id');
 
@@ -106,7 +91,7 @@ class Util extends CI_Controller
 			$desc = $person->id . ' ' . $person->f . ' ' . $person->i . ' forgot card';
 
 			if ($this->util->add_user_event($type, $desc)) {
-				$this->output->set_output($response);
+				echo $response;
 			}
 		} elseif ($type == 2 || $type == 3) {
 			$cards = $this->card->get_by_holder($person->id);
@@ -122,7 +107,7 @@ class Util extends CI_Controller
 			foreach ($cards as $card) {
 
 				$this->card->set_holder($card->id, -1);
-				
+
 				foreach ($ctrls as $ctrl) {
 					$this->ctrl->delete_cards($ctrl->id, $card->wiegand);
 				}
@@ -133,10 +118,8 @@ class Util extends CI_Controller
 			$response .= ' ' . lang('and') . ' ' . lang('card_deleted');
 
 			if ($this->util->add_user_event($type, $desc)) {
-				$this->output->set_output($response);
+				echo $response;
 			}
-		} else {
-			return null;
 		}
 	}
 }

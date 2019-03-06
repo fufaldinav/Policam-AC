@@ -28,19 +28,14 @@ function getNewMsgs(events, time) {
 		},
 		success: function(data) {
 			if (data) {
-				try {
-					time = data.time;
-					if (data.msgs.length > 0) {
-						let card = data.msgs[data.msgs.length - 1].card_id; //последний прочитанный ключ из БД
-						setPersonInfo(card);
-					}
-					setTimeout(function() {
-						getNewMsgs(events, time);
-					}, 10);
-				} catch (e) {
-					sendError(e);
-					alert(`Ошибка: ${e.name}: ${e.message}`);
+				time = data.time;
+				if (data.msgs.length > 0) {
+					let card = data.msgs[data.msgs.length - 1].card_id; //последний прочитанный ключ из БД
+					setPersonInfo(card);
 				}
+				setTimeout(function() {
+					getNewMsgs(events, time);
+				}, 10);
 			} else {
 				alert(`Пустой ответ от сервера`);
 			}

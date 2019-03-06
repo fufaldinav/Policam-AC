@@ -23,9 +23,9 @@ class Server extends CI_Controller
 		$out_json_msg = $this->server->handle_msg($inc_json_msg);
 
 		if ($out_json_msg !== null) {
-			$this->output
-				->set_content_type('application/json')
-				->set_output($out_json_msg);
+			header('Content-Type: application/json');
+
+			echo $out_json_msg;
 		}
 	}
 }
