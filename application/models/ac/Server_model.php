@@ -70,6 +70,11 @@ class Server_model extends CI_Model
 		$out_msg->messages = [];
 
 		$decoded_msg = json_decode($inc_json_msg);
+
+		if ($decoded_msg === null) {
+			exit;
+		}
+
 		$type = $decoded_msg->type;
 		$sn = $decoded_msg->sn;
 		$inc_msgs = $decoded_msg->messages;
