@@ -198,7 +198,7 @@ class Photo_model extends CI_Model
 			}
 		} else {
 			$this->load->model('ac/util_model', 'util');
-			$this->util->save_errors($e);
+			$this->util->save_errors($response);
 			return $response;
 		}
 	}
