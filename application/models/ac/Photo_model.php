@@ -149,7 +149,7 @@ class Photo_model extends CI_Model
 			$response['error'] = 'Extension not allowed: ' . $file_name . ' ' . $file_type;
 		}
 
-		if ($file_size > 20971520) {
+		if ($file_size > 8388608) {
 			$response['error'] = 'File size exceeds limit: ' . $file_name . ' ' . $file_type;
 		}
 
