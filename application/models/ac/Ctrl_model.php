@@ -49,10 +49,10 @@ class Ctrl_model extends CI_Model
 	/**
 	* Получение информации о контроллере по серийному номеру
 	*
-	* @param string $sn Серийный номер контроллера
+	* @param int $sn Серийный номер контроллера
 	* @return object|null Контроллер или NULL - отсутствует
 	*/
-	public function get_by_sn(string $sn)
+	public function get_by_sn(int $sn)
 	{
 		$query = $this->db
 			->where('sn', $sn)
