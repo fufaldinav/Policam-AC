@@ -21,7 +21,7 @@
 				</div>
 				<div id="info-div" class="info-item">
 					<?php echo lang('class');?><br />
-					<input id="div" name="div" size="3" type="text" readonly />
+					<?php echo form_dropdown('div', $divs_list, '0', $divs_attr);?>
 				</div>
 				<div id="info-birthday" class="info-item">
 					<?php echo lang('birthday');?><br />

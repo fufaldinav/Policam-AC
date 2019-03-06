@@ -1,9 +1,6 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');?>
 		<div id="main" class="main-grid-container">
 			<div id="menu" onclick="tree_toggle(arguments[0]);">
-				<?php if ($divs_menu === null):?>
-					<?php echo lang('missing');?>
-				<?php else:?>
 				<ul class="tree-container">
 					<?php $last_div = count($divs_menu) - 1;?>
 					<?php foreach ($divs_menu as $k => $div):?>
@@ -27,7 +24,6 @@
 					</li>
 					<?php endforeach;?>
 				</ul>
-				<?php endif;?>
 			</div>
 			<div id="info">
 				<div id="info-photo" class="info-item">

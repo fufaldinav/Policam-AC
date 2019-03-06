@@ -85,6 +85,7 @@ function deletePerson() {
 				document.getElementById(`cards`).innerHTML = ``; //очистка списка привязанных карт
 				document.getElementById(`card_selector`).hidden = false; //отобразим меню с неизвестными картами
 				document.getElementById(`card`).disabled = true; //но запретим редактирование
+				document.getElementById(`div`).disabled = true; //но запретим редактирование
 				document.getElementById(`photo`).onchange = function() {
 					return false;
 				};
@@ -126,6 +127,7 @@ function getPersonInfo(person_id) {
 						}
 					}
 				});
+				document.getElementById(`div`).disabled = false;
 				let photo = document.getElementById(`photo_bg`);
 				if (!data.photo) {
 					data.photo = `0`;

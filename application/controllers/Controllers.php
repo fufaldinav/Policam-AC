@@ -32,7 +32,12 @@ class Controllers extends CI_Controller
 		$this->load->model('ac/ctrl_model', 'ctrl');
 		$this->load->model('ac/org_model', 'org');
 
-		$this->user_id = $this->ion_auth->user()->row()->id; //TODO
+		if (!$this->ion_auth->logged_in()) {
+			header("HTTP/1.1 401 Unauthorized");
+			exit;
+		}
+
+		$this->user_id = $this->ion_auth->user()->row()->id;
 		$this->orgs = $this->org->get_all($this->user_id); //TODO
 		$this->first_org = array_shift($this->orgs); //TODO
 	}
@@ -45,43 +50,36 @@ class Controllers extends CI_Controller
 	 */
 	public function set_door_params($ctrl_id = null, $open_time = null)
 	{
-		if (!$this->ion_auth->logged_in()) {
-			$this->output->set_header("HTTP/1.1 401 Unauthorized");
-			exit;
-		}
 		if (!$this->ion_auth->is_admin()) {
-			$this->output->set_header('HTTP/1.1 403 Forbidden');
+			header('HTTP/1.1 403 Forbidden');
 			exit;
 		}
+
 		if ($ctrl_id !== null && $open_time !== null) {
 			if ($this->ctrl->set_door_params($ctrl_id, $open_time)) {
-				$this->output->set_output('Задания успешно отправлены'); //TODO перевод
+				echo 'Задания успешно отправлены'; //TODO перевод
 			}
 		} else {
-			$this->output->set_output('Не выбран контроллер или не задано время открытия'); //TODO перевод
+			echo 'Не выбран контроллер или не задано время открытия'; //TODO перевод
 		}
 	}
 
 	/**
-	 * Выгрузка всех карт в контроллер
+	 * Удаление всех карт их контроллера
 	 *
 	 * @param int|null $ctrl_id ID контроллера
 	 */
 	public function clear($ctrl_id = null) {
-		if (!$this->ion_auth->logged_in()) {
-			$this->output->set_header("HTTP/1.1 401 Unauthorized");
-			exit;
-		}
 		if (!$this->ion_auth->is_admin()) {
-			$this->output->set_header('HTTP/1.1 403 Forbidden');
+			header('HTTP/1.1 403 Forbidden');
 			exit;
 		}
 
 		if ($ctrl_id === null) {
-			$this->output->set_output('Не выбран контроллер'); //TODO перевод
+			echo 'Не выбран контроллер'; //TODO перевод
 		} else {
 			if ($this->ctrl->clear_cards($ctrl_id)) {
-				$this->output->set_output('Задания успешно отправлены'); //TODO перевод
+				echo 'Задания успешно отправлены'; //TODO перевод
 			}
 		}
 	}
@@ -93,24 +91,21 @@ class Controllers extends CI_Controller
 	 */
 	public function reload_cards($ctrl_id = null)
 	{
-		if (!$this->ion_auth->logged_in()) {
-			$this->output->set_header("HTTP/1.1 401 Unauthorized");
-			exit;
-		}
 		if (!$this->ion_auth->is_admin()) {
-			$this->output->set_header('HTTP/1.1 403 Forbidden');
+			header('HTTP/1.1 403 Forbidden');
 			exit;
 		}
 
 		if ($ctrl_id === null) {
-			$this->output->set_output('Не выбран контроллер'); //TODO перевод
+			echo 'Не выбран контроллер'; //TODO перевод
 		} elseif ($this->first_org === null) {
-			$this->output->set_output('Нет организаций'); //TODO перевод
+			echo 'Нет организаций'; //TODO перевод
 		} else {
-			$cards = [];
 			$this->load->model('ac/card_model', 'card');
 			$this->load->model('ac/div_model', 'div');
 			$this->load->model('ac/person_model', 'person');
+
+			$cards = [];
 
 			$divs = $this->div->get_all($this->first_org->id);
 
@@ -140,7 +135,7 @@ class Controllers extends CI_Controller
 				}
 			}
 
-			$this->output->set_output('Отправлено заданий: ' . $counter); //TODO перевод
+			echo 'Отправлено заданий: ' . $counter; //TODO перевод
 		}
 	}
 }

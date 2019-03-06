@@ -10,6 +10,16 @@ class Cards extends CI_Controller
 	{
 		parent::__construct();
 
+		if (!$this->ion_auth->logged_in()) {
+			header("HTTP/1.1 401 Unauthorized");
+			exit;
+		}
+
+		if (!$this->ion_auth->in_group(2)) {
+			header('HTTP/1.1 403 Forbidden');
+			exit;
+		}
+
 		$this->load->model('ac/card_model', 'card');
 	}
 
@@ -21,16 +31,7 @@ class Cards extends CI_Controller
 	 */
 	public function add($card_id, $person_id)
 	{
-		if (!$this->ion_auth->logged_in()) {
-			$this->output->set_header("HTTP/1.1 401 Unauthorized");
-			exit;
-		}
-		if (!$this->ion_auth->in_group(2)) {
-			$this->output->set_header('HTTP/1.1 403 Forbidden');
-			exit;
-		}
-
-		$this->output->set_output($this->card->set_holder($card_id, $person_id));
+		echo $this->card->set_holder($card_id, $person_id);
 	}
 
 	/**
@@ -40,16 +41,7 @@ class Cards extends CI_Controller
 	 */
 	public function delete($card_id)
 	{
-		if (!$this->ion_auth->logged_in()) {
-			$this->output->set_header("HTTP/1.1 401 Unauthorized");
-			exit;
-		}
-		if (!$this->ion_auth->in_group(2)) {
-			$this->output->set_header('HTTP/1.1 403 Forbidden');
-			exit;
-		}
-
-		$this->output->set_output($this->card->delete($card_id));
+		echo $this->card->delete($card_id);
 	}
 
 	/**
@@ -57,18 +49,11 @@ class Cards extends CI_Controller
 	 */
 	public function get_all()
 	{
-		if (!$this->ion_auth->logged_in()) {
-			$this->output->set_header("HTTP/1.1 401 Unauthorized");
-			exit;
-		}
-		if (!$this->ion_auth->in_group(2)) {
-			$this->output->set_header('HTTP/1.1 403 Forbidden');
-			exit;
-		}
+		header('Content-Type: application/json');
 
-		$this->output
-			->set_content_type('application/json')
-			->set_output(json_encode($this->card->get_by_holder()));
+		echo json_encode(
+			$this->card->get_by_holder()
+		);
 	}
 
 	/**
@@ -78,17 +63,10 @@ class Cards extends CI_Controller
 	 */
 	public function get_by_person($holder_id)
 	{
-		if (!$this->ion_auth->logged_in()) {
-			$this->output->set_header("HTTP/1.1 401 Unauthorized");
-			exit;
-		}
-		if (!$this->ion_auth->in_group(2)) {
-			$this->output->set_header('HTTP/1.1 403 Forbidden');
-			exit;
-		}
+		header('Content-Type: application/json');
 
-		$this->output
-			->set_content_type('application/json')
-			->set_output(json_encode($this->card->get_by_holder($holder_id)));
+		echo json_encode(
+			$this->card->get_by_holder($holder_id)
+		);
 	}
 }

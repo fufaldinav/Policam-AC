@@ -7,12 +7,24 @@
  */
 class Divisions extends CI_Controller
 {
+	/**
+	* @var int $user_id
+	*/
+	private $user_id;
+
 	public function __construct()
 	{
 		parent::__construct();
 
+		if (!$this->ion_auth->logged_in()) {
+			header("HTTP/1.1 401 Unauthorized");
+			exit;
+		}
+
 		$this->load->model('ac/div_model', 'div');
 		$this->load->model('ac/org_model', 'org');
+
+		$this->user_id = $this->ion_auth->user()->row()->id;
 	}
 
 	/**
@@ -20,22 +32,16 @@ class Divisions extends CI_Controller
 	 */
 	public function get_all()
 	{
-		if (!$this->ion_auth->logged_in()) {
-			$this->output->set_header("HTTP/1.1 401 Unauthorized");
-			exit;
-		}
-
-		$user_id = $this->ion_auth->user()->row()->id; //TODO
-		$orgs = $this->org->get_all($user_id);
+		$orgs = $this->org->get_all($this->user_id);
 
 		$divs = [];
 		foreach ($orgs as $org) {
 			$divs = array_merge($divs, $this->div->get_all($org->id));
 		}
 
-		$this->output
-			->set_content_type('application/json')
-			->set_output(json_encode($divs));
+		header('Content-Type: application/json');
+
+		echo json_encode($divs);
 	}
 
 	/**
@@ -43,12 +49,8 @@ class Divisions extends CI_Controller
 	 */
 	public function add()
 	{
-		if (!$this->ion_auth->logged_in()) {
-			$this->output->set_header("HTTP/1.1 401 Unauthorized");
-			exit;
-		}
 		if (!$this->ion_auth->in_group(2)) {
-			$this->output->set_header('HTTP/1.1 403 Forbidden');
+			header('HTTP/1.1 403 Forbidden');
 			exit;
 		}
 
@@ -56,9 +58,11 @@ class Divisions extends CI_Controller
 
 		$div_id = $this->div->add($div);
 
-		$this->output
-			->set_content_type('application/json')
-			->set_output(json_encode($this->div->get($div_id)));
+		header('Content-Type: application/json');
+
+		echo json_encode(
+			$this->div->get($div_id)
+		);
 	}
 
 	/**
@@ -68,15 +72,11 @@ class Divisions extends CI_Controller
 	 */
 	public function delete($div_id)
 	{
-		if (!$this->ion_auth->logged_in()) {
-			$this->output->set_header("HTTP/1.1 401 Unauthorized");
-			exit;
-		}
 		if (!$this->ion_auth->in_group(2)) {
-			$this->output->set_header('HTTP/1.1 403 Forbidden');
+			header('HTTP/1.1 403 Forbidden');
 			exit;
 		}
 
-		$this->output->set_output($this->div->delete($div_id));
+		echo $this->div->delete($div_id);
 	}
 }
