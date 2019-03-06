@@ -48,7 +48,7 @@ class Controllers extends CI_Controller
 	 * @param int|null $ctrl_id   ID контроллера
 	 * @param int|null $open_time Время открытия в 0.1 сек
 	 */
-	public function set_door_params($ctrl_id = null, $open_time = null)
+	public function set_door_params(int $ctrl_id = null, int $open_time = null)
 	{
 		if (!$this->ion_auth->is_admin()) {
 			header('HTTP/1.1 403 Forbidden');
@@ -69,7 +69,7 @@ class Controllers extends CI_Controller
 	 *
 	 * @param int|null $ctrl_id ID контроллера
 	 */
-	public function clear($ctrl_id = null) {
+	public function clear(int $ctrl_id = null) {
 		if (!$this->ion_auth->is_admin()) {
 			header('HTTP/1.1 403 Forbidden');
 			exit;
@@ -89,7 +89,7 @@ class Controllers extends CI_Controller
 	 *
 	 * @param int|null $ctrl_id ID контроллера
 	 */
-	public function reload_cards($ctrl_id = null)
+	public function reload_cards(int $ctrl_id = null)
 	{
 		if (!$this->ion_auth->is_admin()) {
 			header('HTTP/1.1 403 Forbidden');

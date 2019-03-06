@@ -49,7 +49,7 @@ class Photo_model extends CI_Model
 	* @param int $photo_id ID фотографии
 	* @return object|null Фотография или NULL - отсутствует
 	*/
-	public function get($photo_id)
+	public function get(int $photo_id)
 	{
 		$query = $this->db
 			->where('id', $photo_id)
@@ -68,7 +68,7 @@ class Photo_model extends CI_Model
 	* @param string $hash Хэш-сумма фотографии
 	* @return object|null Фотография или NULL - отсутствует
 	*/
-	public function get_by_hash($hash)
+	public function get_by_hash(string $hash)
 	{
 		$query = $this->db
 			->where('hash', $hash)
@@ -87,7 +87,7 @@ class Photo_model extends CI_Model
 	* @param int $person_id ID человека
 	* @return object|null Фотография или NULL - отсутствует
 	*/
-	public function get_by_person($person_id)
+	public function get_by_person(int $person_id)
 	{
 		$query = $this->db
 			->where('person_id', $person_id)
@@ -106,7 +106,7 @@ class Photo_model extends CI_Model
 	* @param int $person_id ID человека
 	* @return bool TRUE - успешно, FALSE - ошибка
 	*/
-	public function set_person($photo_id, $person_id)
+	public function set_person(int $photo_id, int $person_id): bool
 	{
 		$this->db
 			->where('id', $photo_id)
@@ -123,9 +123,9 @@ class Photo_model extends CI_Model
 	 * Сохранение фотографии
 	 *
 	 * @param mixed[] $file Файл фотографии
-	 * @return string
+	 * @return mixed[]
 	 */
-	public function save($file) //TODO проверка уже имеющейся фото за человеком
+	public function save(array $file): array //TODO проверка уже имеющейся фото за человеком
 	{
 		$response = [
 			'id' => 0,
@@ -209,7 +209,7 @@ class Photo_model extends CI_Model
 	 * @param int $photo_id ID фотографии
 	 * @return bool TRUE - успешно, FALSE - ошибка
 	 */
-	public function delete($photo_id)
+	public function delete(int $photo_id): bool
 	{
 		$photo = $this->get($photo_id);
 

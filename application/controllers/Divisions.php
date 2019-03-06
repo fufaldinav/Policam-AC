@@ -70,7 +70,7 @@ class Divisions extends CI_Controller
 	 *
 	 * @param int $div_id ID подразделения
 	 */
-	public function delete($div_id)
+	public function delete(int $div_id)
 	{
 		if (!$this->ion_auth->in_group(2)) {
 			header('HTTP/1.1 403 Forbidden');

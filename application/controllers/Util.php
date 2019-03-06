@@ -56,7 +56,7 @@ class Util extends CI_Controller
 	 *
 	 * @param string|null $err Текст ошибки или NULL - получить POST-запрос
 	 */
-	public function save_js_errors($err = null)
+	public function save_js_errors(string $err = null)
 	{
 		if ($err === null) {
 			$err = $this->input->post('error');

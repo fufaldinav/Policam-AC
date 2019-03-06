@@ -29,19 +29,19 @@ class Task_model extends CI_Model
 	/**
 	 * Добавление задания для отправки на контроллер
 	 *
-	 * @param int $operation  Операция, отправляемая на контроллер
-	 * @param int $ctrl_id    ID контроллера
-	 * @param int|null $data  Дополнительные данные
+	 * @param string $operation Операция, отправляемая на контроллер
+	 * @param int $ctrl_id      ID контроллера
+	 * @param string|null $data Дополнительные данные
 	 * @return bool TRUE - успешно, FALSE - ошибка
 	 */
-	public function add($operation, $ctrl_id, $data = null)
+	public function add(string $operation, int $ctrl_id, string $data = null): bool
 	{
 		$id = mt_rand(500000, 999999999);
 
 		$json = '{"id":' . $id . ',';
 		$json .= '"operation":"' . $operation . '"';
-		$json .= (isset($data)) ? ',' : '';
-		$json .= (isset($data)) ? $data : '';
+		$json .= ($data !== null) ? ',' : '';
+		$json .= ($data !== null) ? $data : '';
 		$json .= '}';
 
 		$data =	[
@@ -66,7 +66,7 @@ class Task_model extends CI_Model
 	 * @param int $task_id ID задания
 	 * @return bool TRUE - успешно, FALSE - ошибка
 	 */
-	public function delete($task_id)
+	public function delete(int $task_id): bool
 	{
 		$this->db
 			->where('id', $task_id)
@@ -85,7 +85,7 @@ class Task_model extends CI_Model
 	 * @param int $ctrl_id ID контроллера
 	 * @return object|null Задание или NULL - отсутствует
 	 */
-	public function get_last($ctrl_id)
+	public function get_last(int $ctrl_id)
 	{
 		$query = $this->db
 			->where('controller_id', $ctrl_id)

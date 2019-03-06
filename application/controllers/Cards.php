@@ -29,7 +29,7 @@ class Cards extends CI_Controller
 	 * @param int $card_id   ID карты
 	 * @param int $person_id ID человека
 	 */
-	public function add($card_id, $person_id)
+	public function add(int $card_id, int $person_id)
 	{
 		echo $this->card->set_holder($card_id, $person_id);
 	}
@@ -61,7 +61,7 @@ class Cards extends CI_Controller
 	 *
 	 * @param int $holder_id ID человека
 	 */
-	public function get_by_person($holder_id)
+	public function get_by_person(int $holder_id)
 	{
 		header('Content-Type: application/json');
 

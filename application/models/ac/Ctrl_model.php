@@ -33,7 +33,7 @@ class Ctrl_model extends CI_Model
 	* @param int $ctrl_id ID контроллера
 	* @return object|null Контроллер или NULL - отсутствует
 	*/
-	public function get($ctrl_id)
+	public function get(int $ctrl_id)
 	{
 		$query = $this->db
 			->where('id', $ctrl_id)
@@ -52,7 +52,7 @@ class Ctrl_model extends CI_Model
 	* @param string $sn Серийный номер контроллера
 	* @return object|null Контроллер или NULL - отсутствует
 	*/
-	public function get_by_sn($sn)
+	public function get_by_sn(string $sn)
 	{
 		$query = $this->db
 			->where('sn', $sn)
@@ -71,7 +71,7 @@ class Ctrl_model extends CI_Model
 	* @param int|null $org_id ID организации
 	* @return object[]|null Массив с контроллерами или NULL - отсутствует
 	*/
-	public function get_all($org_id = null)
+	public function get_all(int $org_id = null)
 	{
 		if ($org_id !== null) {
 			$this->db->where('org_id', $org_id);
@@ -91,7 +91,7 @@ class Ctrl_model extends CI_Model
 	* @param object $ctrl Контроллер
 	* @return int ID нового контроллера
 	*/
-	public function add($ctrl)
+	public function add($ctrl): int
 	{
 		$this->db->insert('controllers', $this->set($ctrl));
 
@@ -104,7 +104,7 @@ class Ctrl_model extends CI_Model
 	* @param object $ctrl Контроллер
 	* @return bool TRUE - успешно, FALSE - ошибка
 	*/
-	public function update($ctrl)
+	public function update($ctrl): bool
 	{
 		$this->db
 			->where('id', $ctrl->id)
@@ -123,7 +123,7 @@ class Ctrl_model extends CI_Model
 	* @param int $ctrl_id ID контроллера
 	* @return bool TRUE - успешно, FALSE - ошибка
 	*/
-	public function delete($ctrl_id)
+	public function delete(int $ctrl_id): bool
 	{
 		$this->db->delete('controllers', ['id' => $ctrl_id]);
 
@@ -138,9 +138,9 @@ class Ctrl_model extends CI_Model
 	* Установить информацию о контроллере
 	*
 	* @param object $ctrl Контроллер
-	* @return mixed[] Массив с параметрами контроллера
+	* @return array Массив с параметрами контроллера
 	*/
-	public function set($ctrl)
+	public function set($ctrl): array
 	{
 		$data = [
 			'name' => $ctrl->name,
@@ -161,7 +161,7 @@ class Ctrl_model extends CI_Model
 	 * @param int $close_control Контроль закрытия в 0.1 сек, по-умолчанию 0 - без контроля
 	 * @return bool TRUE - успешно, FALSE - ошибка
 	 */
-	public function set_door_params($ctrl_id, $open_time, $open_control = 0, $close_control = 0)
+	public function set_door_params(int $ctrl_id, int $open_time, int $open_control = 0, int $close_control = 0): bool
 	{
 		$this->load->model('ac/task_model', 'task');
 
@@ -241,7 +241,7 @@ class Ctrl_model extends CI_Model
 	 * @param int $ctrl_id ID контроллера
 	 * @return bool TRUE - успешно, FALSE - ошибка
 	 */
-	public function clear_cards($ctrl_id)
+	public function clear_cards(int $ctrl_id): bool
 	{
 		$this->load->model('ac/task_model', 'task');
 

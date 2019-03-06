@@ -45,7 +45,7 @@ class Photos extends CI_Controller
 	 *
 	 * @param int $photo_id ID фотографии
 	 */
-	public function delete($photo_id)
+	public function delete(int $photo_id)
 	{
 		echo $this->photo->delete($photo_id);
 	}
