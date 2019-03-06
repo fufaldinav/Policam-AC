@@ -19,7 +19,7 @@
 								<div class="tree-expand"></div>
 								<div class="tree-content">
 									<?php echo $person->cards !== null ? '(+) ' : ''?>
-									<a class="person" href="#<? echo $person->id?>" onClick="getPersonInfo(<?php echo $person->id;?>);"><?php echo $person->f . ' ' . $person->i;?></a>
+									<a class="person" href="#<?php echo $person->id?>" onClick="getPersonInfo(<?php echo $person->id;?>);"><?php echo $person->f . ' ' . $person->i;?></a>
 								</div>
 							</li>
 							<?php endforeach;?>

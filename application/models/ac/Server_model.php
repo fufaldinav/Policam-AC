@@ -83,9 +83,9 @@ class Server_model extends CI_Model
 
 			$this->ctrl->update($ctrl);
 
-			write_file($path, "TYPE: $type || SN: $sn || $inc_json_msg\n", 'a');
+			write_file($path, "TYPE: $type || SN: $sn || $inc_json_msg\r\n", 'a');
 		} else {
-			write_file($path, "TYPE: $type || SN: $sn || Неизвестный контроллер\n", 'a');
+			write_file($path, "TYPE: $type || SN: $sn || Неизвестный контроллер\r\n", 'a');
 
 			return null;
 		}
@@ -206,7 +206,7 @@ class Server_model extends CI_Model
 		$out_json_msg = json_encode($out_msg);
 
 		$path = $this->log_path . '/out-' . $log_date . '.txt';
-		write_file($path, "TYPE: $type || SN: $sn || ". $out_json_msg ."\n", 'a');
+		write_file($path, "TYPE: $type || SN: $sn || $out_json_msg\r\n", 'a');
 
 		return $out_json_msg;
 	}
