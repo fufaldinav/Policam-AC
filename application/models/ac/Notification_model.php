@@ -20,6 +20,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 * Class Notification Model
 *
 * @property Person_model $person
+* @property Photo_model $photo
 */
 class Notification_model extends CI_Model
 {
@@ -28,6 +29,7 @@ class Notification_model extends CI_Model
 		parent::__construct();
 
 		$this->load->model('ac/person_model', 'person');
+		$this->load->model('ac/photo_model', 'photo');
 	}
 
 	/**
@@ -79,12 +81,13 @@ class Notification_model extends CI_Model
 		$this->load->helper('url');
 
 		$person = $this->person->get($person_id);
+		$photo = $this->photo->get_by_person($person->id);
 
 		$notification = [
 			'title' => $event,
 			'body' => $person->f . ' ' . $person->i,
-			'icon' => base_url('/img/ac/s/' . $person_id . '.jpg'),
-			'click_action' => base_url('/'),
+			'icon' => 'https://' . $_SERVER['HTTP_HOST'] . '/img/ac/s/' . $photo->id . '.jpg',
+			'click_action' => base_url('/')
 		];
 
 		return $notification;
