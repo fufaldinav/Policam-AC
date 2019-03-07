@@ -25,6 +25,7 @@ function deleteDivision(div_id) {
 		}
 	});
 }
+
 //сохранить в базу
 function saveDivision(org_id) {
 	div.number = document.getElementById(`number`).value;

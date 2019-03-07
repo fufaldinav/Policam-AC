@@ -51,6 +51,7 @@ function updatePersonInfo() {
 		});
 	}
 }
+
 //удаление пользователя из БД
 function deletePerson() {
 	if (!confirm(`Подтвердите удаление.`)) {
@@ -109,6 +110,7 @@ function deletePerson() {
 		}
 	});
 }
+
 //получение данных пользователя из БД
 function getPersonInfo(person_id) {
 	$.ajax({
@@ -157,6 +159,7 @@ function getPersonInfo(person_id) {
 		}
 	});
 }
+
 //получение списка карт (брелоков) от сервера
 function getCardsByPerson(person_id) {
 	$.ajax({
@@ -187,6 +190,7 @@ function getCardsByPerson(person_id) {
 		}
 	});
 }
+
 //добавление карты в БД
 function saveCard(card_id) {
 	$.ajax({
@@ -205,6 +209,7 @@ function saveCard(card_id) {
 		}
 	});
 }
+
 //удаление карты из БД
 function delCard(card_id) {
 	if (!confirm(`Подтвердите удаление.`)) {

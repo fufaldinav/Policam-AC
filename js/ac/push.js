@@ -13,6 +13,7 @@ firebase.initializeApp(config);
 if (Notification.permission === `granted`) {
 	subscribe();
 }
+
 function subscribe() {
 	let messaging = firebase.messaging();
 	messaging.usePublicVapidKey(`BPKQjI8lJAE9pymLNyKm5fsJSsu-7vXlPZivaRvR52lxGWgsxF2TN5s_iaIKQ1LWNZPh0S8arKNOXfq9nAAB3Yg`);
@@ -35,6 +36,7 @@ function subscribe() {
 		console.warn(`Не удалось получить разрешение на показ уведомлений.`, err);
 	});
 }
+
 // отправка ID на сервер
 function sendTokenToServer(currentToken) {
 	if (!isTokenSentToServer(currentToken)) {
@@ -57,11 +59,13 @@ function sendTokenToServer(currentToken) {
 		console.log(`Токен уже отправлен на сервер.`);
 	}
 }
+
 // используем localStorage для отметки того,
 // что пользователь уже подписался на уведомления
 function isTokenSentToServer(currentToken) {
 	return window.localStorage.getItem(`sentFirebaseMessagingToken`) == currentToken;
 }
+
 function setTokenSentToServer(currentToken) {
 	window.localStorage.setItem(
 		`sentFirebaseMessagingToken`,
