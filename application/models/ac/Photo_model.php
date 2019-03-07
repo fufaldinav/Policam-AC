@@ -176,18 +176,17 @@ class Photo_model extends CI_Model
 
 			try {
 				$file_path = $this->img_path . '/' . $photo->id . '.jpg';
+
 				move_uploaded_file($file_tmp, $file_path);
 				//сохранение уменьшенной копии
-				$source_img = imagecreatefromjpeg($file_path);
-				list($width, $height) = getimagesize($file_path);
-				$d = max([($width / 240), ($height / 320)]);
-				$new_width = $width / $d;
-				$new_height = $height / $d;
-				$new_img = imagecreatetruecolor($new_width, $new_height);
-				imagecopyresampled($new_img, $source_img, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
+				$params = [
+					'src_path' => $file_path,
+					'width' => 320,
+					'height' => 240,
+					'dst_path' => $this->img_path . '/s/' . $photo->id . '.jpg'
+				];
 
-				$file_path = $this->img_path . '/s/' . $photo->id . '.jpg';
-				imagejpeg($new_img, $file_path);
+				$this->create_thumbnail($params);
 
 				return $response;
 			} catch (Exception $e) {
@@ -252,5 +251,35 @@ class Photo_model extends CI_Model
 		foreach ($query->result() as $photo) {
 			$this->delete($photo->id);
 		}
+	}
+
+	/**
+	* Создание уменьшенной копии изображения
+	* $params = [
+	*   'src_path' => string,
+	*   'width' => int,
+	*   'height' => int,
+	*   'dst_path' => string
+	* ];
+	* @param array $params
+	* @return bool
+	*/
+	public function create_thumbnail(array $params): bool
+	{
+		$src_img = imagecreatefromjpeg($params['src_path']);
+
+		list($width, $height) = getimagesize($params['src_path']);
+		$delta = max([
+			($width / $params['width']),
+			($height / $params['height'])
+		]);
+		$new_width = $width / $delta;
+		$new_height = $height / $delta;
+
+		$new_img = imagecreatetruecolor($new_width, $new_height);
+
+		imagecopyresampled($new_img, $src_img, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
+
+		return imagejpeg($new_img, $params['dst_path']);
 	}
 }
