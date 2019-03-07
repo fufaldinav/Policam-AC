@@ -32,16 +32,3 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 
 .ftpconfig
 .ftpignore
-
-img/.db
-img/ac/*.jpg
-img/ac/*.db
-!img/ac/0.jpg
-img/ac/s/*.jpg
-img/ac/s/*.db
-!img/ac/s/0.jpg
-
-logs/*
-!logs/index.html
-
-application/controllers/Test.php
