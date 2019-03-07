@@ -92,7 +92,7 @@ class Util extends CI_Controller
 				echo $response;
 			}
 		} elseif ($type == 2 || $type == 3) {
-			$cards = $this->card->get_by_holder($person->id);
+			$cards = $this->card->get_by_person($person->id);
 
 			if ($cards === null) {
 				return null;

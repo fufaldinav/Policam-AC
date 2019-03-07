@@ -136,7 +136,7 @@ class Server_model extends CI_Model
 				$card = $this->card->get_by_code($inc_m->card);
 
 				if ($card !== null) {
-					if ($card->holder_id != -1) {
+					if ($card->person_id != -1) {
 						$out_m->granted = 1;
 					}
 
@@ -145,7 +145,7 @@ class Server_model extends CI_Model
 					$card->wiegand = $inc_m->card;
 					$card->last_conn = $time;
 					$card->controller_id = $ctrl->id;
-					$card->holder_id = -1;
+					$card->person_id = -1;
 
 					$this->card->add($card);
 				}
@@ -177,7 +177,7 @@ class Server_model extends CI_Model
 						$card->wiegand = $event->card;
 						$card->last_conn = $time;
 						$card->controller_id = $ctrl->id;
-						$card->holder_id = -1;
+						$card->person_id = -1;
 
 						$card->id = $this->card->add($card);
 					}
@@ -191,19 +191,19 @@ class Server_model extends CI_Model
 						'card_id' => $card->id
 					];
 
-					$subscriptions = $this->notification->check_subscription($card->holder_id);
+					$subscriptions = $this->notification->check_subscription($card->person_id);
 					if ($subscriptions !== null) {
 
 						foreach ($subscriptions as $sub) {
 
-							$notification = $this->notification->generate($card->holder_id, $event->event);
+							$notification = $this->notification->generate($card->person_id, $event->event);
 
 							if ($notification !== null) {
 
 								$response = $this->notification->send($notification, $sub->user_id);
 
 								$path = $this->log_path . '/push-' . $log_date . '.txt';
-								write_file($path, "USER: $sub->user_id || PERSON: $card->holder_id || $response\n", 'a');
+								write_file($path, "USER: $sub->user_id || PERSON: $card->person_id || $response\n", 'a');
 
 							}
 

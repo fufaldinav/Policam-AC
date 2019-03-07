@@ -126,7 +126,7 @@ class Ac extends CI_Controller
 		$data['cards'] = [];
 		$data['cards_attr'] = 'id="card"';
 
-		$cards = $this->card->get_by_holder(-1);
+		$cards = $this->card->get_by_person(-1);
 
 		if ($cards === null) {
 			$data['cards'][] = lang('missing');
@@ -178,7 +178,7 @@ class Ac extends CI_Controller
 			$div->persons = $this->person->get_all($div->id);
 
 			foreach ($div->persons as &$person) {
-	 			$person->cards = $this->card->get_by_holder($person->id);
+	 			$person->cards = $this->card->get_by_person($person->id);
 	 		}
 			unset($person);
 
@@ -191,7 +191,7 @@ class Ac extends CI_Controller
 		$data['cards'] = [];
 		$data['cards_attr'] = 'id="card" disabled';
 
-		$cards = $this->card->get_by_holder(-1);
+		$cards = $this->card->get_by_person(-1);
 
 		if ($cards === null) {
 			$data['cards'][] = lang('missing');

@@ -52,21 +52,21 @@ class Cards extends CI_Controller
 		header('Content-Type: application/json');
 
 		echo json_encode(
-			$this->card->get_by_holder()
+			$this->card->get_by_person()
 		);
 	}
 
 	/**
 	 * Получение информации о картах конкретного человека
 	 *
-	 * @param int $holder_id ID человека
+	 * @param int $person_id ID человека
 	 */
-	public function get_by_person(int $holder_id)
+	public function get_by_person(int $person_id)
 	{
 		header('Content-Type: application/json');
 
 		echo json_encode(
-			$this->card->get_by_holder($holder_id)
+			$this->card->get_by_person($person_id)
 		);
 	}
 }

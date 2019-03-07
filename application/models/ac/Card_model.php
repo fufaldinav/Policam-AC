@@ -66,15 +66,15 @@ class Card_model extends CI_Model
 	}
 
 	/**
-	* Получение списка карт по человеку
+	* Получает список карт человека или никому не принадлежащие карты
 	*
-	* @param int $holder_id ID человека, по-умолчанию -1 (список всех неизвестных карт)
+	* @param int $person_id ID человека
 	* @return mixed[] Массив с картами или NULL - отсутствует
 	*/
-	public function get_by_holder(int $holder_id = -1)
+	public function get_by_person(int $person_id = -1)
 	{
 		$query = $this->db
-			->where('holder_id', $holder_id)
+			->where('person_id', $person_id)
 			->get('cards');
 
 		if ($query->num_rows() > 0) {
@@ -215,7 +215,7 @@ class Card_model extends CI_Model
 			'wiegand' => $card->wiegand,
 			'last_conn' => $card->last_conn,
 			'controller_id' => $card->controller_id,
-			'holder_id' => $card->holder_id
+			'person_id' => $card->person_id
 		];
 
 		return $data;

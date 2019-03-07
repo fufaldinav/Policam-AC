@@ -129,7 +129,7 @@ class Persons extends CI_Controller
 			exit;
 		}
 
-		$cards = $this->card->get_by_holder($person_id);
+		$cards = $this->card->get_by_person($person_id);
 		if ($cards !== null) {
 
 			$ctrls = $this->ctrl->get_all($this->first_org->id);
@@ -177,7 +177,7 @@ class Persons extends CI_Controller
 		header('Content-Type: application/json');
 
 		echo json_encode(
-			$this->person->get($card->holder_id)
+			$this->person->get($card->person_id)
 		);
 	}
 
