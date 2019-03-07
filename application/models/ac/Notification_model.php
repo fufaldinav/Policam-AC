@@ -126,4 +126,73 @@ class Notification_model extends CI_Model
 
 		return $response;
 	}
+
+	/**
+	* Получение токена
+	*
+	* @param string $token Токен
+	* @return object|null Токен
+	*/
+	public function get_token(string $token) {
+		$query = $this->db
+			->where('token', $token)
+			->get('users_tokens');
+
+		if ($query->num_rows() > 0) {
+			return $query->row();
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	* Получение токенов
+	*
+	* @param int|null $user_id ID пользователя
+	* @return object[]|null Массив токенов
+	*/
+	public function get_all(int $user_id = null) {
+		if ($user_id !== null) {
+			$this->db->where('user_id', $user_id);
+		}
+		$query = $this->db->get('users_tokens');
+
+		if ($query->num_rows() > 0) {
+			return $query->result();
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	* Добавление токена
+	*
+	* @param int $user_id  ID пользователя
+	* @param string $token Токен
+	* @return int ID токена
+	*/
+	public function add_token(int $user_id, string $token): int {
+		$this->db->insert('users_tokens', [
+			'user_id' => $user_id,
+			'token' => $token
+		]);
+
+		return $this->db->insert_id();
+	}
+
+	/**
+	* Удаление токена
+	*
+	* @param string $token Токен
+	* @return bool TRUE - успешно, FALSE - ошибка
+	*/
+	public function delete_token(string $token): bool {
+		$this->db->delete('users_tokens', ['token' => $token]);
+
+		if ($this->db->affected_rows() > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
