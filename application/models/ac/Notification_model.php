@@ -96,19 +96,27 @@ class Notification_model extends CI_Model
 	* Отправка уведомления
 	*
 	* @param array $notification Параметры уведомления
-	* @return string|bool Ответ на запрос
+	* @param int|null $user_id   ID пользователя
+	* @return string Ответ на запрос
 	*/
-	public function send(array $notification)
+	public function send(array $notification, int $user_id = null): string
 	{
 		$url = 'https://fcm.googleapis.com/fcm/send';
 		//Ключ сервера
 		$YOUR_API_KEY = 'AAAA6hsRfn0:APA91bFXS5t_qUC7StorR89rPP0bKbc3qDA-N6xqdeaNRn1TBSqSS-qMUx4F3HKjOwTNDRdQnpxE8uvpJLwB8dcdKlCDu1N2_35zmLkDQ1TxJXBMLzWO3MrQ7WQhBjgvT_MNBIWcOzV5';
 		//Идентификатор отправителя
-		$YOUR_TOKEN_ID = '1005476478589';
+
+		$registration_ids = [];
+
+		$tokens = $this->get_all($user_id);
+
+		foreach ($tokens as $token) {
+			$registration_ids[] = $token->token;
+		}
 
 		$request_body = [
-			'to' => $YOUR_TOKEN_ID,
-			'notification' => $notification
+			'notification' => $notification,
+			'registration_ids' => $registration_ids
 		];
 		$fields = json_encode($request_body);
 
