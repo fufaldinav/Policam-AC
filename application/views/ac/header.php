@@ -8,6 +8,7 @@
 		<link rel="stylesheet" href="/css/<?php echo $css ?>.css" />
 	<?php endforeach;?>
 	<script src="/js/jquery-3.3.1.min.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/5.8.5/firebase.js"></script>
 	<?php foreach ($js_list as $js): ?>
 		<script src="/js/ac/<?php echo $js ?>-0.0.5.js"></script>
 	<?php endforeach;?>

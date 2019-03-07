@@ -20,6 +20,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 * Class Server Model
 * @property Card_model $card
 * @property Ctrl_model $ctrl
+* @property Notification_model $notification
 * @property Task_model $task
 */
 class Server_model extends CI_Model
@@ -37,6 +38,7 @@ class Server_model extends CI_Model
 
 		$this->load->model('ac/card_model', 'card');
 		$this->load->model('ac/ctrl_model', 'ctrl');
+		$this->load->model('ac/notification_model', 'notification');
 		$this->load->model('ac/task_model', 'task');
 
 		$this->config->load('ac', true);
@@ -188,6 +190,26 @@ class Server_model extends CI_Model
 						'server_time' => $time,
 						'card_id' => $card->id
 					];
+
+					$subscriptions = $this->notification->check_subscription($card->holder_id);
+					if ($subscriptions !== null) {
+
+						foreach ($subscriptions as $sub) {
+
+							$notification = $this->notification->generate($card->holder_id, $event->event);
+
+							if ($notification !== null) {
+
+								$response = $this->notification->send($notification, $sub->user_id);
+
+								$path = $this->log_path . '/push-' . $log_date . '.txt';
+								write_file($path, "USER: $sub->user_id || PERSON: $card->holder_id || $response\n", 'a');
+
+							}
+
+						}
+
+					}
 
 					$events_count++;
 				}
