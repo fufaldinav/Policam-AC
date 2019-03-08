@@ -4,13 +4,13 @@
 
 <head>
 	<meta charset="utf-8" />
-	<?php foreach ($css_list as $css): ?>
-		<link rel="stylesheet" href="/css/<?php echo $css ?>.css?<?php echo time() ?>" />
+	<?php foreach ($css_list as $css):?>
+		<link rel="stylesheet" href="<?php echo base_url('css/') . $css;?>.css?<?php echo time();?>" />
 	<?php endforeach;?>
 	<script src="/js/jquery-3.3.1.min.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/5.8.5/firebase.js"></script>
-	<?php foreach ($js_list as $js): ?>
-		<script src="/js/ac/<?php echo $js ?>.js?t=<?php echo time() ?>"></script>
+	<?php foreach ($js_list as $js):?>
+		<script src="<?php echo base_url('js/ac/') . $js;?>.js?t=<?php echo time();?>"></script>
 	<?php endforeach;?>
 </head>
 
@@ -23,15 +23,15 @@
 					<?php echo $org_name;?>
 				</div>
 				<div id="header-content">
-					<a class="nav" href="/"><?php echo lang('observ') ?></a>
-					<?php if ($this->ion_auth->in_group(2)): ?>
-						<a class="nav" href="/ac/add_person"><?php echo lang('adding') ?></a>
-						<a class="nav" href="/ac/edit_persons"><?php echo lang('editing') ?></a>
-						<a class="nav" href="/ac/classes"><?php echo lang('classes') ?></a>
+					<a class="nav" href="<?php echo base_url();?>"><?php echo lang('observ');?></a>
+					<?php if ($this->ion_auth->in_group(2)):?>
+						<a class="nav" href="<?php echo base_url('ac/add_person/');?>"><?php echo lang('adding');?></a>
+						<a class="nav" href="<?php echo base_url('ac/edit_persons/');?>"><?php echo lang('editing');?></a>
+						<a class="nav" href="<?php echo base_url('ac/classes/');?>"><?php echo lang('classes');?></a>
 					<?php endif;?>
 				</div>
 				<div id="header-right">
-					<a class="nav" href="/auth/logout">
+					<a class="nav" href="<?php echo base_url('auth/logout/');?>">
 						<?php echo lang('exit');?></a>
 				</div>
 			</div>
