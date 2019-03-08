@@ -74,7 +74,7 @@ class Server_model extends CI_Model
 
 		$decoded_msg = json_decode($inc_json_msg);
 
-		if ($decoded_msg === null) {
+		if (!isset($decoded_msg)) {
 			exit;
 		}
 
@@ -86,7 +86,7 @@ class Server_model extends CI_Model
 
 		$path = $this->log_path . '/inc-' . $log_date . '.txt';
 
-		if ($ctrl !== null) {
+		if (isset($ctrl)) {
 			$ctrl->last_conn = $time;
 
 			$this->ctrl->update($ctrl);
@@ -136,7 +136,7 @@ class Server_model extends CI_Model
 
 				$card = $this->card->get_by_code($inc_m->card);
 
-				if ($card !== null) {
+				if (isset($card)) {
 					if ($card->person_id != -1) {
 						$out_m->granted = 1;
 					}
@@ -170,7 +170,7 @@ class Server_model extends CI_Model
 				foreach ($inc_m->events as $event) {
 					$card = $this->card->get_by_code($event->card);
 					//проверяем наличие карты в БД
-					if ($card !== null) {
+					if (isset($card)) {
 						$this->card->set_last_conn($card->id, $ctrl->id);
 					} else {
 						$card = new stdClass();
@@ -222,7 +222,7 @@ class Server_model extends CI_Model
 
 		$task = $this->task->get_last($ctrl->id);
 
-		if ($task !== null) {
+		if (isset($task)) {
 			$out_msg->messages[] = json_decode($task->json);
 		}
 

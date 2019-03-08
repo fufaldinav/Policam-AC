@@ -59,7 +59,7 @@ class Persons extends CI_Controller
 
 		$person_id = $this->person->add($person);
 
-		if ($person->photo !== null) {
+		if (isset($person->photo)) {
 			$this->photo->set_person($person->photo, $person_id);
 		}
 
@@ -93,7 +93,7 @@ class Persons extends CI_Controller
 
 		$count += $this->person->update($person);
 
-		if ($person->photo !== null) {
+		if (isset($person->photo)) {
 				$count += $this->photo->set_person($person->photo, $person->id);
 		}
 
@@ -138,7 +138,7 @@ class Persons extends CI_Controller
 		}
 
 		$photo = $this->photo->get_by_person($person_id);
-		if ($photo !== null) {
+		if (isset($photo)) {
 			$this->photo->delete($photo->id);
 		}
 

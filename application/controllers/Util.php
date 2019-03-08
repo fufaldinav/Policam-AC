@@ -79,7 +79,7 @@ class Util extends CI_Controller
 		$type = $this->input->post('type');
 		$person_id = $this->input->post('person_id');
 
-		if ($type === null || $person_id === null) {
+		if (!isset($type) || !isset($person_id)) {
 			return null;
 		}
 

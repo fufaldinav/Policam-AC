@@ -62,7 +62,7 @@ class Notification_model extends CI_Model
 	*/
 	public function check_subscription(int $person_id, int $user_id = null): array
 	{
-		if ($user_id !== null) {
+		if (isset($user_id)) {
 			$this->db->where('user_id', $user_id);
 		}
 
@@ -103,7 +103,7 @@ class Notification_model extends CI_Model
 		$notification = [
 			'title' => $event,
 			'body' => $person->f . ' ' . $person->i,
-			'icon' => ($photo !== null) ? ('https://' . $_SERVER['HTTP_HOST'] . '/img/ac/s/' . $photo->id . '.jpg') : '',
+			'icon' => (isset($photo)) ? ('https://' . $_SERVER['HTTP_HOST'] . '/img/ac/s/' . $photo->id . '.jpg') : '',
 			'click_action' => base_url('/')
 		];
 
@@ -173,7 +173,7 @@ class Notification_model extends CI_Model
 	*/
 	public function get_all(int $user_id = null): array
 	{
-		if ($user_id !== null) {
+		if (isset($user_id)) {
 			$this->db->where('user_id', $user_id);
 		}
 		$query = $this->db->get('users_tokens');

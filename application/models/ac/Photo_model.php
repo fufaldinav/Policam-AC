@@ -147,7 +147,7 @@ class Photo_model extends CI_Model
 
 			$photo = $this->get_by_hash($file_hash);
 
-			if ($photo === null) {
+			if (!isset($photo)) {
 				$this->db->insert('photo', ['hash' => $file_hash, 'time' => $time]);
 				$photo = $this->get($this->db->insert_id());
 			} else {
@@ -197,7 +197,7 @@ class Photo_model extends CI_Model
 	{
 		$photo = $this->get($photo_id);
 
-		if ($photo->person_id !== null) {
+		if (isset($photo->person_id)) {
 			$this->load->model('ac/person_model', 'person');
 
 			$this->person->unset_photo($photo->person_id);
