@@ -116,14 +116,13 @@ class Util_model extends CI_Model
 	/**
 	 * Сохраняет полученное от пользователя событие
 	 *
+	 * @param int $user_id ID пользователя
 	 * @param int $type    Тип события
 	 * @param string $desc Описание события
 	 * @return int Количество успешных сохранений
 	 */
-	public function add_user_event(int $type, string $desc): int
+	public function add_user_event(int $user_id, int $type, string $desc): int
 	{
-		$user_id = $this->ion_auth->user()->row()->id; //TODO
-
 		$data =	[
 			'user_id' => $user_id,
 			'type' => $type,
