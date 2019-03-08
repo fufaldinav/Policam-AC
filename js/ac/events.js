@@ -8,13 +8,13 @@ document.addEventListener("DOMContentLoaded", function() {
 //получение времени от сервера
 function getServerTime() {
 	$.ajax({
-		url: `/util/get_time`,
+		url: `[base_url]util/get_time`,
 		type: `GET`,
 		success: function(res) {
 			time = res;
 		},
 		error: function() {
-			alert(`Неизвестная ошибка`);
+			alert(`Неизвестная ошибка`); //TODO перевод
 		}
 	});
 }
@@ -22,7 +22,7 @@ function getServerTime() {
 //получение сообщений из БД
 function getNewMsgs(events, time) {
 	$.ajax({
-		url: `/util/get_events`,
+		url: `[base_url]util/get_events`,
 		type: `POST`,
 		data: {
 			events: events,
@@ -32,7 +32,7 @@ function getNewMsgs(events, time) {
 			time = data.time;
 			if (!document.getElementById(`card`).disabled) { //если меню неизвестных карт активно
 				if (data.msgs.length > 0) {
-					let o = confirm(`Введен неизвестный ключ. Выбрать его в качестве нового ключа пользователя?`);
+					let o = confirm(`Введен неизвестный ключ. Выбрать его в качестве нового ключа пользователя?`); //TODO перевод
 					if (o) {
 						let card = data.msgs[data.msgs.length - 1].card_id; //последний прочитанный ключ из БД
 						getCards(card);
@@ -40,7 +40,7 @@ function getNewMsgs(events, time) {
 				}
 			} else if (document.getElementById(`card_selector`).hidden) {
 				if (data.msgs.length > 0) {
-					let o = confirm(`Введен неизвестный ключ. Добавить его текущему пользователю?`);
+					let o = confirm(`Введен неизвестный ключ. Добавить его текущему пользователю?`); //TODO перевод
 					if (o) {
 						let card = data.msgs[data.msgs.length - 1].card_id; //последний прочитанный ключ из БД
 						saveCard(card);
@@ -52,7 +52,7 @@ function getNewMsgs(events, time) {
 			}, 100);
 		},
 		error: function() {
-			alert(`Неизвестная ошибка`);
+			alert(`Неизвестная ошибка`); //TODO перевод
 		}
 	});
 }

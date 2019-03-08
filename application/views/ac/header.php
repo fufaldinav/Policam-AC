@@ -10,7 +10,7 @@
 	<script src="/js/jquery-3.3.1.min.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/5.8.5/firebase.js"></script>
 	<?php foreach ($js_list as $js):?>
-		<script src="<?php echo base_url('js/ac/') . $js;?>.js?t=<?php echo time();?>"></script>
+		<script src="<?php echo site_url('jsloader/file/' . $js . '.js');?>?t=<?php echo time();?>" /></script>
 	<?php endforeach;?>
 </head>
 

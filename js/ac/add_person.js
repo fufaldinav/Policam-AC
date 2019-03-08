@@ -28,10 +28,10 @@ function savePersonInfo() {
 		}
 	});
 	if (!checkValidity) {
-		alert(`Введены не все данные`);
+		alert(`Введены не все данные`); //TODO перевод
 	} else {
 		$.ajax({
-			url: `/persons/add`,
+			url: `[base_url]persons/add`,
 			type: `POST`,
 			data: {
 				person: JSON.stringify(person)
@@ -40,11 +40,11 @@ function savePersonInfo() {
 				for (let k in person) {
 					person[k] = null;
 				}
-				alert(`Пользователь №${person_id} успешно сохранен`);
+				alert(`Пользователь №${person_id} успешно сохранен`); //TODO перевод
 				clearPersonInfo();
 			},
 			error: function() {
-				alert(`Неизвестная ошибка`);
+				alert(`Неизвестная ошибка`); //TODO перевод
 			}
 		});
 	}
