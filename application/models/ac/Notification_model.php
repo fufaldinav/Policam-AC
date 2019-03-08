@@ -42,6 +42,8 @@ class Notification_model extends CI_Model
 	{
 		parent::__construct();
 
+		$this->lang->load('ac');
+
 		$this->load->model('ac/person_model', 'person');
 		$this->load->model('ac/photo_model', 'photo');
 
@@ -81,12 +83,12 @@ class Notification_model extends CI_Model
 	public function generate(int $person_id, int $event_id): array
 	{
 		switch ($event_id) {
-			case 4:
-				$event = 'Вход'; //TODO перевод
+			case 4: //вход
+				$event = lang('entrace');
 				break;
 
-			case 5:
-				$event = 'Выход'; //TODO перевод
+			case 5: //выход
+				$event = lang('exit');
 				break;
 
 			default:

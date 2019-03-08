@@ -5,6 +5,7 @@ $lang['observ'] = 'Observing';
 $lang['adding'] = 'Adding';
 $lang['editing'] = 'Editing';
 $lang['classes'] = 'Classes';
+$lang['entrace'] = 'Entrace';
 $lang['exit'] = 'Exit';
 $lang['f'] = 'Last name';
 $lang['i'] = 'First name';
