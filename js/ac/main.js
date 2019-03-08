@@ -1,7 +1,7 @@
 //сохранить ошибку на сервере
 function sendError(message) {
 	$.ajax({
-		url: `/index.php/util/save_js_errors`,
+		url: `/util/save_js_errors`,
 		type: `POST`,
 		data: {
 			error: message
@@ -13,14 +13,14 @@ function sendError(message) {
 function getCards(id) {
 	let card = document.getElementById(`card`);
 	$.ajax({
-		url: `/index.php/cards/get_all`,
+		url: `/cards/get_all`,
 		type: `GET`,
 		success: function(data) {
 			if (data) {
 				while (card.length > 0) { //удалить все элементы из меню карт
 					card.remove(card.length - 1);
 				}
-				if (data.length == 0) { //если нет неизвестных карт
+				if (data.length == 0) { //если нет известных карт
 					addOption(card, 0, `Отсутствует`);
 				} else { //иначе заполним меню картами
 					addOption(card, 0, `Не выбрана`); //первый пункт
@@ -54,7 +54,7 @@ function handleFiles(files) {
 	let formData = new FormData();
 	formData.append(`file`, files[0]);
 	$.ajax({
-		url: `/index.php/photos/save`,
+		url: `/photos/save`,
 		type: `POST`,
 		method: `POST`,
 		contentType: false,
@@ -88,7 +88,7 @@ function deletePhoto() {
 		return;
 	}
 	$.ajax({
-		url: `/index.php/photos/delete/${person.photo}`,
+		url: `/photos/delete/${person.photo}`,
 		type: `GET`,
 		success: function(res) {
 			if (res) {

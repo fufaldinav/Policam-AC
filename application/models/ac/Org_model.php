@@ -1,6 +1,6 @@
 <?php
 /**
- * Name:   Policam AC Org Model
+ * Name:   Policam AC
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *
@@ -8,11 +8,12 @@
  *
  * Description: Приложение для систем контроля и управления доступом.
  *
- * Requirements: PHP7.0 or above
+ * Requirements: PHP7.2 or above
  *
  * @package Policam-AC
  * @author  Artem Fufaldin
  * @link    http://github.com/m2jest1c/Policam-AC
+ * @filesource
  */
 defined('BASEPATH') or exit('No direct script access allowed');
 
@@ -27,31 +28,27 @@ class Org_model extends CI_Model
 	}
 
 	/**
-	* Получение информации о организации
+	* Получает организацию по ID
 	*
 	* @param int $org_id ID организации
-	* @return object|null Организация или NULL - отсутствует
+	* @return object|null Организация или NULL, если не найдена
 	*/
-	public function get(int $org_id)
+	public function get(int $org_id): ?object
 	{
 		$query = $this->db
 			->where('id', $org_id)
 			->get('organizations');
 
-		if ($query->num_rows() > 0) {
-			return $query->row();
-		} else {
-			return null;
-		}
+		return $query->row();
 	}
 
 	/**
-	* Получение информации о всех организациях
+	* Получает все организации по пользователю
 	*
 	* @param int|null $user_id ID пользователя
-	* @return object[]|null Массив с организациями или NULL - отсутствует
+	* @return object[] Массив с организациями или пустой массив
 	*/
-	public function get_all(int $user_id = null)
+	public function get_all(int $user_id = null): array
 	{
 		if ($user_id !== null) {
 			$this->db->where('user_id', $user_id);
@@ -61,26 +58,18 @@ class Org_model extends CI_Model
 			->order_by('number', 'ASC')
 			->get('organizations_users');
 
-		if ($query->num_rows() > 0) {
-			return $query->result();
-		} else {
-			return null;
-		}
+		return $query->result();
 	}
 
 	/**
-	 * Получить полное имя организации
+	 * Получает полное имя организации
 	 *
 	 * @param int $org_id ID организации
-	 * @return string|null Строка в формате 'номер (адресс при наличии)' или NULL - оргиназиция отсутствует
+	 * @return string Строка в формате 'номер (адресс при наличии)' или NULL, если организация не найдена
 	 */
-	public function get_full_name(int $org_id)  //TODO check
+	public function get_full_name(int $org_id): string  //TODO check
 	{
 		$org = $this->get($org_id);
-
-		if ($org === null) {
-			return null;
-		}
 
 		$org_name = $org->number;
 		if ($org->address !== null) {
@@ -91,12 +80,12 @@ class Org_model extends CI_Model
 	}
 
 	/**
-	* Добавление новой организации
+	* Добавляет новую организацию
 	*
 	* @param object $org Организация
 	* @return int ID новой организации
 	*/
-	public function add($org): int
+	public function add(object $org): int
 	{
 		$this->db->insert('organizations', $this->set($org));
 
@@ -104,48 +93,40 @@ class Org_model extends CI_Model
 	}
 
 	/**
-	* Обновление информации об организациях
+	* Обновляет информацию об организации
 	*
 	* @param object $org Организация
-	* @return int TRUE - успешно, FALSE - ошибка
+	* @return int Количество успешных записей
 	*/
-	public function update($org): int
+	public function update(object $org): int
 	{
 		$this->db
 			->where('id', $id)
 			->update('organizations', $this->set($org));
 
-		if ($this->db->affected_rows() > 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return $this->db->affected_rows();
 	}
 
 	/**
-	* Удаление организации
+	* Удаляет организацию
 	*
 	* @param int $org_id ID организации
-	* @return bool TRUE - успешно, FALSE - ошибка
+	* @return int Количество успешных удалений
 	*/
-	public function delete(int $org_id): bool
+	public function delete(int $org_id): int
 	{
 		$this->db->delete('organizations', ['id' => $org_id]);
 
-		if ($this->db->affected_rows() > 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return $this->db->affected_rows();
 	}
 
 	/**
-	* Установить информацию об организации
+	* Получает объект и возвращает массив для записи
 	*
 	* @param object $org Организация
 	* @return mixed[] Массив с параметрами организации
 	*/
-	public function set($org): array
+	public function set(object $org): array
 	{
 		$this->data = [
 			'number' => $org->number,

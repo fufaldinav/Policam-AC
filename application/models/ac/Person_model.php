@@ -1,6 +1,6 @@
 <?php
 /**
- * Name:   Policam AC Person Model
+ * Name:   Policam AC
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *
@@ -8,11 +8,12 @@
  *
  * Description: Приложение для систем контроля и управления доступом.
  *
- * Requirements: PHP7.0 or above
+ * Requirements: PHP7.2 or above
  *
  * @package Policam-AC
  * @author  Artem Fufaldin
  * @link    http://github.com/m2jest1c/Policam-AC
+ * @filesource
  */
 defined('BASEPATH') or exit('No direct script access allowed');
 
@@ -27,12 +28,12 @@ class Person_model extends CI_Model
 	}
 
 	/**
-	* Получение информации о человеке по ID
+	* Получает человека по ID
 	*
 	* @param int $person_id ID человека
-	* @return object[]|null Человек или NULL - отсутствует
+	* @return object|null Человек или NULL, если не найдена
 	*/
-	public function get(int $person_id)
+	public function get(int $person_id): ?object
 	{
 		$query = $this->db->select('id, address, birthday, f, i, o, phone, type')
 			->select("div_id AS 'div'")
@@ -40,44 +41,34 @@ class Person_model extends CI_Model
 			->where('id', $person_id)
 			->get('persons');
 
-		if ($query->num_rows() > 0) {
-			return $query->row();
-		} else {
-			return null;
-		}
+		return $query->row();
 	}
 
 	/**
-	* Получение информации о всех людях
+	* Получает список всех людей по подразделению
 	*
 	* @param int|null $div_id ID подразделения
-	* @return object[]|null Массив с людьми или NULL - отсутствует
+	* @return object[] Массив с людьми или пустой массив
 	*/
-	public function get_all(int $div_id = null)
+	public function get_all(int $div_id = null): array
 	{
-		if ($div_id !== null) {
+		if (isset($div_id)) {
 			$this->db->where('div_id', $div_id);
 		}
 		$query = $this->db
-			->order_by('f', 'ASC')
-			->order_by('i', 'ASC')
-			->order_by('o', 'ASC')
+			->order_by('f ASC, i ASC, o ASC')
 			->get('persons');
 
-		if ($query->num_rows() > 0) {
-			return $query->result();
-		} else {
-			return null;
-		}
+		return $query->result();
 	}
 
 	/**
-	* Добавление нового человека
+	* Добавляет нового человека
 	*
 	* @param object $person Человек
 	* @return int ID нового человека
 	*/
-	public function add($person): int
+	public function add(object $person): int
 	{
 		$this->db->insert('persons', $this->set($person));
 
@@ -85,48 +76,40 @@ class Person_model extends CI_Model
 	}
 
 	/**
-	* Обновление информации о человеке
+	* Обновляет информацию о человеке
 	*
 	* @param object $person Человек
-	* @return bool TRUE - успешно, FALSE - ошибка
+	* @return int Количество успешных записей
 	*/
-	public function update($person): bool
+	public function update(object $person): int
 	{
 		$this->db
 			->where('id', $person->id)
 			->update('persons', $this->set($person));
 
-		if ($this->db->affected_rows() > 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return $this->db->affected_rows();
 	}
 
 	/**
-	* Удаление человека
+	* Удаляет человека
 	*
 	* @param int $person_id ID человека
-	* @return bool TRUE - успешно, FALSE - ошибка
+	* @return int Количество успешных удалений
 	*/
-	public function delete(int $person_id): bool
+	public function delete(int $person_id): int
 	{
 		$this->db->delete('persons', ['id' => $person_id]);
 
-		if ($this->db->affected_rows() > 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return $this->db->affected_rows();
 	}
 
 	/**
-	* Установить информацию о человеке
+	* Получает объект и возвращает массив для записи
 	*
 	* @param object $person Человек
 	* @return mixed[] Массив с параметрами человека
 	*/
-	public function set($person): array
+	public function set(object $person): array
 	{
 		$data = [
 			'div_id' => $person->div,
@@ -143,21 +126,17 @@ class Person_model extends CI_Model
 	}
 
 	/**
-	* Удалить инфомации о фотографии
+	* Удаляет информацию о фотографии
 	*
 	* @param int $person_id ID человека
-	* @return bool TRUE - успешно, FALSE - ошибка
+	* @return int Количество успешных удалений
 	*/
-	public function delete_photo(int $person_id): bool
+	public function unset_photo(int $person_id): int
 	{
 		$this->db
 			->where('id', $person_id)
 			->update('persons', ['photo_id' => null]);
 
-		if ($this->db->affected_rows() > 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return $this->db->affected_rows();
 	}
 }

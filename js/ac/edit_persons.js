@@ -32,7 +32,7 @@ function updatePersonInfo() {
 		alert(`Введены не все данные`);
 	} else {
 		$.ajax({
-			url: `/index.php/persons/update`,
+			url: `/persons/update`,
 			type: `POST`,
 			data: {
 				person: JSON.stringify(person)
@@ -58,10 +58,10 @@ function deletePerson() {
 		return;
 	}
 	$.ajax({
-		url: `/index.php/persons/delete/${person.id}`,
+		url: `/persons/delete/${person.id}`,
 		type: `GET`,
 		success: function(res) {
-			if (res) {
+			if (res > 0) {
 				Object.keys(person).map(function(k) { //перебор элементов формы
 					let elem = document.getElementById(k);
 					if (k == `card`) { //поставить в карты "Не выбрано"
@@ -114,7 +114,7 @@ function deletePerson() {
 //получение данных пользователя из БД
 function getPersonInfo(person_id) {
 	$.ajax({
-		url: `/index.php/persons/get/${person_id}`,
+		url: `/persons/get/${person_id}`,
 		type: `GET`,
 		success: function(data) {
 			if (data) {
@@ -163,12 +163,12 @@ function getPersonInfo(person_id) {
 //получение списка карт (брелоков) от сервера
 function getCardsByPerson(person_id) {
 	$.ajax({
-		url: `/index.php/cards/get_by_person/${person_id}`,
+		url: `/cards/get_by_person/${person_id}`,
 		type: `GET`,
 		success: function(data) {
 			let cards = document.getElementById(`cards`);
 			cards.innerHTML = ``;
-			if (data) {
+			if (data.lenght > 0) {
 				document.getElementById(`card_selector`).hidden = true; //спрячем неизвестные карты
 				document.getElementById(`card`).disabled = true; //отключим меню неизвеснтых карт
 				data.forEach(function(c) { //добавим каждую карту в список привязанных
@@ -194,10 +194,10 @@ function getCardsByPerson(person_id) {
 //добавление карты в БД
 function saveCard(card_id) {
 	$.ajax({
-		url: `/index.php/cards/add/${card_id}/${person.id}`,
+		url: `/cards/add/${card_id}/${person.id}`,
 		type: `GET`,
 		success: function(res) {
-			if (res) {
+			if (res > 0) {
 				getCardsByPerson(person.id);
 				alert(`Ключ успешно добавлен`);
 			} else {
@@ -216,10 +216,10 @@ function delCard(card_id) {
 		return;
 	}
 	$.ajax({
-		url: `/index.php/cards/delete/${card_id}`,
+		url: `/cards/delete/${card_id}`,
 		type: `GET`,
 		success: function(res) {
-			if (res) {
+			if (res > 0) {
 				let card = document.getElementById(`card${card_id}`);
 				card.remove(); //удалим карту из списка привязанных
 				let cardsHtml = document.getElementById(`cards`).innerHTML;

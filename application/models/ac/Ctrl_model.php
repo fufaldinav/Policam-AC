@@ -1,6 +1,6 @@
 <?php
 /**
- * Name:   Policam AC Ctrl Model
+ * Name:   Policam AC
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *
@@ -8,11 +8,12 @@
  *
  * Description: Приложение для систем контроля и управления доступом.
  *
- * Requirements: PHP7.0 or above
+ * Requirements: PHP7.2 or above
  *
  * @package Policam-AC
  * @author  Artem Fufaldin
  * @link    http://github.com/m2jest1c/Policam-AC
+ * @filesource
  */
 defined('BASEPATH') or exit('No direct script access allowed');
 
@@ -28,70 +29,58 @@ class Ctrl_model extends CI_Model
 	}
 
 	/**
-	* Получение информации о контроллере по ID
+	* Получает контроллер по ID
 	*
 	* @param int $ctrl_id ID контроллера
-	* @return object|null Контроллер или NULL - отсутствует
+	* @return object|null Контроллер или NULL, если не найден
 	*/
-	public function get(int $ctrl_id)
+	public function get(int $ctrl_id): ?object
 	{
 		$query = $this->db
 			->where('id', $ctrl_id)
 			->get('controllers');
 
-		if ($query->num_rows() > 0) {
-			return $query->row();
-		} else {
-			return null;
-		}
+		return $query->row();
 	}
 
 	/**
-	* Получение информации о контроллере по серийному номеру
+	* Получает контроллер по серийному номеру
 	*
 	* @param int $sn Серийный номер контроллера
 	* @return object|null Контроллер или NULL - отсутствует
 	*/
-	public function get_by_sn(int $sn)
+	public function get_by_sn(int $sn): ?object
 	{
 		$query = $this->db
 			->where('sn', $sn)
 			->get('controllers');
 
-		if ($query->num_rows() > 0) {
-			return $query->row();
-		} else {
-			return null;
-		}
+		return $query->row();
 	}
 
 	/**
-	* Получение информации о всех контроллерах
+	* Получает список всех контроллеров по организации
 	*
 	* @param int|null $org_id ID организации
-	* @return object[]|null Массив с контроллерами или NULL - отсутствует
+	* @return object[] Массив с контроллерами или пустой массив
 	*/
-	public function get_all(int $org_id = null)
+	public function get_all(int $org_id = null): array
 	{
 		if ($org_id !== null) {
 			$this->db->where('org_id', $org_id);
 		}
 		$query = $this->db->get('controllers');
 
-		if ($query->num_rows() > 0) {
-			return $query->result();
-		} else {
-			return null;
-		}
+		return $query->result();
 	}
 
 	/**
-	* Добавление нового контроллера
+	* Добавляет новый контроллер
 	*
 	* @param object $ctrl Контроллер
 	* @return int ID нового контроллера
 	*/
-	public function add($ctrl): int
+	public function add(object $ctrl): int
 	{
 		$this->db->insert('controllers', $this->set($ctrl));
 
@@ -99,48 +88,40 @@ class Ctrl_model extends CI_Model
 	}
 
 	/**
-	* Обновление информации о контроллере
+	* Обновляет информацию о контроллере
 	*
 	* @param object $ctrl Контроллер
-	* @return bool TRUE - успешно, FALSE - ошибка
+	* @return int Количество успешных записей
 	*/
-	public function update($ctrl): bool
+	public function update(object $ctrl): int
 	{
 		$this->db
 			->where('id', $ctrl->id)
 			->update('controllers', $this->set($ctrl));
 
-		if ($this->db->affected_rows() > 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return $this->db->affected_rows();
 	}
 
 	/**
-	* Удаление контроллера
+	* Удаляет контроллер
 	*
 	* @param int $ctrl_id ID контроллера
-	* @return bool TRUE - успешно, FALSE - ошибка
+	* @return int Количество успешных удалений
 	*/
-	public function delete(int $ctrl_id): bool
+	public function delete(int $ctrl_id): int
 	{
 		$this->db->delete('controllers', ['id' => $ctrl_id]);
 
-		if ($this->db->affected_rows() > 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return $this->db->affected_rows();
 	}
 
 	/**
-	* Установить информацию о контроллере
+	* Получает объект и возвращает массив для записи
 	*
 	* @param object $ctrl Контроллер
 	* @return array Массив с параметрами контроллера
 	*/
-	public function set($ctrl): array
+	public function set(object $ctrl): array
 	{
 		$data = [
 			'name' => $ctrl->name,
@@ -153,37 +134,31 @@ class Ctrl_model extends CI_Model
 	}
 
 	/**
-	 * Установить параметры открытия
+	 * Установливает параметры открытия
 	 *
 	 * @param int $ctrl_id       ID контроллера
 	 * @param int $open_time     Время открытия в 0.1 сек
 	 * @param int $open_control  Контроль открытия в 0.1 сек, по-умолчанию 0 - без контроля
 	 * @param int $close_control Контроль закрытия в 0.1 сек, по-умолчанию 0 - без контроля
-	 * @return bool TRUE - успешно, FALSE - ошибка
+	 * @return int Количество успешных записей
 	 */
-	public function set_door_params(int $ctrl_id, int $open_time, int $open_control = 0, int $close_control = 0): bool
+	public function set_door_params(int $ctrl_id, int $open_time, int $open_control = 0, int $close_control = 0): int
 	{
 		$this->load->model('ac/task_model', 'task');
 
-		$data = '"open":' . $open_time;
-		$data .= ',"open_control":' . $open_control;
-		$data .= ',"close_control":' . $close_control;
+		$data = sprintf('"open": %d, "open_control": %d, "close_control": %d', $open_time, $open_control, $close_control);
 
-		if ($this->task->add('set_door_params', $ctrl_id, $data)) {
-			return true;
-		} else {
-			return false;
-		}
+		return $this->task->add('set_door_params', $ctrl_id, $data);
 	}
 
 	/**
-	 * Добавление карт в контроллер
+	 * Добавляет карты в контроллер
 	 *
 	 * @param int $ctrl_id    ID контроллера
 	 * @param string[] $codes Коды карт
-	 * @return bool TRUE - успешно, FALSE - ошибка
+	 * @return int Количество успешных записей
 	 */
-	public function add_cards(int $ctrl_id, array $codes): bool
+	public function add_cards(int $ctrl_id, array $codes): int
 	{
 		$this->load->model('ac/task_model', 'task');
 
@@ -196,21 +171,17 @@ class Ctrl_model extends CI_Model
 
 		$data .= ']';
 
-		if ($this->task->add('add_cards', $ctrl_id, $data)) {
-			return true;
-		} else {
-			return false;
-		}
+		return $this->task->add('add_cards', $ctrl_id, $data);
 	}
 
 	/**
-	 * Удаление карт из контроллера
+	 * Удаляет карты из контроллера
 	 *
 	 * @param int $ctrl_id    ID контроллера
 	 * @param string[] $codes Коды карт
-	 * @return bool TRUE - успешно, FALSE - ошибка
+	 * @return int Количество успешных удалений
 	 */
-	public function delete_cards(int $ctrl_id, array $codes): bool
+	public function delete_cards(int $ctrl_id, array $codes): int
 	{
 		$this->load->model('ac/task_model', 'task');
 
@@ -223,28 +194,20 @@ class Ctrl_model extends CI_Model
 
 		$data .= ']';
 
-		if ($this->task->add('del_cards', $ctrl_id, $data)) {
-			return true;
-		} else {
-			return false;
-		}
+		return $this->task->add('del_cards', $ctrl_id, $data);
 	}
 
 
 	/**
-	 * Удаление всех карт из контроллера
+	 * Удаляет все карты из контроллера
 	 *
 	 * @param int $ctrl_id ID контроллера
-	 * @return bool TRUE - успешно, FALSE - ошибка
+	 * @return int Количество успешных удалений
 	 */
-	public function clear_cards(int $ctrl_id): bool
+	public function clear_cards(int $ctrl_id): int
 	{
 		$this->load->model('ac/task_model', 'task');
 
-		if ($this->task->add('clear_cards', $ctrl_id)) {
-			return true;
-		} else {
-			return false;
-		}
+		return $this->task->add('clear_cards', $ctrl_id);
 	}
 }

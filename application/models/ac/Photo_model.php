@@ -1,6 +1,6 @@
 <?php
 /**
- * Name:   Policam AC Photo Model
+ * Name:   Policam AC
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *
@@ -8,11 +8,12 @@
  *
  * Description: Приложение для систем контроля и управления доступом.
  *
- * Requirements: PHP7.0 or above
+ * Requirements: PHP7.2 or above
  *
  * @package Policam-AC
  * @author  Artem Fufaldin
  * @link    http://github.com/m2jest1c/Policam-AC
+ * @filesource
  */
 defined('BASEPATH') or exit('No direct script access allowed');
 
@@ -44,86 +45,70 @@ class Photo_model extends CI_Model
 	}
 
 	/**
-	* Получение информации о фотографии по ID
+	* Получает фотографию по ID
 	*
 	* @param int $photo_id ID фотографии
-	* @return object|null Фотография или NULL - отсутствует
+	* @return object|null Фотография или NULL, если не найдена
 	*/
-	public function get(int $photo_id)
+	public function get(int $photo_id): ?object
 	{
 		$query = $this->db
 			->where('id', $photo_id)
 			->get('photo');
 
-		if ($query->num_rows() > 0) {
-			return $query->row();
-		} else {
-			return null;
-		}
+		return $query->row();
 	}
 
 	/**
-	* Получение информации о фотографии по хэшу
+	* Получает фотографию по хэшу
 	*
 	* @param string $hash Хэш-сумма фотографии
-	* @return object|null Фотография или NULL - отсутствует
+	* @return object|null Фотография или NULL, если не найдена
 	*/
-	public function get_by_hash(string $hash)
+	public function get_by_hash(string $hash): ?object
 	{
 		$query = $this->db
 			->where('hash', $hash)
 			->get('photo');
 
-		if ($query->num_rows() > 0) {
-			return $query->row();
-		} else {
-			return null;
-		}
+		return $query->row();
 	}
 
 	/**
-	* Получение информации о фотографии по человеку
+	* Получает фотографию по человеку
 	*
 	* @param int $person_id ID человека
-	* @return object|null Фотография или NULL - отсутствует
+	* @return object|null Фотография или NULL, если не найдена
 	*/
-	public function get_by_person(int $person_id)
+	public function get_by_person(int $person_id): ?object
 	{
 		$query = $this->db
 			->where('person_id', $person_id)
 			->get('photo');
 
-		if ($query->num_rows() > 0) {
-			return $query->row();
-		} else {
-			return null;
-		}
+		return $query->row();
 	}
 	/**
-	* Установить владельца фотографии
+	* Устанавливает владельца фотографии
 	*
 	* @param int $photo_id ID фотографии
 	* @param int $person_id ID человека
-	* @return bool TRUE - успешно, FALSE - ошибка
+	* @return int Количество успешных записей
 	*/
-	public function set_person(int $photo_id, int $person_id): bool
+	public function set_person(int $photo_id, int $person_id): int
 	{
 		$this->db
 			->where('id', $photo_id)
 			->update('photo', ['person_id' => $person_id]);
 
-		if ($this->db->affected_rows() > 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return $this->db->affected_rows();
 	}
 
 	/**
-	 * Сохранение фотографии
+	 * Сохраняет фотографию
 	 *
 	 * @param mixed[] $file Файл фотографии
-	 * @return mixed[]
+	 * @return mixed[] Отчет о сохранении
 	 */
 	public function save(array $file): array //TODO проверка уже имеющейся фото за человеком
 	{
@@ -172,7 +157,7 @@ class Photo_model extends CI_Model
 			}
 			$response['id'] = $photo->id;
 
-			$this->clear_old();
+			$this->delete_old();
 
 			try {
 				$file_path = $this->img_path . '/' . $photo->id . '.jpg';
@@ -203,7 +188,7 @@ class Photo_model extends CI_Model
 	}
 
 	/**
-	 * Удаление фото из БД и диска
+	 * Удаляет фото из БД и диска
 	 *
 	 * @param int $photo_id ID фотографии
 	 * @return bool TRUE - успешно, FALSE - ошибка
@@ -215,7 +200,7 @@ class Photo_model extends CI_Model
 		if ($photo->person_id !== null) {
 			$this->load->model('ac/person_model', 'person');
 
-			$this->person->delete_photo($photo->person_id);
+			$this->person->unset_photo($photo->person_id);
 		}
 
 		$this->db->delete('photo', ['id' => $photo->id]);
@@ -238,23 +223,30 @@ class Photo_model extends CI_Model
 			return false;
 		}
 	}
+
 	/**
-	 * Очистка старых фото из БД и диска
+	 * Удаляет старые фото из БД и диска
+	 *
+	 * @return int Количество удаленных фотографий
 	 */
-	public function clear_old()
+	private function delete_old(): int
 	{
 		$query =  $this->db
 			->where('person_id', null)
 			->where('time <', now('Asia/Yekaterinburg') - 86400)
 			->get('photo');
 
+		$counter = 0;
+
 		foreach ($query->result() as $photo) {
-			$this->delete($photo->id);
+			$counter += $this->delete($photo->id);
 		}
+
+		return $counter;
 	}
 
 	/**
-	* Создание уменьшенной копии изображения
+	* Создает уменьшенную копию изображения
 	* $params = [
 	*   'src_path' => string,
 	*   'width' => int,
@@ -262,9 +254,9 @@ class Photo_model extends CI_Model
 	*   'dst_path' => string
 	* ];
 	* @param array $params
-	* @return bool
+	* @return bool TRUE - успешно, FALSE - ошибка
 	*/
-	public function create_thumbnail(array $params): bool
+	private function create_thumbnail(array $params): bool
 	{
 		$src_img = imagecreatefromjpeg($params['src_path']);
 

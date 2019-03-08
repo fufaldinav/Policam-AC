@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function() {
 //получение времени от сервера
 function getServerTime() {
 	$.ajax({
-		url: `/index.php/util/get_time`,
+		url: `/util/get_time`,
 		type: `GET`,
 		success: function(data) {
 			time = data;
@@ -20,7 +20,7 @@ function getServerTime() {
 //получение сообщений от сервера
 function getNewMsgs(events, time) {
 	$.ajax({
-		url: `/index.php/util/get_events`,
+		url: `/util/get_events`,
 		type: `POST`,
 		data: {
 			events: events,
@@ -49,7 +49,7 @@ function getNewMsgs(events, time) {
 //получение данных пользователя из БД
 function setPersonInfo(card_id) {
 	$.ajax({
-		url: `/index.php/persons/get_by_card/${card_id}`,
+		url: `/persons/get_by_card/${card_id}`,
 		type: `GET`,
 		success: function(data) {
 			if (data) {
@@ -75,10 +75,10 @@ function setPersonInfo(card_id) {
 
 function getDivisions() {
 	$.ajax({
-		url: `/index.php/divisions/get_all`,
+		url: `/divisions/get_all`,
 		type: `GET`,
 		success: function(data) {
-			if (data) {
+			if (data.length > 0) {
 				let divisions = ``;
 				data.forEach(function(div) {
 					divisions += `<div id="div${div.id}" class="menu-item" onclick="getPersons(${div.id});">${div.number} "${div.letter}"</div>`;
@@ -97,10 +97,10 @@ function getDivisions() {
 
 function getPersons(div_id) {
 	$.ajax({
-		url: `/index.php/persons/get_all/${div_id}`,
+		url: `/persons/get_all/${div_id}`,
 		type: `GET`,
 		success: function(data) {
-			if (data) {
+			if (data.length > 0) {
 				let persons = `<div id="menu-button-back" class="menu-item" onclick="getDivisions();">Назад</div>`;
 				data.forEach(function(person) {
 					persons += `<div id="person${person.id}" class="menu-item" onclick="openEntraceOptions(${person.id}, ${div_id});">${person.f} ${person.i}</div>`;
@@ -148,7 +148,7 @@ function sendInfo(type, person_id) {
 			break;
 	}
 	$.ajax({
-		url: `/index.php/util/card_problem`,
+		url: `/util/card_problem`,
 		type: `POST`,
 		data: {
 			type: type,

@@ -1,6 +1,6 @@
 <?php
 /**
- * Name:   Policam AC Util Model
+ * Name:   Policam AC
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *
@@ -8,11 +8,12 @@
  *
  * Description: Приложение для систем контроля и управления доступом.
  *
- * Requirements: PHP7.0 or above
+ * Requirements: PHP7.2 or above
  *
  * @package Policam-AC
  * @author  Artem Fufaldin
  * @link    http://github.com/m2jest1c/Policam-AC
+ * @filesource
  */
 defined('BASEPATH') or exit('No direct script access allowed');
 
@@ -53,7 +54,7 @@ class Util_model extends CI_Model
 	}
 
 	/**
-	 * Реализация long polling
+	 * Реализует long polling
 	 *
 	 * @param int|null $time Время последнего запроса
 	 * @param int[] $events  ID событий
@@ -113,13 +114,13 @@ class Util_model extends CI_Model
 	}
 
 	/**
-	 * Сохранение полученого от пользователя события
+	 * Сохраняет полученное от пользователя событие
 	 *
 	 * @param int $type    Тип события
 	 * @param string $desc Описание события
-	 * @return bool TRUE - успешно, FALSE - ошибка
+	 * @return int Количество успешных сохранений
 	 */
-	public function add_user_event(int $type, string $desc): bool
+	public function add_user_event(int $type, string $desc): int
 	{
 		$user_id = $this->ion_auth->user()->row()->id; //TODO
 
@@ -132,19 +133,15 @@ class Util_model extends CI_Model
 
 		$this->db->insert('users_events', $data);
 
-		if ($this->db->affected_rows() > 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return $this->db->affected_rows();
 	}
 
 	/**
-	 * Сохранение ошибок
+	 * Сохраняет ошибки
 	 *
 	 * @param string $err Текст ошибки
 	 */
-	public function save_errors(string $err)
+	public function save_errors(string $err): void
 	{
 		$this->load->helper('file');
 

@@ -56,7 +56,7 @@ class Controllers extends CI_Controller
 		}
 
 		if ($ctrl_id !== null && $open_time !== null) {
-			if ($this->ctrl->set_door_params($ctrl_id, $open_time)) {
+			if ($this->ctrl->set_door_params($ctrl_id, $open_time) > 0) {
 				echo 'Задания успешно отправлены'; //TODO перевод
 			}
 		} else {
@@ -78,7 +78,7 @@ class Controllers extends CI_Controller
 		if ($ctrl_id === null) {
 			echo 'Не выбран контроллер'; //TODO перевод
 		} else {
-			if ($this->ctrl->clear_cards($ctrl_id)) {
+			if ($this->ctrl->clear_cards($ctrl_id) > 0) {
 				echo 'Задания успешно отправлены'; //TODO перевод
 			}
 		}
@@ -115,7 +115,7 @@ class Controllers extends CI_Controller
 				foreach ($div->persons as &$person) {
 					$person->cards = $this->card->get_by_person($person->id);
 
-					if ($person->cards !== null) {
+					if (count($person->cards) > 0) {
 						$cards = array_merge($cards, $person->cards);
 					}
 				}
@@ -128,9 +128,8 @@ class Controllers extends CI_Controller
 				$codes[] = $cards[$i]->wiegand;
 
 				if (($i > 0 && ($i % 10 == 0)) || $i == ($card_count - 1)) {
-					if ($this->ctrl->add_cards($ctrl_id, $codes)) {
-						$counter++;
-					}
+					$counter += $this->ctrl->add_cards($ctrl_id, $codes);
+					
 					$codes = [];
 				}
 			}

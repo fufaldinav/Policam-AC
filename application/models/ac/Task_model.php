@@ -1,6 +1,6 @@
 <?php
 /**
- * Name:   Policam AC Task Model
+ * Name:   Policam AC
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *
@@ -8,11 +8,12 @@
  *
  * Description: Приложение для систем контроля и управления доступом.
  *
- * Requirements: PHP7.0 or above
+ * Requirements: PHP7.2 or above
  *
  * @package Policam-AC
  * @author  Artem Fufaldin
  * @link    http://github.com/m2jest1c/Policam-AC
+ * @filesource
  */
 defined('BASEPATH') or exit('No direct script access allowed');
 
@@ -27,14 +28,14 @@ class Task_model extends CI_Model
 	}
 
 	/**
-	 * Добавление задания для отправки на контроллер
+	 * Добавляет задания для отправки на контроллер
 	 *
 	 * @param string $operation Операция, отправляемая на контроллер
 	 * @param int $ctrl_id      ID контроллера
 	 * @param string|null $data Дополнительные данные
-	 * @return bool TRUE - успешно, FALSE - ошибка
+	 * @return int Количество успешных записей
 	 */
-	public function add(string $operation, int $ctrl_id, string $data = null): bool
+	public function add(string $operation, int $ctrl_id, string $data = null): int
 	{
 		$id = mt_rand(500000, 999999999);
 
@@ -53,49 +54,37 @@ class Task_model extends CI_Model
 
 		$this->db->insert('tasks', $data);
 
-		if ($this->db->affected_rows() > 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return $this->db->affected_rows();
 	}
 
 	/**
-	 * Удаление задания, отправленного на контроллер
+	 * Удаляет задания, отправленные на контроллер
 	 *
 	 * @param int $task_id ID задания
-	 * @return bool TRUE - успешно, FALSE - ошибка
+	 * @return int Количество успешных удалений
 	 */
-	public function delete(int $task_id): bool
+	public function delete(int $task_id): int
 	{
 		$this->db
 			->where('id', $task_id)
 			->delete('tasks');
 
-		if ($this->db->affected_rows() > 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return $this->db->affected_rows();
 	}
 
 	/**
-	 * Получение последнего задания для отправки на контроллер
+	 * Получает последнее задание для отправки на контроллер
 	 *
 	 * @param int $ctrl_id ID контроллера
-	 * @return object|null Задание или NULL - отсутствует
+	 * @return object|null Задание или NULL, если не найден
 	 */
-	public function get_last(int $ctrl_id)
+	public function get_last(int $ctrl_id): ?object
 	{
 		$query = $this->db
 			->where('controller_id', $ctrl_id)
 			->order_by('time', 'ASC')
 			->get('tasks');
 
-		if ($query->num_rows() > 0) {
-			return $query->row();
-		} else {
-			return null;
-		}
+		return $query->row();
 	}
 }

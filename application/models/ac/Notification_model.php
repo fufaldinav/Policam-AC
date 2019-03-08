@@ -1,6 +1,6 @@
 <?php
 /**
- * Name:   Policam AC Notification Model
+ * Name:   Policam AC
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *
@@ -8,17 +8,17 @@
  *
  * Description: Приложение для систем контроля и управления доступом.
  *
- * Requirements: PHP7.0 or above
+ * Requirements: PHP7.2 or above
  *
  * @package Policam-AC
  * @author  Artem Fufaldin
  * @link    http://github.com/m2jest1c/Policam-AC
+ * @filesource
  */
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
 * Class Notification Model
-*
 * @property Person_model $person
 * @property Photo_model $photo
 */
@@ -33,13 +33,13 @@ class Notification_model extends CI_Model
 	}
 
 	/**
-	* Проверка подписки
+	* Проверяет подписки
 	*
 	* @param int $person_id    ID человека
 	* @param int|null $user_id ID пользователя
-	* @return array|null
+	* @return array Список подписок
 	*/
-	public function check_subscription(int $person_id, int $user_id = null)
+	public function check_subscription(int $person_id, int $user_id = null): array
 	{
 		if ($user_id !== null) {
 			$this->db->where('user_id', $user_id);
@@ -49,21 +49,17 @@ class Notification_model extends CI_Model
 			->where('person_id', $person_id)
 			->get('persons_users');
 
-		if ($query->num_rows() > 0) {
-			return $query->result();
-		} else {
-			return null;
-		}
+		return $query->result();
 	}
 
 	/**
-	* Отправка уведомления
+	* Генерирует уведомление
 	*
 	* @param int $person_id ID человека
 	* @param int $event_id  ID события
-	* @return array|null Параметры уведомления
+	* @return array Параметры уведомления
 	*/
-	public function generate(int $person_id, int $event_id)
+	public function generate(int $person_id, int $event_id): array
 	{
 		switch ($event_id) {
 			case 4:
@@ -75,7 +71,7 @@ class Notification_model extends CI_Model
 				break;
 
 			default:
-				return null;
+				return [];
 		}
 
 		$this->load->helper('url');
@@ -86,20 +82,20 @@ class Notification_model extends CI_Model
 		$notification = [
 			'title' => $event,
 			'body' => $person->f . ' ' . $person->i,
-			'icon' => 'https://' . $_SERVER['HTTP_HOST'] . '/img/ac/s/' . $photo->id . '.jpg',
+			'icon' => ($photo !== null) ? ('https://' . $_SERVER['HTTP_HOST'] . '/img/ac/s/' . $photo->id . '.jpg') : '',
 			'click_action' => base_url('/')
 		];
 
 		return $notification;
 	}
 	/**
-	* Отправка уведомления
+	* Отправляет уведомление
 	*
 	* @param array $notification Параметры уведомления
 	* @param int|null $user_id   ID пользователя
 	* @return string Ответ на запрос
 	*/
-	public function send(array $notification, int $user_id = null): string
+	public function send(array $notification, int $user_id = null): string //TODO перенести кое-что в конфиг
 	{
 		$url = 'https://fcm.googleapis.com/fcm/send';
 		//Ключ сервера
@@ -139,50 +135,45 @@ class Notification_model extends CI_Model
 	}
 
 	/**
-	* Получение токена
+	* Получает токен
 	*
 	* @param string $token Токен
 	* @return object|null Токен
 	*/
-	public function get_token(string $token) {
+	public function get_token(string $token): ?object
+	{
 		$query = $this->db
 			->where('token', $token)
 			->get('users_tokens');
 
-		if ($query->num_rows() > 0) {
-			return $query->row();
-		} else {
-			return null;
-		}
+		return $query->row();
 	}
 
 	/**
-	* Получение токенов
+	* Получает все токены пользователя
 	*
 	* @param int|null $user_id ID пользователя
-	* @return object[]|null Массив токенов
+	* @return object[] Массив с токенами или пустой массив
 	*/
-	public function get_all(int $user_id = null) {
+	public function get_all(int $user_id = null): array
+	{
 		if ($user_id !== null) {
 			$this->db->where('user_id', $user_id);
 		}
 		$query = $this->db->get('users_tokens');
 
-		if ($query->num_rows() > 0) {
-			return $query->result();
-		} else {
-			return null;
-		}
+		return $query->result();
 	}
 
 	/**
-	* Добавление токена
+	* Добавляет токен
 	*
 	* @param int $user_id  ID пользователя
 	* @param string $token Токен
 	* @return int ID токена
 	*/
-	public function add_token(int $user_id, string $token): int {
+	public function add_token(int $user_id, string $token): int
+	{
 		$this->db->insert('users_tokens', [
 			'user_id' => $user_id,
 			'token' => $token
@@ -195,15 +186,11 @@ class Notification_model extends CI_Model
 	* Удаление токена
 	*
 	* @param string $token Токен
-	* @return bool TRUE - успешно, FALSE - ошибка
+	* @return int Количество успешных удалений
 	*/
-	public function delete_token(string $token): bool {
+	public function delete_token(string $token): int {
 		$this->db->delete('users_tokens', ['token' => $token]);
 
-		if ($this->db->affected_rows() > 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return $this->db->affected_rows();
 	}
 }

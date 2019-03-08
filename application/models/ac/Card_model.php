@@ -1,6 +1,6 @@
 <?php
 /**
- * Name:   Policam AC Card Model
+ * Name:   Policam AC
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *
@@ -8,11 +8,12 @@
  *
  * Description: Приложение для систем контроля и управления доступом.
  *
- * Requirements: PHP7.0 or above
+ * Requirements: PHP7.2 or above
  *
  * @package Policam-AC
  * @author  Artem Fufaldin
  * @link    http://github.com/m2jest1c/Policam-AC
+ * @filesource
  */
 defined('BASEPATH') or exit('No direct script access allowed');
 
@@ -28,112 +29,90 @@ class Card_model extends CI_Model
 	}
 
 	/**
-	* Получение информации о карте по ID
+	* Получает карту по ID
 	*
 	* @param int $card_id ID карты
-	* @return object|null Карта или NULL - отсутствует
+	* @return object|null Карта или NULL, если не найдена
 	*/
-	public function get(int $card_id)
+	public function get(int $card_id): ?object
 	{
 		$query = $this->db
 			->where('id', $card_id)
 			->get('cards');
 
-		if ($query->num_rows() > 0) {
-			return $query->row();
-		} else {
-			return null;
-		}
+		return $query->row();
 	}
 
 	/**
-	* Получение информации о карте по коду
+	* Получает карту по коду карты
 	*
 	* @param string $code Код карты
-	* @return object|null Карта или NULL - отсутствует
+	* @return object|null Карта или NULL, если не найдена
 	*/
-	public function get_by_code(string $code)
+	public function get_by_code(string $code): ?object
 	{
 		$query = $this->db
 			->where('wiegand', $code)
 			->get('cards');
 
-		if ($query->num_rows() > 0) {
-			return $query->row();
-		} else {
-			return null;
-		}
+		return $query->row();
 	}
 
 	/**
 	* Получает список карт человека или никому не принадлежащие карты
 	*
-	* @param int $person_id ID человека
-	* @return mixed[] Массив с картами или NULL - отсутствует
+	* @param int $person_id ID человека, по-умолчанию -1 - никому не принадлежащие карты
+	* @return object[] Массив с картами или пустой массив
 	*/
-	public function get_by_person(int $person_id = -1)
+	public function get_by_person(int $person_id = -1): array
 	{
 		$query = $this->db
 			->where('person_id', $person_id)
 			->get('cards');
 
-		if ($query->num_rows() > 0) {
-			return $query->result();
-		} else {
-			return null;
-		}
+		return $query->result();
 	}
 
 	/**
-	* Получение информации о всех картах
+	* Получает список всех карт
 	*
 	* @param int|null $ctrl_id ID контроллера
-	* @return object[]|null Массив с картами или NULL - отсутствует
+	* @return object[] Массив с картами или пустой массив
 	*/
-	public function get_all(int $ctrl_id = null)
+	public function get_all(int $ctrl_id = null): array
 	{
 		if ($ctrl_id !== null) {
 			$this->db->where('controller_id', $ctrl_id);
 		}
 		$query = $this->db->get('cards');
 
-		if ($query->num_rows() > 0) {
-			return $query->result();
-		} else {
-			return null;
-		}
+		return $query->result();
 	}
 
 	/**
-	* Закрепление карты за человеком
+	* Закрепляет карту за человеком
 	*
 	* @param int $card_id   ID карты
 	* @param int $person_id ID человека
-	* @return bool TRUE - успешно, FALSE - ошибка
+	* @return int Количество успешных записей
 	*/
-	public function set_holder(int $card_id, int $person_id): bool
+	public function set_holder(int $card_id, int $person_id): int
 	{
-		$this->load->model('ac/ctrl_model', 'ctrl');
-
 		$this->db
 			->where('id', $card_id)
 			->update('cards', ['holder_id' => $person_id]);
 
-		if ($this->db->affected_rows() > 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return $this->db->affected_rows();
 	}
 
 	/**
-	 * Установить время последней связи с картой
+	 * Записывает время последнего считывания карты на контроллере
 	 *
 	 * @param int $card_id ID карты
 	 * @param int $ctrl_id ID контроллера
-	 * @return bool TRUE - успешно, FALSE - ошибка
+	 * @return int Количество успешных записей
 	 */
-	public function set_last_conn(int $card_id, int $ctrl_id): bool
+	public function set_last_conn(int $card_id, int $ctrl_id): int
 	{
 		$data = [
 			'last_conn' => now('Asia/Yekaterinburg'),
@@ -143,20 +122,16 @@ class Card_model extends CI_Model
 			->where('id', $card_id)
 			->update('cards', $data);
 
-		if ($this->db->affected_rows() > 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return $this->db->affected_rows();
 	}
 
 	/**
-	* Добавление новой карты
+	* Добавляет новую карту
 	*
 	* @param object $card Карта
 	* @return int ID новой карты
 	*/
-	public function add($card): int
+	public function add(object $card): int
 	{
 		$this->db->insert('cards', $this->set($card));
 
@@ -164,52 +139,40 @@ class Card_model extends CI_Model
 	}
 
 	/**
-	* Обновление информации о карте
+	* Обновляет информацию о карте
 	*
 	* @param object $card Карта
-	* @return bool TRUE - успешно, FALSE - ошибка
+	* @return int Количество успешных записей
 	*/
-	public function update($card): bool
+	public function update(object $card): int
 	{
 		$this->db
 			->where('id', $card->id)
 			->update('cards', $this->set($card));
 
-		if ($this->db->affected_rows() > 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return $this->db->affected_rows();
 	}
 
 	/**
-	 * Удаление карты
+	 * Удаляет карту
 	 *
 	 * @param int $card_id ID карты
-	 * @return bool TRUE - успешно, FALSE - ошибка
+	 * @return int Количество удаленных записей
 	 */
-	public function delete(int $card_id): bool
+	public function delete(int $card_id): int
 	{
-		$this->load->model('ac/ctrl_model', 'ctrl');
+		$this->db->delete('cards', ['id' => $card_id]);
 
-		$this->db
-			->where('id', $card_id)
-			->update('cards', ['holder_id' => -1]);
-
-		if ($this->db->affected_rows() > 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return $this->db->affected_rows();
 	}
 
 	/**
-	* Установить информацию о карте
+	* Получает объект и возвращает массив для записи
 	*
 	* @param object $card Карта
 	* @return mixed[] Массив с параметрами карты
 	*/
-	public function set($card): array
+	private function set(object $card): array
 	{
 		$data = [
 			'wiegand' => $card->wiegand,

@@ -91,20 +91,14 @@ class Persons extends CI_Controller
 
 		$count = 0;
 
-		if ($this->person->update($person)) {
-			$count++;
-		}
+		$count += $this->person->update($person);
 
 		if ($person->photo !== null) {
-			if ($this->photo->set_person($person->photo, $person->id)) {
-				$count++;
-			}
+				$count += $this->photo->set_person($person->photo, $person->id);
 		}
 
 		if ($person->card > 0) {
-			if ($this->card->set_holder($person->card, $person->id)) {
-				$count++;
-			}
+			$count += $this->card->set_holder($person->card, $person->id);
 
 			$card = $this->card->get($person->card);
 
@@ -130,7 +124,7 @@ class Persons extends CI_Controller
 		}
 
 		$cards = $this->card->get_by_person($person_id);
-		if ($cards !== null) {
+		if (count($cards) > 0) {
 
 			$ctrls = $this->ctrl->get_all($this->first_org->id);
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Name:   Policam AC Server Model
+ * Name:   Policam AC
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *
@@ -8,11 +8,12 @@
  *
  * Description: Приложение для систем контроля и управления доступом.
  *
- * Requirements: PHP7.0 or above
+ * Requirements: PHP7.2 or above
  *
  * @package Policam-AC
  * @author  Artem Fufaldin
  * @link    http://github.com/m2jest1c/Policam-AC
+ * @filesource
  */
 defined('BASEPATH') or exit('No direct script access allowed');
 
@@ -51,12 +52,12 @@ class Server_model extends CI_Model
 	}
 
 	/**
-	* Обработка входящего сообщения
+	* Обрабатывает входящее сообщение
 	*
 	* @param string $inc_json_msg Входящее JSON сообщение
-	* @return string|null Сообщение в формате JSON или NULL - сообщение от неизвестного контроллера
+	* @return string|null Сообщение в формате JSON или NULL, если сообщение от неизвестного контроллера
 	*/
-	public function handle_msg(string $inc_json_msg)
+	public function handle_msg(string $inc_json_msg): ?string
 	{
 		$this->load->helper('file');
 		$this->load->helper('date');
@@ -192,21 +193,16 @@ class Server_model extends CI_Model
 					];
 
 					$subscriptions = $this->notification->check_subscription($card->person_id);
-					if ($subscriptions !== null) {
 
-						foreach ($subscriptions as $sub) {
+					foreach ($subscriptions as $sub) {
 
-							$notification = $this->notification->generate($card->person_id, $event->event);
+						$notification = $this->notification->generate($card->person_id, $event->event);
 
-							if ($notification !== null) {
+						if (count($notification) > 0) {
+							$response = $this->notification->send($notification, $sub->user_id);
 
-								$response = $this->notification->send($notification, $sub->user_id);
-
-								$path = $this->log_path . '/push-' . $log_date . '.txt';
-								write_file($path, "USER: $sub->user_id || PERSON: $card->person_id || $response\n", 'a');
-
-							}
-
+							$path = $this->log_path . '/push-' . $log_date . '.txt';
+							write_file($path, "USER: $sub->user_id || PERSON: $card->person_id || $response\n", 'a');
 						}
 
 					}
@@ -239,19 +235,15 @@ class Server_model extends CI_Model
 	}
 
 	/**
-	* Сохранение событий
+	* Сохраняет события
 	*
 	* @param mixed[] $events События для сохранения в БД
-	* @return bool TRUE - успешно, FALSE - ошибка
+	* @return int Количество успешных записей
 	*/
-	public function save_events(array $events): bool
+	public function save_events(array $events): int
 	{
 		$this->db->insert_batch('events', $events);
 
-		if ($this->db->affected_rows() > 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return $this->db->affected_rows();
 	}
 }

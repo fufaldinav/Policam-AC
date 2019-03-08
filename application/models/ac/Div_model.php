@@ -1,6 +1,6 @@
 <?php
 /**
- * Name:   Policam AC Div Model
+ * Name:   Policam AC
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *
@@ -8,11 +8,12 @@
  *
  * Description: Приложение для систем контроля и управления доступом.
  *
- * Requirements: PHP7.0 or above
+ * Requirements: PHP7.2 or above
  *
  * @package Policam-AC
  * @author  Artem Fufaldin
  * @link    http://github.com/m2jest1c/Policam-AC
+ * @filesource
  */
 defined('BASEPATH') or exit('No direct script access allowed');
 
@@ -27,49 +28,40 @@ class Div_model extends CI_Model
 	}
 
 	/**
-	* Получение информации о подразделении
+	* Получает подразделениe
 	*
 	* @param int $div_id ID подразделения
-	* @return object|null Подразделение или NULL - отсутствует
+	* @return object|null Подразделение или NULL, если не найдено
 	*/
-	public function get(int $div_id)
+	public function get(int $div_id): ?object
 	{
 		$query = $this->db
 			->where('id', $div_id)
 			->get('divisions');
 
-		if ($query->num_rows() > 0) {
-			return $query->row();
-		} else {
-			return null;
-		}
+		return $query->row();
 	}
 
 	/**
-	* Получение информации о всех подразделениях
+	* Получает все подразделения по организации
 	*
 	* @param int|null $org_id ID организации
-	* @return object[]|null Массив с подразделениями или NULL - отсутствует
+	* @return object[] Массив с подразделениями или пустой массив
 	*/
-	public function get_all(int $org_id = null)
+	public function get_all(int $org_id = null): array
 	{
 		if ($org_id !== null) {
 			$this->db->where('org_id', $org_id);
 		}
 		$query = $this->db
-			->order_by('number', 'ASC')
-			->order_by('letter', 'ASC')
+			->order_by('number ASC', 'letter ASC')
 			->get('divisions');
 
-		if ($query->num_rows() > 0) {
-			return $query->result();
-		} else {
-			return null;
-		}
+		return $query->result();
 	}
 
 	/**
-	* Добавление нового подразделения
+	* Добавляет новое подразделение
 	*
 	* @param object $div Подразделение
 	* @return int ID нового подразделения
@@ -82,43 +74,35 @@ class Div_model extends CI_Model
 	}
 
 	/**
-	* Обновление информации о подразделении
+	* Обновляет информацию о подразделении
 	*
 	* @param object $div Подразделение
-	* @return bool TRUE - успешно, FALSE - ошибка
+	* @return int Количество успешных записей
 	*/
-	public function update($div): bool
+	public function update($div): int
 	{
 		$this->db
 			->where('id', $div->id)
 			->update('divisions', $this->set($div));
 
-		if ($this->db->affected_rows() > 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return $this->db->affected_rows();
 	}
 
 	/**
-	* Удаление подразделения
+	* Удаляет подразделение
 	*
 	* @param int $div_id ID подразделения
-	* @return bool TRUE - успешно, FALSE - ошибка
+	* @return int Количество успешных удалений
 	*/
-	public function delete(int $div_id): bool
+	public function delete(int $div_id): int
 	{
 		$this->db->delete('divisions', ['id' => $div_id]);
 
-		if ($this->db->affected_rows() > 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return $this->db->affected_rows();
 	}
 
 	/**
-	* Установить информацию о подразделении
+	* Получает объект и возвращает массив для записи
 	*
 	* @param object $div Подразделение
 	* @return mixed[] Массив с параметрами контроллера

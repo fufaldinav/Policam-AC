@@ -10,10 +10,10 @@ function deleteDivision(div_id) {
 		return;
 	}
 	$.ajax({
-		url: `/index.php/divisions/delete/${div_id}`,
+		url: `/divisions/delete/${div_id}`,
 		type: `GET`,
 		success: function(res) {
-			if (res) {
+			if (res > 0) {
 				alert(`Успешное удаление`);
 				location.reload();
 			} else {
@@ -36,7 +36,7 @@ function saveDivision(org_id) {
 		return;
 	}
 	$.ajax({
-		url: `/index.php/divisions/add`,
+		url: `/divisions/add`,
 		type: `POST`,
 		data: {
 			div: JSON.stringify(div)

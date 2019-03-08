@@ -31,7 +31,7 @@ function savePersonInfo() {
 		alert(`Введены не все данные`);
 	} else {
 		$.ajax({
-			url: `/index.php/persons/add`,
+			url: `/persons/add`,
 			type: `POST`,
 			data: {
 				person: JSON.stringify(person)

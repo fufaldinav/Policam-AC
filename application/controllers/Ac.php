@@ -74,7 +74,7 @@ class Ac extends CI_Controller
 
 		$divs = $this->div->get_all($this->first_org->id);
 
-		if ($divs === null) {
+		if (count($divs) == 0) {
 			$data['divs_list'][] = lang('missing');
 		} else {
 			foreach ($divs as $div) {
@@ -112,7 +112,7 @@ class Ac extends CI_Controller
 
 		$divs = $this->div->get_all($this->first_org->id);
 
-		if ($divs === null) {
+		if (count($divs) == 0) {
 			$data['divs_list'][] = lang('missing');
 		} else {
 			foreach ($divs as $div) {
@@ -128,7 +128,7 @@ class Ac extends CI_Controller
 
 		$cards = $this->card->get_by_person(-1);
 
-		if ($cards === null) {
+		if (count($cards) == 0) {
 			$data['cards'][] = lang('missing');
 		} else {
 			$data['cards'][] = lang('not_selected');
@@ -165,7 +165,7 @@ class Ac extends CI_Controller
 			'divs_attr' => 'id="div" disabled'
 		];
 
-		$divs = $this->div->get_all($this->first_org->id) ?? [];
+		$divs = $this->div->get_all($this->first_org->id);
 
 		$data['divs_menu'] = $divs;
 
@@ -193,7 +193,7 @@ class Ac extends CI_Controller
 
 		$cards = $this->card->get_by_person(-1);
 
-		if ($cards === null) {
+		if (count($cards) == 0) {
 			$data['cards'][] = lang('missing');
 		} else {
 			$data['cards'][] = lang('not_selected');
@@ -226,7 +226,7 @@ class Ac extends CI_Controller
 
 		$data = [
 			'org_id' => $this->first_org->id,
-			'divs' => $this->div->get_all($this->first_org->id) ?? []
+			'divs' => $this->div->get_all($this->first_org->id)
 		];
 
 		$header = [
