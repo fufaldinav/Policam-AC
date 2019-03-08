@@ -30,3 +30,9 @@ $config['log_path'] = '/var/www/logs';
 | Таймаут одного long poll
 */
 $config['long_poll_timeout'] = 10;
+
+/*
+|	Firebase Cloud Messaging
+*/
+$config['fcm_url'] = 'https://fcm.googleapis.com/fcm/send';
+$config['server_key'] = 'AAAA6hsRfn0:APA91bFXS5t_qUC7StorR89rPP0bKbc3qDA-N6xqdeaNRn1TBSqSS-qMUx4F3HKjOwTNDRdQnpxE8uvpJLwB8dcdKlCDu1N2_35zmLkDQ1TxJXBMLzWO3MrQ7WQhBjgvT_MNBIWcOzV5';
