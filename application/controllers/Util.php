@@ -74,10 +74,12 @@ class Util extends CI_Controller
 		$this->load->model('ac/org_model', 'org');
 		$this->load->model('ac/person_model', 'person');
 
+		$user_id = $this->ion_auth->user()->row()->id; //TODO
+
 		$type = $this->input->post('type');
 		$person_id = $this->input->post('person_id');
 
-		if ($type === null || $person_id === null) {
+		if (!isset($type) || !isset($person_id)) {
 			return null;
 		}
 
@@ -88,7 +90,7 @@ class Util extends CI_Controller
 		if ($type == 1) {
 			$desc = $person->id . ' ' . $person->f . ' ' . $person->i . ' forgot card';
 
-			if ($this->util->add_user_event($type, $desc) > 0) {
+			if ($this->util->add_user_event($user_id, $type, $desc) > 0) {
 				echo $response;
 			}
 		} elseif ($type == 2 || $type == 3) {
@@ -115,7 +117,7 @@ class Util extends CI_Controller
 
 			$response .= ' ' . lang('and') . ' ' . lang('card_deleted');
 
-			if ($this->util->add_user_event($type, $desc) > 0) {
+			if ($this->util->add_user_event($user_id, $type, $desc) > 0) {
 				echo $response;
 			}
 		}

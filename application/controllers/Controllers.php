@@ -55,7 +55,7 @@ class Controllers extends CI_Controller
 			exit;
 		}
 
-		if ($ctrl_id !== null && $open_time !== null) {
+		if (isset($ctrl_id) && isset($open_time)) {
 			if ($this->ctrl->set_door_params($ctrl_id, $open_time) > 0) {
 				echo 'Задания успешно отправлены'; //TODO перевод
 			}
@@ -75,12 +75,12 @@ class Controllers extends CI_Controller
 			exit;
 		}
 
-		if ($ctrl_id === null) {
-			echo 'Не выбран контроллер'; //TODO перевод
-		} else {
+		if (isset($ctrl_id)) {
 			if ($this->ctrl->clear_cards($ctrl_id) > 0) {
 				echo 'Задания успешно отправлены'; //TODO перевод
 			}
+		} else {
+			echo 'Не выбран контроллер'; //TODO перевод
 		}
 	}
 
@@ -96,9 +96,9 @@ class Controllers extends CI_Controller
 			exit;
 		}
 
-		if ($ctrl_id === null) {
+		if (!isset($ctrl_id)) {
 			echo 'Не выбран контроллер'; //TODO перевод
-		} elseif ($this->first_org === null) {
+		} elseif (!isset($this->first_org)) {
 			echo 'Нет организаций'; //TODO перевод
 		} else {
 			$this->load->model('ac/card_model', 'card');
@@ -129,7 +129,7 @@ class Controllers extends CI_Controller
 
 				if (($i > 0 && ($i % 10 == 0)) || $i == ($card_count - 1)) {
 					$counter += $this->ctrl->add_cards($ctrl_id, $codes);
-					
+
 					$codes = [];
 				}
 			}

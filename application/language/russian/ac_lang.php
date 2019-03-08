@@ -5,6 +5,7 @@ $lang['observ'] = 'Наблюдение';
 $lang['adding'] = 'Добавление';
 $lang['editing'] = 'Редактирование';
 $lang['classes'] = 'Классы';
+$lang['entrace'] = 'Вход';
 $lang['exit'] = 'Выход';
 $lang['f'] = 'ФАМИЛИЯ';
 $lang['i'] = 'Имя';

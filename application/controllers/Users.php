@@ -29,7 +29,7 @@ class Users extends CI_Controller
 
 		if ($token_str === 'false') {
 			$this->notification->delete_token($token_str);
-		} elseif ($this->notification->get_token($token_str) === null) {
+		} elseif (!isset($this->notification->get_token($token_str))) {
 			$this->notification->add_token($this->user_id, $token_str);
 		}
 	}

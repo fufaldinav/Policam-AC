@@ -50,7 +50,7 @@ class Org_model extends CI_Model
 	*/
 	public function get_all(int $user_id = null): array
 	{
-		if ($user_id !== null) {
+		if (isset($user_id)) {
 			$this->db->where('user_id', $user_id);
 		}
 		$query = $this->db
@@ -72,7 +72,7 @@ class Org_model extends CI_Model
 		$org = $this->get($org_id);
 
 		$org_name = $org->number;
-		if ($org->address !== null) {
+		if (isset($org->address)) {
 			$org_name .= ' (' . $org->address . ')';
 		}
 

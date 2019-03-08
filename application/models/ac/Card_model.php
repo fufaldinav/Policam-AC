@@ -81,7 +81,7 @@ class Card_model extends CI_Model
 	*/
 	public function get_all(int $ctrl_id = null): array
 	{
-		if ($ctrl_id !== null) {
+		if (isset($ctrl_id)) {
 			$this->db->where('controller_id', $ctrl_id);
 		}
 		$query = $this->db->get('cards');

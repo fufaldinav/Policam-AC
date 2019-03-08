@@ -41,8 +41,8 @@ class Task_model extends CI_Model
 
 		$json = '{"id":' . $id . ',';
 		$json .= '"operation":"' . $operation . '"';
-		$json .= ($data !== null) ? ',' : '';
-		$json .= ($data !== null) ? $data : '';
+		$json .= isset($data) ? ',' : '';
+		$json .= isset($data) ? $data : '';
 		$json .= '}';
 
 		$data =	[

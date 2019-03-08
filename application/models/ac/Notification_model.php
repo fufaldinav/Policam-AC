@@ -24,12 +24,33 @@ defined('BASEPATH') or exit('No direct script access allowed');
 */
 class Notification_model extends CI_Model
 {
+	/**
+	* Адрес сервера FCM
+	*
+	* @var string $fcm_url
+	*/
+	private $fcm_url;
+
+	/**
+	* Ключ сервера
+	*
+	* @var string $server_key
+	*/
+	private $server_key;
+
 	public function __construct()
 	{
 		parent::__construct();
 
+		$this->lang->load('ac');
+
 		$this->load->model('ac/person_model', 'person');
 		$this->load->model('ac/photo_model', 'photo');
+
+		$this->config->load('ac', true);
+
+		$this->fcm_url = $this->config->item('fcm_url', 'ac');
+		$this->server_key = $this->config->item('server_key', 'ac');
 	}
 
 	/**
@@ -41,7 +62,7 @@ class Notification_model extends CI_Model
 	*/
 	public function check_subscription(int $person_id, int $user_id = null): array
 	{
-		if ($user_id !== null) {
+		if (isset($user_id)) {
 			$this->db->where('user_id', $user_id);
 		}
 
@@ -62,12 +83,12 @@ class Notification_model extends CI_Model
 	public function generate(int $person_id, int $event_id): array
 	{
 		switch ($event_id) {
-			case 4:
-				$event = 'Вход'; //TODO перевод
+			case 4: //вход
+				$event = lang('entrace');
 				break;
 
-			case 5:
-				$event = 'Выход'; //TODO перевод
+			case 5: //выход
+				$event = lang('exit');
 				break;
 
 			default:
@@ -82,7 +103,7 @@ class Notification_model extends CI_Model
 		$notification = [
 			'title' => $event,
 			'body' => $person->f . ' ' . $person->i,
-			'icon' => ($photo !== null) ? ('https://' . $_SERVER['HTTP_HOST'] . '/img/ac/s/' . $photo->id . '.jpg') : '',
+			'icon' => (isset($photo)) ? ('https://' . $_SERVER['HTTP_HOST'] . '/img/ac/s/' . $photo->id . '.jpg') : '',
 			'click_action' => base_url('/')
 		];
 
@@ -95,13 +116,8 @@ class Notification_model extends CI_Model
 	* @param int|null $user_id   ID пользователя
 	* @return string Ответ на запрос
 	*/
-	public function send(array $notification, int $user_id = null): string //TODO перенести кое-что в конфиг
+	public function send(array $notification, int $user_id = null): string
 	{
-		$url = 'https://fcm.googleapis.com/fcm/send';
-		//Ключ сервера
-		$YOUR_API_KEY = 'AAAA6hsRfn0:APA91bFXS5t_qUC7StorR89rPP0bKbc3qDA-N6xqdeaNRn1TBSqSS-qMUx4F3HKjOwTNDRdQnpxE8uvpJLwB8dcdKlCDu1N2_35zmLkDQ1TxJXBMLzWO3MrQ7WQhBjgvT_MNBIWcOzV5';
-		//Идентификатор отправителя
-
 		$registration_ids = [];
 
 		$tokens = $this->get_all($user_id);
@@ -118,11 +134,11 @@ class Notification_model extends CI_Model
 
 		$request_headers = [
 			'Content-Type: application/json',
-			'Authorization: key=' . $YOUR_API_KEY,
+			'Authorization: key=' . $this->server_key,
 		];
 
 		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_URL, $this->fcm_url);
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
@@ -157,7 +173,7 @@ class Notification_model extends CI_Model
 	*/
 	public function get_all(int $user_id = null): array
 	{
-		if ($user_id !== null) {
+		if (isset($user_id)) {
 			$this->db->where('user_id', $user_id);
 		}
 		$query = $this->db->get('users_tokens');

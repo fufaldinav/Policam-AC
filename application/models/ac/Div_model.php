@@ -50,7 +50,7 @@ class Div_model extends CI_Model
 	*/
 	public function get_all(int $org_id = null): array
 	{
-		if ($org_id !== null) {
+		if (isset($org_id)) {
 			$this->db->where('org_id', $org_id);
 		}
 		$query = $this->db
