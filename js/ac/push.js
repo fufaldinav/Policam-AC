@@ -21,28 +21,28 @@ function subscribe() {
 	messaging.requestPermission().then(function () {
 			// получаем ID устройства
 			messaging.getToken().then(function (currentToken) {
-				console.log(`Токен успешно получен`);
+				console.log(`Токен успешно получен`); //TODO перевод
 				if (currentToken) {
 					sendTokenToServer(currentToken);
 				} else {
-					console.warn(`Не удалось получить токен.`);
+					console.warn(`Не удалось получить токен.`); //TODO перевод
 					setTokenSentToServer(false);
 				}
 			}).catch(function (err) {
-				console.warn(`При получении токена произошла ошибка.`, err);
+				console.warn(`При получении токена произошла ошибка.`, err); //TODO перевод
 				setTokenSentToServer(false);
 			});
 	}).catch(function (err) {
-		console.warn(`Не удалось получить разрешение на показ уведомлений.`, err);
+		console.warn(`Не удалось получить разрешение на показ уведомлений.`, err); //TODO перевод
 	});
 }
 
 // отправка ID на сервер
 function sendTokenToServer(currentToken) {
 	if (!isTokenSentToServer(currentToken)) {
-		console.log(`Отправка токена на сервер...`);
+		console.log(`Отправка токена на сервер...`); //TODO перевод
 		$.ajax({
-			url: `/users/token`,
+			url: `[base_url]users/token`,
 			type: `POST`,
 			data: {
 				token: currentToken
@@ -51,12 +51,12 @@ function sendTokenToServer(currentToken) {
 				console.log(res);
 			},
 			error: function() {
-				console.warn(`Неизвестная ошибка`);
+				console.warn(`Неизвестная ошибка`); //TODO перевод
 			}
 		});
 		setTokenSentToServer(currentToken);
 	} else {
-		console.log(`Токен уже отправлен на сервер.`);
+		console.log(`Токен уже отправлен на сервер.`); //TODO перевод
 	}
 }
 

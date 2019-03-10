@@ -1,7 +1,7 @@
 //сохранить ошибку на сервере
 function sendError(message) {
 	$.ajax({
-		url: `/util/save_js_errors`,
+		url: `[base_url]util/save_js_errors`,
 		type: `POST`,
 		data: {
 			error: message
@@ -13,7 +13,7 @@ function sendError(message) {
 function getCards(id) {
 	let card = document.getElementById(`card`);
 	$.ajax({
-		url: `/cards/get_all`,
+		url: `[base_url]cards/get_all`,
 		type: `GET`,
 		success: function(data) {
 			if (data) {
@@ -21,9 +21,9 @@ function getCards(id) {
 					card.remove(card.length - 1);
 				}
 				if (data.length == 0) { //если нет известных карт
-					addOption(card, 0, `Отсутствует`);
+					addOption(card, 0, `[missing]`);
 				} else { //иначе заполним меню картами
-					addOption(card, 0, `Не выбрана`); //первый пункт
+					addOption(card, 0, `[not_selected]`); //первый пункт
 					data.forEach(function(c) {
 						addOption(card, c.id, c.wiegand);
 					});
@@ -32,11 +32,11 @@ function getCards(id) {
 					card.value = id;
 				}
 			} else {
-				alert(`Пустой ответ от сервера`);
+				alert(`Пустой ответ от сервера`); //TODO перевод
 			}
 		},
 		error: function() {
-			alert(`Неизвестная ошибка`);
+			alert(`Неизвестная ошибка`); //TODO перевод
 		}
 	});
 }
@@ -54,7 +54,7 @@ function handleFiles(files) {
 	let formData = new FormData();
 	formData.append(`file`, files[0]);
 	$.ajax({
-		url: `/photos/save`,
+		url: `[base_url]photos/save`,
 		type: `POST`,
 		method: `POST`,
 		contentType: false,
@@ -73,22 +73,22 @@ function handleFiles(files) {
 					alert(data.error);
 				}
 			} else {
-				alert(`Неизвестная ошибка`);
+				alert(`Неизвестная ошибка`); //TODO перевод
 			}
 		},
 		error: function() {
-			alert(`Неизвестная ошибка`);
+			alert(`Неизвестная ошибка`); //TODO перевод
 		}
 	});
 }
 
 //удаление фото
 function deletePhoto() {
-	if (!confirm(`Подтвердите удаление.`)) {
+	if (!confirm(`Подтвердите удаление.`)) { //TODO перевод
 		return;
 	}
 	$.ajax({
-		url: `/photos/delete/${person.photo}`,
+		url: `[base_url]photos/delete/${person.photo}`,
 		type: `GET`,
 		success: function(res) {
 			if (res) {
@@ -101,11 +101,11 @@ function deletePhoto() {
 				document.getElementById(`photo`).value = null;
 				person.photo = null;
 			} else {
-				alert(`Неизвестная ошибка`);
+				alert(`Неизвестная ошибка`); //TODO перевод
 			}
 		},
 		error: function() {
-			alert(`Неизвестная ошибка`);
+			alert(`Неизвестная ошибка`); //TODO перевод
 		}
 	});
 }

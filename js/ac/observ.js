@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function() {
 //получение времени от сервера
 function getServerTime() {
 	$.ajax({
-		url: `/util/get_time`,
+		url: `[base_url]util/get_time`,
 		type: `GET`,
 		success: function(data) {
 			time = data;
@@ -20,7 +20,7 @@ function getServerTime() {
 //получение сообщений от сервера
 function getNewMsgs(events, time) {
 	$.ajax({
-		url: `/util/get_events`,
+		url: `[base_url]util/get_events`,
 		type: `POST`,
 		data: {
 			events: events,
@@ -37,11 +37,11 @@ function getNewMsgs(events, time) {
 					getNewMsgs(events, time);
 				}, 10);
 			} else {
-				alert(`Пустой ответ от сервера`);
+				alert(`Пустой ответ от сервера`); //TODO перевод
 			}
 		},
 		error: function() {
-			alert(`Неизвестная ошибка`);
+			alert(`Неизвестная ошибка`); //TODO перевод
 		}
 	});
 }
@@ -49,7 +49,7 @@ function getNewMsgs(events, time) {
 //получение данных пользователя из БД
 function setPersonInfo(card_id) {
 	$.ajax({
-		url: `/persons/get_by_card/${card_id}`,
+		url: `[base_url]persons/get_by_card/${card_id}`,
 		type: `GET`,
 		success: function(data) {
 			if (data) {
@@ -64,18 +64,18 @@ function setPersonInfo(card_id) {
 				}
 				photo.style.backgroundImage = 'url(/img/ac/s/' + data.photo + '.jpg)';
 			} else {
-				alert(`Пустой ответ от сервера`);
+				alert(`Пустой ответ от сервера`); //TODO перевод
 			}
 		},
 		error: function() {
-			alert(`Неизвестная ошибка`);
+			alert(`Неизвестная ошибка`); //TODO перевод
 		}
 	});
 }
 
 function getDivisions() {
 	$.ajax({
-		url: `/divisions/get_all`,
+		url: `[base_url]divisions/get_all`,
 		type: `GET`,
 		success: function(data) {
 			if (data.length > 0) {
@@ -86,33 +86,33 @@ function getDivisions() {
 				let menu = document.getElementById(`menu`);
 				menu.innerHTML = divisions;
 			} else {
-				alert(`Пустой ответ от сервера`);
+				alert(`Пустой ответ от сервера`); //TODO перевод
 			}
 		},
 		error: function() {
-			alert(`Неизвестная ошибка`);
+			alert(`Неизвестная ошибка`); //TODO перевод
 		}
 	});
 }
 
 function getPersons(div_id) {
 	$.ajax({
-		url: `/persons/get_all/${div_id}`,
+		url: `[base_url]persons/get_all/${div_id}`,
 		type: `GET`,
 		success: function(data) {
 			if (data.length > 0) {
-				let persons = `<div id="menu-button-back" class="menu-item" onclick="getDivisions();">Назад</div>`;
+				let persons = `<div id="menu-button-back" class="menu-item" onclick="getDivisions();">Назад</div>`; //TODO перевод
 				data.forEach(function(person) {
 					persons += `<div id="person${person.id}" class="menu-item" onclick="openEntraceOptions(${person.id}, ${div_id});">${person.f} ${person.i}</div>`;
 				});
 				let menu = document.getElementById(`menu`);
 				menu.innerHTML = persons;
 			} else {
-				alert(`Пустой ответ от сервера`);
+				alert(`Пустой ответ от сервера`); //TODO перевод
 			}
 		},
 		error: function() {
-			alert(`Неизвестная ошибка`);
+			alert(`Неизвестная ошибка`); //TODO перевод
 		}
 	});
 }
@@ -120,13 +120,13 @@ function getPersons(div_id) {
 function openEntraceOptions(person_id, div_id) {
 	let options = ``;
 	if (div_id === undefined) {
-		options += `<div id="menu-button-back" class="menu-item" onclick="getDivisions();">Назад</div>`;
+		options += `<div id="menu-button-back" class="menu-item" onclick="getDivisions();">Назад</div>`; //TODO перевод
 	} else {
-		options += `<div id="menu-button-back" class="menu-item" onclick="getPersons(${div_id});">Назад</div>`;
+		options += `<div id="menu-button-back" class="menu-item" onclick="getPersons(${div_id});">Назад</div>`; //TODO перевод
 	}
-	options += `<div id="menu-button-forgot" class="menu-item" onclick="sendInfo(1, ${person_id})">Забыл</div>`;
-	options += `<div id="menu-button-lost" class="menu-item" onclick="sendInfo(2, ${person_id})">Потерял</div>`;
-	options += `<div id="menu-button-broke" class="menu-item" onclick="sendInfo(3, ${person_id})">Сломал</div>`;
+	options += `<div id="menu-button-forgot" class="menu-item" onclick="sendInfo(1, ${person_id})">Забыл</div>`; //TODO перевод
+	options += `<div id="menu-button-lost" class="menu-item" onclick="sendInfo(2, ${person_id})">Потерял</div>`; //TODO перевод
+	options += `<div id="menu-button-broke" class="menu-item" onclick="sendInfo(3, ${person_id})">Сломал</div>`; //TODO перевод
 	let menu = document.getElementById(`menu`);
 	menu.innerHTML = options;
 }
@@ -135,20 +135,20 @@ function sendInfo(type, person_id) {
 	let msg;
 	switch (type) {
 		case 1:
-			msg = `На сервер будет отправлено уведомление.`;
+			msg = `На сервер будет отправлено уведомление.`; //TODO перевод
 			if (!confirm(msg)) return;
 			break;
 		case 2:
-			msg = `Карта будет удалена, а на сервер будет отправлено уведомление.`;
+			msg = `Карта будет удалена, а на сервер будет отправлено уведомление.`; //TODO перевод
 			if (!confirm(msg)) return;
 			break;
 		case 3:
-			msg = `Карта будет удалена, а на сервер будет отправлено уведомление.`;
+			msg = `Карта будет удалена, а на сервер будет отправлено уведомление.`; //TODO перевод
 			if (!confirm(msg)) return;
 			break;
 	}
 	$.ajax({
-		url: `/util/card_problem`,
+		url: `[base_url]util/card_problem`,
 		type: `POST`,
 		data: {
 			type: type,
@@ -158,11 +158,11 @@ function sendInfo(type, person_id) {
 			if (res) {
 				alert(res);
 			} else {
-				alert(`Пустой ответ от сервера`);
+				alert(`Пустой ответ от сервера`); //TODO перевод
 			}
 		},
 		error: function() {
-			alert(`Неизвестная ошибка`);
+			alert(`Неизвестная ошибка`); //TODO перевод
 		}
 	});
 }

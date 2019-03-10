@@ -29,24 +29,24 @@ function updatePersonInfo() {
 		}
 	});
 	if (!checkValidity) {
-		alert(`Введены не все данные`);
+		alert(`Введены не все данные`); //TODO перевод
 	} else {
 		$.ajax({
-			url: `/persons/update`,
+			url: `[base_url]persons/update`,
 			type: `POST`,
 			data: {
 				person: JSON.stringify(person)
 			},
 			success: function(res) {
 				if (res > 0) {
-					alert(`Пользователь успешно сохранен`);
+					alert(`Пользователь успешно сохранен`); //TODO перевод
 				} else {
-					alert(`Не сохранено или данные совпали`);
+					alert(`Не сохранено или данные совпали`); //TODO перевод
 				}
 				getCardsByPerson(person.id);
 			},
 			error: function() {
-				alert(`Неизвестная ошибка`);
+				alert(`Неизвестная ошибка`); //TODO перевод
 			}
 		});
 	}
@@ -54,11 +54,11 @@ function updatePersonInfo() {
 
 //удаление пользователя из БД
 function deletePerson() {
-	if (!confirm(`Подтвердите удаление.`)) {
+	if (!confirm(`Подтвердите удаление.`)) { //TODO перевод
 		return;
 	}
 	$.ajax({
-		url: `/persons/delete/${person.id}`,
+		url: `[base_url]persons/delete/${person.id}`,
 		type: `GET`,
 		success: function(res) {
 			if (res > 0) {
@@ -100,13 +100,13 @@ function deletePerson() {
 				document.getElementById(`delete`).onclick = function() {
 					return false;
 				};
-				alert(`Пользователь успешно удален`);
+				alert(`Пользователь успешно удален`); //TODO перевод
 			} else {
-				alert(`Пустой ответ от сервера`);
+				alert(`Пустой ответ от сервера`); //TODO перевод
 			}
 		},
 		error: function() {
-			alert(`Неизвестная ошибка`);
+			alert(`Неизвестная ошибка`); //TODO перевод
 		}
 	});
 }
@@ -114,7 +114,7 @@ function deletePerson() {
 //получение данных пользователя из БД
 function getPersonInfo(person_id) {
 	$.ajax({
-		url: `/persons/get/${person_id}`,
+		url: `[base_url]persons/get/${person_id}`,
 		type: `GET`,
 		success: function(data) {
 			if (data) {
@@ -151,11 +151,11 @@ function getPersonInfo(person_id) {
 				document.getElementById(`delete`).onclick = deletePerson;
 				getCardsByPerson(person.id);
 			} else {
-				alert(`Пустой ответ от сервера`);
+				alert(`Пустой ответ от сервера`); //TODO перевод
 			}
 		},
 		error: function() {
-			alert(`Неизвестная ошибка`);
+			alert(`Неизвестная ошибка`); //TODO перевод
 		}
 	});
 }
@@ -163,7 +163,7 @@ function getPersonInfo(person_id) {
 //получение списка карт (брелоков) от сервера
 function getCardsByPerson(person_id) {
 	$.ajax({
-		url: `/cards/get_by_person/${person_id}`,
+		url: `[base_url]cards/get_by_person/${person_id}`,
 		type: `GET`,
 		success: function(data) {
 			let cards = document.getElementById(`cards`);
@@ -186,7 +186,7 @@ function getCardsByPerson(person_id) {
 			}
 		},
 		error: function() {
-			alert(`Неизвестная ошибка`);
+			alert(`Неизвестная ошибка`); //TODO перевод
 		}
 	});
 }
@@ -194,29 +194,29 @@ function getCardsByPerson(person_id) {
 //добавление карты в БД
 function saveCard(card_id) {
 	$.ajax({
-		url: `/cards/add/${card_id}/${person.id}`,
+		url: `[base_url]cards/add/${card_id}/${person.id}`,
 		type: `GET`,
 		success: function(res) {
 			if (res > 0) {
 				getCardsByPerson(person.id);
-				alert(`Ключ успешно добавлен`);
+				alert(`Ключ успешно добавлен`); //TODO перевод
 			} else {
-				alert(`Неизвестная ошибка`);
+				alert(`Неизвестная ошибка`); //TODO перевод
 			}
 		},
 		error: function() {
-			alert(`Неизвестная ошибка`);
+			alert(`Неизвестная ошибка`); //TODO перевод
 		}
 	});
 }
 
 //удаление карты из БД
 function delCard(card_id) {
-	if (!confirm(`Подтвердите удаление.`)) {
+	if (!confirm(`Подтвердите удаление.`)) { //TODO перевод
 		return;
 	}
 	$.ajax({
-		url: `/cards/delete/${card_id}`,
+		url: `[base_url]cards/delete/${card_id}`,
 		type: `GET`,
 		success: function(res) {
 			if (res > 0) {
@@ -234,13 +234,13 @@ function delCard(card_id) {
 						c.innerHTML = c.innerHTML.substring(4);
 					}
 				}
-				alert(`Ключ успешно отвязан`);
+				alert(`Ключ успешно отвязан`); //TODO перевод
 			} else {
-				alert(`Неизвестная ошибка`);
+				alert(`Неизвестная ошибка`); //TODO перевод
 			}
 		},
 		error: function() {
-			alert(`Неизвестная ошибка`);
+			alert(`Неизвестная ошибка`); //TODO перевод
 		}
 	});
 }
