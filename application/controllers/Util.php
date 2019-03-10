@@ -15,16 +15,14 @@ class Util extends CI_Controller
 	{
 		parent::__construct();
 
+		$this->load->library('ion_auth');
+
 		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
 		}
 
-		$this->lang->load('ac');
-
 		$this->load->model('ac/util_model', 'util');
-
-		$this->load->helper('language');
 	}
 
 	/**
@@ -68,11 +66,15 @@ class Util extends CI_Controller
 	 */
 	public function card_problem()
 	{
+		$this->lang->load('ac');
+
 		$this->load->model('ac/card_model', 'card');
 		$this->load->model('ac/ctrl_model', 'ctrl');
 		$this->load->model('ac/div_model', 'div');
 		$this->load->model('ac/org_model', 'org');
 		$this->load->model('ac/person_model', 'person');
+
+		$this->load->helper('language');
 
 		$user_id = $this->ion_auth->user()->row()->id; //TODO
 

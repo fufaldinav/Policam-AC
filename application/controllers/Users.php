@@ -15,6 +15,8 @@ class Users extends CI_Controller
 	{
 		parent::__construct();
 
+		$this->load->library('ion_auth');
+
 		$this->load->model('ac/notification_model', 'notification');
 
 		$this->user_id = $this->ion_auth->user()->row()->id;

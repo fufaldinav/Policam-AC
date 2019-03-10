@@ -28,19 +28,20 @@ class Ac extends CI_Controller
 	{
 		parent::__construct();
 
-		$this->load->helper('language');
+		$this->lang->load('ac');
+
+		$this->load->library('ion_auth');
 
 		if (!$this->ion_auth->logged_in()) {
 			redirect('auth/login');
 		}
-		$this->lang->load('ac');
 
 		$this->load->model('ac/card_model', 'card');
 		$this->load->model('ac/div_model', 'div');
 		$this->load->model('ac/org_model', 'org');
 		$this->load->model('ac/person_model', 'person');
 
-		$this->load->helper('form');
+		$this->load->helper('language');
 
 		$this->user_id = $this->ion_auth->user()->row()->id;
 		$this->orgs = $this->org->get_all($this->user_id); //TODO
@@ -64,6 +65,8 @@ class Ac extends CI_Controller
 	 */
 	public function observ()
 	{
+		$this->load->helper('form');
+
 		/**
 		 * Подразделения
 		 */
@@ -101,6 +104,8 @@ class Ac extends CI_Controller
 		if (!$this->ion_auth->in_group(2)) {
 			redirect('ac/observ');
 		}
+
+		$this->load->helper('form');
 
 		/**
 		 * Подразделения
@@ -156,6 +161,8 @@ class Ac extends CI_Controller
 		if (!$this->ion_auth->in_group(2)) {
 			redirect('ac/observ');
 		}
+
+		$this->load->helper('form');
 
 		/**
 		 * Подразделения

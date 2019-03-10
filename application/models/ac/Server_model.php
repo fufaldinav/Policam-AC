@@ -37,12 +37,14 @@ class Server_model extends CI_Model
 	{
 		parent::__construct();
 
+		$this->config->load('ac', true);
+
+		$this->load->database();
+
 		$this->load->model('ac/card_model', 'card');
 		$this->load->model('ac/ctrl_model', 'ctrl');
 		$this->load->model('ac/notification_model', 'notification');
 		$this->load->model('ac/task_model', 'task');
-
-		$this->config->load('ac', true);
 
 		$this->log_path = $this->config->item('log_path', 'ac');
 
@@ -59,8 +61,7 @@ class Server_model extends CI_Model
 	*/
 	public function handle_msg(string $inc_json_msg): ?string
 	{
-		$this->load->helper('file');
-		$this->load->helper('date');
+		$this->load->helper(['date', 'file']);
 
 		$out_msg = new stdClass();
 

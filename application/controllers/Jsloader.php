@@ -48,6 +48,8 @@ class Jsloader extends CI_Controller
 	{
 		$this->lang->load('ac');
 
+		$this->load->helper(['language', 'url']);
+
 		preg_match_all("/\[@{0,1}[a-zA-Z0-9_]+[\s]*[a-zA-Z0-9_]*\]/", $text, $matches, PREG_PATTERN_ORDER);
 
 		foreach ($matches[0] as $match) {

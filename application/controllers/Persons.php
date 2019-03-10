@@ -29,6 +29,8 @@ class Persons extends CI_Controller
 	{
 		parent::__construct();
 
+		$this->load->library('ion_auth');
+
 		if (!$this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
