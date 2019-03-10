@@ -13,20 +13,18 @@ body {
 	min-height: 768px;
 	min-width: 1024px;
 	display: grid;
-	grid-template-areas:
-		"header"
-		"main"
-		"footer";
-	grid-template-columns: 100%;
-	grid-template-rows: 5% 90% 5%;
+	grid:
+		"header" 5%
+		"main" 90%
+		"footer" 5%
+		/ 100%;
 }
 #main {
 	grid-area: main;
 }
 .main-grid-container {
 	display: grid;
-	grid-template-columns: 20% 80%;
-	grid-template-rows: 100%;
+	grid: 100% / 20% 80%;
 }
 #header {
 	grid-area: header;
@@ -39,13 +37,11 @@ body {
 }
 #header-container {
 	display: grid;
-	grid-template-columns: 250px auto 250px;
-	grid-template-rows: 100%;
+	grid: 100% / 250px auto 250px;
 }
 #footer-container {
 	display: grid;
-	grid-template-columns: 250px auto 250px;
-	grid-template-rows: 100%;
+	grid: 100% / 250px auto 250px;
 }
 #header-left {
 	padding: 5px 10px;
@@ -111,15 +107,14 @@ body {
 #info {
 	height: 100%;
 	display: grid;
-	grid-template-areas:
-		"photo f"
-		"photo i"
-		"photo o"
-		"div birthday"
-		"address address"
-		"phone card";
-	grid-template-columns: 50%;
-	grid-template-rows: repeat(3, 15%) repeat(4, 13.75%);
+	grid:
+		"photo f" 15%
+		"photo i" 15%
+		"photo o" 15%
+		"div birthday" 13.75%
+		"address address" 13.75%
+		"phone card" 13.75%
+		/ 50%;
 	align-items: center;
 	background: #ffffff;
 	margin: 0 20px 0 20px;
