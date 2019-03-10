@@ -37,6 +37,8 @@ class Photo_model extends CI_Model
 
 		$this->config->load('ac', true);
 
+		$this->load->database();
+
 		$this->img_path = $this->config->item('img_path', 'ac');
 
 		if (!is_dir($this->img_path)) {

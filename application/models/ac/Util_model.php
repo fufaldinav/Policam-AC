@@ -44,6 +44,8 @@ class Util_model extends CI_Model
 
 		$this->config->load('ac', true);
 
+		$this->load->database();
+
 		$this->log_path = $this->config->item('log_path', 'ac');
 
 		if (!is_dir($this->log_path)) {
