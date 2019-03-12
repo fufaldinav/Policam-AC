@@ -78,7 +78,7 @@ class Org_model extends CI_Model
 
 		$org_name = $org->number;
 		if (isset($org->address)) {
-			$org_name .= ' (' . $org->address . ')';
+			$org_name .= " ($org->address)";
 		}
 
 		return $org_name;

@@ -96,7 +96,7 @@ class Persons extends CI_Controller
 		$count += $this->person->update($person);
 
 		if (isset($person->photo)) {
-				$count += $this->photo->set_person($person->photo, $person->id);
+			$count += $this->photo->set_person($person->photo, $person->id);
 		}
 
 		if ($person->card > 0) {
@@ -127,7 +127,6 @@ class Persons extends CI_Controller
 
 		$cards = $this->card->get_by_person($person_id);
 		if (count($cards) > 0) {
-
 			$ctrls = $this->ctrl->get_all($this->first_org->id);
 
 			foreach ($cards as $card) {

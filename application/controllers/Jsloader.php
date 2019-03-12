@@ -24,7 +24,7 @@ class Jsloader extends CI_Controller
 
 		$this->load->helper('file');
 
-		$contents = read_file('./js/ac/' . $file);
+		$contents = read_file("./js/ac/$file");
 
 		if (!$contents) {
 			header('HTTP/1.1 404 Not Found');
@@ -75,7 +75,7 @@ class Jsloader extends CI_Controller
 
 		$var = substr($var, strlen($prefix) + 1);
 
-		if ($prefix == 'ci') {
+		if ($prefix === 'ci') {
 			switch ($var) {
 				case 'base_url':
 					$this->load->helper('url');
@@ -95,11 +95,11 @@ class Jsloader extends CI_Controller
 
 					break;
 			}
-		} elseif ($prefix == 'config') {
+		} elseif ($prefix === 'config') {
 			$this->config->load('ac', true);
 
 			$value = $this->config->item($var, 'ac');
-		} elseif ($prefix == 'lang') {
+		} elseif ($prefix === 'lang') {
 			$this->lang->load('ac');
 
 			$this->load->helper('language');

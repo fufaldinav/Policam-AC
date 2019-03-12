@@ -106,8 +106,8 @@ class Notification_model extends CI_Model
 
 		$notification = [
 			'title' => $event,
-			'body' => $person->f . ' ' . $person->i,
-			'icon' => (isset($photo)) ? ('https://' . $_SERVER['HTTP_HOST'] . '/img/ac/s/' . $photo->id . '.jpg') : '',
+			'body' => "$person->f $person->i",
+			'icon' => (isset($photo)) ? ("https://" . $_SERVER['HTTP_HOST'] . "/img/ac/s/$photo->id.jpg") : "",
 			'click_action' => base_url('/')
 		];
 
@@ -138,8 +138,8 @@ class Notification_model extends CI_Model
 		$fields = json_encode($request_body);
 
 		$request_headers = [
-			'Content-Type: application/json',
-			'Authorization: key=' . $this->server_key,
+			"Content-Type: application/json",
+			"Authorization: key=$this->server_key",
 		];
 
 		$ch = curl_init();
@@ -213,7 +213,8 @@ class Notification_model extends CI_Model
 	 *
 	 * @return int Количество успешных удалений
 	 */
-	public function delete_token(string $token): int {
+	public function delete_token(string $token): int
+	{
 		$this->db->delete('users_tokens', ['token' => $token]);
 
 		return $this->db->affected_rows();

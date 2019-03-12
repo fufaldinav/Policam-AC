@@ -154,7 +154,7 @@ class Util_model extends CI_Model
 		$timestring = '%H:%i:%s';
 		$time = mdate($timestring, $time);
 
-		$path = $this->log_path . '/err-' . $date . '.txt';
+		$path = "$this->log_path/err-$date.txt";
 		write_file($path, "$time $err\n", 'a');
 	}
 }

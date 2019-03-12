@@ -71,7 +71,8 @@ class Controllers extends CI_Controller
 	 *
 	 * @param int|null $ctrl_id ID контроллера
 	 */
-	public function clear(int $ctrl_id = null) {
+	public function clear(int $ctrl_id = null)
+	{
 		if (!$this->ion_auth->is_admin()) {
 			header('HTTP/1.1 403 Forbidden');
 			exit;
@@ -129,14 +130,14 @@ class Controllers extends CI_Controller
 			for ($i = 0; $i < $card_count; $i++) {
 				$codes[] = $cards[$i]->wiegand;
 
-				if (($i > 0 && ($i % 10 == 0)) || $i == ($card_count - 1)) {
+				if (($i > 0 && ($i % 10 === 0)) || $i === ($card_count - 1)) {
 					$counter += $this->ctrl->add_cards($ctrl_id, $codes);
 
 					$codes = [];
 				}
 			}
 
-			echo 'Отправлено заданий: ' . $counter; //TODO перевод
+			echo "Отправлено заданий: $counter"; //TODO перевод
 		}
 	}
 }

@@ -86,7 +86,7 @@ class Server_model extends CI_Model
 
 		$ctrl = $this->ctrl->get_by_sn($sn);
 
-		$path = $this->log_path . '/inc-' . $log_date . '.txt';
+		$path = "$this->log_path/inc-$log_date.txt";
 
 		if (isset($ctrl)) {
 			$ctrl->last_conn = $time;
@@ -106,14 +106,14 @@ class Server_model extends CI_Model
 			//простой ответ
 			//
 			if (!isset($inc_m->operation) && isset($inc_m->success)) {
-				if ($inc_m->success == 1) {
+				if ($inc_m->success === 1) {
 					$this->task->delete($inc_m->id);
 				}
 			}
 			//
 			//запуск контроллера
 			//
-			elseif ($inc_m->operation == 'power_on') {
+			elseif ($inc_m->operation === 'power_on') {
 				$out_m = new stdClass();
 				$out_m->id = 0;
 				$out_m->operation = 'set_active';
@@ -130,7 +130,7 @@ class Server_model extends CI_Model
 			//
 			//проверка доступа
 			//
-			elseif ($inc_m->operation == 'check_access') {
+			elseif ($inc_m->operation === 'check_access') {
 				$out_m = new stdClass();
 				$out_m->id = $inc_m->id; //запись верна, т.к. ответ должен быть с тем же id
 				$out_m->operation = 'check_access';
@@ -158,13 +158,13 @@ class Server_model extends CI_Model
 			//
 			//пинг от контроллера
 			//
-			elseif ($inc_m->operation == 'ping') {
+			elseif ($inc_m->operation === 'ping') {
 				//do nothing
 			}
 			//
 			//события на контроллере
 			//
-			elseif ($inc_m->operation == 'events') {
+			elseif ($inc_m->operation === 'events') {
 				$events_count = 0;
 				$events = [];
 
@@ -197,16 +197,14 @@ class Server_model extends CI_Model
 					$subscriptions = $this->notification->check_subscription($card->person_id);
 
 					foreach ($subscriptions as $sub) {
-
 						$notification = $this->notification->generate($card->person_id, $event->event);
 
 						if (count($notification) > 0) {
 							$response = $this->notification->send($notification, $sub->user_id);
 
-							$path = $this->log_path . '/push-' . $log_date . '.txt';
+							$path = "$this->log_path/push-$log_date.txt";
 							write_file($path, "USER: $sub->user_id || PERSON: $card->person_id || $response\n", 'a');
 						}
-
 					}
 
 					$events_count++;
@@ -230,7 +228,7 @@ class Server_model extends CI_Model
 
 		$out_json_msg = json_encode($out_msg);
 
-		$path = $this->log_path . '/out-' . $log_date . '.txt';
+		$path = "$this->log_path/out-$log_date.txt";
 		write_file($path, "TYPE: $type || SN: $sn || $out_json_msg\n", 'a');
 
 		return $out_json_msg;

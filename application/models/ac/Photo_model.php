@@ -138,15 +138,15 @@ class Photo_model extends CI_Model
 		$file_hash = hash_file('md5', $file_tmp);
 
 		if (!in_array($file_ext, $extensions)) {
-			$response['error'] = 'Extension not allowed: ' . $file_name . ' ' . $file_type;
+			$response['error'] = "Extension not allowed: $file_name $file_type"; //TODO перевод
 		}
 
 		if ($file_size > 8388608) {
-			$response['error'] = 'File size exceeds limit: ' . $file_name . ' ' . $file_type;
+			$response['error'] = "File size exceeds limit: $file_name $file_type"; //TODO перевод
 		}
 
-		if ($file_size == 0) {
-			$response['error'] = 'Wrong file or file not exists';
+		if ($file_size === 0) {
+			$response['error'] = 'Wrong file or file not exists'; //TODO перевод
 		}
 
 		if ($response['error'] === '') {
@@ -167,7 +167,7 @@ class Photo_model extends CI_Model
 			$this->delete_old();
 
 			try {
-				$file_path = $this->img_path . '/' . $photo->id . '.jpg';
+				$file_path = "$this->img_path/$photo->id.jpg";
 
 				move_uploaded_file($file_tmp, $file_path);
 				//сохранение уменьшенной копии
@@ -175,7 +175,7 @@ class Photo_model extends CI_Model
 					'src_path' => $file_path,
 					'width' => 320,
 					'height' => 240,
-					'dst_path' => $this->img_path . '/s/' . $photo->id . '.jpg'
+					'dst_path' => "$this->img_path/s/$photo->id.jpg"
 				];
 
 				$this->create_thumbnail($params);
@@ -214,12 +214,12 @@ class Photo_model extends CI_Model
 		$this->db->delete('photo', ['id' => $photo->id]);
 
 		try {
-			$file_path = $this->img_path . '/' . $photo->id . '.jpg';
+			$file_path = "$this->img_path/$photo->id.jpg";
 			if (file_exists($file_path)) {
 				unlink($file_path);
 			}
 
-			$file_path = $this->img_path . '/s/' . $photo->id . '.jpg';
+			$file_path = "$this->img_path/s/$photo->id.jpg";
 			if (file_exists($file_path)) {
 				unlink($file_path);
 			}
