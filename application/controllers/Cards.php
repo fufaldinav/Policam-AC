@@ -31,7 +31,7 @@ class Cards extends CI_Controller
 	 * @param int $card_id   ID карты
 	 * @param int $person_id ID человека
 	 */
-	public function add(int $card_id, int $person_id)
+	public function holder(int $card_id, int $person_id = -1)
 	{
 		echo $this->card->set_holder($card_id, $person_id);
 	}

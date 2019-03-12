@@ -107,7 +107,7 @@ class Card_model extends CI_Model
 	{
 		$this->db
 			->where('id', $card_id)
-			->update('cards', ['holder_id' => $person_id]);
+			->update('cards', ['person_id' => $person_id]);
 
 		return $this->db->affected_rows();
 	}

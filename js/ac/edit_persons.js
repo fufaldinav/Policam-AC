@@ -168,7 +168,7 @@ function getCardsByPerson(person_id) {
 		success: function(data) {
 			let cards = document.getElementById(`cards`);
 			cards.innerHTML = ``;
-			if (data.lenght > 0) {
+			if (data.length > 0) {
 				document.getElementById(`card_selector`).hidden = true; //спрячем неизвестные карты
 				document.getElementById(`card`).disabled = true; //отключим меню неизвеснтых карт
 				data.forEach(function(c) { //добавим каждую карту в список привязанных
@@ -194,7 +194,7 @@ function getCardsByPerson(person_id) {
 //добавление карты в БД
 function saveCard(card_id) {
 	$.ajax({
-		url: `[ci_site_url]cards/add/${card_id}/${person.id}`,
+		url: `[ci_site_url]cards/holder/${card_id}/${person.id}`,
 		type: `GET`,
 		success: function(res) {
 			if (res > 0) {
@@ -216,7 +216,7 @@ function delCard(card_id) {
 		return;
 	}
 	$.ajax({
-		url: `[ci_site_url]cards/delete/${card_id}`,
+		url: `[ci_site_url]cards/holder/${card_id}`,
 		type: `GET`,
 		success: function(res) {
 			if (res > 0) {
