@@ -25,10 +25,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Photo_model extends CI_Model
 {
 	/**
-	* Каталог с фото
-	*
-	* @var string $img_path
-	*/
+	 * Каталог с фото
+	 *
+	 * @var string $img_path
+	 */
 	private $img_path;
 
 	public function __construct()
@@ -47,11 +47,12 @@ class Photo_model extends CI_Model
 	}
 
 	/**
-	* Получает фотографию по ID
-	*
-	* @param int $photo_id ID фотографии
-	* @return object|null Фотография или NULL, если не найдена
-	*/
+	 * Получает фотографию по ID
+	 *
+	 * @param int $photo_id ID фотографии
+	 *
+	 * @return object|null Фотография или NULL, если не найдена
+	 */
 	public function get(int $photo_id): ?object
 	{
 		$query = $this->db
@@ -62,11 +63,12 @@ class Photo_model extends CI_Model
 	}
 
 	/**
-	* Получает фотографию по хэшу
-	*
-	* @param string $hash Хэш-сумма фотографии
-	* @return object|null Фотография или NULL, если не найдена
-	*/
+	 * Получает фотографию по хэшу
+	 *
+	 * @param string $hash Хэш-сумма фотографии
+	 *
+	 * @return object|null Фотография или NULL, если не найдена
+	 */
 	public function get_by_hash(string $hash): ?object
 	{
 		$query = $this->db
@@ -77,11 +79,12 @@ class Photo_model extends CI_Model
 	}
 
 	/**
-	* Получает фотографию по человеку
-	*
-	* @param int $person_id ID человека
-	* @return object|null Фотография или NULL, если не найдена
-	*/
+	 * Получает фотографию по человеку
+	 *
+	 * @param int $person_id ID человека
+	 *
+	 * @return object|null Фотография или NULL, если не найдена
+	 */
 	public function get_by_person(int $person_id): ?object
 	{
 		$query = $this->db
@@ -91,12 +94,13 @@ class Photo_model extends CI_Model
 		return $query->row();
 	}
 	/**
-	* Устанавливает владельца фотографии
-	*
-	* @param int $photo_id ID фотографии
-	* @param int $person_id ID человека
-	* @return int Количество успешных записей
-	*/
+	 * Устанавливает владельца фотографии
+	 *
+	 * @param int $photo_id  ID фотографии
+	 * @param int $person_id ID человека
+	 *
+	 * @return int Количество успешных записей
+	 */
 	public function set_person(int $photo_id, int $person_id): int
 	{
 		$this->db
@@ -110,6 +114,7 @@ class Photo_model extends CI_Model
 	 * Сохраняет фотографию
 	 *
 	 * @param mixed[] $file Файл фотографии
+	 *
 	 * @return mixed[] Отчет о сохранении
 	 */
 	public function save(array $file): array //TODO проверка уже имеющейся фото за человеком
@@ -193,6 +198,7 @@ class Photo_model extends CI_Model
 	 * Удаляет фото из БД и диска
 	 *
 	 * @param int $photo_id ID фотографии
+	 *
 	 * @return bool TRUE - успешно, FALSE - ошибка
 	 */
 	public function delete(int $photo_id): bool
@@ -248,16 +254,17 @@ class Photo_model extends CI_Model
 	}
 
 	/**
-	* Создает уменьшенную копию изображения
-	* $params = [
-	*   'src_path' => string,
-	*   'width' => int,
-	*   'height' => int,
-	*   'dst_path' => string
-	* ];
-	* @param array $params
-	* @return bool TRUE - успешно, FALSE - ошибка
-	*/
+	 * Создает уменьшенную копию изображения
+	 * $params = [
+	 *   'src_path' => string,
+	 *   'width' => int,
+	 *   'height' => int,
+	 *   'dst_path' => string
+	 * ];
+	 * @param array $params
+	 *
+	 * @return bool TRUE - успешно, FALSE - ошибка
+	 */
 	private function create_thumbnail(array $params): bool
 	{
 		$src_img = imagecreatefromjpeg($params['src_path']);

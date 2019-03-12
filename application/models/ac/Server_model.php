@@ -27,10 +27,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Server_model extends CI_Model
 {
 	/**
-	* Каталог с логами
-	*
-	* @var string $log_path
-	*/
+	 * Каталог с логами
+	 *
+	 * @var string $log_path
+	 */
 	private $log_path;
 
 	public function __construct()
@@ -54,11 +54,12 @@ class Server_model extends CI_Model
 	}
 
 	/**
-	* Обрабатывает входящее сообщение
-	*
-	* @param string $inc_json_msg Входящее JSON сообщение
-	* @return string|null Сообщение в формате JSON или NULL, если сообщение от неизвестного контроллера
-	*/
+	 * Обрабатывает входящее сообщение
+	 *
+	 * @param string $inc_json_msg Входящее JSON сообщение
+	 *
+	 * @return string|null Сообщение в формате JSON или NULL, если сообщение от неизвестного контроллера
+	 */
 	public function handle_msg(string $inc_json_msg): ?string
 	{
 		$this->load->helper(['date', 'file']);
@@ -236,11 +237,12 @@ class Server_model extends CI_Model
 	}
 
 	/**
-	* Сохраняет события
-	*
-	* @param mixed[] $events События для сохранения в БД
-	* @return int Количество успешных записей
-	*/
+	 * Сохраняет события
+	 *
+	 * @param mixed[] $events События для сохранения в БД
+	 *
+	 * @return int Количество успешных записей
+	 */
 	public function save_events(array $events): int
 	{
 		$this->db->insert_batch('events', $events);

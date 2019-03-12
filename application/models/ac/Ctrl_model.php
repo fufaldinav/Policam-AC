@@ -18,9 +18,9 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
-* Class Ctrl Model
-* @property Task_model $task
-*/
+ * Class Ctrl Model
+ * @property Task_model $task
+ */
 class Ctrl_model extends CI_Model
 {
 	public function __construct()
@@ -31,11 +31,12 @@ class Ctrl_model extends CI_Model
 	}
 
 	/**
-	* Получает контроллер по ID
-	*
-	* @param int $ctrl_id ID контроллера
-	* @return object|null Контроллер или NULL, если не найден
-	*/
+	 * Получает контроллер по ID
+	 *
+	 * @param int $ctrl_id ID контроллера
+	 *
+	 * @return object|null Контроллер или NULL, если не найден
+	 */
 	public function get(int $ctrl_id): ?object
 	{
 		$query = $this->db
@@ -46,11 +47,12 @@ class Ctrl_model extends CI_Model
 	}
 
 	/**
-	* Получает контроллер по серийному номеру
-	*
-	* @param int $sn Серийный номер контроллера
-	* @return object|null Контроллер или NULL - отсутствует
-	*/
+	 * Получает контроллер по серийному номеру
+	 *
+	 * @param int $sn Серийный номер контроллера
+	 *
+	 * @return object|null Контроллер или NULL - отсутствует
+	 */
 	public function get_by_sn(int $sn): ?object
 	{
 		$query = $this->db
@@ -61,11 +63,12 @@ class Ctrl_model extends CI_Model
 	}
 
 	/**
-	* Получает список всех контроллеров по организации
-	*
-	* @param int|null $org_id ID организации
-	* @return object[] Массив с контроллерами или пустой массив
-	*/
+	 * Получает список всех контроллеров по организации
+	 *
+	 * @param int|null $org_id ID организации
+	 *
+	 * @return object[] Массив с контроллерами или пустой массив
+	 */
 	public function get_all(int $org_id = null): array
 	{
 		if (isset($org_id)) {
@@ -77,11 +80,12 @@ class Ctrl_model extends CI_Model
 	}
 
 	/**
-	* Добавляет новый контроллер
-	*
-	* @param object $ctrl Контроллер
-	* @return int ID нового контроллера
-	*/
+	 * Добавляет новый контроллер
+	 *
+	 * @param object $ctrl Контроллер
+	 *
+	 * @return int ID нового контроллера
+	 */
 	public function add(object $ctrl): int
 	{
 		$this->db->insert('controllers', $this->set($ctrl));
@@ -90,11 +94,12 @@ class Ctrl_model extends CI_Model
 	}
 
 	/**
-	* Обновляет информацию о контроллере
-	*
-	* @param object $ctrl Контроллер
-	* @return int Количество успешных записей
-	*/
+	 * Обновляет информацию о контроллере
+	 *
+	 * @param object $ctrl Контроллер
+	 *
+	 * @return int Количество успешных записей
+	 */
 	public function update(object $ctrl): int
 	{
 		$this->db
@@ -105,11 +110,12 @@ class Ctrl_model extends CI_Model
 	}
 
 	/**
-	* Удаляет контроллер
-	*
-	* @param int $ctrl_id ID контроллера
-	* @return int Количество успешных удалений
-	*/
+	 * Удаляет контроллер
+	 *
+	 * @param int $ctrl_id ID контроллера
+	 *
+	 * @return int Количество успешных удалений
+	 */
 	public function delete(int $ctrl_id): int
 	{
 		$this->db->delete('controllers', ['id' => $ctrl_id]);
@@ -118,11 +124,12 @@ class Ctrl_model extends CI_Model
 	}
 
 	/**
-	* Получает объект и возвращает массив для записи
-	*
-	* @param object $ctrl Контроллер
-	* @return array Массив с параметрами контроллера
-	*/
+	 * Получает объект и возвращает массив для записи
+	 *
+	 * @param object $ctrl Контроллер
+	 *
+	 * @return array Массив с параметрами контроллера
+	 */
 	public function set(object $ctrl): array
 	{
 		$data = [
@@ -142,6 +149,7 @@ class Ctrl_model extends CI_Model
 	 * @param int $open_time     Время открытия в 0.1 сек
 	 * @param int $open_control  Контроль открытия в 0.1 сек, по-умолчанию 0 - без контроля
 	 * @param int $close_control Контроль закрытия в 0.1 сек, по-умолчанию 0 - без контроля
+	 *
 	 * @return int Количество успешных записей
 	 */
 	public function set_door_params(int $ctrl_id, int $open_time, int $open_control = 0, int $close_control = 0): int
@@ -156,8 +164,9 @@ class Ctrl_model extends CI_Model
 	/**
 	 * Добавляет карты в контроллер
 	 *
-	 * @param int $ctrl_id    ID контроллера
-	 * @param string[] $codes Коды карт
+	 * @param int      $ctrl_id ID контроллера
+	 * @param string[] $codes   Коды карт
+	 *
 	 * @return int Количество успешных записей
 	 */
 	public function add_cards(int $ctrl_id, array $codes): int
@@ -179,8 +188,9 @@ class Ctrl_model extends CI_Model
 	/**
 	 * Удаляет карты из контроллера
 	 *
-	 * @param int $ctrl_id    ID контроллера
-	 * @param string[] $codes Коды карт
+	 * @param int      $ctrl_id ID контроллера
+	 * @param string[] $codes   Коды карт
+	 *
 	 * @return int Количество успешных удалений
 	 */
 	public function delete_cards(int $ctrl_id, array $codes): int
@@ -204,6 +214,7 @@ class Ctrl_model extends CI_Model
 	 * Удаляет все карты из контроллера
 	 *
 	 * @param int $ctrl_id ID контроллера
+	 *
 	 * @return int Количество успешных удалений
 	 */
 	public function clear_cards(int $ctrl_id): int

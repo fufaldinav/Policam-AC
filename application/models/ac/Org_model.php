@@ -30,11 +30,12 @@ class Org_model extends CI_Model
 	}
 
 	/**
-	* Получает организацию по ID
-	*
-	* @param int $org_id ID организации
-	* @return object|null Организация или NULL, если не найдена
-	*/
+	 * Получает организацию по ID
+	 *
+	 * @param int $org_id ID организации
+	 *
+	 * @return object|null Организация или NULL, если не найдена
+	 */
 	public function get(int $org_id): ?object
 	{
 		$query = $this->db
@@ -45,11 +46,12 @@ class Org_model extends CI_Model
 	}
 
 	/**
-	* Получает все организации по пользователю
-	*
-	* @param int|null $user_id ID пользователя
-	* @return object[] Массив с организациями или пустой массив
-	*/
+	 * Получает все организации по пользователю
+	 *
+	 * @param int|null $user_id ID пользователя
+	 *
+	 * @return object[] Массив с организациями или пустой массив
+	 */
 	public function get_all(int $user_id = null): array
 	{
 		if (isset($user_id)) {
@@ -67,6 +69,7 @@ class Org_model extends CI_Model
 	 * Получает полное имя организации
 	 *
 	 * @param int $org_id ID организации
+	 *
 	 * @return string Строка в формате 'номер (адресс при наличии)' или NULL, если организация не найдена
 	 */
 	public function get_full_name(int $org_id): string  //TODO check
@@ -82,11 +85,12 @@ class Org_model extends CI_Model
 	}
 
 	/**
-	* Добавляет новую организацию
-	*
-	* @param object $org Организация
-	* @return int ID новой организации
-	*/
+	 * Добавляет новую организацию
+	 *
+	 * @param object $org Организация
+	 *
+	 * @return int ID новой организации
+	 */
 	public function add(object $org): int
 	{
 		$this->db->insert('organizations', $this->set($org));
@@ -95,11 +99,12 @@ class Org_model extends CI_Model
 	}
 
 	/**
-	* Обновляет информацию об организации
-	*
-	* @param object $org Организация
-	* @return int Количество успешных записей
-	*/
+	 * Обновляет информацию об организации
+	 *
+	 * @param object $org Организация
+	 *
+	 * @return int Количество успешных записей
+	 */
 	public function update(object $org): int
 	{
 		$this->db
@@ -110,11 +115,12 @@ class Org_model extends CI_Model
 	}
 
 	/**
-	* Удаляет организацию
-	*
-	* @param int $org_id ID организации
-	* @return int Количество успешных удалений
-	*/
+	 * Удаляет организацию
+	 *
+	 * @param int $org_id ID организации
+	 *
+	 * @return int Количество успешных удалений
+	 */
 	public function delete(int $org_id): int
 	{
 		$this->db->delete('organizations', ['id' => $org_id]);
@@ -123,11 +129,12 @@ class Org_model extends CI_Model
 	}
 
 	/**
-	* Получает объект и возвращает массив для записи
-	*
-	* @param object $org Организация
-	* @return mixed[] Массив с параметрами организации
-	*/
+	 * Получает объект и возвращает массив для записи
+	 *
+	 * @param object $org Организация
+	 *
+	 * @return mixed[] Массив с параметрами организации
+	 */
 	public function set(object $org): array
 	{
 		$this->data = [

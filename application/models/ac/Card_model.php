@@ -18,9 +18,9 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
-* Class Card Model
-* @property Ctrl_model $ctrl
-*/
+ * Class Card Model
+ * @property Ctrl_model $ctrl
+ */
 class Card_model extends CI_Model
 {
 	public function __construct()
@@ -31,11 +31,12 @@ class Card_model extends CI_Model
 	}
 
 	/**
-	* Получает карту по ID
-	*
-	* @param int $card_id ID карты
-	* @return object|null Карта или NULL, если не найдена
-	*/
+	 * Получает карту по ID
+	 *
+	 * @param int $card_id ID карты
+	 *
+	 * @return object|null Карта или NULL, если не найдена
+	 */
 	public function get(int $card_id): ?object
 	{
 		$query = $this->db
@@ -46,11 +47,12 @@ class Card_model extends CI_Model
 	}
 
 	/**
-	* Получает карту по коду карты
-	*
-	* @param string $code Код карты
-	* @return object|null Карта или NULL, если не найдена
-	*/
+	 * Получает карту по коду карты
+	 *
+	 * @param string $code Код карты
+	 *
+	 * @return object|null Карта или NULL, если не найдена
+	 */
 	public function get_by_code(string $code): ?object
 	{
 		$query = $this->db
@@ -61,11 +63,12 @@ class Card_model extends CI_Model
 	}
 
 	/**
-	* Получает список карт человека или никому не принадлежащие карты
-	*
-	* @param int $person_id ID человека, по-умолчанию -1 - никому не принадлежащие карты
-	* @return object[] Массив с картами или пустой массив
-	*/
+	 * Получает список карт человека или никому не принадлежащие карты
+	 *
+	 * @param int $person_id ID человека, по-умолчанию -1 - никому не принадлежащие карты
+	 *
+	 * @return object[] Массив с картами или пустой массив
+	 */
 	public function get_by_person(int $person_id = -1): array
 	{
 		$query = $this->db
@@ -76,11 +79,12 @@ class Card_model extends CI_Model
 	}
 
 	/**
-	* Получает список всех карт
-	*
-	* @param int|null $ctrl_id ID контроллера
-	* @return object[] Массив с картами или пустой массив
-	*/
+	 * Получает список всех карт
+	 *
+	 * @param int|null $ctrl_id ID контроллера
+	 *
+	 * @return object[] Массив с картами или пустой массив
+	 */
 	public function get_all(int $ctrl_id = null): array
 	{
 		if (isset($ctrl_id)) {
@@ -92,11 +96,12 @@ class Card_model extends CI_Model
 	}
 
 	/**
-	* Закрепляет карту за человеком
-	*
-	* @param int $card_id   ID карты
-	* @param int $person_id ID человека
-	* @return int Количество успешных записей
+	 * Закрепляет карту за человеком
+	 *
+	 * @param int $card_id   ID карты
+	 * @param int $person_id ID человека
+	 *
+	 * @return int Количество успешных записей
 	*/
 	public function set_holder(int $card_id, int $person_id): int
 	{
@@ -112,6 +117,7 @@ class Card_model extends CI_Model
 	 *
 	 * @param int $card_id ID карты
 	 * @param int $ctrl_id ID контроллера
+	 *
 	 * @return int Количество успешных записей
 	 */
 	public function set_last_conn(int $card_id, int $ctrl_id): int
@@ -128,11 +134,12 @@ class Card_model extends CI_Model
 	}
 
 	/**
-	* Добавляет новую карту
-	*
-	* @param object $card Карта
-	* @return int ID новой карты
-	*/
+	 * Добавляет новую карту
+	 *
+	 * @param object $card Карта
+	 *
+	 * @return int ID новой карты
+	 */
 	public function add(object $card): int
 	{
 		$this->db->insert('cards', $this->set($card));
@@ -141,11 +148,12 @@ class Card_model extends CI_Model
 	}
 
 	/**
-	* Обновляет информацию о карте
-	*
-	* @param object $card Карта
-	* @return int Количество успешных записей
-	*/
+	 * Обновляет информацию о карте
+	 *
+	 * @param object $card Карта
+	 *
+	 * @return int Количество успешных записей
+	 */
 	public function update(object $card): int
 	{
 		$this->db
@@ -159,6 +167,7 @@ class Card_model extends CI_Model
 	 * Удаляет карту
 	 *
 	 * @param int $card_id ID карты
+	 *
 	 * @return int Количество удаленных записей
 	 */
 	public function delete(int $card_id): int
@@ -169,11 +178,12 @@ class Card_model extends CI_Model
 	}
 
 	/**
-	* Получает объект и возвращает массив для записи
-	*
-	* @param object $card Карта
-	* @return mixed[] Массив с параметрами карты
-	*/
+	 * Получает объект и возвращает массив для записи
+	 *
+	 * @param object $card Карта
+	 *
+	 * @return mixed[] Массив с параметрами карты
+	 */
 	private function set(object $card): array
 	{
 		$data = [

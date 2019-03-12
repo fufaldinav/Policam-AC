@@ -42,6 +42,7 @@ class Jsloader extends CI_Controller
 	 * Ищет переменные [VAR] в скрипте, заменяет на найденый перевод или base_url
 	 *
 	 * @param string $text Скрипт
+	 *
 	 * @return string Готовый скрипт
 	 */
 	private function parse_variables(string $text): string

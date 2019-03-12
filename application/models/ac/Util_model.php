@@ -25,17 +25,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Util_model extends CI_Model
 {
 	/**
-	* Таймаут одного long poll
-	*
-	* @var int $timeout
-	*/
+	 * Таймаут одного long poll
+	 *
+	 * @var int $timeout
+	 */
 	private $timeout;
 
 	/**
-	* Каталог с логами
-	*
-	* @var string $log_path
-	*/
+	 * Каталог с логами
+	 *
+	 * @var string $log_path
+	 */
 	private $log_path;
 
 	public function __construct()
@@ -58,8 +58,9 @@ class Util_model extends CI_Model
 	/**
 	 * Реализует long polling
 	 *
-	 * @param int|null $time Время последнего запроса
-	 * @param int[] $events  ID событий
+	 * @param int|null $time   Время последнего запроса
+	 * @param int[]    $events ID событий
+	 *
 	 * @return mixed[] События от контроллера
 	 */
 	public function start_polling(int $time = null, array $events): array
@@ -118,9 +119,10 @@ class Util_model extends CI_Model
 	/**
 	 * Сохраняет полученное от пользователя событие
 	 *
-	 * @param int $user_id ID пользователя
-	 * @param int $type    Тип события
-	 * @param string $desc Описание события
+	 * @param int    $user_id ID пользователя
+	 * @param int    $type    Тип события
+	 * @param string $desc    Описание события
+	 *
 	 * @return int Количество успешных сохранений
 	 */
 	public function add_user_event(int $user_id, int $type, string $desc): int

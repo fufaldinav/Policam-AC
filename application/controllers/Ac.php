@@ -10,18 +10,18 @@
 class Ac extends CI_Controller
 {
 	/**
-	* @var int $user_id
-	*/
+	 * @var int $user_id
+	 */
 	private $user_id;
 
 	/**
-	* @var mixed[] $orgs
-	*/
+	 * @var mixed[] $orgs
+	 */
 	private $orgs;
 
 	/**
-	* @var mixed[] $first_org
-	*/
+	 * @var mixed[] $first_org
+	 */
 	private $first_org;
 
 	public function __construct()
