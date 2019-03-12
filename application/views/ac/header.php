@@ -8,7 +8,8 @@
 		<link rel="stylesheet" href="<?php echo base_url('css/') . $css;?>.css?<?php echo time();?>" />
 	<?php endforeach;?>
 	<script src="/js/jquery-3.3.1.min.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/5.8.5/firebase.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/5.8.5/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/5.8.5/firebase-messaging.js"></script>
 	<?php foreach ($js_list as $js):?>
 		<script src="<?php echo site_url('jsloader/file/' . $js . '.js');?>?t=<?php echo time();?>" /></script>
 	<?php endforeach;?>
