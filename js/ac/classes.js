@@ -10,7 +10,7 @@ function deleteDivision(div_id) {
 		return;
 	}
 	$.ajax({
-		url: `[ci_base_url]divisions/delete/${div_id}`,
+		url: `[ci_site_url]divisions/delete/${div_id}`,
 		type: `GET`,
 		success: function(res) {
 			if (res > 0) {
@@ -36,7 +36,7 @@ function saveDivision(org_id) {
 		return;
 	}
 	$.ajax({
-		url: `[ci_base_url]divisions/add`,
+		url: `[ci_site_url]divisions/add`,
 		type: `POST`,
 		data: {
 			div: JSON.stringify(div)

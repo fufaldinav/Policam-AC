@@ -23,15 +23,15 @@
 					<?php echo $org_name;?>
 				</div>
 				<div id="header-content">
-					<a class="nav" href="<?php echo base_url();?>"><?php echo lang('observ');?></a>
+					<a class="nav" href="<?php echo site_url();?>"><?php echo lang('observ');?></a>
 					<?php if ($this->ion_auth->in_group(2)):?>
-						<a class="nav" href="<?php echo base_url('ac/add_person/');?>"><?php echo lang('adding');?></a>
-						<a class="nav" href="<?php echo base_url('ac/edit_persons/');?>"><?php echo lang('editing');?></a>
-						<a class="nav" href="<?php echo base_url('ac/classes/');?>"><?php echo lang('classes');?></a>
+						<a class="nav" href="<?php echo site_url('ac/add_person/');?>"><?php echo lang('adding');?></a>
+						<a class="nav" href="<?php echo site_url('ac/edit_persons/');?>"><?php echo lang('editing');?></a>
+						<a class="nav" href="<?php echo site_url('ac/classes/');?>"><?php echo lang('classes');?></a>
 					<?php endif;?>
 				</div>
 				<div id="header-right">
-					<a class="nav" href="<?php echo base_url('auth/logout/');?>">
+					<a class="nav" href="<?php echo site_url('auth/logout/');?>">
 						<?php echo lang('exit');?></a>
 				</div>
 			</div>

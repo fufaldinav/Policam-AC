@@ -84,6 +84,12 @@ class Jsloader extends CI_Controller
 
 					break;
 
+				case 'site_url':
+					$this->load->helper('url');
+
+					$value = site_url();
+
+					break;
 				default:
 					$value = '';
 

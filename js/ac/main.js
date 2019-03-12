@@ -1,7 +1,7 @@
 //сохранить ошибку на сервере
 function sendError(message) {
 	$.ajax({
-		url: `[ci_base_url]util/save_js_errors`,
+		url: `[ci_site_url]util/save_js_errors`,
 		type: `POST`,
 		data: {
 			error: message
@@ -13,7 +13,7 @@ function sendError(message) {
 function getCards(id) {
 	let card = document.getElementById(`card`);
 	$.ajax({
-		url: `[ci_base_url]cards/get_all`,
+		url: `[ci_site_url]cards/get_all`,
 		type: `GET`,
 		success: function(data) {
 			if (data) {
@@ -54,7 +54,7 @@ function handleFiles(files) {
 	let formData = new FormData();
 	formData.append(`file`, files[0]);
 	$.ajax({
-		url: `[ci_base_url]photos/save`,
+		url: `[ci_site_url]photos/save`,
 		type: `POST`,
 		method: `POST`,
 		contentType: false,
@@ -88,7 +88,7 @@ function deletePhoto() {
 		return;
 	}
 	$.ajax({
-		url: `[ci_base_url]photos/delete/${person.photo}`,
+		url: `[ci_site_url]photos/delete/${person.photo}`,
 		type: `GET`,
 		success: function(res) {
 			if (res) {
