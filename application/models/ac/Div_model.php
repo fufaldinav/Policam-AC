@@ -30,11 +30,12 @@ class Div_model extends CI_Model
 	}
 
 	/**
-	* Получает подразделениe
-	*
-	* @param int $div_id ID подразделения
-	* @return object|null Подразделение или NULL, если не найдено
-	*/
+	 * Получает подразделениe
+	 *
+	 * @param int $div_id ID подразделения
+	 *
+	 * @return object|null Подразделение или NULL, если не найдено
+	 */
 	public function get(int $div_id): ?object
 	{
 		$query = $this->db
@@ -45,11 +46,12 @@ class Div_model extends CI_Model
 	}
 
 	/**
-	* Получает все подразделения по организации
-	*
-	* @param int|null $org_id ID организации
-	* @return object[] Массив с подразделениями или пустой массив
-	*/
+	 * Получает все подразделения по организации
+	 *
+	 * @param int|null $org_id ID организации
+	 *
+	 * @return object[] Массив с подразделениями или пустой массив
+	 */
 	public function get_all(int $org_id = null): array
 	{
 		if (isset($org_id)) {
@@ -63,11 +65,12 @@ class Div_model extends CI_Model
 	}
 
 	/**
-	* Добавляет новое подразделение
-	*
-	* @param object $div Подразделение
-	* @return int ID нового подразделения
-	*/
+	 * Добавляет новое подразделение
+	 *
+	 * @param object $div Подразделение
+	 *
+	 * @return int ID нового подразделения
+	 */
 	public function add($div): int
 	{
 		$this->db->insert('divisions', $this->set($div));
@@ -76,11 +79,12 @@ class Div_model extends CI_Model
 	}
 
 	/**
-	* Обновляет информацию о подразделении
-	*
-	* @param object $div Подразделение
-	* @return int Количество успешных записей
-	*/
+	 * Обновляет информацию о подразделении
+	 *
+	 * @param object $div Подразделение
+	 *
+	 * @return int Количество успешных записей
+	 */
 	public function update($div): int
 	{
 		$this->db
@@ -91,11 +95,12 @@ class Div_model extends CI_Model
 	}
 
 	/**
-	* Удаляет подразделение
-	*
-	* @param int $div_id ID подразделения
-	* @return int Количество успешных удалений
-	*/
+	 * Удаляет подразделение
+	 *
+	 * @param int $div_id ID подразделения
+	 *
+	 * @return int Количество успешных удалений
+	 */
 	public function delete(int $div_id): int
 	{
 		$this->db->delete('divisions', ['id' => $div_id]);
@@ -104,11 +109,12 @@ class Div_model extends CI_Model
 	}
 
 	/**
-	* Получает объект и возвращает массив для записи
-	*
-	* @param object $div Подразделение
-	* @return mixed[] Массив с параметрами контроллера
-	*/
+	 * Получает объект и возвращает массив для записи
+	 *
+	 * @param object $div Подразделение
+	 *
+	 * @return mixed[] Массив с параметрами контроллера
+	 */
 	public function set($div): array
 	{
 		$data = [

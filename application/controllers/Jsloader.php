@@ -24,14 +24,14 @@ class Jsloader extends CI_Controller
 
 		$this->load->helper('file');
 
-		$contents = read_file('./js/ac/' . $file);
+		$contents = read_file("./js/ac/$file");
 
 		if (!$contents) {
 			header('HTTP/1.1 404 Not Found');
 			exit;
 		}
 
-		$contents = $this->parse_variables($contents);
+		$contents = $this->parse_contents($contents);
 
 		header('Content-Type: text/javascript');
 
@@ -39,28 +39,20 @@ class Jsloader extends CI_Controller
 	}
 
 	/**
-	 * Ищет переменные [VAR] в скрипте, заменяет на найденый перевод или base_url
+	 * Ищет [PREFIX_VAR] в тексте, заменяет соответственно найденым префиксу и имени переменной
 	 *
-	 * @param string $text Скрипт
-	 * @return string Готовый скрипт
+	 * @param string $text Входящий текст
+	 *
+	 * @return string Текст с подставленными значениями
 	 */
-	private function parse_variables(string $text): string
+	private function parse_contents(string $text): string
 	{
-		$this->lang->load('ac');
-
-		$this->load->helper(['language', 'url']);
-
-		preg_match_all("/\[@{0,1}[a-zA-Z0-9_]+[\s]*[a-zA-Z0-9_]*\]/", $text, $matches, PREG_PATTERN_ORDER);
+		preg_match_all('/\[(ci|config|lang)_[a-zA-Z0-9_]+\]/', $text, $matches, PREG_PATTERN_ORDER); //строка вида [ci_VAR], [config_VAR] или [lang_VAR]
 
 		foreach ($matches[0] as $match) {
-			$varname = str_replace('[', '', $match);
-			$varname = str_replace(']', '', $varname);
+			$var = trim($match, '[]');
 
-			if ($varname == 'base_url') {
-				$value = base_url('/');
-			} else {
-				$value = lang($varname);
-			}
+			$value = $this->parse_variable($var);
 
 			if ($value) {
 				$text = str_replace($match, $value, $text);
@@ -68,5 +60,53 @@ class Jsloader extends CI_Controller
 		}
 
 		return $text;
+	}
+
+	/**
+	 * Заменяет переменную значением
+	 *
+	 * @param string $var Строка с префиксом для подмены
+	 *
+	 * @return string Строка с подставленным значением
+	 */
+	private function parse_variable(string $var): string
+	{
+		$prefix = strstr($var, '_', true);
+
+		$var = substr($var, strlen($prefix) + 1);
+
+		if ($prefix === 'ci') {
+			switch ($var) {
+				case 'base_url':
+					$this->load->helper('url');
+
+					$value = base_url();
+
+					break;
+
+				case 'site_url':
+					$this->load->helper('url');
+
+					$value = site_url();
+
+					break;
+				default:
+					$value = '';
+
+					break;
+			}
+		} elseif ($prefix === 'config') {
+			$this->config->load('ac', true);
+
+			$value = $this->config->item($var, 'ac');
+		} elseif ($prefix === 'lang') {
+			$this->lang->load('ac');
+
+			$this->load->helper('language');
+
+			$value = lang($var);
+		}
+
+		return $value;
 	}
 }

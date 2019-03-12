@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function() {
 //получение времени от сервера
 function getServerTime() {
 	$.ajax({
-		url: `[base_url]util/get_time`,
+		url: `[ci_site_url]util/get_time`,
 		type: `GET`,
 		success: function(data) {
 			time = data;
@@ -20,7 +20,7 @@ function getServerTime() {
 //получение сообщений от сервера
 function getNewMsgs(events, time) {
 	$.ajax({
-		url: `[base_url]util/get_events`,
+		url: `[ci_site_url]util/get_events`,
 		type: `POST`,
 		data: {
 			events: events,
@@ -49,7 +49,7 @@ function getNewMsgs(events, time) {
 //получение данных пользователя из БД
 function setPersonInfo(card_id) {
 	$.ajax({
-		url: `[base_url]persons/get_by_card/${card_id}`,
+		url: `[ci_site_url]persons/get_by_card/${card_id}`,
 		type: `GET`,
 		success: function(data) {
 			if (data) {
@@ -75,7 +75,7 @@ function setPersonInfo(card_id) {
 
 function getDivisions() {
 	$.ajax({
-		url: `[base_url]divisions/get_all`,
+		url: `[ci_site_url]divisions/get_all`,
 		type: `GET`,
 		success: function(data) {
 			if (data.length > 0) {
@@ -97,7 +97,7 @@ function getDivisions() {
 
 function getPersons(div_id) {
 	$.ajax({
-		url: `[base_url]persons/get_all/${div_id}`,
+		url: `[ci_site_url]persons/get_all/${div_id}`,
 		type: `GET`,
 		success: function(data) {
 			if (data.length > 0) {
@@ -148,7 +148,7 @@ function sendInfo(type, person_id) {
 			break;
 	}
 	$.ajax({
-		url: `[base_url]util/card_problem`,
+		url: `[ci_site_url]util/card_problem`,
 		type: `POST`,
 		data: {
 			type: type,

@@ -10,18 +10,18 @@
 class Ac extends CI_Controller
 {
 	/**
-	* @var int $user_id
-	*/
+	 * @var int $user_id
+	 */
 	private $user_id;
 
 	/**
-	* @var mixed[] $orgs
-	*/
+	 * @var mixed[] $orgs
+	 */
 	private $orgs;
 
 	/**
-	* @var mixed[] $first_org
-	*/
+	 * @var mixed[] $first_org
+	 */
 	private $first_org;
 
 	public function __construct()
@@ -67,8 +67,8 @@ class Ac extends CI_Controller
 	{
 		$this->load->helper('form');
 
-		/**
-		 * Подразделения
+		/*
+		 | Подразделения
 		 */
 		$data = [
 			'divs_list' => [],
@@ -77,7 +77,7 @@ class Ac extends CI_Controller
 
 		$divs = $this->div->get_all($this->first_org->id);
 
-		if (count($divs) == 0) {
+		if (count($divs) === 0) {
 			$data['divs_list'][] = lang('missing');
 		} else {
 			foreach ($divs as $div) {
@@ -107,8 +107,8 @@ class Ac extends CI_Controller
 
 		$this->load->helper('form');
 
-		/**
-		 * Подразделения
+		/*
+		 | Подразделения
 		 */
 		$data = [
 			'divs_list' => [],
@@ -117,7 +117,7 @@ class Ac extends CI_Controller
 
 		$divs = $this->div->get_all($this->first_org->id);
 
-		if (count($divs) == 0) {
+		if (count($divs) === 0) {
 			$data['divs_list'][] = lang('missing');
 		} else {
 			foreach ($divs as $div) {
@@ -125,15 +125,15 @@ class Ac extends CI_Controller
 			}
 		}
 
-		/**
-		 * Карты
+		/*
+		 | Карты
 		 */
 		$data['cards'] = [];
 		$data['cards_attr'] = 'id="card"';
 
 		$cards = $this->card->get_by_person(-1);
 
-		if (count($cards) == 0) {
+		if (count($cards) === 0) {
 			$data['cards'][] = lang('missing');
 		} else {
 			$data['cards'][] = lang('not_selected');
@@ -164,8 +164,8 @@ class Ac extends CI_Controller
 
 		$this->load->helper('form');
 
-		/**
-		 * Подразделения
+		/*
+		 | Подразделения
 		 */
 		$data = [
 			'divs_list' => [],
@@ -176,7 +176,7 @@ class Ac extends CI_Controller
 
 		$data['divs_menu'] = $divs;
 
-		if (count($divs) == 0) {
+		if (count($divs) === 0) {
 			$data['divs_list'][] = lang('missing');
 		}
 
@@ -185,22 +185,21 @@ class Ac extends CI_Controller
 			$div->persons = $this->person->get_all($div->id);
 
 			foreach ($div->persons as &$person) {
-	 			$person->cards = $this->card->get_by_person($person->id);
-	 		}
+				$person->cards = $this->card->get_by_person($person->id);
+			}
 			unset($person);
-
 		}
 		unset($div);
 
-		/**
-		 * Карты
+		/*
+		 | Карты
 		 */
 		$data['cards'] = [];
 		$data['cards_attr'] = 'id="card" disabled';
 
 		$cards = $this->card->get_by_person(-1);
 
-		if (count($cards) == 0) {
+		if (count($cards) === 0) {
 			$data['cards'][] = lang('missing');
 		} else {
 			$data['cards'][] = lang('not_selected');

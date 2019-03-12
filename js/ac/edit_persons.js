@@ -32,7 +32,7 @@ function updatePersonInfo() {
 		alert(`Введены не все данные`); //TODO перевод
 	} else {
 		$.ajax({
-			url: `[base_url]persons/update`,
+			url: `[ci_site_url]persons/update`,
 			type: `POST`,
 			data: {
 				person: JSON.stringify(person)
@@ -58,7 +58,7 @@ function deletePerson() {
 		return;
 	}
 	$.ajax({
-		url: `[base_url]persons/delete/${person.id}`,
+		url: `[ci_site_url]persons/delete/${person.id}`,
 		type: `GET`,
 		success: function(res) {
 			if (res > 0) {
@@ -114,7 +114,7 @@ function deletePerson() {
 //получение данных пользователя из БД
 function getPersonInfo(person_id) {
 	$.ajax({
-		url: `[base_url]persons/get/${person_id}`,
+		url: `[ci_site_url]persons/get/${person_id}`,
 		type: `GET`,
 		success: function(data) {
 			if (data) {
@@ -163,12 +163,12 @@ function getPersonInfo(person_id) {
 //получение списка карт (брелоков) от сервера
 function getCardsByPerson(person_id) {
 	$.ajax({
-		url: `[base_url]cards/get_by_person/${person_id}`,
+		url: `[ci_site_url]cards/get_by_person/${person_id}`,
 		type: `GET`,
 		success: function(data) {
 			let cards = document.getElementById(`cards`);
 			cards.innerHTML = ``;
-			if (data.lenght > 0) {
+			if (data.length > 0) {
 				document.getElementById(`card_selector`).hidden = true; //спрячем неизвестные карты
 				document.getElementById(`card`).disabled = true; //отключим меню неизвеснтых карт
 				data.forEach(function(c) { //добавим каждую карту в список привязанных
@@ -194,7 +194,7 @@ function getCardsByPerson(person_id) {
 //добавление карты в БД
 function saveCard(card_id) {
 	$.ajax({
-		url: `[base_url]cards/add/${card_id}/${person.id}`,
+		url: `[ci_site_url]cards/holder/${card_id}/${person.id}`,
 		type: `GET`,
 		success: function(res) {
 			if (res > 0) {
@@ -216,7 +216,7 @@ function delCard(card_id) {
 		return;
 	}
 	$.ajax({
-		url: `[base_url]cards/delete/${card_id}`,
+		url: `[ci_site_url]cards/holder/${card_id}`,
 		type: `GET`,
 		success: function(res) {
 			if (res > 0) {

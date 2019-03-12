@@ -89,16 +89,16 @@ class Util extends CI_Controller
 
 		$person = $this->person->get($person_id);
 
-		if ($type == 1) {
-			$desc = $person->id . ' ' . $person->f . ' ' . $person->i . ' forgot card';
+		if ($type === 1) {
+			$desc = "$person->id $person->f $person->i forgot card";
 
 			if ($this->util->add_user_event($user_id, $type, $desc) > 0) {
 				echo $response;
 			}
-		} elseif ($type == 2 || $type == 3) {
+		} elseif ($type === 2 || $type === 3) {
 			$cards = $this->card->get_by_person($person->id);
 
-			if (count($cards) == 0) {
+			if (count($cards) === 0) {
 				return null;
 			}
 
@@ -107,7 +107,6 @@ class Util extends CI_Controller
 			$ctrls = $this->ctrl->get_all($org->id);
 
 			foreach ($cards as $card) {
-
 				$this->card->set_holder($card->id, -1);
 
 				foreach ($ctrls as $ctrl) {
@@ -115,7 +114,7 @@ class Util extends CI_Controller
 				}
 			}
 
-			$desc = $person->id . ' ' . $person->f . ' ' . $person->i . ' lost/broke card';
+			$desc = "$person->id $person->f $person->i lost/broke card";
 
 			$response .= ' ' . lang('and') . ' ' . lang('card_deleted');
 

@@ -30,11 +30,12 @@ class Person_model extends CI_Model
 	}
 
 	/**
-	* Получает человека по ID
-	*
-	* @param int $person_id ID человека
-	* @return object|null Человек или NULL, если не найдена
-	*/
+	 * Получает человека по ID
+	 *
+	 * @param int $person_id ID человека
+	 *
+	 * @return object|null Человек или NULL, если не найдена
+	 */
 	public function get(int $person_id): ?object
 	{
 		$query = $this->db->select('id, address, birthday, f, i, o, phone, type')
@@ -47,11 +48,12 @@ class Person_model extends CI_Model
 	}
 
 	/**
-	* Получает список всех людей по подразделению
-	*
-	* @param int|null $div_id ID подразделения
-	* @return object[] Массив с людьми или пустой массив
-	*/
+	 * Получает список всех людей по подразделению
+	 *
+	 * @param int|null $div_id ID подразделения
+	 *
+	 * @return object[] Массив с людьми или пустой массив
+	 */
 	public function get_all(int $div_id = null): array
 	{
 		if (isset($div_id)) {
@@ -65,11 +67,12 @@ class Person_model extends CI_Model
 	}
 
 	/**
-	* Добавляет нового человека
-	*
-	* @param object $person Человек
-	* @return int ID нового человека
-	*/
+	 * Добавляет нового человека
+	 *
+	 * @param object $person Человек
+	 *
+	 * @return int ID нового человека
+	 */
 	public function add(object $person): int
 	{
 		$this->db->insert('persons', $this->set($person));
@@ -78,11 +81,12 @@ class Person_model extends CI_Model
 	}
 
 	/**
-	* Обновляет информацию о человеке
-	*
-	* @param object $person Человек
-	* @return int Количество успешных записей
-	*/
+	 * Обновляет информацию о человеке
+	 *
+	 * @param object $person Человек
+	 *
+	 * @return int Количество успешных записей
+	 */
 	public function update(object $person): int
 	{
 		$this->db
@@ -93,11 +97,12 @@ class Person_model extends CI_Model
 	}
 
 	/**
-	* Удаляет человека
-	*
-	* @param int $person_id ID человека
-	* @return int Количество успешных удалений
-	*/
+	 * Удаляет человека
+	 *
+	 * @param int $person_id ID человека
+	 *
+	 * @return int Количество успешных удалений
+	 */
 	public function delete(int $person_id): int
 	{
 		$this->db->delete('persons', ['id' => $person_id]);
@@ -106,11 +111,12 @@ class Person_model extends CI_Model
 	}
 
 	/**
-	* Получает объект и возвращает массив для записи
-	*
-	* @param object $person Человек
-	* @return mixed[] Массив с параметрами человека
-	*/
+	 * Получает объект и возвращает массив для записи
+	 *
+	 * @param object $person Человек
+	 *
+	 * @return mixed[] Массив с параметрами человека
+	 */
 	public function set(object $person): array
 	{
 		$data = [
@@ -128,11 +134,12 @@ class Person_model extends CI_Model
 	}
 
 	/**
-	* Удаляет информацию о фотографии
-	*
-	* @param int $person_id ID человека
-	* @return int Количество успешных удалений
-	*/
+	 * Удаляет информацию о фотографии
+	 *
+	 * @param int $person_id ID человека
+	 *
+	 * @return int Количество успешных удалений
+	 */
 	public function unset_photo(int $person_id): int
 	{
 		$this->db

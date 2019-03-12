@@ -32,9 +32,10 @@ class Task_model extends CI_Model
 	/**
 	 * Добавляет задания для отправки на контроллер
 	 *
-	 * @param string $operation Операция, отправляемая на контроллер
-	 * @param int $ctrl_id      ID контроллера
-	 * @param string|null $data Дополнительные данные
+	 * @param string      $operation Операция, отправляемая на контроллер
+	 * @param int         $ctrl_id   ID контроллера
+	 * @param string|null $data      Дополнительные данные
+	 *
 	 * @return int Количество успешных записей
 	 */
 	public function add(string $operation, int $ctrl_id, string $data = null): int
@@ -63,6 +64,7 @@ class Task_model extends CI_Model
 	 * Удаляет задания, отправленные на контроллер
 	 *
 	 * @param int $task_id ID задания
+	 *
 	 * @return int Количество успешных удалений
 	 */
 	public function delete(int $task_id): int
@@ -78,6 +80,7 @@ class Task_model extends CI_Model
 	 * Получает последнее задание для отправки на контроллер
 	 *
 	 * @param int $ctrl_id ID контроллера
+	 *
 	 * @return object|null Задание или NULL, если не найден
 	 */
 	public function get_last(int $ctrl_id): ?object

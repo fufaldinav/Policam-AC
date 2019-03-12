@@ -25,17 +25,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Notification_model extends CI_Model
 {
 	/**
-	* Адрес сервера FCM
-	*
-	* @var string $fcm_url
-	*/
+	 * Адрес сервера FCM
+	 *
+	 * @var string $fcm_url
+	 */
 	private $fcm_url;
 
 	/**
-	* Ключ сервера
-	*
-	* @var string $server_key
-	*/
+	 * Ключ сервера
+	 *
+	 * @var string $server_key
+	 */
 	private $server_key;
 
 	public function __construct()
@@ -56,12 +56,13 @@ class Notification_model extends CI_Model
 	}
 
 	/**
-	* Проверяет подписки
-	*
-	* @param int $person_id    ID человека
-	* @param int|null $user_id ID пользователя
-	* @return array Список подписок
-	*/
+	 * Проверяет подписки
+	 *
+	 * @param int      $person_id ID человека
+	 * @param int|null $user_id   ID пользователя
+	 *
+	 * @return array Список подписок
+	 */
 	public function check_subscription(int $person_id, int $user_id = null): array
 	{
 		if (isset($user_id)) {
@@ -76,12 +77,13 @@ class Notification_model extends CI_Model
 	}
 
 	/**
-	* Генерирует уведомление
-	*
-	* @param int $person_id ID человека
-	* @param int $event_id  ID события
-	* @return array Параметры уведомления
-	*/
+	 * Генерирует уведомление
+	 *
+	 * @param int $person_id ID человека
+	 * @param int $event_id  ID события
+	 *
+	 * @return array Параметры уведомления
+	 */
 	public function generate(int $person_id, int $event_id): array
 	{
 		switch ($event_id) {
@@ -104,20 +106,21 @@ class Notification_model extends CI_Model
 
 		$notification = [
 			'title' => $event,
-			'body' => $person->f . ' ' . $person->i,
-			'icon' => (isset($photo)) ? ('https://' . $_SERVER['HTTP_HOST'] . '/img/ac/s/' . $photo->id . '.jpg') : '',
+			'body' => "$person->f $person->i",
+			'icon' => (isset($photo)) ? ("https://" . $_SERVER['HTTP_HOST'] . "/img/ac/s/$photo->id.jpg") : "",
 			'click_action' => base_url('/')
 		];
 
 		return $notification;
 	}
 	/**
-	* Отправляет уведомление
-	*
-	* @param array $notification Параметры уведомления
-	* @param int|null $user_id   ID пользователя
-	* @return string Ответ на запрос
-	*/
+	 * Отправляет уведомление
+	 *
+	 * @param array    $notification Параметры уведомления
+	 * @param int|null $user_id      ID пользователя
+	 *
+	 * @return string Ответ на запрос
+	 */
 	public function send(array $notification, int $user_id = null): string
 	{
 		$registration_ids = [];
@@ -135,8 +138,8 @@ class Notification_model extends CI_Model
 		$fields = json_encode($request_body);
 
 		$request_headers = [
-			'Content-Type: application/json',
-			'Authorization: key=' . $this->server_key,
+			"Content-Type: application/json",
+			"Authorization: key=$this->server_key",
 		];
 
 		$ch = curl_init();
@@ -153,11 +156,12 @@ class Notification_model extends CI_Model
 	}
 
 	/**
-	* Получает токен
-	*
-	* @param string $token Токен
-	* @return object|null Токен
-	*/
+	 * Получает токен
+	 *
+	 * @param string $token Токен
+	 *
+	 * @return object|null Токен
+	 */
 	public function get_token(string $token): ?object
 	{
 		$query = $this->db
@@ -168,11 +172,12 @@ class Notification_model extends CI_Model
 	}
 
 	/**
-	* Получает все токены пользователя
-	*
-	* @param int|null $user_id ID пользователя
-	* @return object[] Массив с токенами или пустой массив
-	*/
+	 * Получает все токены пользователя
+	 *
+	 * @param int|null $user_id ID пользователя
+	 *
+	 * @return object[] Массив с токенами или пустой массив
+	 */
 	public function get_all(int $user_id = null): array
 	{
 		if (isset($user_id)) {
@@ -184,12 +189,13 @@ class Notification_model extends CI_Model
 	}
 
 	/**
-	* Добавляет токен
-	*
-	* @param int $user_id  ID пользователя
-	* @param string $token Токен
-	* @return int ID токена
-	*/
+	 * Добавляет токен
+	 *
+	 * @param int    $user_id ID пользователя
+	 * @param string $token   Токен
+	 *
+	 * @return int ID токена
+	 */
 	public function add_token(int $user_id, string $token): int
 	{
 		$this->db->insert('users_tokens', [
@@ -201,12 +207,14 @@ class Notification_model extends CI_Model
 	}
 
 	/**
-	* Удаление токена
-	*
-	* @param string $token Токен
-	* @return int Количество успешных удалений
-	*/
-	public function delete_token(string $token): int {
+	 * Удаление токена
+	 *
+	 * @param string $token Токен
+	 *
+	 * @return int Количество успешных удалений
+	 */
+	public function delete_token(string $token): int
+	{
 		$this->db->delete('users_tokens', ['token' => $token]);
 
 		return $this->db->affected_rows();

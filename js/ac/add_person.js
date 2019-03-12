@@ -31,7 +31,7 @@ function savePersonInfo() {
 		alert(`Введены не все данные`); //TODO перевод
 	} else {
 		$.ajax({
-			url: `[base_url]persons/add`,
+			url: `[ci_site_url]persons/add`,
 			type: `POST`,
 			data: {
 				person: JSON.stringify(person)

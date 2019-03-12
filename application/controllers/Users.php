@@ -7,8 +7,8 @@
 class Users extends CI_Controller
 {
 	/**
-	* @var int $user_id
-	*/
+	 * @var int $user_id
+	 */
 	private $user_id;
 
 	public function __construct()
