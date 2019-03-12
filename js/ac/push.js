@@ -1,11 +1,11 @@
 // Initialize Firebase
 let config = {
-	apiKey: `AIzaSyDI_-AwpqcTclSXCyXgYJzvaTNC-dky9iY`,
-	authDomain: `policam-ac.firebaseapp.com`,
-	databaseURL: `https://policam-ac.firebaseio.com`,
-	projectId: `policam-ac`,
-	storageBucket: `policam-ac.appspot.com`,
-	messagingSenderId: `1005476478589`
+	apiKey: `[config_api_key]`,
+	authDomain: `[config_auth_domain]`,
+	databaseURL: `[config_database_url]`,
+	projectId: `[config_project_id]`,
+	storageBucket: `[config_storage_bucket]`,
+	messagingSenderId: `[config_messaging_sender_id]`
 };
 firebase.initializeApp(config);
 // пользователь уже разрешил получение уведомлений
@@ -16,7 +16,7 @@ if (Notification.permission === `granted`) {
 
 function subscribe() {
 	let messaging = firebase.messaging();
-	messaging.usePublicVapidKey(`BPKQjI8lJAE9pymLNyKm5fsJSsu-7vXlPZivaRvR52lxGWgsxF2TN5s_iaIKQ1LWNZPh0S8arKNOXfq9nAAB3Yg`);
+	messaging.usePublicVapidKey(`[config_public_vapid_key]`);
 	// запрашиваем разрешение на получение уведомлений
 	messaging.requestPermission().then(function () {
 			// получаем ID устройства
