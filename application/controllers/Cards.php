@@ -17,7 +17,7 @@ class Cards extends CI_Controller
 			exit;
 		}
 
-		if (!$this->ion_auth->in_group(2)) {
+		if (!$this->ion_auth->in_group(2) || !$this->ion_auth->is_admin()) {
 			header('HTTP/1.1 403 Forbidden');
 			exit;
 		}
@@ -44,6 +44,29 @@ class Cards extends CI_Controller
 	public function delete($card_id)
 	{
 		echo $this->card->delete($card_id);
+	}
+
+	/**
+	 * Удаление всех неизвестных карт
+	 */
+	public function delete_all_unknowns()
+	{
+		if (!$this->ion_auth->is_admin()) {
+			header('HTTP/1.1 403 Forbidden');
+			exit;
+		}
+
+		$cards = $this->card->get_all();
+
+		$count = 0;
+
+		foreach ($cards as $card) {
+			if ($card->person_id == -1) {
+				$count += $this->card->delete($card->id);
+			}
+		}
+
+		echo $count;
 	}
 
 	/**

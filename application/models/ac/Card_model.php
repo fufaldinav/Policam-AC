@@ -172,6 +172,7 @@ class Card_model extends CI_Model
 	 */
 	public function delete(int $card_id): int
 	{
+		$this->db->delete('events', ['card_id' => $card_id]);
 		$this->db->delete('cards', ['id' => $card_id]);
 
 		return $this->db->affected_rows();
