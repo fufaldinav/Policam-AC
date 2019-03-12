@@ -42,7 +42,7 @@ function sendTokenToServer(currentToken) {
 	if (!isTokenSentToServer(currentToken)) {
 		console.log(`Отправка токена на сервер...`); //TODO перевод
 		$.ajax({
-			url: `[base_url]users/token`,
+			url: `[ci_base_url]users/token`,
 			type: `POST`,
 			data: {
 				token: currentToken
