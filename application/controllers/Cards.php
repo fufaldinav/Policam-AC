@@ -17,7 +17,7 @@ class Cards extends CI_Controller
 			exit;
 		}
 
-		if (!$this->ion_auth->in_group(2) || !$this->ion_auth->is_admin()) {
+		if (!$this->ion_auth->in_group(2) && !$this->ion_auth->is_admin()) {
 			header('HTTP/1.1 403 Forbidden');
 			exit;
 		}
