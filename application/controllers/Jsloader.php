@@ -47,7 +47,7 @@ class Jsloader extends CI_Controller
 	 */
 	private function parse_contents(string $text): string
 	{
-		preg_match_all('/\[(ci|lang)_[a-zA-Z0-9_]+\]/', $text, $matches, PREG_PATTERN_ORDER); //строка вида [ci_VAR] или [lang_VAR]
+		preg_match_all('/\[(ci|config|lang)_[a-zA-Z0-9_]+\]/', $text, $matches, PREG_PATTERN_ORDER); //строка вида [ci_VAR], [config_VAR] или [lang_VAR]
 
 		foreach ($matches[0] as $match) {
 			$var = trim($match, '[]');
@@ -95,6 +95,10 @@ class Jsloader extends CI_Controller
 
 					break;
 			}
+		} elseif ($prefix == 'config') {
+			$this->config->load('ac', true);
+
+			$value = $this->config->item($var, 'ac');
 		} elseif ($prefix == 'lang') {
 			$this->lang->load('ac');
 
