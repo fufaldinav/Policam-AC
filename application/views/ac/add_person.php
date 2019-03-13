@@ -1,5 +1,12 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');?>
-		<div id="main">
+		<div id="main"  class="main-grid-container">
+			<div id="menu">
+				<?php foreach ($divs as $div): ?>
+				<div id="div<?php echo $div->id?>" class="menu-item" onclick="setDiv(<?php echo $div->id?>);">
+					<?php echo $div->name?>
+				</div>
+				<?php endforeach;?>
+			</div>
 			<div id="info">
 				<div id="info-photo" class="info-item">
 					<div id="photo_bg" class="photo">
@@ -22,8 +29,7 @@
 					<input maxlength="20" id="o" name="o" size="30" type="text" />
 				</div>
 				<div id="info-div" class="info-item">
-					<?php echo lang('class');?><br />
-					<?php echo form_dropdown('div', $divs_list, '0', $divs_attr);?>
+					<!-- CLASS TO DELETE -->
 				</div>
 				<div id="info-birthday" class="info-item">
 					<?php echo lang('birthday');?><br />

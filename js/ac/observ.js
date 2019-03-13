@@ -1,7 +1,6 @@
 let time, events = [4, 5]; //где 4,5 - события разрешенного входа/выхода
 
 document.addEventListener("DOMContentLoaded", function() {
-	getDivisions();
 	time = getServerTime();
 	getNewMsgs(events, time);
 });
@@ -54,7 +53,11 @@ function setPersonInfo(card_id) {
 		success: function(data) {
 			if (data) {
 				Object.keys(data).map(function(k) { //перебор полученных данных
-					if (document.getElementById(k)) {
+					if (k === `divs`) {
+						data[k].forEach(function(div) {
+							document.getElementById(k).innerHTML = div.name; //TODO списком
+						});
+					} else if (document.getElementById(k)) {
 						document.getElementById(k).value = data[k];
 					}
 				});
@@ -81,7 +84,7 @@ function getDivisions() {
 			if (data.length > 0) {
 				let divisions = ``;
 				data.forEach(function(div) {
-					divisions += `<div id="div${div.id}" class="menu-item" onclick="getPersons(${div.id});">${div.number} "${div.letter}"</div>`;
+					divisions += `<div id="div${div.id}" class="menu-item" onclick="getPersons(${div.id});">${div.name}</div>`;
 				});
 				let menu = document.getElementById(`menu`);
 				menu.innerHTML = divisions;
@@ -100,16 +103,13 @@ function getPersons(div_id) {
 		url: `[ci_site_url]persons/get_all/${div_id}`,
 		type: `GET`,
 		success: function(data) {
+			let persons = `<div id="menu-button-back" class="menu-item" onclick="getDivisions();">Назад</div>`; //TODO перевод
 			if (data.length > 0) {
-				let persons = `<div id="menu-button-back" class="menu-item" onclick="getDivisions();">Назад</div>`; //TODO перевод
 				data.forEach(function(person) {
 					persons += `<div id="person${person.id}" class="menu-item" onclick="openEntraceOptions(${person.id}, ${div_id});">${person.f} ${person.i}</div>`;
 				});
-				let menu = document.getElementById(`menu`);
-				menu.innerHTML = persons;
-			} else {
-				alert(`Пустой ответ от сервера`); //TODO перевод
 			}
+			document.getElementById(`menu`).innerHTML = persons;
 		},
 		error: function() {
 			alert(`Неизвестная ошибка`); //TODO перевод

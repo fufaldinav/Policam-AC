@@ -18,8 +18,8 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
-* Class Div Model
-*/
+ * Class Div Model
+ */
 class Div_model extends CI_Model
 {
 	public function __construct()
@@ -46,19 +46,23 @@ class Div_model extends CI_Model
 	}
 
 	/**
-	 * Получает все подразделения по организации
+	 * Получает все подразделения по организации и/или типу
 	 *
 	 * @param int|null $org_id ID организации
+	 * @param int|null $type   Тип организации, по-умолчанию NULL - классы любого типа
 	 *
 	 * @return object[] Массив с подразделениями или пустой массив
 	 */
-	public function get_all(int $org_id = null): array
+	public function get_all(int $org_id = null, int $type = null): array
 	{
 		if (isset($org_id)) {
 			$this->db->where('org_id', $org_id);
 		}
+		if (isset($type)) {
+			$this->db->where('type', $type);
+		}
 		$query = $this->db
-			->order_by('number ASC', 'letter ASC')
+			->order_by('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
 			->get('divisions');
 
 		return $query->result();
@@ -71,9 +75,9 @@ class Div_model extends CI_Model
 	 *
 	 * @return int ID нового подразделения
 	 */
-	public function add($div): int
+	public function add(object $div): int
 	{
-		$this->db->insert('divisions', $this->set($div));
+		$this->db->insert('divisions', $this->_set($div));
 
 		return $this->db->insert_id();
 	}
@@ -85,11 +89,11 @@ class Div_model extends CI_Model
 	 *
 	 * @return int Количество успешных записей
 	 */
-	public function update($div): int
+	public function update(object $div): int
 	{
 		$this->db
 			->where('id', $div->id)
-			->update('divisions', $this->set($div));
+			->update('divisions', $this->_set($div));
 
 		return $this->db->affected_rows();
 	}
@@ -103,7 +107,50 @@ class Div_model extends CI_Model
 	 */
 	public function delete(int $div_id): int
 	{
+		$this->db->delete('persons_divisions', ['div_id' => $div_id]);
 		$this->db->delete('divisions', ['id' => $div_id]);
+
+		return $this->db->affected_rows();
+	}
+
+	/**
+	 * Добавляет людей в подразделение
+	 *
+	 * @param int[] $persons_ids Список ID людей
+	 * @param int   $div_id      ID подразделения
+	 *
+	 * @return int Количество успешных записей
+	 */
+	public function add_persons(array $persons_ids, int $div_id): int
+	{
+		$data = [];
+		foreach ($persons_ids as $person_id) {
+			$data[] = [
+				'div_id' => $div_id,
+				'person_id' => $person_id
+			];
+		}
+		$this->db->insert_batch('persons_divisions', $data);
+
+		return $this->db->affected_rows();
+	}
+
+	/**
+	 * Удаляет людей из подразделения или всех подразделений
+	 *
+	 * @param int[]    $persons_ids Список ID людей
+	 * @param int|null $div_id      ID подразделения, по-умолчанию NULL - из всех подразделений
+	 *
+	 * @return int Количество успешных удалений
+	 */
+	public function delete_persons(array $persons_ids, int $div_id = null): int
+	{
+		if (isset($div_id)) {
+			$this->db->where('div_id', $div_id);
+		}
+		$this->db
+			->where_in('person_id', $persons_ids)
+			->delete('persons_divisions');
 
 		return $this->db->affected_rows();
 	}
@@ -115,11 +162,11 @@ class Div_model extends CI_Model
 	 *
 	 * @return mixed[] Массив с параметрами контроллера
 	 */
-	public function set($div): array
+	private function _set($div): array
 	{
 		$data = [
-			'number' => $div->number,
-			'letter' => $div->letter,
+			'name' => $div->name,
+			'type' => $div->type ?? 1,
 			'org_id' => $div->org_id
 		];
 

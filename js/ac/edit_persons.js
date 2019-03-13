@@ -4,7 +4,6 @@ let person = {
 	'i': null,
 	'o': null,
 	'photo': null,
-	'div': null,
 	'birthday': null,
 	'address': null,
 	'phone': null,
@@ -66,7 +65,7 @@ function deletePerson() {
 					let elem = document.getElementById(k);
 					if (k == `card`) { //поставить в карты "Не выбрано"
 						elem.value = 0;
-					} else if (k != `div`) { //обнулить значение всех полей, кроме Класс
+					} else { //обнулить значение всех полей
 						elem.value = null;
 					}
 					if (k == `photo`) { //скрыть поле загрузки фото
@@ -86,7 +85,6 @@ function deletePerson() {
 				document.getElementById(`cards`).innerHTML = ``; //очистка списка привязанных карт
 				document.getElementById(`card_selector`).hidden = false; //отобразим меню с неизвестными картами
 				document.getElementById(`card`).disabled = true; //но запретим редактирование
-				document.getElementById(`div`).disabled = true; //но запретим редактирование
 				document.getElementById(`photo`).onchange = function() {
 					return false;
 				};
@@ -129,7 +127,6 @@ function getPersonInfo(person_id) {
 						}
 					}
 				});
-				document.getElementById(`div`).disabled = false;
 				let photo = document.getElementById(`photo_bg`);
 				if (!data.photo) {
 					data.photo = `0`;
@@ -175,10 +172,8 @@ function getCardsByPerson(person_id) {
 					cards.innerHTML = cards.innerHTML + `<div id="card${c.id}">${c.wiegand} <button type="button" onclick="delCard(${c.id});">Отвязать</button><br /></div>`
 				});
 				let li = document.getElementById(`person${person.id}`); //добавим пользователю метку наличия ключей
-				let c = li.querySelector(`.tree-content`);
-				if (c.innerHTML.indexOf(`(+) `) == -1) {
-					c.innerHTML = `(+) ${c.innerHTML}`;
-				}
+				let a = li.querySelector(`.person`);
+				a.classList.remove(`no-card`);
 			} else {
 				document.getElementById(`card_selector`).hidden = false; //отобразим неизвестные карты
 				document.getElementById(`card`).disabled = false; //включим меню неизвеснтых карт
@@ -229,10 +224,8 @@ function delCard(card_id) {
 					document.getElementById(`card`).disabled = false;
 					getCards();
 					let li = document.getElementById(`person${person.id}`); //удалим у пользователя метку наличия ключей
-					let c = li.querySelector(`.tree-content`);
-					if (c.innerHTML.indexOf(`(+) `) == 0) {
-						c.innerHTML = c.innerHTML.substring(4);
-					}
+					let a = li.querySelector(`.person`);
+					a.classList.add(`no-card`);
 				}
 				alert(`Ключ успешно отвязан`); //TODO перевод
 			} else {

@@ -59,7 +59,7 @@ class Org_model extends CI_Model
 		}
 		$query = $this->db
 			->join('organizations', 'organizations.id = organizations_users.org_id', 'left')
-			->order_by('number', 'ASC')
+			->order_by('name', 'ASC')
 			->get('organizations_users');
 
 		return $query->result();
@@ -76,7 +76,7 @@ class Org_model extends CI_Model
 	{
 		$org = $this->get($org_id);
 
-		$org_name = $org->number;
+		$org_name = $org->name;
 		if (isset($org->address)) {
 			$org_name .= " ($org->address)";
 		}
@@ -93,7 +93,7 @@ class Org_model extends CI_Model
 	 */
 	public function add(object $org): int
 	{
-		$this->db->insert('organizations', $this->set($org));
+		$this->db->insert('organizations', $this->_set($org));
 
 		return $this->db->insert_id();
 	}
@@ -109,7 +109,7 @@ class Org_model extends CI_Model
 	{
 		$this->db
 			->where('id', $id)
-			->update('organizations', $this->set($org));
+			->update('organizations', $this->_set($org));
 
 		return $this->db->affected_rows();
 	}
@@ -135,10 +135,10 @@ class Org_model extends CI_Model
 	 *
 	 * @return mixed[] Массив с параметрами организации
 	 */
-	public function set(object $org): array
+	private function _set(object $org): array
 	{
 		$this->data = [
-			'number' => $org->number,
+			'name' => $org->name,
 			'addres' => $org->address,
 			'type' => $org->type
 		];

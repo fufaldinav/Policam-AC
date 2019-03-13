@@ -1,7 +1,9 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');?>
 		<div id="main" class="main-grid-container">
 			<div id="menu">
-				<!-- MENU -->
+				<?php foreach ($divs as $div): ?>
+				<div id="div<?php echo $div->id?>" class="menu-item" onclick="getPersons(<?php echo $div->id?>);"><?php echo $div->name?></div>
+				<?php endforeach;?>
 			</div>
 			<div id="info">
 				<div id="info-photo" class="info-item">
@@ -20,8 +22,7 @@
 					<input id="o" name="o" size="30" type="text" readonly />
 				</div>
 				<div id="info-div" class="info-item">
-					<?php echo lang('class');?><br />
-					<?php echo form_dropdown('div', $divs_list, '0', $divs_attr);?>
+					<div id="divs"></div>
 				</div>
 				<div id="info-birthday" class="info-item">
 					<?php echo lang('birthday');?><br />

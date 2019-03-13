@@ -4,6 +4,7 @@
  * Class Persons
  * @property Card_model $card
  * @property Ctrl_model $ctrl
+ * @property Div_model $div
  * @property Org_model $org
  * @property Person_model $person
  * @property Photo_model $photo
@@ -38,6 +39,7 @@ class Persons extends CI_Controller
 
 		$this->load->model('ac/card_model', 'card');
 		$this->load->model('ac/ctrl_model', 'ctrl');
+		$this->load->model('ac/div_model', 'div');
 		$this->load->model('ac/org_model', 'org');
 		$this->load->model('ac/person_model', 'person');
 		$this->load->model('ac/photo_model', 'photo');
@@ -57,9 +59,20 @@ class Persons extends CI_Controller
 			exit;
 		}
 
+		$divs = json_decode($this->input->post('divs'));
 		$person = json_decode($this->input->post('person'));
 
 		$person_id = $this->person->add($person);
+
+		if (count($divs) > 0) {
+			foreach ($divs as $div) {
+				$this->div->add_persons([$person_id], $div);
+			}
+		} else {
+			$divs = $this->div->get_all($this->first_org->id, 0);
+			$div = array_shift($divs);
+			$this->div->add_persons([$person_id], $div->id);
+		}
 
 		if (isset($person->photo)) {
 			$this->photo->set_person($person->photo, $person_id);
@@ -143,6 +156,8 @@ class Persons extends CI_Controller
 			$this->photo->delete($photo->id);
 		}
 
+		$this->div->delete_persons([$person_id]);
+
 		echo $this->person->delete($person_id);
 	}
 
@@ -171,9 +186,18 @@ class Persons extends CI_Controller
 
 		header('Content-Type: application/json');
 
-		echo json_encode(
-			$this->person->get($card->person_id)
-		);
+		$person = $this->person->get($card->person_id);
+
+		$divs = $this->person->get_divs($person->id);
+
+		foreach ($divs as &$div) {
+			$div = $this->div->get($div->div_id);
+		}
+		unset($div);
+
+		$person->divs = $divs;
+
+		echo json_encode($person);
 	}
 
 	/**

@@ -4,6 +4,7 @@
  * Class Divisions
  * @property Div_model $div
  * @property Org_model $org
+ * @property Person_model $person
  */
 class Divisions extends CI_Controller
 {
@@ -11,6 +12,16 @@ class Divisions extends CI_Controller
 	 * @var int $user_id
 	 */
 	private $user_id;
+
+	/**
+	 * @var mixed[] $orgs
+	 */
+	private $orgs;
+
+	/**
+	 * @var mixed[] $first_org
+	 */
+	private $first_org;
 
 	public function __construct()
 	{
@@ -27,6 +38,8 @@ class Divisions extends CI_Controller
 		$this->load->model('ac/org_model', 'org');
 
 		$this->user_id = $this->ion_auth->user()->row()->id;
+		$this->orgs = $this->org->get_all($this->user_id); //TODO
+		$this->first_org = array_shift($this->orgs); //TODO
 	}
 
 	/**
@@ -47,7 +60,7 @@ class Divisions extends CI_Controller
 	}
 
 	/**
-	 * Сохранение нового подразделения
+	 * Добавляет новое подразделение
 	 */
 	public function add()
 	{
@@ -68,7 +81,7 @@ class Divisions extends CI_Controller
 	}
 
 	/**
-	 * Удаление подразделения
+	 * Удаляет подразделение
 	 *
 	 * @param int $div_id ID подразделения
 	 */
@@ -77,6 +90,17 @@ class Divisions extends CI_Controller
 		if (!$this->ion_auth->in_group(2)) {
 			header('HTTP/1.1 403 Forbidden');
 			exit;
+		}
+
+		$this->load->model('ac/person_model', 'person');
+
+		$persons = $this->person->get_all($div_id);
+
+		$new_div = $this->div->get_all($this->first_org->id, 0);
+		$new_div = array_shift($new_div);
+
+		foreach ($persons as $person) {
+			$this->div->add_persons([$person->id], $new_div->id);
 		}
 
 		echo $this->div->delete($div_id);

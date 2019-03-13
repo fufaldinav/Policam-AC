@@ -77,11 +77,13 @@ class Ac extends CI_Controller
 
 		$divs = $this->div->get_all($this->first_org->id);
 
+		$data['divs'] = $divs;
+
 		if (count($divs) === 0) {
 			$data['divs_list'][] = lang('missing');
 		} else {
 			foreach ($divs as $div) {
-				$data['divs_list'][$div->id] = $div->number . ' "' . $div->letter . '"';
+				$data['divs_list'][$div->id] = $div->name;
 			}
 		}
 
@@ -117,11 +119,13 @@ class Ac extends CI_Controller
 
 		$divs = $this->div->get_all($this->first_org->id);
 
+		$data['divs'] = $divs;
+
 		if (count($divs) === 0) {
 			$data['divs_list'][] = lang('missing');
 		} else {
 			foreach ($divs as $div) {
-				$data['divs_list'][$div->id] = $div->number . ' "' . $div->letter . '"';
+				$data['divs_list'][$div->id] = $div->name;
 			}
 		}
 
@@ -174,14 +178,14 @@ class Ac extends CI_Controller
 
 		$divs = $this->div->get_all($this->first_org->id);
 
-		$data['divs_menu'] = $divs;
+		$data['divs'] = $divs;
 
 		if (count($divs) === 0) {
 			$data['divs_list'][] = lang('missing');
 		}
 
 		foreach ($divs as &$div) {
-			$data['divs_list'][$div->id] = $div->number . ' "' . $div->letter . '"';
+			$data['divs_list'][$div->id] = $div->name;
 			$div->persons = $this->person->get_all($div->id);
 
 			foreach ($div->persons as &$person) {

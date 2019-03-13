@@ -2,12 +2,12 @@
 		<div id="main" class="main-grid-container">
 			<div id="menu" onclick="tree_toggle(arguments[0]);">
 				<ul class="tree-container">
-					<?php $last_div = count($divs_menu) - 1;?>
-					<?php foreach ($divs_menu as $k => $div):?>
+					<?php $last_div = count($divs) - 1;?>
+					<?php foreach ($divs as $k => $div):?>
 					<li class="tree-node tree-is-root tree-expand-closed <?php echo $k === $last_div ? 'tree-is-last' : '';?>">
 						<div class="tree-expand"></div>
 						<div class="tree-content tree-expand-content">
-							<?php echo $div->number . ' "' . $div->letter . '"';?>
+							<?php echo $div->name;?>
 						</div>
 						<ul class="tree-container">
 							<?php $last_person = count($div->persons) - 1;?>
@@ -15,8 +15,7 @@
 							<li id="person<?php echo $person->id?>" class="tree-node tree-expand-leaf <?php echo $n === $last_person ? 'tree-is-last' : '';?>">
 								<div class="tree-expand"></div>
 								<div class="tree-content">
-									<?php echo (count($person->cards) > 0) ? '(+) ' : ''?>
-									<a class="person" href="#<?php echo $person->id?>" onClick="getPersonInfo(<?php echo $person->id;?>);"><?php echo "$person->f $person->i";?></a>
+									<a class="person<?php echo (count($person->cards) === 0) ? ' no-card' : ''?>" href="#<?php echo $person->id?>" onClick="getPersonInfo(<?php echo $person->id;?>);"><?php echo "$person->f $person->i";?></a>
 								</div>
 							</li>
 							<?php endforeach;?>
@@ -47,8 +46,7 @@
 					<input maxlength="20" id="o" name="o" size="30" type="text" readonly />
 				</div>
 				<div id="info-div" class="info-item">
-					<?php echo lang('class');?><br />
-					<?php echo form_dropdown('div', $divs_list, '0', $divs_attr);?>
+					<!-- CLASS TO DELETE -->
 				</div>
 				<div id="info-birthday" class="info-item">
 					<?php echo lang('birthday');?><br />
