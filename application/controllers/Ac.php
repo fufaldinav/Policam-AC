@@ -65,27 +65,14 @@ class Ac extends CI_Controller
 	 */
 	public function observ()
 	{
-		$this->load->helper('form');
-
 		/*
 		 | Подразделения
 		 */
-		$data = [
-			'divs_list' => [],
-			'divs_attr' => 'id="div" disabled'
-		];
-
 		$divs = $this->div->get_all($this->first_org->id);
 
-		$data['divs'] = $divs;
-
-		if (count($divs) === 0) {
-			$data['divs_list'][] = lang('missing');
-		} else {
-			foreach ($divs as $div) {
-				$data['divs_list'][$div->id] = $div->name;
-			}
-		}
+		$data = [
+			'divs' => $divs
+		];
 
 		$header = [
 			'org_name' => $this->org->get_full_name($this->first_org->id) ?? lang('missing'),

@@ -2,7 +2,7 @@
 
 /**
  * Class Notification
- * @property Notification_model $server
+ * @property Notification_model $notification
  */
 class Users extends CI_Controller
 {

@@ -18,12 +18,12 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
-* Class Server Model
-* @property Card_model $card
-* @property Ctrl_model $ctrl
-* @property Notification_model $notification
-* @property Task_model $task
-*/
+ * Class Server Model
+ * @property Card_model $card
+ * @property Ctrl_model $ctrl
+ * @property Notification_model $notification
+ * @property Task_model $task
+ */
 class Server_model extends CI_Model
 {
 	/**

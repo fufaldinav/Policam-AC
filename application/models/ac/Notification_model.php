@@ -4,7 +4,7 @@
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *
- * Created: 01.03.2019
+ * Created: 07.03.2019
  *
  * Description: Приложение для систем контроля и управления доступом.
  *
@@ -18,10 +18,10 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
-* Class Notification Model
-* @property Person_model $person
-* @property Photo_model $photo
-*/
+ * Class Notification Model
+ * @property Person_model $person
+ * @property Photo_model $photo
+ */
 class Notification_model extends CI_Model
 {
 	/**
