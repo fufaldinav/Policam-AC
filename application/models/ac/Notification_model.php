@@ -180,7 +180,7 @@ class Notification_model extends CI_Model
 	 *
 	 * @return object[] Массив с токенами или пустой массив
 	 */
-	public function get_all(int $user_id = null): array
+	public function get_all_tokens(int $user_id = null): array
 	{
 		if (isset($user_id)) {
 			$this->db->where('user_id', $user_id);
