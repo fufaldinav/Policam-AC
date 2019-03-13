@@ -7,7 +7,7 @@
 					<li class="tree-node tree-is-root tree-expand-closed <?php echo $k === $last_div ? 'tree-is-last' : '';?>">
 						<div class="tree-expand"></div>
 						<div class="tree-content tree-expand-content">
-							<?php echo $div->number . ' "' . $div->letter . '"';?>
+							<?php echo $div->name;?>
 						</div>
 						<ul class="tree-container">
 							<?php $last_person = count($div->persons) - 1;?>

@@ -80,7 +80,7 @@ function getDivisions() {
 			if (data.length > 0) {
 				let divisions = ``;
 				data.forEach(function(div) {
-					divisions += `<div id="div${div.id}" class="menu-item" onclick="getPersons(${div.id});">${div.number} "${div.letter}"</div>`;
+					divisions += `<div id="div${div.id}" class="menu-item" onclick="getPersons(${div.id});">${div.name}</div>`;
 				});
 				let menu = document.getElementById(`menu`);
 				menu.innerHTML = divisions;

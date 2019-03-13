@@ -2,7 +2,7 @@
 		<div id="main" class="main-grid-container">
 			<div id="menu">
 				<?php foreach ($divs as $div): ?>
-				<div id="div<?php echo $div->id?>" class="menu-item" onclick="getPersons(<?php echo $div->id?>);"><?php echo "$div->number \"$div->letter\""?></div>
+				<div id="div<?php echo $div->id?>" class="menu-item" onclick="getPersons(<?php echo $div->id?>);"><?php echo $div->name?></div>
 				<?php endforeach;?>
 			</div>
 			<div id="info">

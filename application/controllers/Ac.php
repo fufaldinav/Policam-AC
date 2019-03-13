@@ -83,7 +83,7 @@ class Ac extends CI_Controller
 			$data['divs_list'][] = lang('missing');
 		} else {
 			foreach ($divs as $div) {
-				$data['divs_list'][$div->id] = $div->number . ' "' . $div->letter . '"';
+				$data['divs_list'][$div->id] = $div->name;
 			}
 		}
 
@@ -125,7 +125,7 @@ class Ac extends CI_Controller
 			$data['divs_list'][] = lang('missing');
 		} else {
 			foreach ($divs as $div) {
-				$data['divs_list'][$div->id] = $div->number . ' "' . $div->letter . '"';
+				$data['divs_list'][$div->id] = $div->name;
 			}
 		}
 
@@ -185,7 +185,7 @@ class Ac extends CI_Controller
 		}
 
 		foreach ($divs as &$div) {
-			$data['divs_list'][$div->id] = $div->number . ' "' . $div->letter . '"';
+			$data['divs_list'][$div->id] = $div->name;
 			$div->persons = $this->person->get_all($div->id);
 
 			foreach ($div->persons as &$person) {

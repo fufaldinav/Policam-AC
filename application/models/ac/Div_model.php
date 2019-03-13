@@ -62,7 +62,7 @@ class Div_model extends CI_Model
 			$this->db->where('type', $type);
 		}
 		$query = $this->db
-			->order_by('number ASC, letter ASC')
+			->order_by('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
 			->get('divisions');
 
 		return $query->result();
@@ -148,8 +148,9 @@ class Div_model extends CI_Model
 		if (isset($div_id)) {
 			$this->db->where('div_id', $div_id);
 		}
-		$this->db->where_in('person_id', $persons_ids);
-		$this->db->delete('persons_divisions');
+		$this->db
+			->where_in('person_id', $persons_ids)
+			->delete('persons_divisions');
 
 		return $this->db->affected_rows();
 	}
@@ -164,8 +165,8 @@ class Div_model extends CI_Model
 	private function _set($div): array
 	{
 		$data = [
-			'number' => $div->number,
-			'letter' => $div->letter,
+			'name' => $div->name,
+			'type' => $div->type ?? 1,
 			'org_id' => $div->org_id
 		];
 

@@ -16,9 +16,11 @@
 							<td><button onclick="saveDivision(<?php echo $org_id;?>)"><?php echo lang('save');?></button></td>
 						</tr>
 						<?php foreach ($divs as $div):?>
+						<?php if ($div->type == 0) continue; ?>
 						<tr>
-							<td><?php echo $div->number;?></td>
-							<td><?php echo $div->letter;?></td>
+							<?php $name = explode(' ', $div->name);?>
+							<td><?php echo $name[0];?></td>
+							<td><?php echo $name[1] ?? '';?></td>
 							<td><button onclick="deleteDivision(<?php echo $div->id;?>)"><?php echo lang('delete');?></button></td>
 						</tr>
 					<?php endforeach;?>

@@ -59,7 +59,7 @@ class Org_model extends CI_Model
 		}
 		$query = $this->db
 			->join('organizations', 'organizations.id = organizations_users.org_id', 'left')
-			->order_by('number', 'ASC')
+			->order_by('name', 'ASC')
 			->get('organizations_users');
 
 		return $query->result();
@@ -76,7 +76,7 @@ class Org_model extends CI_Model
 	{
 		$org = $this->get($org_id);
 
-		$org_name = $org->number;
+		$org_name = $org->name;
 		if (isset($org->address)) {
 			$org_name .= " ($org->address)";
 		}
@@ -138,7 +138,7 @@ class Org_model extends CI_Model
 	private function _set(object $org): array
 	{
 		$this->data = [
-			'number' => $org->number,
+			'name' => $org->name,
 			'addres' => $org->address,
 			'type' => $org->type
 		];

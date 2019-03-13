@@ -3,7 +3,7 @@
 			<div id="menu">
 				<?php foreach ($divs as $div): ?>
 				<div id="div<?php echo $div->id?>" class="menu-item" onclick="setDiv(<?php echo $div->id?>);">
-					<?php echo "$div->number \"$div->letter\""?>
+					<?php echo $div->name?>
 				</div>
 				<?php endforeach;?>
 			</div>

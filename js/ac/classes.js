@@ -1,6 +1,5 @@
 let div = {
-	'number': null,
-	'letter': null,
+	'name': null,
 	'org_id': null
 };
 
@@ -28,13 +27,14 @@ function deleteDivision(div_id) {
 
 //сохранить в базу
 function saveDivision(org_id) {
-	div.number = document.getElementById(`number`).value;
-	div.letter = document.getElementById(`letter`).value;
-	div.org_id = org_id;
+	let number = document.getElementById(`number`).value;
+	let letter = document.getElementById(`letter`).value;
 	if (!number || !letter) {
 		alert(`Введены не все данные`); //TODO перевод
 		return;
 	}
+	div.name = `${number} "${letter}"`;
+	div.org_id = org_id;
 	$.ajax({
 		url: `[ci_site_url]divisions/add`,
 		type: `POST`,
@@ -42,7 +42,7 @@ function saveDivision(org_id) {
 			div: JSON.stringify(div)
 		},
 		success: function(div) {
-			alert(`Класс ${div.number} "${div.letter}" успешно сохранен`); //TODO перевод
+			alert(`Класс ${div.name} успешно сохранен`); //TODO перевод
 			location.reload();
 		},
 		error: function() {
