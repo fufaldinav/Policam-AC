@@ -2,8 +2,8 @@
 		<div id="main" class="main-grid-container">
 			<div id="menu" onclick="tree_toggle(arguments[0]);">
 				<ul class="tree-container">
-					<?php $last_div = count($divs_menu) - 1;?>
-					<?php foreach ($divs_menu as $k => $div):?>
+					<?php $last_div = count($divs) - 1;?>
+					<?php foreach ($divs as $k => $div):?>
 					<li class="tree-node tree-is-root tree-expand-closed <?php echo $k === $last_div ? 'tree-is-last' : '';?>">
 						<div class="tree-expand"></div>
 						<div class="tree-content tree-expand-content">
