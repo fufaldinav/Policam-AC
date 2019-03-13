@@ -47,7 +47,7 @@ class Divisions extends CI_Controller
 	}
 
 	/**
-	 * Сохранение нового подразделения
+	 * Добавляет новое подразделение
 	 */
 	public function add()
 	{
@@ -68,7 +68,7 @@ class Divisions extends CI_Controller
 	}
 
 	/**
-	 * Удаление подразделения
+	 * Удаляет подразделение
 	 *
 	 * @param int $div_id ID подразделения
 	 */
