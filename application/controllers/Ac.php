@@ -77,6 +77,8 @@ class Ac extends CI_Controller
 
 		$divs = $this->div->get_all($this->first_org->id);
 
+		$data['divs'] = $divs;
+
 		if (count($divs) === 0) {
 			$data['divs_list'][] = lang('missing');
 		} else {

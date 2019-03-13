@@ -1,7 +1,6 @@
 let time, events = [4, 5]; //где 4,5 - события разрешенного входа/выхода
 
 document.addEventListener("DOMContentLoaded", function() {
-	getDivisions();
 	time = getServerTime();
 	getNewMsgs(events, time);
 });

@@ -1,7 +1,9 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');?>
 		<div id="main" class="main-grid-container">
 			<div id="menu">
-				<!-- MENU -->
+				<?php foreach ($divs as $div): ?>
+				<div id="div<?php echo $div->id?>" class="menu-item" onclick="getPersons(<?php echo $div->id?>);"><?php echo "$div->number \"$div->letter\""?></div>
+				<?php endforeach;?>
 			</div>
 			<div id="info">
 				<div id="info-photo" class="info-item">
