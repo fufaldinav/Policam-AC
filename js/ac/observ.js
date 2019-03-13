@@ -53,7 +53,11 @@ function setPersonInfo(card_id) {
 		success: function(data) {
 			if (data) {
 				Object.keys(data).map(function(k) { //перебор полученных данных
-					if (document.getElementById(k)) {
+					if (k === `divs`) {
+						data[k].forEach(function(div) {
+							document.getElementById(k).innerHTML = div.name; //TODO списком
+						});
+					} else if (document.getElementById(k)) {
 						document.getElementById(k).value = data[k];
 					}
 				});

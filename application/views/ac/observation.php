@@ -22,7 +22,7 @@
 					<input id="o" name="o" size="30" type="text" readonly />
 				</div>
 				<div id="info-div" class="info-item">
-					<!-- CLASS TO DELETE -->
+					<div id="divs"></div>
 				</div>
 				<div id="info-birthday" class="info-item">
 					<?php echo lang('birthday');?><br />

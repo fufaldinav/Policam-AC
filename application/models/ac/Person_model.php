@@ -67,6 +67,22 @@ class Person_model extends CI_Model
 	}
 
 	/**
+	 * Получает подразделения человека
+	 *
+	 * @param int $person_id ID человека
+	 *
+	 * @return int[] Список ID подразделений
+	 */
+	public function get_divs(int $person_id): array
+	{
+		$query = $this->db
+			->where('person_id', $person_id)
+			->get('persons_divisions');
+
+		return $query->result();
+	}
+
+	/**
 	 * Добавляет нового человека
 	 *
 	 * @param object $person Человек

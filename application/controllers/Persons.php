@@ -186,9 +186,18 @@ class Persons extends CI_Controller
 
 		header('Content-Type: application/json');
 
-		echo json_encode(
-			$this->person->get($card->person_id)
-		);
+		$person = $this->person->get($card->person_id);
+
+		$divs = $this->person->get_divs($person->id);
+
+		foreach ($divs as &$div) {
+			$div = $this->div->get($div->div_id);
+		}
+		unset($div);
+
+		$person->divs = $divs;
+
+		echo json_encode($person);
 	}
 
 	/**
