@@ -142,7 +142,7 @@ class Card_model extends CI_Model
 	 */
 	public function add(object $card): int
 	{
-		$this->db->insert('cards', $this->set($card));
+		$this->db->insert('cards', $this->_set($card));
 
 		return $this->db->insert_id();
 	}
@@ -158,7 +158,7 @@ class Card_model extends CI_Model
 	{
 		$this->db
 			->where('id', $card->id)
-			->update('cards', $this->set($card));
+			->update('cards', $this->_set($card));
 
 		return $this->db->affected_rows();
 	}
@@ -185,7 +185,7 @@ class Card_model extends CI_Model
 	 *
 	 * @return mixed[] Массив с параметрами карты
 	 */
-	private function set(object $card): array
+	private function _set(object $card): array
 	{
 		$data = [
 			'wiegand' => $card->wiegand,

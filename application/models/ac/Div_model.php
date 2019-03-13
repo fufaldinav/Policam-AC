@@ -73,7 +73,7 @@ class Div_model extends CI_Model
 	 */
 	public function add($div): int
 	{
-		$this->db->insert('divisions', $this->set($div));
+		$this->db->insert('divisions', $this->_set($div));
 
 		return $this->db->insert_id();
 	}
@@ -89,7 +89,7 @@ class Div_model extends CI_Model
 	{
 		$this->db
 			->where('id', $div->id)
-			->update('divisions', $this->set($div));
+			->update('divisions', $this->_set($div));
 
 		return $this->db->affected_rows();
 	}
@@ -115,7 +115,7 @@ class Div_model extends CI_Model
 	 *
 	 * @return mixed[] Массив с параметрами контроллера
 	 */
-	public function set($div): array
+	private function _set($div): array
 	{
 		$data = [
 			'number' => $div->number,

@@ -93,7 +93,7 @@ class Org_model extends CI_Model
 	 */
 	public function add(object $org): int
 	{
-		$this->db->insert('organizations', $this->set($org));
+		$this->db->insert('organizations', $this->_set($org));
 
 		return $this->db->insert_id();
 	}
@@ -109,7 +109,7 @@ class Org_model extends CI_Model
 	{
 		$this->db
 			->where('id', $id)
-			->update('organizations', $this->set($org));
+			->update('organizations', $this->_set($org));
 
 		return $this->db->affected_rows();
 	}
@@ -135,7 +135,7 @@ class Org_model extends CI_Model
 	 *
 	 * @return mixed[] Массив с параметрами организации
 	 */
-	public function set(object $org): array
+	private function _set(object $org): array
 	{
 		$this->data = [
 			'number' => $org->number,

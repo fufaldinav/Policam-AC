@@ -88,7 +88,7 @@ class Ctrl_model extends CI_Model
 	 */
 	public function add(object $ctrl): int
 	{
-		$this->db->insert('controllers', $this->set($ctrl));
+		$this->db->insert('controllers', $this->_set($ctrl));
 
 		return $this->db->insert_id();
 	}
@@ -104,7 +104,7 @@ class Ctrl_model extends CI_Model
 	{
 		$this->db
 			->where('id', $ctrl->id)
-			->update('controllers', $this->set($ctrl));
+			->update('controllers', $this->_set($ctrl));
 
 		return $this->db->affected_rows();
 	}
@@ -130,7 +130,7 @@ class Ctrl_model extends CI_Model
 	 *
 	 * @return array Массив с параметрами контроллера
 	 */
-	public function set(object $ctrl): array
+	private function _set(object $ctrl): array
 	{
 		$data = [
 			'name' => $ctrl->name,

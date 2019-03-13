@@ -75,7 +75,7 @@ class Person_model extends CI_Model
 	 */
 	public function add(object $person): int
 	{
-		$this->db->insert('persons', $this->set($person));
+		$this->db->insert('persons', $this->_set($person));
 
 		return $this->db->insert_id();
 	}
@@ -91,7 +91,7 @@ class Person_model extends CI_Model
 	{
 		$this->db
 			->where('id', $person->id)
-			->update('persons', $this->set($person));
+			->update('persons', $this->_set($person));
 
 		return $this->db->affected_rows();
 	}
@@ -117,7 +117,7 @@ class Person_model extends CI_Model
 	 *
 	 * @return mixed[] Массив с параметрами человека
 	 */
-	public function set(object $person): array
+	private function _set(object $person): array
 	{
 		$data = [
 			'div_id' => $person->div,
