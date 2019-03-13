@@ -68,6 +68,10 @@ class Persons extends CI_Controller
 			foreach ($divs as $div) {
 				$this->div->add_persons([$person_id], $div);
 			}
+		} else {
+			$divs = $this->div->get_all($this->first_org->id, 0);
+			$div = array_shift($divs);
+			$this->div->add_persons([$person_id], $div->id);
 		}
 
 		if (isset($person->photo)) {
