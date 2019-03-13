@@ -71,7 +71,7 @@ class Div_model extends CI_Model
 	 *
 	 * @return int ID нового подразделения
 	 */
-	public function add($div): int
+	public function add(object $div): int
 	{
 		$this->db->insert('divisions', $this->_set($div));
 
@@ -85,7 +85,7 @@ class Div_model extends CI_Model
 	 *
 	 * @return int Количество успешных записей
 	 */
-	public function update($div): int
+	public function update(object $div): int
 	{
 		$this->db
 			->where('id', $div->id)
