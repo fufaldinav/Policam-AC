@@ -8,6 +8,7 @@
  * @property Org_model $org
  * @property Person_model $person
  * @property Photo_model $photo
+ * @property Task_model $task
  */
 class Persons extends CI_Controller
 {
@@ -43,6 +44,7 @@ class Persons extends CI_Controller
 		$this->load->model('ac/org_model', 'org');
 		$this->load->model('ac/person_model', 'person');
 		$this->load->model('ac/photo_model', 'photo');
+		$this->load->model('ac/task_model', 'task');
 
 		$this->user_id = $this->ion_auth->user()->row()->id;
 		$this->orgs = $this->org->get_all($this->user_id); //TODO
@@ -85,7 +87,7 @@ class Persons extends CI_Controller
 
 			$ctrls = $this->ctrl->get_all($this->first_org->id);
 			foreach ($ctrls as $ctrl) {
-				$this->ctrl->add_cards($ctrl->id, [$card->wiegand]);
+				$this->task->add_cards($ctrl->id, [$card->wiegand]);
 			}
 		}
 
@@ -119,7 +121,7 @@ class Persons extends CI_Controller
 
 			$ctrls = $this->ctrl->get_all($this->first_org->id);
 			foreach ($ctrls as $ctrl) {
-				$this->ctrl->add_cards($ctrl->id, [$card->wiegand]);
+				$this->task->add_cards($ctrl->id, [$card->wiegand]);
 			}
 		}
 
@@ -146,7 +148,7 @@ class Persons extends CI_Controller
 				$this->card->delete($card->id);
 
 				foreach ($ctrls as $ctrl) {
-					$this->ctrl->delete_cards($ctrl->id, [$card->wiegand]);
+					$this->task->delete_cards($ctrl->id, [$card->wiegand]);
 				}
 			}
 		}

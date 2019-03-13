@@ -3,10 +3,10 @@
 /**
  * Class Controllers
  * @property Card_model $card
- * @property Ctrl_model $ctrl
  * @property Div_model $div
  * @property Org_model $org
  * @property Person_model $person
+ * @property Task_mode $task
  */
 class Controllers extends CI_Controller
 {
@@ -36,8 +36,8 @@ class Controllers extends CI_Controller
 			exit;
 		}
 
-		$this->load->model('ac/ctrl_model', 'ctrl');
 		$this->load->model('ac/org_model', 'org');
+		$this->load->model('ac/task_model', 'task');
 
 		$this->user_id = $this->ion_auth->user()->row()->id;
 		$this->orgs = $this->org->get_all($this->user_id); //TODO
@@ -58,7 +58,7 @@ class Controllers extends CI_Controller
 		}
 
 		if (isset($ctrl_id) && isset($open_time)) {
-			if ($this->ctrl->set_door_params($ctrl_id, $open_time) > 0) {
+			if ($this->task->set_door_params($ctrl_id, $open_time) > 0) {
 				echo 'Задания успешно отправлены'; //TODO перевод
 			}
 		} else {
@@ -79,7 +79,7 @@ class Controllers extends CI_Controller
 		}
 
 		if (isset($ctrl_id)) {
-			if ($this->ctrl->clear_cards($ctrl_id) > 0) {
+			if ($this->task->clear_cards($ctrl_id) > 0) {
 				echo 'Задания успешно отправлены'; //TODO перевод
 			}
 		} else {
@@ -131,7 +131,7 @@ class Controllers extends CI_Controller
 				$codes[] = $cards[$i]->wiegand;
 
 				if (($i > 0 && ($i % 10 === 0)) || $i === ($card_count - 1)) {
-					$counter += $this->ctrl->add_cards($ctrl_id, $codes);
+					$counter += $this->task->add_cards($ctrl_id, $codes);
 
 					$codes = [];
 				}

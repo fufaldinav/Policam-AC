@@ -19,7 +19,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
  * Class Ctrl Model
- * @property Task_model $task
  */
 class Ctrl_model extends CI_Model
 {
@@ -140,87 +139,5 @@ class Ctrl_model extends CI_Model
 		];
 
 		return $data;
-	}
-
-	/**
-	 * Установливает параметры открытия
-	 *
-	 * @param int $ctrl_id       ID контроллера
-	 * @param int $open_time     Время открытия в 0.1 сек
-	 * @param int $open_control  Контроль открытия в 0.1 сек, по-умолчанию 0 - без контроля
-	 * @param int $close_control Контроль закрытия в 0.1 сек, по-умолчанию 0 - без контроля
-	 *
-	 * @return int Количество успешных записей
-	 */
-	public function set_door_params(int $ctrl_id, int $open_time, int $open_control = 0, int $close_control = 0): int
-	{
-		$this->load->model('ac/task_model', 'task');
-
-		$data = sprintf('"open": %d, "open_control": %d, "close_control": %d', $open_time, $open_control, $close_control);
-
-		return $this->task->add('set_door_params', $ctrl_id, $data);
-	}
-
-	/**
-	 * Добавляет карты в контроллер
-	 *
-	 * @param int      $ctrl_id ID контроллера
-	 * @param string[] $codes   Коды карт
-	 *
-	 * @return int Количество успешных записей
-	 */
-	public function add_cards(int $ctrl_id, array $codes): int
-	{
-		$this->load->model('ac/task_model', 'task');
-
-		$data = '"cards": [';
-
-		foreach ($codes as $code) {
-			$data .= '{"card":"' . $code . '","flags":32,"tz":255},';
-		}
-		$data = substr($data, 0, -1);
-
-		$data .= ']';
-
-		return $this->task->add('add_cards', $ctrl_id, $data);
-	}
-
-	/**
-	 * Удаляет карты из контроллера
-	 *
-	 * @param int      $ctrl_id ID контроллера
-	 * @param string[] $codes   Коды карт
-	 *
-	 * @return int Количество успешных удалений
-	 */
-	public function delete_cards(int $ctrl_id, array $codes): int
-	{
-		$this->load->model('ac/task_model', 'task');
-
-		$data = '"cards": [';
-
-		foreach ($codes as $code) {
-			$data .= '{"card":"' . $code . '"},';
-		}
-		$data = substr($data, 0, -1);
-
-		$data .= ']';
-
-		return $this->task->add('del_cards', $ctrl_id, $data);
-	}
-
-
-	/**
-	 * Удаляет все карты из контроллера
-	 *
-	 * @param int $ctrl_id ID контроллера
-	 *
-	 * @return int Количество успешных удалений
-	 */
-	public function clear_cards(int $ctrl_id): int
-	{
-		$this->load->model('ac/task_model', 'task');
-
-		return $this->task->add('clear_cards', $ctrl_id);
 	}
 }
