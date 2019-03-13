@@ -58,7 +58,7 @@ class Div_model extends CI_Model
 			$this->db->where('org_id', $org_id);
 		}
 		$query = $this->db
-			->order_by('number ASC', 'letter ASC')
+			->order_by('number ASC, letter ASC')
 			->get('divisions');
 
 		return $query->result();
