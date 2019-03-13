@@ -18,8 +18,8 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
-* Class Person Model
-*/
+ * Class Person Model
+ */
 class Person_model extends CI_Model
 {
 	public function __construct()
@@ -39,7 +39,6 @@ class Person_model extends CI_Model
 	public function get(int $person_id): ?object
 	{
 		$query = $this->db->select('id, address, birthday, f, i, o, phone, type')
-			->select("div_id AS 'div'")
 			->select("photo_id AS 'photo'")
 			->where('id', $person_id)
 			->get('persons');
@@ -60,8 +59,9 @@ class Person_model extends CI_Model
 			$this->db->where('div_id', $div_id);
 		}
 		$query = $this->db
+			->join('persons', 'persons.id = persons_divisions.person_id', 'left')
 			->order_by('f ASC, i ASC, o ASC')
-			->get('persons');
+			->get('persons_divisions');
 
 		return $query->result();
 	}
@@ -120,7 +120,6 @@ class Person_model extends CI_Model
 	private function _set(object $person): array
 	{
 		$data = [
-			'div_id' => $person->div,
 			'f' => $person->f,
 			'i' => $person->i,
 			'o' => $person->o,

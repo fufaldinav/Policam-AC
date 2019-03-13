@@ -185,3 +185,7 @@ input.submit {
 button:hover {
 	cursor: pointer;
 }
+.checked, .checked:hover {
+	background-color: #c548f1;
+	box-shadow: 0 1px 0 0 #9300c7, 0 0 0 1px #9300c7;
+}

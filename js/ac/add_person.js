@@ -4,12 +4,23 @@ let person = {
 	'i': null,
 	'o': null,
 	'photo': null,
-	'div': null,
 	'birthday': null,
 	'address': null,
 	'phone': null,
 	'card': null
 };
+let divs = [];
+
+function setDiv(id) {
+	let index = divs.indexOf(id);
+	if (index === -1) {
+		divs.push(id);
+		document.getElementById(`div${id}`).classList.add(`checked`);
+	} else {
+		divs.splice(index, 1);
+		document.getElementById(`div${id}`).classList.remove(`checked`);
+	}
+}
 
 function savePersonInfo() {
 	let checkValidity = true;
@@ -34,6 +45,7 @@ function savePersonInfo() {
 			url: `[ci_site_url]persons/add`,
 			type: `POST`,
 			data: {
+				divs: JSON.stringify(divs),
 				person: JSON.stringify(person)
 			},
 			success: function(person_id) {
@@ -54,10 +66,8 @@ function clearPersonInfo() {
 	document.getElementById(`card`).value = 0; //поставить в карты "Не выбрано"
 	Object.keys(person).map(function(k, index) {
 		let elem = document.getElementById(k);
-		if (k != `div`) { //обнулить значение всех полей, кроме Класс
-			person[k] = null;
-			elem.value = null;
-		}
+		person[k] = null;
+		elem.value = null;
 	});
 	document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/0.jpg)';
 	document.getElementById(`photo_del`).hidden = true;
