@@ -44,14 +44,10 @@ class Notification_model extends CI_Model
 
 		$this->config->load('ac', true);
 
-		$this->lang->load('ac');
-
 		$this->load->database();
 
 		$this->load->model('ac/person_model', 'person');
 		$this->load->model('ac/photo_model', 'photo');
-
-		$this->load->helper('language');
 
 		$this->fcm_url = $this->config->item('fcm_url', 'ac');
 		$this->server_key = $this->config->item('server_key', 'ac');
@@ -88,6 +84,10 @@ class Notification_model extends CI_Model
 	 */
 	public function generate(int $person_id, int $event_id): array
 	{
+		$this->lang->load('ac');
+
+		$this->load->helper('language');
+
 		switch ($event_id) {
 			case 4: //вход
 				$event = lang('entrace');
