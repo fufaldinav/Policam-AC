@@ -172,10 +172,8 @@ function getCardsByPerson(person_id) {
 					cards.innerHTML = cards.innerHTML + `<div id="card${c.id}">${c.wiegand} <button type="button" onclick="delCard(${c.id});">Отвязать</button><br /></div>`
 				});
 				let li = document.getElementById(`person${person.id}`); //добавим пользователю метку наличия ключей
-				let c = li.querySelector(`.tree-content`);
-				if (c.innerHTML.indexOf(`(+) `) == -1) {
-					c.innerHTML = `(+) ${c.innerHTML}`;
-				}
+				let a = li.querySelector(`.person`);
+				a.classList.remove(`no-card`);
 			} else {
 				document.getElementById(`card_selector`).hidden = false; //отобразим неизвестные карты
 				document.getElementById(`card`).disabled = false; //включим меню неизвеснтых карт
@@ -226,10 +224,8 @@ function delCard(card_id) {
 					document.getElementById(`card`).disabled = false;
 					getCards();
 					let li = document.getElementById(`person${person.id}`); //удалим у пользователя метку наличия ключей
-					let c = li.querySelector(`.tree-content`);
-					if (c.innerHTML.indexOf(`(+) `) == 0) {
-						c.innerHTML = c.innerHTML.substring(4);
-					}
+					let a = li.querySelector(`.person`);
+					a.classList.add(`no-card`);
 				}
 				alert(`Ключ успешно отвязан`); //TODO перевод
 			} else {
