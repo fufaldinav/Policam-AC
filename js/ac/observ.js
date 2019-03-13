@@ -99,16 +99,13 @@ function getPersons(div_id) {
 		url: `[ci_site_url]persons/get_all/${div_id}`,
 		type: `GET`,
 		success: function(data) {
+			let persons = `<div id="menu-button-back" class="menu-item" onclick="getDivisions();">Назад</div>`; //TODO перевод
 			if (data.length > 0) {
-				let persons = `<div id="menu-button-back" class="menu-item" onclick="getDivisions();">Назад</div>`; //TODO перевод
 				data.forEach(function(person) {
 					persons += `<div id="person${person.id}" class="menu-item" onclick="openEntraceOptions(${person.id}, ${div_id});">${person.f} ${person.i}</div>`;
 				});
-				let menu = document.getElementById(`menu`);
-				menu.innerHTML = persons;
-			} else {
-				alert(`Пустой ответ от сервера`); //TODO перевод
 			}
+			document.getElementById(`menu`).innerHTML = persons;
 		},
 		error: function() {
 			alert(`Неизвестная ошибка`); //TODO перевод
