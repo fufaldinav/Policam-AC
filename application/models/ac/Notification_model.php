@@ -51,6 +51,8 @@ class Notification_model extends CI_Model
 		$this->load->model('ac/person_model', 'person');
 		$this->load->model('ac/photo_model', 'photo');
 
+		$this->load->helper('language');
+
 		$this->fcm_url = $this->config->item('fcm_url', 'ac');
 		$this->server_key = $this->config->item('server_key', 'ac');
 	}
