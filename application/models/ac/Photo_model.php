@@ -39,6 +39,9 @@ class Photo_model extends CI_Model
 
 		$this->load->database();
 
+		$this->load->model('ac/person_model', 'person');
+		$this->load->model('ac/util_model', 'util');
+
 		$this->img_path = $this->config->item('img_path', 'ac');
 
 		if (! is_dir($this->img_path)) {
@@ -183,12 +186,10 @@ class Photo_model extends CI_Model
 				return $response;
 			} catch (Exception $e) {
 				$response['error'] = $e;
-				$this->load->model('ac/util_model', 'util');
 				$this->util->save_errors($e);
 				return $response;
 			}
 		} else {
-			$this->load->model('ac/util_model', 'util');
 			$this->util->save_errors($response);
 			return $response;
 		}
@@ -206,8 +207,6 @@ class Photo_model extends CI_Model
 		$photo = $this->get($photo_id);
 
 		if (isset($photo->person_id)) {
-			$this->load->model('ac/person_model', 'person');
-
 			$this->person->unset_photo($photo->person_id);
 		}
 
@@ -226,7 +225,6 @@ class Photo_model extends CI_Model
 
 			return true;
 		} catch (Exception $e) {
-			$this->load->model('ac/util_model', 'util');
 			$this->util->save_errors($e);
 			return false;
 		}

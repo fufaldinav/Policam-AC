@@ -36,6 +36,7 @@ class Divisions extends CI_Controller
 
 		$this->load->model('ac/div_model', 'div');
 		$this->load->model('ac/org_model', 'org');
+		$this->load->model('ac/person_model', 'person');
 
 		$this->user_id = $this->ion_auth->user()->row()->id;
 		$this->orgs = $this->org->get_all($this->user_id); //TODO
@@ -91,8 +92,6 @@ class Divisions extends CI_Controller
 			header('HTTP/1.1 403 Forbidden');
 			exit;
 		}
-
-		$this->load->model('ac/person_model', 'person');
 
 		$persons = $this->person->get_all($div_id);
 

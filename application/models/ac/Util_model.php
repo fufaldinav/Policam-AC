@@ -46,6 +46,9 @@ class Util_model extends CI_Model
 
 		$this->load->database();
 
+		$this->load->model('ac/org_model', 'org');
+		$this->load->model('ac/ctrl_model', 'ctrl');
+
 		$this->log_path = $this->config->item('log_path', 'ac');
 
 		if (! is_dir($this->log_path)) {
@@ -65,9 +68,6 @@ class Util_model extends CI_Model
 	 */
 	public function start_polling(int $time = null, array $events): array
 	{
-		$this->load->model('ac/org_model', 'org');
-		$this->load->model('ac/ctrl_model', 'ctrl');
-
 		$time = $time ?? now('Asia/Yekaterinburg');
 
 		$user_id = $this->ion_auth->user()->row()->id; //TODO

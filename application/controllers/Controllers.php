@@ -36,7 +36,10 @@ class Controllers extends CI_Controller
 			exit;
 		}
 
+		$this->load->model('ac/card_model', 'card');
+		$this->load->model('ac/div_model', 'div');
 		$this->load->model('ac/org_model', 'org');
+		$this->load->model('ac/person_model', 'person');
 		$this->load->model('ac/task_model', 'task');
 
 		$this->user_id = $this->ion_auth->user()->row()->id;
@@ -104,10 +107,6 @@ class Controllers extends CI_Controller
 		} elseif (! isset($this->first_org)) {
 			echo 'Нет организаций'; //TODO перевод
 		} else {
-			$this->load->model('ac/card_model', 'card');
-			$this->load->model('ac/div_model', 'div');
-			$this->load->model('ac/person_model', 'person');
-
 			$cards = [];
 
 			$divs = $this->div->get_all($this->first_org->id);

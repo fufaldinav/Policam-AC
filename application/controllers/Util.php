@@ -22,6 +22,11 @@ class Util extends CI_Controller
 			exit;
 		}
 
+		$this->load->model('ac/card_model', 'card');
+		$this->load->model('ac/ctrl_model', 'ctrl');
+		$this->load->model('ac/div_model', 'div');
+		$this->load->model('ac/org_model', 'org');
+		$this->load->model('ac/person_model', 'person');
 		$this->load->model('ac/util_model', 'util');
 	}
 
@@ -67,12 +72,6 @@ class Util extends CI_Controller
 	public function card_problem()
 	{
 		$this->lang->load('ac');
-
-		$this->load->model('ac/card_model', 'card');
-		$this->load->model('ac/ctrl_model', 'ctrl');
-		$this->load->model('ac/div_model', 'div');
-		$this->load->model('ac/org_model', 'org');
-		$this->load->model('ac/person_model', 'person');
 
 		$this->load->helper('language');
 
