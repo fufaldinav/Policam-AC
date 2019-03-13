@@ -31,7 +31,7 @@ class Controllers extends CI_Controller
 
 		$this->load->library('ion_auth');
 
-		if (!$this->ion_auth->logged_in()) {
+		if (! $this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
 		}
@@ -52,7 +52,7 @@ class Controllers extends CI_Controller
 	 */
 	public function set_door_params(int $ctrl_id = null, int $open_time = null)
 	{
-		if (!$this->ion_auth->is_admin()) {
+		if (! $this->ion_auth->is_admin()) {
 			header('HTTP/1.1 403 Forbidden');
 			exit;
 		}
@@ -73,7 +73,7 @@ class Controllers extends CI_Controller
 	 */
 	public function clear(int $ctrl_id = null)
 	{
-		if (!$this->ion_auth->is_admin()) {
+		if (! $this->ion_auth->is_admin()) {
 			header('HTTP/1.1 403 Forbidden');
 			exit;
 		}
@@ -94,14 +94,14 @@ class Controllers extends CI_Controller
 	 */
 	public function reload_cards(int $ctrl_id = null)
 	{
-		if (!$this->ion_auth->is_admin()) {
+		if (! $this->ion_auth->is_admin()) {
 			header('HTTP/1.1 403 Forbidden');
 			exit;
 		}
 
-		if (!isset($ctrl_id)) {
+		if (! isset($ctrl_id)) {
 			echo 'Не выбран контроллер'; //TODO перевод
-		} elseif (!isset($this->first_org)) {
+		} elseif (! isset($this->first_org)) {
 			echo 'Нет организаций'; //TODO перевод
 		} else {
 			$this->load->model('ac/card_model', 'card');

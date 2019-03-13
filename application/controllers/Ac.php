@@ -32,7 +32,7 @@ class Ac extends CI_Controller
 
 		$this->load->library('ion_auth');
 
-		if (!$this->ion_auth->logged_in()) {
+		if (! $this->ion_auth->logged_in()) {
 			redirect('auth/login');
 		}
 
@@ -90,7 +90,7 @@ class Ac extends CI_Controller
 	 */
 	public function add_person()
 	{
-		if (!$this->ion_auth->in_group(2)) {
+		if (! $this->ion_auth->in_group(2)) {
 			redirect('ac/observ');
 		}
 
@@ -149,7 +149,7 @@ class Ac extends CI_Controller
 	 */
 	public function edit_persons()
 	{
-		if (!$this->ion_auth->in_group(2)) {
+		if (! $this->ion_auth->in_group(2)) {
 			redirect('ac/observ');
 		}
 
@@ -215,7 +215,7 @@ class Ac extends CI_Controller
 	 */
 	public function classes()
 	{
-		if (!$this->ion_auth->in_group(2)) {
+		if (! $this->ion_auth->in_group(2)) {
 			redirect('ac/observ');
 		}
 

@@ -41,7 +41,7 @@ class Photo_model extends CI_Model
 
 		$this->img_path = $this->config->item('img_path', 'ac');
 
-		if (!is_dir($this->img_path)) {
+		if (! is_dir($this->img_path)) {
 			mkdir($this->img_path, 0755, true);
 		}
 	}
@@ -137,7 +137,7 @@ class Photo_model extends CI_Model
 		$file_ext = strtolower($file_ext);
 		$file_hash = hash_file('md5', $file_tmp);
 
-		if (!in_array($file_ext, $extensions)) {
+		if (! in_array($file_ext, $extensions)) {
 			$response['error'] = "Extension not allowed: $file_name $file_type"; //TODO перевод
 		}
 
@@ -154,7 +154,7 @@ class Photo_model extends CI_Model
 
 			$photo = $this->get_by_hash($file_hash);
 
-			if (!isset($photo)) {
+			if (! isset($photo)) {
 				$this->db->insert('photo', ['hash' => $file_hash, 'time' => $time]);
 				$photo = $this->get($this->db->insert_id());
 			} else {

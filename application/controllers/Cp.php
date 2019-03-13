@@ -22,7 +22,7 @@ class Cp extends CI_Controller
 
 		$this->load->library('ion_auth');
 
-		if (!$this->ion_auth->logged_in()) {
+		if (! $this->ion_auth->logged_in()) {
 			redirect('auth/login');
 		}
 
@@ -41,7 +41,7 @@ class Cp extends CI_Controller
 	 */
 	public function index()
 	{
-		if (!$this->ion_auth->is_admin()) {
+		if (! $this->ion_auth->is_admin()) {
 			redirect('/');
 		}
 

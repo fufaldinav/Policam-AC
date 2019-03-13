@@ -12,12 +12,12 @@ class Cards extends CI_Controller
 
 		$this->load->library('ion_auth');
 
-		if (!$this->ion_auth->logged_in()) {
+		if (! $this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
 		}
 
-		if (!$this->ion_auth->in_group(2) && !$this->ion_auth->is_admin()) {
+		if (! $this->ion_auth->in_group(2) && ! $this->ion_auth->is_admin()) {
 			header('HTTP/1.1 403 Forbidden');
 			exit;
 		}
@@ -51,7 +51,7 @@ class Cards extends CI_Controller
 	 */
 	public function delete_all_unknowns()
 	{
-		if (!$this->ion_auth->is_admin()) {
+		if (! $this->ion_auth->is_admin()) {
 			header('HTTP/1.1 403 Forbidden');
 			exit;
 		}

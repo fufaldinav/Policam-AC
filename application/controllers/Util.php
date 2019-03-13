@@ -17,7 +17,7 @@ class Util extends CI_Controller
 
 		$this->load->library('ion_auth');
 
-		if (!$this->ion_auth->logged_in()) {
+		if (! $this->ion_auth->logged_in()) {
 			header("HTTP/1.1 401 Unauthorized");
 			exit;
 		}
@@ -81,7 +81,7 @@ class Util extends CI_Controller
 		$type = $this->input->post('type');
 		$person_id = $this->input->post('person_id');
 
-		if (!isset($type) || !isset($person_id)) {
+		if (! isset($type) || ! isset($person_id)) {
 			return null;
 		}
 

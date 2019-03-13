@@ -26,7 +26,7 @@ class Jsloader extends CI_Controller
 
 		$contents = read_file("./js/ac/$file");
 
-		if (!$contents) {
+		if (! $contents) {
 			header('HTTP/1.1 404 Not Found');
 			exit;
 		}

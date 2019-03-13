@@ -48,7 +48,7 @@ class Util_model extends CI_Model
 
 		$this->log_path = $this->config->item('log_path', 'ac');
 
-		if (!is_dir($this->log_path)) {
+		if (! is_dir($this->log_path)) {
 			mkdir($this->log_path, 0755, true);
 		}
 
