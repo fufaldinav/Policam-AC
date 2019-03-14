@@ -71,7 +71,7 @@ class Persons extends CI_Controller
 				$this->div->add_persons([$person_id], $div);
 			}
 		} else {
-			$divs = $this->div->get_all($this->first_org->id, 0);
+			$divs = $this->div->get_list($this->first_org->id, 0);
 			$div = array_shift($divs);
 			$this->div->add_persons([$person_id], $div->id);
 		}

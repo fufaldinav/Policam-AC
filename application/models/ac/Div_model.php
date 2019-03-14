@@ -53,7 +53,7 @@ class Div_model extends CI_Model
 	 *
 	 * @return object[] Массив с подразделениями или пустой массив
 	 */
-	public function get_all(int $org_id = null, int $type = null): array
+	public function get_list(int $org_id = null, int $type = null): array
 	{
 		if (isset($org_id)) {
 			$this->db->where('org_id', $org_id);

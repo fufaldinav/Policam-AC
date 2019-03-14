@@ -110,7 +110,7 @@ class Controllers extends CI_Controller
 		} else {
 			$cards = [];
 
-			$divs = $this->div->get_all($this->first_org->id);
+			$divs = $this->div->get_list($this->first_org->id);
 
 			foreach ($divs as &$div) {
 				$div->persons = $this->person->get_all($div->id);

@@ -68,7 +68,7 @@ class Ac extends CI_Controller
 		/*
 		 | Подразделения
 		 */
-		$divs = $this->div->get_all($this->first_org->id);
+		$divs = $this->div->get_list($this->first_org->id);
 
 		$data = [
 			'divs' => $divs
@@ -104,7 +104,7 @@ class Ac extends CI_Controller
 			'divs_attr' => 'id="div"'
 		];
 
-		$divs = $this->div->get_all($this->first_org->id);
+		$divs = $this->div->get_list($this->first_org->id);
 
 		$data['divs'] = $divs;
 
@@ -163,7 +163,7 @@ class Ac extends CI_Controller
 			'divs_attr' => 'id="div" disabled'
 		];
 
-		$divs = $this->div->get_all($this->first_org->id);
+		$divs = $this->div->get_list($this->first_org->id);
 
 		$data['divs'] = $divs;
 
@@ -223,7 +223,7 @@ class Ac extends CI_Controller
 
 		$data = [
 			'org_id' => $this->first_org->id,
-			'divs' => $this->div->get_all($this->first_org->id)
+			'divs' => $this->div->get_list($this->first_org->id)
 		];
 
 		$header = [

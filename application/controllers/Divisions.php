@@ -52,7 +52,7 @@ class Divisions extends CI_Controller
 
 		$divs = [];
 		foreach ($orgs as $org) {
-			$divs = array_merge($divs, $this->div->get_all($org->id));
+			$divs = array_merge($divs, $this->div->get_list($org->id));
 		}
 
 		header('Content-Type: application/json');
@@ -97,7 +97,7 @@ class Divisions extends CI_Controller
 		$persons = $this->person->get_all($div_id);
 
 		//"Пустое" подразделение
-		$new_div = $this->div->get_all($this->first_org->id, 0);
+		$new_div = $this->div->get_list($this->first_org->id, 0);
 		$new_div = array_shift($new_div);
 
 		//Переносим полученных людей в "пустое" подразделение
