@@ -190,7 +190,7 @@ class Card_model extends CI_Model
 			'wiegand' => $card->wiegand,
 			'last_conn' => $card->last_conn,
 			'controller_id' => $card->controller_id,
-			'person_id' => $card->person_id
+			'person_id' => $card->person_id ?? 0
 		];
 
 		return $data;

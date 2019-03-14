@@ -140,7 +140,7 @@ class Org_model extends CI_Model
 		$this->data = [
 			'name' => $org->name,
 			'addres' => $org->address,
-			'type' => $org->type
+			'type' => $org->type ?? 1
 		];
 
 		return $data;

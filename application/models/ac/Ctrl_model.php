@@ -133,9 +133,17 @@ class Ctrl_model extends CI_Model
 	{
 		$data = [
 			'name' => $ctrl->name,
-			'online' => $ctrl->online,
-			'last_conn' => $ctrl->last_conn,
-			'org_id' => $ctrl->org_id
+			'sn' => $ctrl->sn,
+			'type' => $ctrl->type ?? 'Z5RWEB',
+			'fw' => $ctrl->fw,
+			'conn_fw' => $ctrl->conn_fw,
+			'mode' => $ctrl->mode ?? 0,
+			'ip' => $ctrl->ip,
+			'protocol' => $ctrl->protocol ?? 1,
+			'active' => $ctrl->active ?? 1,
+			'online' => $ctrl->online ?? 0,
+			'last_conn' => $ctrl->last_conn ?? 0,
+			'org_id' => $ctrl->org_id ?? 0
 		];
 
 		return $data;

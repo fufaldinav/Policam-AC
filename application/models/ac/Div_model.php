@@ -183,8 +183,8 @@ class Div_model extends CI_Model
 	{
 		$data = [
 			'name' => $div->name,
-			'type' => $div->type ?? 1,
-			'org_id' => $div->org_id
+			'org_id' => $div->org_id,
+			'type' => $div->type ?? 1
 		];
 
 		return $data;
