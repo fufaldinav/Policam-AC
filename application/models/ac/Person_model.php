@@ -139,6 +139,7 @@ class Person_model extends CI_Model
 			'f' => $person->f,
 			'i' => $person->i,
 			'o' => $person->o,
+			'type' => $person->type ?? 1,
 			'birthday' => $person->birthday,
 			'address' => $person->address,
 			'phone' => $person->phone,
