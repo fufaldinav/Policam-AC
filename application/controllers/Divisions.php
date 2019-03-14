@@ -18,11 +18,6 @@ class Divisions extends CI_Controller
 	 */
 	private $orgs;
 
-	/**
-	 * @var mixed[] $first_org
-	 */
-	private $first_org;
-
 	public function __construct()
 	{
 		parent::__construct();
@@ -40,7 +35,6 @@ class Divisions extends CI_Controller
 
 		$this->user_id = $this->ion_auth->user()->row()->id;
 		$this->orgs = $this->org->get_list($this->user_id); //TODO
-		$this->first_org = array_shift($this->orgs); //TODO
 	}
 
 	/**
@@ -97,7 +91,7 @@ class Divisions extends CI_Controller
 		$persons = $this->person->get_list($div_id);
 
 		//"Пустое" подразделение
-		$new_div = $this->div->get_list_by_type($this->first_org->id);
+		$new_div = $this->div->get_list_by_type(current($this->orgs)->id);
 
 		//Переносим полученных людей в "пустое" подразделение
 		//TODO проверят наличие людей в других подразделениях и тогда не добавлять в пустое

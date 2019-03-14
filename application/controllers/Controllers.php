@@ -20,11 +20,6 @@ class Controllers extends CI_Controller
 	 */
 	private $orgs;
 
-	/**
-	 * @var mixed[] $first_org
-	 */
-	private $first_org;
-
 	public function __construct()
 	{
 		parent::__construct();
@@ -44,7 +39,6 @@ class Controllers extends CI_Controller
 
 		$this->user_id = $this->ion_auth->user()->row()->id;
 		$this->orgs = $this->org->get_list($this->user_id); //TODO
-		$this->first_org = array_shift($this->orgs); //TODO
 	}
 
 	/**
@@ -105,12 +99,12 @@ class Controllers extends CI_Controller
 
 		if (! isset($ctrl_id)) {
 			echo 'Не выбран контроллер'; //TODO перевод
-		} elseif (! isset($this->first_org)) {
+		} elseif (! isset(current($this->orgs))) {
 			echo 'Нет организаций'; //TODO перевод
 		} else {
 			$cards = [];
 
-			$divs = $this->div->get_list($this->first_org->id);
+			$divs = $this->div->get_list(current($this->orgs)->id);
 
 			foreach ($divs as &$div) {
 				$div->persons = $this->person->get_list($div->id);

@@ -19,11 +19,6 @@ class Cards extends CI_Controller
 	 */
 	private $orgs;
 
-	/**
-	 * @var mixed[] $first_org
-	 */
-	private $first_org;
-
 	public function __construct()
 	{
 		parent::__construct();
@@ -47,7 +42,6 @@ class Cards extends CI_Controller
 
 		$this->user_id = $this->ion_auth->user()->row()->id;
 		$this->orgs = $this->org->get_list($this->user_id); //TODO
-		$this->first_org = array_shift($this->orgs); //TODO
 	}
 
 	/**
@@ -62,7 +56,7 @@ class Cards extends CI_Controller
 
 		$card->person_id = $person_id;
 
-		$ctrls = $this->ctrl->get_list($this->first_org->id);
+		$ctrls = $this->ctrl->get_list(current($this->orgs)->id);
 
 		if ($card->person_id === 0) {
 			foreach ($ctrls as $ctrl) {

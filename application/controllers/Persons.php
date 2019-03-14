@@ -22,11 +22,6 @@ class Persons extends CI_Controller
 	 */
 	private $orgs;
 
-	/**
-	 * @var mixed[] $first_org
-	 */
-	private $first_org;
-
 	public function __construct()
 	{
 		parent::__construct();
@@ -48,7 +43,6 @@ class Persons extends CI_Controller
 
 		$this->user_id = $this->ion_auth->user()->row()->id;
 		$this->orgs = $this->org->get_list($this->user_id); //TODO
-		$this->first_org = array_shift($this->orgs); //TODO
 	}
 
 	/**
@@ -71,7 +65,7 @@ class Persons extends CI_Controller
 				$this->person->add_to_div($person_id, $div_id);
 			}
 		} else {
-			$divs = $this->div->get_list_by_type($this->first_org->id);
+			$divs = $this->div->get_list_by_type(current($this->orgs)->id);
 			$this->person->add_to_div($person_id, current($divs));
 		}
 
@@ -80,7 +74,7 @@ class Persons extends CI_Controller
 		}
 
 		if (count($person->cards) > 0) {
-			$ctrls = $this->ctrl->get_list($this->first_org->id);
+			$ctrls = $this->ctrl->get_list(current($this->orgs)->id);
 
 			foreach ($person->cards as $card_id) {
 				$card = $this->card->get($card_id);
@@ -119,7 +113,7 @@ class Persons extends CI_Controller
 		}
 
 		if (count($person->cards) > 0) {
-			$ctrls = $this->ctrl->get_list($this->first_org->id);
+			$ctrls = $this->ctrl->get_list(current($this->orgs)->id);
 
 			foreach ($person->cards as $card_id) {
 				$card = $this->card->get($card_id);
@@ -151,7 +145,7 @@ class Persons extends CI_Controller
 
 		$cards = $this->card->get_by_person($person_id);
 		if (count($cards) > 0) {
-			$ctrls = $this->ctrl->get_list($this->first_org->id);
+			$ctrls = $this->ctrl->get_list(current($this->orgs)->id);
 
 			foreach ($cards as $card) {
 				$card->person_id = 0;
