@@ -127,7 +127,7 @@ class Notification_model extends CI_Model
 	{
 		$registration_ids = [];
 
-		$tokens = $this->get_all($user_id);
+		$tokens = $this->get_all_tokens($user_id);
 
 		foreach ($tokens as $token) {
 			$registration_ids[] = $token->token;
