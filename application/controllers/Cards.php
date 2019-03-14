@@ -97,13 +97,13 @@ class Cards extends CI_Controller
 			exit;
 		}
 
-		$cards = $this->card->get_all();
+		$cards = $this->card->get_list();
 
 		$count = 0;
 
 		foreach ($cards as $card) {
 			if ($card->person_id == -1) {
-				$count += $this->card->delete($card->id);
+				$count += $this->card->delete($card->id); //TODO события???
 			}
 		}
 

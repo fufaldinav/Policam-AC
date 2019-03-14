@@ -80,11 +80,11 @@ class Card_model extends CI_Model
 	/**
 	 * Получает список всех карт
 	 *
-	 * @param int|null $ctrl_id ID контроллера
+	 * @param int|null $ctrl_id ID контроллера, по-умолчанию NULL - все карты, независимо от контроллера
 	 *
 	 * @return object[] Массив с картами или пустой массив
 	 */
-	public function get_all(int $ctrl_id = null): array
+	public function get_list(int $ctrl_id = null): array
 	{
 		if (isset($ctrl_id)) {
 			$this->db->where('controller_id', $ctrl_id);
