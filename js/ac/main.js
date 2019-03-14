@@ -11,25 +11,25 @@ function sendError(message) {
 
 //получим список неизвестных карт (брелоков) из БД
 function getCards(id) {
-	let card = document.getElementById(`card`);
+	let cards = document.getElementById(`cards`);
 	$.ajax({
 		url: `[ci_site_url]cards/get_all`,
 		type: `GET`,
 		success: function(data) {
 			if (data) {
-				while (card.length > 0) { //удалить все элементы из меню карт
-					card.remove(card.length - 1);
+				while (cards.length > 0) { //удалить все элементы из меню карт
+					cards.remove(cards.length - 1);
 				}
 				if (data.length == 0) { //если нет известных карт
-					addOption(card, 0, `[lang_missing]`);
+					addOption(cards, 0, `[lang_missing]`);
 				} else { //иначе заполним меню картами
-					addOption(card, 0, `[lang_not_selected]`); //первый пункт
+					addOption(cards, 0, `[lang_not_selected]`); //первый пункт
 					data.forEach(function(c) {
-						addOption(card, c.id, c.wiegand);
+						addOption(cards, c.id, c.wiegand);
 					});
 				}
 				if (id) { //если передавали id, то установим карту как текущую
-					card.value = id;
+					cards.value = id;
 				}
 			} else {
 				alert(`Пустой ответ от сервера`); //TODO перевод

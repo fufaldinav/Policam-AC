@@ -7,6 +7,7 @@
  * @property Div_model $div
  * @property Org_model $org
  * @property Person_model $person
+ * @property Task_model $task
  * @property Util_model $util
  */
 class Util extends CI_Controller
@@ -27,6 +28,7 @@ class Util extends CI_Controller
 		$this->load->model('ac/div_model', 'div');
 		$this->load->model('ac/org_model', 'org');
 		$this->load->model('ac/person_model', 'person');
+		$this->load->model('ac/task_model', 'task');
 		$this->load->model('ac/util_model', 'util');
 	}
 
@@ -106,10 +108,12 @@ class Util extends CI_Controller
 			$ctrls = $this->ctrl->get_all($org->id);
 
 			foreach ($cards as $card) {
-				$this->card->set_holder($card->id, -1);
+				$card->person_id = 0;
+
+				$this->card->update($card);
 
 				foreach ($ctrls as $ctrl) {
-					$this->ctrl->delete_cards($ctrl->id, [$card->wiegand]);
+					$this->task->delete_cards($ctrl->id, [$card->wiegand]);
 				}
 			}
 

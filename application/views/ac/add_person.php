@@ -45,7 +45,7 @@
 				</div>
 				<div id="info-card" class="info-item">
 					<?php echo lang('card');?><br />
-					<?php echo form_dropdown('card', $cards, '0', $cards_attr);?>
+					<?php echo form_dropdown('cards', $cards, '0', $cards_attr);?>
 				</div>
 				<div id="info-button1" class="info-item">
 					<button type="button" onclick="savePersonInfo();">

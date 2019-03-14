@@ -80,14 +80,19 @@ class Persons extends CI_Controller
 			$this->photo->set_person($person->photo, $person_id);
 		}
 
-		if ($person->card > 0) {
-			$this->card->set_holder($person->card, $person_id);
-
-			$card = $this->card->get($person->card);
-
+		if (count($person->cards) > 0) {
 			$ctrls = $this->ctrl->get_all($this->first_org->id);
-			foreach ($ctrls as $ctrl) {
-				$this->task->add_cards($ctrl->id, [$card->wiegand]);
+
+			foreach ($person->cards as $card_id) {
+				$card = $this->card->get($card_id);
+
+				$card->person_id = $person_id;
+
+				$this->card->update($card);
+
+				foreach ($ctrls as $ctrl) {
+					$this->task->add_cards($ctrl->id, [$card->wiegand]);
+				}
 			}
 		}
 
@@ -114,14 +119,19 @@ class Persons extends CI_Controller
 			$count += $this->photo->set_person($person->photo, $person->id);
 		}
 
-		if ($person->card > 0) {
-			$count += $this->card->set_holder($person->card, $person->id);
-
-			$card = $this->card->get($person->card);
-
+		if (count($person->cards) > 0) {
 			$ctrls = $this->ctrl->get_all($this->first_org->id);
-			foreach ($ctrls as $ctrl) {
-				$this->task->add_cards($ctrl->id, [$card->wiegand]);
+
+			foreach ($person->cards as $card_id) {
+				$card = $this->card->get($card_id);
+
+				$card->person_id = $person->id;
+
+				$count += $this->card->update($card);
+
+				foreach ($ctrls as $ctrl) {
+					$this->task->add_cards($ctrl->id, [$card->wiegand]);
+				}
 			}
 		}
 
@@ -145,7 +155,9 @@ class Persons extends CI_Controller
 			$ctrls = $this->ctrl->get_all($this->first_org->id);
 
 			foreach ($cards as $card) {
-				$this->card->delete($card->id);
+				$card->person_id = 0;
+
+				$this->card->update($card);
 
 				foreach ($ctrls as $ctrl) {
 					$this->task->delete_cards($ctrl->id, [$card->wiegand]);

@@ -95,23 +95,6 @@ class Card_model extends CI_Model
 	}
 
 	/**
-	 * Закрепляет карту за человеком
-	 *
-	 * @param int $card_id   ID карты
-	 * @param int $person_id ID человека
-	 *
-	 * @return int Количество успешных записей
-	*/
-	public function set_holder(int $card_id, int $person_id): int
-	{
-		$this->db
-			->where('id', $card_id)
-			->update('cards', ['person_id' => $person_id]);
-
-		return $this->db->affected_rows();
-	}
-
-	/**
 	 * Записывает время последнего считывания карты на контроллере
 	 *
 	 * @param int $card_id ID карты

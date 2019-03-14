@@ -120,7 +120,7 @@ class Ac extends CI_Controller
 		 | Карты
 		 */
 		$data['cards'] = [];
-		$data['cards_attr'] = 'id="card"';
+		$data['cards_attr'] = 'id="cards"';
 
 		$cards = $this->card->get_by_person(-1);
 
@@ -128,8 +128,8 @@ class Ac extends CI_Controller
 			$data['cards'][] = lang('missing');
 		} else {
 			$data['cards'][] = lang('not_selected');
-			foreach ($cards as $row) {
-				$data['cards'][$row->id] = $row->wiegand;
+			foreach ($cards as $card) {
+				$data['cards'][$card->id] = $card->wiegand;
 			}
 		}
 
@@ -186,7 +186,7 @@ class Ac extends CI_Controller
 		 | Карты
 		 */
 		$data['cards'] = [];
-		$data['cards_attr'] = 'id="card" disabled';
+		$data['cards_attr'] = 'id="cards" disabled';
 
 		$cards = $this->card->get_by_person(-1);
 

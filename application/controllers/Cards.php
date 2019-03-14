@@ -3,9 +3,27 @@
 /**
  * Class Cards
  * @property Card_model $card
+ * @property Ctrl_model $ctrl
+ * @property Org_model $org
+ * @property Task_model $org
  */
 class Cards extends CI_Controller
 {
+	/**
+	 * @var int $user_id
+	 */
+	private $user_id;
+
+	/**
+	 * @var mixed[] $orgs
+	 */
+	private $orgs;
+
+	/**
+	 * @var mixed[] $first_org
+	 */
+	private $first_org;
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -23,6 +41,13 @@ class Cards extends CI_Controller
 		}
 
 		$this->load->model('ac/card_model', 'card');
+		$this->load->model('ac/ctrl_model', 'ctrl');
+		$this->load->model('ac/org_model', 'org');
+		$this->load->model('ac/task_model', 'task');
+
+		$this->user_id = $this->ion_auth->user()->row()->id;
+		$this->orgs = $this->org->get_all($this->user_id); //TODO
+		$this->first_org = array_shift($this->orgs); //TODO
 	}
 
 	/**
@@ -31,9 +56,25 @@ class Cards extends CI_Controller
 	 * @param int $card_id   ID карты
 	 * @param int $person_id ID человека
 	 */
-	public function holder(int $card_id, int $person_id = -1)
+	public function holder(int $card_id, int $person_id = 0)
 	{
-		echo $this->card->set_holder($card_id, $person_id);
+		$card = $this->card->get($card_id);
+
+		$card->person_id = $person_id;
+
+		$ctrls = $this->ctrl->get_all($this->first_org->id);
+
+		if ($card->person_id === 0) {
+			foreach ($ctrls as $ctrl) {
+				$this->task->delete_cards($ctrl->id, [$card->wiegand]);
+			}
+		} else {
+			foreach ($ctrls as $ctrl) {
+				$this->task->add_cards($ctrl->id, [$card->wiegand]);
+			}
+		}
+
+		echo $this->card->update($card);
 	}
 
 	/**
