@@ -1,4 +1,4 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');?>
+<?php defined('BASEPATH') or exit('No direct script access allowed');?>
 		<div id="main">
 			<div id="scrollable-container">
 				<table border="0" cellpadding="4" cellspacing="0">
@@ -16,7 +16,7 @@
 							<td><button onclick="saveDivision(<?php echo $org_id;?>)"><?php echo lang('save');?></button></td>
 						</tr>
 						<?php foreach ($divs as $div):?>
-						<?php if ($div->type == 0) continue; ?>
+						<?php if ($div->type == 0) { continue; } ?>
 						<tr>
 							<?php $name = explode(' ', $div->name);?>
 							<td><?php echo $name[0];?></td>

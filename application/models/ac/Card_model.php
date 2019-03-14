@@ -22,28 +22,28 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 class Card_model extends MY_Model
 {
-	public function __construct()
-	{
-		parent::__construct();
+    public function __construct()
+    {
+        parent::__construct();
 
-		$this->_table = 'cards';
-		$this->_foreing_key = 'person_id';
-	}
+        $this->_table = 'cards';
+        $this->_foreing_key = 'person_id';
+    }
 
-	/**
-	 * Выделяет нужные свойства для записи в БД
-	 *
-	 * @return mixed[] Массив с параметрами карты
-	 */
-	protected function _set(): array
-	{
-		$data = [
-			'wiegand' => $this->wiegand,
-			'last_conn' => $this->last_conn,
-			'controller_id' => $this->controller_id,
-			'person_id' => $this->person_id ?? 0
-		];
+    /**
+     * Выделяет нужные свойства для записи в БД
+     *
+     * @return mixed[] Массив с параметрами карты
+     */
+    protected function _set(): array
+    {
+        $data = [
+            'wiegand' => $this->wiegand,
+            'last_conn' => $this->last_conn,
+            'controller_id' => $this->controller_id,
+            'person_id' => $this->person_id ?? 0
+        ];
 
-		return $data;
-	}
+        return $data;
+    }
 }

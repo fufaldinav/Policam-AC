@@ -22,130 +22,130 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 class Ctrl_model extends CI_Model
 {
-	public function __construct()
-	{
-		parent::__construct();
+    public function __construct()
+    {
+        parent::__construct();
 
-		$this->load->database();
-	}
+        $this->load->database();
+    }
 
-	/**
-	 * Получает контроллер по ID
-	 *
-	 * @param int $ctrl_id ID контроллера
-	 *
-	 * @return object|null Контроллер или NULL, если не найден
-	 */
-	public function get(int $ctrl_id): ?object
-	{
-		$query = $this->db
-			->where('id', $ctrl_id)
-			->get('controllers');
+    /**
+     * Получает контроллер по ID
+     *
+     * @param int $ctrl_id ID контроллера
+     *
+     * @return object|null Контроллер или NULL, если не найден
+     */
+    public function get(int $ctrl_id): ?object
+    {
+        $query = $this->db
+            ->where('id', $ctrl_id)
+            ->get('controllers');
 
-		return $query->row();
-	}
+        return $query->row();
+    }
 
-	/**
-	 * Получает контроллер по серийному номеру
-	 *
-	 * @param int $sn Серийный номер контроллера
-	 *
-	 * @return object|null Контроллер или NULL - отсутствует
-	 */
-	public function get_by_sn(int $sn): ?object
-	{
-		$query = $this->db
-			->where('sn', $sn)
-			->get('controllers');
+    /**
+     * Получает контроллер по серийному номеру
+     *
+     * @param int $sn Серийный номер контроллера
+     *
+     * @return object|null Контроллер или NULL - отсутствует
+     */
+    public function get_by_sn(int $sn): ?object
+    {
+        $query = $this->db
+            ->where('sn', $sn)
+            ->get('controllers');
 
-		return $query->row();
-	}
+        return $query->row();
+    }
 
-	/**
-	 * Получает список всех контроллеров по организации
-	 *
-	 * @param int|null $org_id ID организации
-	 *
-	 * @return object[] Массив с контроллерами или пустой массив
-	 */
-	public function get_list(int $org_id = null): array
-	{
-		if (isset($org_id)) {
-			$this->db->where('org_id', $org_id);
-		}
-		$query = $this->db->get('controllers');
+    /**
+     * Получает список всех контроллеров по организации
+     *
+     * @param int|null $org_id ID организации
+     *
+     * @return object[] Массив с контроллерами или пустой массив
+     */
+    public function get_list(int $org_id = null): array
+    {
+        if (isset($org_id)) {
+            $this->db->where('org_id', $org_id);
+        }
+        $query = $this->db->get('controllers');
 
-		return $query->result();
-	}
+        return $query->result();
+    }
 
-	/**
-	 * Добавляет новый контроллер
-	 *
-	 * @param object $ctrl Контроллер
-	 *
-	 * @return int ID нового контроллера
-	 */
-	public function add(object $ctrl): int
-	{
-		$this->db->insert('controllers', $this->_set($ctrl));
+    /**
+     * Добавляет новый контроллер
+     *
+     * @param object $ctrl Контроллер
+     *
+     * @return int ID нового контроллера
+     */
+    public function add(object $ctrl): int
+    {
+        $this->db->insert('controllers', $this->_set($ctrl));
 
-		return $this->db->insert_id();
-	}
+        return $this->db->insert_id();
+    }
 
-	/**
-	 * Обновляет информацию о контроллере
-	 *
-	 * @param object $ctrl Контроллер
-	 *
-	 * @return int Количество успешных записей
-	 */
-	public function update(object $ctrl): int
-	{
-		$this->db
-			->where('id', $ctrl->id)
-			->update('controllers', $this->_set($ctrl));
+    /**
+     * Обновляет информацию о контроллере
+     *
+     * @param object $ctrl Контроллер
+     *
+     * @return int Количество успешных записей
+     */
+    public function update(object $ctrl): int
+    {
+        $this->db
+            ->where('id', $ctrl->id)
+            ->update('controllers', $this->_set($ctrl));
 
-		return $this->db->affected_rows();
-	}
+        return $this->db->affected_rows();
+    }
 
-	/**
-	 * Удаляет контроллер
-	 *
-	 * @param int $ctrl_id ID контроллера
-	 *
-	 * @return int Количество успешных удалений
-	 */
-	public function delete(int $ctrl_id): int
-	{
-		$this->db->delete('controllers', ['id' => $ctrl_id]);
+    /**
+     * Удаляет контроллер
+     *
+     * @param int $ctrl_id ID контроллера
+     *
+     * @return int Количество успешных удалений
+     */
+    public function delete(int $ctrl_id): int
+    {
+        $this->db->delete('controllers', ['id' => $ctrl_id]);
 
-		return $this->db->affected_rows();
-	}
+        return $this->db->affected_rows();
+    }
 
-	/**
-	 * Получает объект и возвращает массив для записи
-	 *
-	 * @param object $ctrl Контроллер
-	 *
-	 * @return array Массив с параметрами контроллера
-	 */
-	private function _set(object $ctrl): array
-	{
-		$data = [
-			'name' => $ctrl->name,
-			'sn' => $ctrl->sn,
-			'type' => $ctrl->type ?? 'Z5RWEB',
-			'fw' => $ctrl->fw,
-			'conn_fw' => $ctrl->conn_fw,
-			'mode' => $ctrl->mode ?? 0,
-			'ip' => $ctrl->ip,
-			'protocol' => $ctrl->protocol ?? 1,
-			'active' => $ctrl->active ?? 1,
-			'online' => $ctrl->online ?? 0,
-			'last_conn' => $ctrl->last_conn ?? 0,
-			'org_id' => $ctrl->org_id ?? 0
-		];
+    /**
+     * Получает объект и возвращает массив для записи
+     *
+     * @param object $ctrl Контроллер
+     *
+     * @return array Массив с параметрами контроллера
+     */
+    private function _set(object $ctrl): array
+    {
+        $data = [
+            'name' => $ctrl->name,
+            'sn' => $ctrl->sn,
+            'type' => $ctrl->type ?? 'Z5RWEB',
+            'fw' => $ctrl->fw,
+            'conn_fw' => $ctrl->conn_fw,
+            'mode' => $ctrl->mode ?? 0,
+            'ip' => $ctrl->ip,
+            'protocol' => $ctrl->protocol ?? 1,
+            'active' => $ctrl->active ?? 1,
+            'online' => $ctrl->online ?? 0,
+            'last_conn' => $ctrl->last_conn ?? 0,
+            'org_id' => $ctrl->org_id ?? 0
+        ];
 
-		return $data;
-	}
+        return $data;
+    }
 }

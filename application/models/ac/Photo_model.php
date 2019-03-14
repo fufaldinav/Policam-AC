@@ -24,261 +24,261 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 class Photo_model extends CI_Model
 {
-	/**
-	 * Каталог с фото
-	 *
-	 * @var string $img_path
-	 */
-	private $img_path;
+    /**
+     * Каталог с фото
+     *
+     * @var string $img_path
+     */
+    private $img_path;
 
-	public function __construct()
-	{
-		parent::__construct();
+    public function __construct()
+    {
+        parent::__construct();
 
-		$this->config->load('ac', true);
+        $this->config->load('ac', true);
 
-		$this->load->database();
+        $this->load->database();
 
-		$this->load->model('ac/person_model', 'person');
-		$this->load->model('ac/util_model', 'util');
+        $this->load->model('ac/person_model', 'person');
+        $this->load->model('ac/util_model', 'util');
 
-		$this->img_path = $this->config->item('img_path', 'ac');
+        $this->img_path = $this->config->item('img_path', 'ac');
 
-		if (! is_dir($this->img_path)) {
-			mkdir($this->img_path, 0755, true);
-		}
-	}
+        if (! is_dir($this->img_path)) {
+            mkdir($this->img_path, 0755, true);
+        }
+    }
 
-	/**
-	 * Получает фотографию по ID
-	 *
-	 * @param int $photo_id ID фотографии
-	 *
-	 * @return object|null Фотография или NULL, если не найдена
-	 */
-	public function get(int $photo_id): ?object
-	{
-		$query = $this->db
-			->where('id', $photo_id)
-			->get('photo');
+    /**
+     * Получает фотографию по ID
+     *
+     * @param int $photo_id ID фотографии
+     *
+     * @return object|null Фотография или NULL, если не найдена
+     */
+    public function get(int $photo_id): ?object
+    {
+        $query = $this->db
+            ->where('id', $photo_id)
+            ->get('photo');
 
-		return $query->row();
-	}
+        return $query->row();
+    }
 
-	/**
-	 * Получает фотографию по хэшу
-	 *
-	 * @param string $hash Хэш-сумма фотографии
-	 *
-	 * @return object|null Фотография или NULL, если не найдена
-	 */
-	public function get_by_hash(string $hash): ?object
-	{
-		$query = $this->db
-			->where('hash', $hash)
-			->get('photo');
+    /**
+     * Получает фотографию по хэшу
+     *
+     * @param string $hash Хэш-сумма фотографии
+     *
+     * @return object|null Фотография или NULL, если не найдена
+     */
+    public function get_by_hash(string $hash): ?object
+    {
+        $query = $this->db
+            ->where('hash', $hash)
+            ->get('photo');
 
-		return $query->row();
-	}
+        return $query->row();
+    }
 
-	/**
-	 * Получает фотографию по человеку
-	 *
-	 * @param int $person_id ID человека
-	 *
-	 * @return object|null Фотография или NULL, если не найдена
-	 */
-	public function get_by_person(int $person_id): ?object
-	{
-		$query = $this->db
-			->where('person_id', $person_id)
-			->get('photo');
+    /**
+     * Получает фотографию по человеку
+     *
+     * @param int $person_id ID человека
+     *
+     * @return object|null Фотография или NULL, если не найдена
+     */
+    public function get_by_person(int $person_id): ?object
+    {
+        $query = $this->db
+            ->where('person_id', $person_id)
+            ->get('photo');
 
-		return $query->row();
-	}
-	/**
-	 * Устанавливает владельца фотографии
-	 *
-	 * @param int $photo_id  ID фотографии
-	 * @param int $person_id ID человека
-	 *
-	 * @return int Количество успешных записей
-	 */
-	public function set_person(int $photo_id, int $person_id): int
-	{
-		$this->db
-			->where('id', $photo_id)
-			->update('photo', ['person_id' => $person_id]);
+        return $query->row();
+    }
+    /**
+     * Устанавливает владельца фотографии
+     *
+     * @param int $photo_id  ID фотографии
+     * @param int $person_id ID человека
+     *
+     * @return int Количество успешных записей
+     */
+    public function set_person(int $photo_id, int $person_id): int
+    {
+        $this->db
+            ->where('id', $photo_id)
+            ->update('photo', ['person_id' => $person_id]);
 
-		return $this->db->affected_rows();
-	}
+        return $this->db->affected_rows();
+    }
 
-	/**
-	 * Сохраняет фотографию
-	 *
-	 * @param mixed[] $file Файл фотографии
-	 *
-	 * @return mixed[] Отчет о сохранении
-	 */
-	public function save(array $file): array //TODO проверка уже имеющейся фото за человеком
-	{
-		$response = [
-			'id' => 0,
-			'error' => ''
-		];
+    /**
+     * Сохраняет фотографию
+     *
+     * @param mixed[] $file Файл фотографии
+     *
+     * @return mixed[] Отчет о сохранении
+     */
+    public function save(array $file): array //TODO проверка уже имеющейся фото за человеком
+    {
+        $response = [
+            'id' => 0,
+            'error' => ''
+        ];
 
-		$extensions = ['jpg', 'jpeg'];
+        $extensions = ['jpg', 'jpeg'];
 
-		$file_name = $file['name'];
-		$file_tmp = $file['tmp_name'];
-		$file_type = $file['type'];
-		$file_size = $file['size'];
+        $file_name = $file['name'];
+        $file_tmp = $file['tmp_name'];
+        $file_type = $file['type'];
+        $file_size = $file['size'];
 
 
-		$file_ext = explode('.', $file['name']);
-		$file_ext = end($file_ext);
-		$file_ext = strtolower($file_ext);
-		$file_hash = hash_file('md5', $file_tmp);
+        $file_ext = explode('.', $file['name']);
+        $file_ext = end($file_ext);
+        $file_ext = strtolower($file_ext);
+        $file_hash = hash_file('md5', $file_tmp);
 
-		if (! in_array($file_ext, $extensions)) {
-			$response['error'] = "Extension not allowed: $file_name $file_type"; //TODO перевод
-		}
+        if (! in_array($file_ext, $extensions)) {
+            $response['error'] = "Extension not allowed: $file_name $file_type"; //TODO перевод
+        }
 
-		if ($file_size > 8388608) {
-			$response['error'] = "File size exceeds limit: $file_name $file_type"; //TODO перевод
-		}
+        if ($file_size > 8388608) {
+            $response['error'] = "File size exceeds limit: $file_name $file_type"; //TODO перевод
+        }
 
-		if ($file_size === 0) {
-			$response['error'] = 'Wrong file or file not exists'; //TODO перевод
-		}
+        if ($file_size === 0) {
+            $response['error'] = 'Wrong file or file not exists'; //TODO перевод
+        }
 
-		if ($response['error'] === '') {
-			$time = now('Asia/Yekaterinburg');
+        if ($response['error'] === '') {
+            $time = now('Asia/Yekaterinburg');
 
-			$photo = $this->get_by_hash($file_hash);
+            $photo = $this->get_by_hash($file_hash);
 
-			if (! isset($photo)) {
-				$this->db->insert('photo', ['hash' => $file_hash, 'time' => $time]);
-				$photo = $this->get($this->db->insert_id());
-			} else {
-				$this->db
-					->where('hash', $file_hash)
-					->update('photo', ['time' => $time]);
-			}
-			$response['id'] = $photo->id;
+            if (! isset($photo)) {
+                $this->db->insert('photo', ['hash' => $file_hash, 'time' => $time]);
+                $photo = $this->get($this->db->insert_id());
+            } else {
+                $this->db
+                    ->where('hash', $file_hash)
+                    ->update('photo', ['time' => $time]);
+            }
+            $response['id'] = $photo->id;
 
-			$this->delete_old();
+            $this->delete_old();
 
-			try {
-				$file_path = "$this->img_path/$photo->id.jpg";
+            try {
+                $file_path = "$this->img_path/$photo->id.jpg";
 
-				move_uploaded_file($file_tmp, $file_path);
-				//сохранение уменьшенной копии
-				$params = [
-					'src_path' => $file_path,
-					'width' => 320,
-					'height' => 240,
-					'dst_path' => "$this->img_path/s/$photo->id.jpg"
-				];
+                move_uploaded_file($file_tmp, $file_path);
+                //сохранение уменьшенной копии
+                $params = [
+                    'src_path' => $file_path,
+                    'width' => 320,
+                    'height' => 240,
+                    'dst_path' => "$this->img_path/s/$photo->id.jpg"
+                ];
 
-				$this->create_thumbnail($params);
+                $this->create_thumbnail($params);
 
-				return $response;
-			} catch (Exception $e) {
-				$response['error'] = $e;
-				$this->util->save_errors($e);
-				return $response;
-			}
-		} else {
-			$this->util->save_errors($response);
-			return $response;
-		}
-	}
+                return $response;
+            } catch (Exception $e) {
+                $response['error'] = $e;
+                $this->util->save_errors($e);
+                return $response;
+            }
+        } else {
+            $this->util->save_errors($response);
+            return $response;
+        }
+    }
 
-	/**
-	 * Удаляет фото из БД и диска
-	 *
-	 * @param int $photo_id ID фотографии
-	 *
-	 * @return bool TRUE - успешно, FALSE - ошибка
-	 */
-	public function delete(int $photo_id): bool
-	{
-		$photo = $this->get($photo_id);
+    /**
+     * Удаляет фото из БД и диска
+     *
+     * @param int $photo_id ID фотографии
+     *
+     * @return bool TRUE - успешно, FALSE - ошибка
+     */
+    public function delete(int $photo_id): bool
+    {
+        $photo = $this->get($photo_id);
 
-		if (isset($photo->person_id)) {
-			$this->person->unset_photo($photo->person_id);
-		}
+        if (isset($photo->person_id)) {
+            $this->person->unset_photo($photo->person_id);
+        }
 
-		$this->db->delete('photo', ['id' => $photo->id]);
+        $this->db->delete('photo', ['id' => $photo->id]);
 
-		try {
-			$file_path = "$this->img_path/$photo->id.jpg";
-			if (file_exists($file_path)) {
-				unlink($file_path);
-			}
+        try {
+            $file_path = "$this->img_path/$photo->id.jpg";
+            if (file_exists($file_path)) {
+                unlink($file_path);
+            }
 
-			$file_path = "$this->img_path/s/$photo->id.jpg";
-			if (file_exists($file_path)) {
-				unlink($file_path);
-			}
+            $file_path = "$this->img_path/s/$photo->id.jpg";
+            if (file_exists($file_path)) {
+                unlink($file_path);
+            }
 
-			return true;
-		} catch (Exception $e) {
-			$this->util->save_errors($e);
-			return false;
-		}
-	}
+            return true;
+        } catch (Exception $e) {
+            $this->util->save_errors($e);
+            return false;
+        }
+    }
 
-	/**
-	 * Удаляет старые фото из БД и диска
-	 *
-	 * @return int Количество удаленных фотографий
-	 */
-	private function delete_old(): int
-	{
-		$query =  $this->db
-			->where('person_id', null)
-			->where('time <', now('Asia/Yekaterinburg') - 86400)
-			->get('photo');
+    /**
+     * Удаляет старые фото из БД и диска
+     *
+     * @return int Количество удаленных фотографий
+     */
+    private function delete_old(): int
+    {
+        $query =  $this->db
+            ->where('person_id', null)
+            ->where('time <', now('Asia/Yekaterinburg') - 86400)
+            ->get('photo');
 
-		$counter = 0;
+        $counter = 0;
 
-		foreach ($query->result() as $photo) {
-			$counter += $this->delete($photo->id);
-		}
+        foreach ($query->result() as $photo) {
+            $counter += $this->delete($photo->id);
+        }
 
-		return $counter;
-	}
+        return $counter;
+    }
 
-	/**
-	 * Создает уменьшенную копию изображения
-	 * $params = [
-	 *   'src_path' => string,
-	 *   'width' => int,
-	 *   'height' => int,
-	 *   'dst_path' => string
-	 * ];
-	 * @param array $params
-	 *
-	 * @return bool TRUE - успешно, FALSE - ошибка
-	 */
-	private function create_thumbnail(array $params): bool
-	{
-		$src_img = imagecreatefromjpeg($params['src_path']);
+    /**
+     * Создает уменьшенную копию изображения
+     * $params = [
+     *   'src_path' => string,
+     *   'width' => int,
+     *   'height' => int,
+     *   'dst_path' => string
+     * ];
+     * @param array $params
+     *
+     * @return bool TRUE - успешно, FALSE - ошибка
+     */
+    private function create_thumbnail(array $params): bool
+    {
+        $src_img = imagecreatefromjpeg($params['src_path']);
 
-		list($width, $height) = getimagesize($params['src_path']);
-		$delta = max([
-			($width / $params['width']),
-			($height / $params['height'])
-		]);
-		$new_width = $width / $delta;
-		$new_height = $height / $delta;
+        list($width, $height) = getimagesize($params['src_path']);
+        $delta = max([
+            ($width / $params['width']),
+            ($height / $params['height'])
+        ]);
+        $new_width = $width / $delta;
+        $new_height = $height / $delta;
 
-		$new_img = imagecreatetruecolor($new_width, $new_height);
+        $new_img = imagecreatetruecolor($new_width, $new_height);
 
-		imagecopyresampled($new_img, $src_img, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
+        imagecopyresampled($new_img, $src_img, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
 
-		return imagejpeg($new_img, $params['dst_path']);
-	}
+        return imagejpeg($new_img, $params['dst_path']);
+    }
 }

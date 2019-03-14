@@ -6,49 +6,49 @@
  */
 class Photos extends CI_Controller
 {
-	public function __construct()
-	{
-		parent::__construct();
+    public function __construct()
+    {
+        parent::__construct();
 
-		$this->load->library('ion_auth');
+        $this->load->library('ion_auth');
 
-		if (! $this->ion_auth->logged_in()) {
-			header("HTTP/1.1 401 Unauthorized");
-			exit;
-		}
+        if (! $this->ion_auth->logged_in()) {
+            header("HTTP/1.1 401 Unauthorized");
+            exit;
+        }
 
-		if (! $this->ion_auth->in_group(2)) {
-			header('HTTP/1.1 403 Forbidden');
-			exit;
-		}
+        if (! $this->ion_auth->in_group(2)) {
+            header('HTTP/1.1 403 Forbidden');
+            exit;
+        }
 
-		$this->load->model('ac/photo_model', 'photo');
-	}
+        $this->load->model('ac/photo_model', 'photo');
+    }
 
-	/**
-	 * Сохраняет фотографию
-	 */
-	public function save()
-	{
-		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-			if (isset($_FILES['file'])) {
-				$file = $_FILES['file'];
-				header('Content-Type: application/json');
+    /**
+     * Сохраняет фотографию
+     */
+    public function save()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (isset($_FILES['file'])) {
+                $file = $_FILES['file'];
+                header('Content-Type: application/json');
 
-				echo json_encode(
-					$this->photo->save($file)
-				);
-			}
-		}
-	}
+                echo json_encode(
+                    $this->photo->save($file)
+                );
+            }
+        }
+    }
 
-	/**
-	 * Удаляет фотографию
-	 *
-	 * @param int $photo_id ID фотографии
-	 */
-	public function delete(int $photo_id)
-	{
-		echo $this->photo->delete($photo_id);
-	}
+    /**
+     * Удаляет фотографию
+     *
+     * @param int $photo_id ID фотографии
+     */
+    public function delete(int $photo_id)
+    {
+        echo $this->photo->delete($photo_id);
+    }
 }

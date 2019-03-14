@@ -71,7 +71,7 @@ class MY_Model extends CI_Model
                           ->row_array();
 
         if (! isset($query)) {
-          return false;
+            return false;
         }
         //записывает результат в свойства объекта
         foreach ($query as $k => $val) {
@@ -96,7 +96,7 @@ class MY_Model extends CI_Model
                           ->row_array();
 
         if (! isset($query)) {
-          return false;
+            return false;
         }
         //записывает результат в свойства объекта
         foreach ($query as $k => $val) {

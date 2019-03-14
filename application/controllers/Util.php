@@ -12,119 +12,119 @@
  */
 class Util extends CI_Controller
 {
-	public function __construct()
-	{
-		parent::__construct();
+    public function __construct()
+    {
+        parent::__construct();
 
-		$this->load->library('ion_auth');
+        $this->load->library('ion_auth');
 
-		if (! $this->ion_auth->logged_in()) {
-			header("HTTP/1.1 401 Unauthorized");
-			exit;
-		}
+        if (! $this->ion_auth->logged_in()) {
+            header("HTTP/1.1 401 Unauthorized");
+            exit;
+        }
 
-		$this->load->model('ac/card_model', 'card');
-		$this->load->model('ac/ctrl_model', 'ctrl');
-		$this->load->model('ac/div_model', 'div');
-		$this->load->model('ac/org_model', 'org');
-		$this->load->model('ac/person_model', 'person');
-		$this->load->model('ac/task_model', 'task');
-		$this->load->model('ac/util_model', 'util');
-	}
+        $this->load->model('ac/card_model', 'card');
+        $this->load->model('ac/ctrl_model', 'ctrl');
+        $this->load->model('ac/div_model', 'div');
+        $this->load->model('ac/org_model', 'org');
+        $this->load->model('ac/person_model', 'person');
+        $this->load->model('ac/task_model', 'task');
+        $this->load->model('ac/util_model', 'util');
+    }
 
-	/**
-	 * Получает время сервера
-	 */
-	public function get_time()
-	{
-		echo time();
-	}
+    /**
+     * Получает время сервера
+     */
+    public function get_time()
+    {
+        echo time();
+    }
 
-	/**
-	 * Получает события и реализует long polling
-	 */
-	public function get_events()
-	{
-		$time = $this->input->post('time');
-		$events = $this->input->post('events');
+    /**
+     * Получает события и реализует long polling
+     */
+    public function get_events()
+    {
+        $time = $this->input->post('time');
+        $events = $this->input->post('events');
 
-		header('Content-Type: application/json');
+        header('Content-Type: application/json');
 
-		echo json_encode([
-				'msgs' => $this->util->start_polling($time, $events),
-				'time' => now('Asia/Yekaterinburg')
-		]);
-	}
+        echo json_encode([
+                'msgs' => $this->util->start_polling($time, $events),
+                'time' => now('Asia/Yekaterinburg')
+        ]);
+    }
 
-	/**
-	 * Сохраняет ошибки от клиентов
-	 *
-	 * @param string|null $err Текст ошибки или NULL - получить POST-запрос
-	 */
-	public function save_js_errors(string $err = null)
-	{
-		$err = $err ?? $this->input->post('error');
+    /**
+     * Сохраняет ошибки от клиентов
+     *
+     * @param string|null $err Текст ошибки или NULL - получить POST-запрос
+     */
+    public function save_js_errors(string $err = null)
+    {
+        $err = $err ?? $this->input->post('error');
 
-		$this->util->save_errors($err);
-	}
+        $this->util->save_errors($err);
+    }
 
-	/**
-	 * Обрабатывает проблемы с картами
-	 */
-	public function card_problem()
-	{
-		$this->lang->load('ac');
+    /**
+     * Обрабатывает проблемы с картами
+     */
+    public function card_problem()
+    {
+        $this->lang->load('ac');
 
-		$this->load->helper('language');
+        $this->load->helper('language');
 
-		$user_id = $this->ion_auth->user()->row()->id; //TODO
+        $user_id = $this->ion_auth->user()->row()->id; //TODO
 
-		$type = $this->input->post('type');
-		$person_id = $this->input->post('person_id');
+        $type = $this->input->post('type');
+        $person_id = $this->input->post('person_id');
 
-		if (! isset($type) || ! isset($person_id)) {
-			return null;
-		}
+        if (! isset($type) || ! isset($person_id)) {
+            return null;
+        }
 
-		$response = lang('registred');
+        $response = lang('registred');
 
-		$person = $this->person->get($person_id);
+        $person = $this->person->get($person_id);
 
-		if ($type === 1) {
-			$desc = "$person->id $person->f $person->i forgot card";
+        if ($type === 1) {
+            $desc = "$person->id $person->f $person->i forgot card";
 
-			if ($this->util->add_user_event($user_id, $type, $desc) > 0) {
-				echo $response;
-			}
-		} elseif ($type === 2 || $type === 3) {
-			$this->card->get_list($person->id);
+            if ($this->util->add_user_event($user_id, $type, $desc) > 0) {
+                echo $response;
+            }
+        } elseif ($type === 2 || $type === 3) {
+            $this->card->get_list($person->id);
 
-			if (count($this->card->list) === 0) {
-				return null;
-			}
+            if (count($this->card->list) === 0) {
+                return null;
+            }
 
-			$div = $this->div->get($person->div);
-			$org = $this->org->get($div->org_id);
-			$ctrls = $this->ctrl->get_list($org->id);
+            $div = $this->div->get($person->div);
+            $org = $this->org->get($div->org_id);
+            $ctrls = $this->ctrl->get_list($org->id);
 
-			foreach ($this->card->list as &$card) {
-				$card->person_id = 0;
+            foreach ($this->card->list as &$card) {
+                $card->person_id = 0;
 
-				foreach ($ctrls as $ctrl) {
-					$this->task->delete_cards($ctrl->id, [$card->wiegand]);
-				}
-			}
-      unset($card);
+                foreach ($ctrls as $ctrl) {
+                    $this->task->delete_cards($ctrl->id, [$card->wiegand]);
+                }
+            }
+            unset($card);
 
-      $this->card->save_list();
+            $this->card->save_list();
 
-			$desc = "$person->id $person->f $person->i lost/broke card";
+            $desc = "$person->id $person->f $person->i lost/broke card";
 
-			$response .= ' ' . lang('and') . ' ' . lang('card_deleted');
+            $response .= ' ' . lang('and') . ' ' . lang('card_deleted');
 
-			if ($this->util->add_user_event($user_id, $type, $desc) > 0) {
-				echo $response;
-			}
-		}
-	}
+            if ($this->util->add_user_event($user_id, $type, $desc) > 0) {
+                echo $response;
+            }
+        }
+    }
 }

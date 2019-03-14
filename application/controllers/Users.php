@@ -6,38 +6,38 @@
  */
 class Users extends CI_Controller
 {
-	/**
-	 * @var int $user_id
-	 */
-	private $user_id;
+    /**
+     * @var int $user_id
+     */
+    private $user_id;
 
-	public function __construct()
-	{
-		parent::__construct();
+    public function __construct()
+    {
+        parent::__construct();
 
-		$this->load->library('ion_auth');
+        $this->load->library('ion_auth');
 
-		if (! $this->ion_auth->logged_in()) {
-			header("HTTP/1.1 401 Unauthorized");
-			exit;
-		}
+        if (! $this->ion_auth->logged_in()) {
+            header("HTTP/1.1 401 Unauthorized");
+            exit;
+        }
 
-		$this->load->model('ac/token_model', 'token');
+        $this->load->model('ac/token_model', 'token');
 
-		$this->user_id = $this->ion_auth->user()->row()->id;
-	}
+        $this->user_id = $this->ion_auth->user()->row()->id;
+    }
 
-	/**
-	 * Получает токен от пользователя
-	 */
-	public function token()
-	{
-		$token = $this->input->post('token');
+    /**
+     * Получает токен от пользователя
+     */
+    public function token()
+    {
+        $token = $this->input->post('token');
 
-		if ($token_key === 'false') {
-			$this->token->delete($token_key); //TODO удалять просроченный ключ
-		} elseif (! isset($this->token->get($token_key))) {
-			$this->token->add($this->user_id, $token_key);
-		}
-	}
+        if ($token_key === 'false') {
+            $this->token->delete($token_key); //TODO удалять просроченный ключ
+        } elseif (! isset($this->token->get($token_key))) {
+            $this->token->add($this->user_id, $token_key);
+        }
+    }
 }
