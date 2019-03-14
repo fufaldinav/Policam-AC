@@ -64,11 +64,11 @@ class Card_model extends CI_Model
 	/**
 	 * Получает список карт человека или никому не принадлежащие карты
 	 *
-	 * @param int $person_id ID человека, по-умолчанию -1 - никому не принадлежащие карты
+	 * @param int $person_id ID человека, по-умолчанию 0 - никому не принадлежащие карты
 	 *
 	 * @return object[] Массив с картами или пустой массив
 	 */
-	public function get_by_person(int $person_id = -1): array
+	public function get_by_person(int $person_id = 0): array
 	{
 		$query = $this->db
 			->where('person_id', $person_id)
