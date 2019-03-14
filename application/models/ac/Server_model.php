@@ -84,14 +84,12 @@ class Server_model extends CI_Model
         $sn = $decoded_msg->sn;
         $inc_msgs = $decoded_msg->messages;
 
-        $ctrl = $this->ctrl->get_by_sn($sn);
-
         $path = "$this->log_path/inc-$log_date.txt";
 
-        if (isset($ctrl)) {
-            $ctrl->last_conn = $time;
+        if ($this->ctrl->get_by('sn', $sn)) {
+            $this->ctrl->last_conn = $time;
 
-            $this->ctrl->update($ctrl);
+            $this->ctrl->save();
 
             write_file($path, "TYPE: $type || SN: $sn || $inc_json_msg\n", 'a');
         } else {
@@ -117,15 +115,15 @@ class Server_model extends CI_Model
                 $out_m = new stdClass();
                 $out_m->id = 0;
                 $out_m->operation = 'set_active';
-                $out_m->active = $ctrl->active;
-                $out_m->online = $ctrl->online;
+                $out_m->active = $this->ctrl->active;
+                $out_m->online = $this->ctrl->online;
                 $out_msg->messages[] = $out_m;
 
-                $ctrl->fw = $inc_m->fw;
-                $ctrl->conn_fw = $inc_m->conn_fw;
-                $ctrl->ip = $inc_m->controller_ip;
+                $this->ctrl->fw = $inc_m->fw;
+                $this->ctrl->conn_fw = $inc_m->conn_fw;
+                $this->ctrl->ip = $inc_m->controller_ip;
 
-                $this->ctrl->update($ctrl);
+                $this->ctrl->save();
             }
             //
             //проверка доступа
@@ -144,7 +142,7 @@ class Server_model extends CI_Model
 
                 $this->card->wiegand = $inc_m->card;
                 $this->card->last_conn = $time;
-                $this->card->controller_id = $ctrl->id;
+                $this->card->controller_id = $this->ctrl->id;
 
                 $this->card->save();
 
@@ -169,12 +167,12 @@ class Server_model extends CI_Model
 
                     $this->card->wiegand = $event->card;
                     $this->card->last_conn = $time;
-                    $this->card->controller_id = $ctrl->id;
+                    $this->card->controller_id = $this->ctrl->id;
 
                     $this->card->save();
 
                     $events[] = [
-                        'controller_id' => $ctrl->id,
+                        'controller_id' => $this->ctrl->id,
                         'event' => $event->event,
                         'flag' => $event->flag,
                         'time' => human_to_unix($event->time),
@@ -208,7 +206,7 @@ class Server_model extends CI_Model
             }
         }
 
-        $task = $this->task->get_last($ctrl->id);
+        $task = $this->task->get_last($this->ctrl->id);
 
         if (isset($task)) {
             $out_msg->messages[] = json_decode($task->json);
