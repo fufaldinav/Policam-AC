@@ -186,11 +186,11 @@ class Photo_model extends CI_Model
                 return $response;
             } catch (Exception $e) {
                 $response['error'] = $e;
-                $this->util->save_errors($e);
+                $this->util->save_errors($response['error']);
                 return $response;
             }
         } else {
-            $this->util->save_errors($response);
+            $this->util->save_errors($response['error']);
             return $response;
         }
     }
