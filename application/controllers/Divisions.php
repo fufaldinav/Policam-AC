@@ -97,13 +97,12 @@ class Divisions extends CI_Controller
 		$persons = $this->person->get_list($div_id);
 
 		//"Пустое" подразделение
-		$new_div = $this->div->get_list($this->first_org->id, 0);
-		$new_div = array_shift($new_div);
+		$new_div = $this->div->get_list_by_type($this->first_org->id);
 
 		//Переносим полученных людей в "пустое" подразделение
 		//TODO проверят наличие людей в других подразделениях и тогда не добавлять в пустое
 		foreach ($persons as $person) {
-			$this->div->add_persons([$person->id], $new_div->id);
+			$this->person->add_to_div($person->id, current($new_div));
 		}
 
 		echo $this->div->delete($div_id);

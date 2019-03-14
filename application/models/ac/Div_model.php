@@ -46,24 +46,58 @@ class Div_model extends CI_Model
 	}
 
 	/**
-	 * Получает все подразделения по организации и/или типу
+	 * Получает список подразделений по организации
 	 *
 	 * @param int|null $org_id ID организации
-	 * @param int|null $type   Тип организации, по-умолчанию NULL - классы любого типа
 	 *
 	 * @return object[] Массив с подразделениями или пустой массив
 	 */
-	public function get_list(int $org_id = null, int $type = null): array
+	public function get_list(int $org_id = null): array
 	{
 		if (isset($org_id)) {
 			$this->db->where('org_id', $org_id);
 		}
-		if (isset($type)) {
-			$this->db->where('type', $type);
-		}
 		$query = $this->db
 			->order_by('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
 			->get('divisions');
+
+		return $query->result();
+	}
+
+	/**
+	 * Получает список подразделений по организации и типу
+	 *
+	 * @param int|null $org_id ID организации
+	 * @param int      $type   Тип организации, по-умолчанию NULL - подразделения-пустышки
+	 *
+	 * @return object[] Массив с подразделениями или пустой массив
+	 */
+	public function get_list_by_type(int $org_id = null, int $type = 0): array
+	{
+		if (isset($org_id)) {
+			$this->db->where('org_id', $org_id);
+		}
+		$query = $this->db
+			->where('type', $type)
+			->order_by('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
+			->get('divisions');
+
+		return $query->result();
+	}
+
+	/**
+	 * Получает людей подразделения
+	 *
+	 * @param int $div_id ID человека
+	 *
+	 * @return int[] Список ID людей
+	 */
+	public function get_persons(int $div_id): array
+	{
+		$query = $this->db
+			->select('person_id')
+			->where('div_id', $div_id)
+			->get('persons_divisions');
 
 		return $query->result();
 	}
@@ -109,65 +143,6 @@ class Div_model extends CI_Model
 	{
 		$this->db->delete('persons_divisions', ['div_id' => $div_id]);
 		$this->db->delete('divisions', ['id' => $div_id]);
-
-		return $this->db->affected_rows();
-	}
-
-	/**
-	 * Получает людей подразделения
-	 *
-	 * @param int $div_id ID человека
-	 *
-	 * @return int[] Список ID людей
-	 */
-	public function get_persons(int $div_id): array
-	{
-		$query = $this->db
-			->select('person_id')
-			->where('div_id', $div_id)
-			->get('persons_divisions');
-
-		return $query->result();
-	}
-
-	/**
-	 * Добавляет людей в подразделение
-	 *
-	 * @param int[] $persons_ids Список ID людей
-	 * @param int   $div_id      ID подразделения
-	 *
-	 * @return int Количество успешных записей
-	 */
-	public function add_persons(array $persons_ids, int $div_id): int
-	{
-		$data = [];
-		foreach ($persons_ids as $person_id) {
-			$data[] = [
-				'div_id' => $div_id,
-				'person_id' => $person_id
-			];
-		}
-		$this->db->insert_batch('persons_divisions', $data);
-
-		return $this->db->affected_rows();
-	}
-
-	/**
-	 * Удаляет людей из подразделения или всех подразделений
-	 *
-	 * @param int[]    $persons_ids Список ID людей
-	 * @param int|null $div_id      ID подразделения, по-умолчанию NULL - из всех подразделений
-	 *
-	 * @return int Количество успешных удалений
-	 */
-	public function delete_persons(array $persons_ids, int $div_id = null): int
-	{
-		if (isset($div_id)) {
-			$this->db->where('div_id', $div_id);
-		}
-		$this->db
-			->where_in('person_id', $persons_ids)
-			->delete('persons_divisions');
 
 		return $this->db->affected_rows();
 	}

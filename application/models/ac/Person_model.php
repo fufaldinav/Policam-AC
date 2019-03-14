@@ -84,6 +84,44 @@ class Person_model extends CI_Model
 	}
 
 	/**
+	 * Добавляет человека в подразделение
+	 *
+	 * @param int $person_id ID человека
+	 * @param int $div_id    ID подразделения
+	 *
+	 * @return int Количество успешных записей
+	 */
+	public function add_to_div(int $person_id, int $div_id): int
+	{
+		$this->db->insert('persons_divisions', [
+			'person_id' => $person_id,
+			'div_id' => $div_id
+		]);
+
+		return $this->db->affected_rows();
+	}
+
+	/**
+	 * Удаляет человека из подразделения
+	 *
+	 * @param int      $person_id ID человека
+	 * @param int|null $div_id    ID подразделения
+	 *
+	 * @return int Количество успешных удалений
+	 */
+	public function del_from_div(int $person_id, int $div_id = null): int
+	{
+		if (isset($div_id)) {
+			$this->db->where('div_id', $div_id);
+		}
+		$this->db
+			->where('person_id', $person_id)
+			->delete('persons_divisions');
+
+		return $this->db->affected_rows();
+	}
+
+	/**
 	 * Добавляет нового человека
 	 *
 	 * @param object $person Человек

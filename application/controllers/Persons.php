@@ -67,13 +67,12 @@ class Persons extends CI_Controller
 		$person_id = $this->person->add($person);
 
 		if (count($divs) > 0) {
-			foreach ($divs as $div) {
-				$this->div->add_persons([$person_id], $div);
+			foreach ($divs as $div_id) {
+				$this->person->add_to_div($person_id, $div_id);
 			}
 		} else {
-			$divs = $this->div->get_list($this->first_org->id, 0);
-			$div = array_shift($divs);
-			$this->div->add_persons([$person_id], $div->id);
+			$divs = $this->div->get_list_by_type($this->first_org->id);
+			$this->person->add_to_div($person_id, current($divs));
 		}
 
 		if (isset($person->photo)) {
@@ -170,7 +169,7 @@ class Persons extends CI_Controller
 			$this->photo->delete($photo->id);
 		}
 
-		$this->div->delete_persons([$person_id]);
+		$this->person->del_from_div($person_id);
 
 		echo $this->person->delete($person_id);
 	}
