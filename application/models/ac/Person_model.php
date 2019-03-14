@@ -76,6 +76,7 @@ class Person_model extends CI_Model
 	public function get_divs(int $person_id): array
 	{
 		$query = $this->db
+			->select('div_id')
 			->where('person_id', $person_id)
 			->get('persons_divisions');
 
