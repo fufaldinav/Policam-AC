@@ -66,12 +66,15 @@ class Divisions extends CI_Controller
 
         $div = json_decode($this->input->post('div'));
 
-        $div_id = $this->div->add($div);
+        $this->div->name = $div->name;
+        $this->div->org_id = $div->org_id;
+
+        $this->div->save();
 
         header('Content-Type: application/json');
 
         echo json_encode(
-            $this->div->get($div_id)
+            $this->div
         );
     }
 

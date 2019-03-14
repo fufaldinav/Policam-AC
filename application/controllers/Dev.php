@@ -98,8 +98,8 @@ class Dev extends CI_Controller
         $divs = $this->person->get_divs($person->id);
 
         foreach ($divs as $div) {
-            $div = $this->div->get($div->div_id);
-            $org = $this->org->get($div->org_id);
+            $this->div->get($div->div_id);
+            $org = $this->org->get($this->div->org_id);
 
             $users = $this->org->get_users($org->id);
 

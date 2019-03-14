@@ -106,10 +106,10 @@ class Controllers extends CI_Controller
 
             $divs = $this->div->get_list(current($this->orgs)->id);
 
-            foreach ($divs as &$div) {
+            foreach ($divs as $div) {
                 $div->persons = $this->person->get_list($div->id);
 
-                foreach ($div->persons as &$person) {
+                foreach ($div->persons as $person) {
                     $person->cards = $this->card->get_list($person->id);
 
                     if (count($person->cards) > 0) {

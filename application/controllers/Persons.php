@@ -197,14 +197,13 @@ class Persons extends CI_Controller
 
         $person = $this->person->get($this->card->person_id);
 
-        $divs = $this->person->get_divs($person->id);
+        $person->divs = $this->person->get_divs($person->id);
 
-        foreach ($divs as &$div) {
-            $div = $this->div->get($div->div_id);
+        foreach ($person->divs as &$div) {
+            $this->div->get($div->div_id);
+            $div = $this->div;
         }
         unset($div);
-
-        $person->divs = $divs;
 
         echo json_encode($person);
     }
