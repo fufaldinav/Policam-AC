@@ -21,6 +21,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * Class Notification Model
  * @property Person_model $person
  * @property Photo_model $photo
+ * @property Token_model $token
  */
 class Notification_model extends CI_Model
 {
@@ -48,6 +49,7 @@ class Notification_model extends CI_Model
 
 		$this->load->model('ac/person_model', 'person');
 		$this->load->model('ac/photo_model', 'photo');
+		$this->load->model('ac/token_model', 'token');
 
 		$this->fcm_url = $this->config->item('fcm_url', 'ac');
 		$this->server_key = $this->config->item('server_key', 'ac');
@@ -127,7 +129,7 @@ class Notification_model extends CI_Model
 	{
 		$registration_ids = [];
 
-		$tokens = $this->get_all_tokens($user_id);
+		$tokens = $this->token->get_list($user_id);
 
 		foreach ($tokens as $token) {
 			$registration_ids[] = $token->token;
@@ -155,70 +157,5 @@ class Notification_model extends CI_Model
 		curl_close($ch);
 
 		return $response;
-	}
-
-	/**
-	 * Получает токен
-	 *
-	 * @param string $token Токен
-	 *
-	 * @return object|null Токен
-	 */
-	public function get_token(string $token): ?object
-	{
-		$query = $this->db
-			->where('token', $token)
-			->get('users_tokens');
-
-		return $query->row();
-	}
-
-	/**
-	 * Получает все токены пользователя
-	 *
-	 * @param int|null $user_id ID пользователя
-	 *
-	 * @return object[] Массив с токенами или пустой массив
-	 */
-	public function get_all_tokens(int $user_id = null): array
-	{
-		if (isset($user_id)) {
-			$this->db->where('user_id', $user_id);
-		}
-		$query = $this->db->get('users_tokens');
-
-		return $query->result();
-	}
-
-	/**
-	 * Добавляет токен
-	 *
-	 * @param int    $user_id ID пользователя
-	 * @param string $token   Токен
-	 *
-	 * @return int ID токена
-	 */
-	public function add_token(int $user_id, string $token): int
-	{
-		$this->db->insert('users_tokens', [
-			'user_id' => $user_id,
-			'token' => $token
-		]);
-
-		return $this->db->insert_id();
-	}
-
-	/**
-	 * Удаление токена
-	 *
-	 * @param string $token Токен
-	 *
-	 * @return int Количество успешных удалений
-	 */
-	public function delete_token(string $token): int
-	{
-		$this->db->delete('users_tokens', ['token' => $token]);
-
-		return $this->db->affected_rows();
 	}
 }

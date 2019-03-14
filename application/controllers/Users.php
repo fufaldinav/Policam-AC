@@ -1,8 +1,8 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
- * Class Notification
- * @property Notification_model $notification
+ * Class Users
+ * @property Token_model $token
  */
 class Users extends CI_Controller
 {
@@ -17,7 +17,12 @@ class Users extends CI_Controller
 
 		$this->load->library('ion_auth');
 
-		$this->load->model('ac/notification_model', 'notification');
+		if (! $this->ion_auth->logged_in()) {
+			header("HTTP/1.1 401 Unauthorized");
+			exit;
+		}
+
+		$this->load->model('ac/token_model', 'token');
 
 		$this->user_id = $this->ion_auth->user()->row()->id;
 	}
@@ -27,12 +32,12 @@ class Users extends CI_Controller
 	 */
 	public function token()
 	{
-		$token_str = $this->input->post('token');
+		$token = $this->input->post('token');
 
-		if ($token_str === 'false') {
-			$this->notification->delete_token($token_str);
-		} elseif (! isset($this->notification->get_token($token_str))) {
-			$this->notification->add_token($this->user_id, $token_str);
+		if ($token_key === 'false') {
+			$this->token->delete($token_key);
+		} elseif (! isset($this->token->get($token_key))) {
+			$this->token->add($this->user_id, $token_key);
 		}
 	}
 }
