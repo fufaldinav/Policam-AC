@@ -71,12 +71,12 @@ class Util_model extends CI_Model
 		$time = $time ?? now('Asia/Yekaterinburg');
 
 		$user_id = $this->ion_auth->user()->row()->id; //TODO
-		$orgs = $this->org->get_all($user_id); //TODO
+		$orgs = $this->org->get_list($user_id); //TODO
 
 		$ctrls = [];
 
 		foreach ($orgs as $org) {
-			$ctrls = array_merge($ctrls, $this->ctrl->get_all($org->id));
+			$ctrls = array_merge($ctrls, $this->ctrl->get_list($org->id));
 		}
 
 		if (count($ctrls) > 0) {

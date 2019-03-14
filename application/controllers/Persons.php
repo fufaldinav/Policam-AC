@@ -47,7 +47,7 @@ class Persons extends CI_Controller
 		$this->load->model('ac/task_model', 'task');
 
 		$this->user_id = $this->ion_auth->user()->row()->id;
-		$this->orgs = $this->org->get_all($this->user_id); //TODO
+		$this->orgs = $this->org->get_list($this->user_id); //TODO
 		$this->first_org = array_shift($this->orgs); //TODO
 	}
 
@@ -81,7 +81,7 @@ class Persons extends CI_Controller
 		}
 
 		if (count($person->cards) > 0) {
-			$ctrls = $this->ctrl->get_all($this->first_org->id);
+			$ctrls = $this->ctrl->get_list($this->first_org->id);
 
 			foreach ($person->cards as $card_id) {
 				$card = $this->card->get($card_id);
@@ -120,7 +120,7 @@ class Persons extends CI_Controller
 		}
 
 		if (count($person->cards) > 0) {
-			$ctrls = $this->ctrl->get_all($this->first_org->id);
+			$ctrls = $this->ctrl->get_list($this->first_org->id);
 
 			foreach ($person->cards as $card_id) {
 				$card = $this->card->get($card_id);
@@ -152,7 +152,7 @@ class Persons extends CI_Controller
 
 		$cards = $this->card->get_by_person($person_id);
 		if (count($cards) > 0) {
-			$ctrls = $this->ctrl->get_all($this->first_org->id);
+			$ctrls = $this->ctrl->get_list($this->first_org->id);
 
 			foreach ($cards as $card) {
 				$card->person_id = 0;
@@ -219,12 +219,12 @@ class Persons extends CI_Controller
 	 *
 	 * @param int $div_id ID подразделения
 	 */
-	public function get_all(int $div_id)
+	public function get_list(int $div_id)
 	{
 		header('Content-Type: application/json');
 
 		echo json_encode(
-			$this->person->get_all($div_id)
+			$this->person->get_list($div_id)
 		);
 	}
 }

@@ -52,7 +52,7 @@ class Org_model extends CI_Model
 	 *
 	 * @return object[] Массив с организациями или пустой массив
 	 */
-	public function get_all(int $user_id = null): array
+	public function get_list(int $user_id = null): array
 	{
 		if (isset($user_id)) {
 			$this->db->where('user_id', $user_id);

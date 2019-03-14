@@ -78,7 +78,7 @@ function setPersonInfo(card_id) {
 
 function getDivisions() {
 	$.ajax({
-		url: `[ci_site_url]divisions/get_all`,
+		url: `[ci_site_url]divisions/get_list`,
 		type: `GET`,
 		success: function(data) {
 			if (data.length > 0) {
@@ -100,7 +100,7 @@ function getDivisions() {
 
 function getPersons(div_id) {
 	$.ajax({
-		url: `[ci_site_url]persons/get_all/${div_id}`,
+		url: `[ci_site_url]persons/get_list/${div_id}`,
 		type: `GET`,
 		success: function(data) {
 			let persons = `<div id="menu-button-back" class="menu-item" onclick="getDivisions();">Назад</div>`; //TODO перевод

@@ -53,7 +53,7 @@ class Person_model extends CI_Model
 	 *
 	 * @return object[] Массив с людьми или пустой массив
 	 */
-	public function get_all(int $div_id = null): array
+	public function get_list(int $div_id = null): array
 	{
 		if (isset($div_id)) {
 			$this->db->where('div_id', $div_id);

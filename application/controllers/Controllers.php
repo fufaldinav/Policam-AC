@@ -43,7 +43,7 @@ class Controllers extends CI_Controller
 		$this->load->model('ac/task_model', 'task');
 
 		$this->user_id = $this->ion_auth->user()->row()->id;
-		$this->orgs = $this->org->get_all($this->user_id); //TODO
+		$this->orgs = $this->org->get_list($this->user_id); //TODO
 		$this->first_org = array_shift($this->orgs); //TODO
 	}
 
@@ -113,7 +113,7 @@ class Controllers extends CI_Controller
 			$divs = $this->div->get_list($this->first_org->id);
 
 			foreach ($divs as &$div) {
-				$div->persons = $this->person->get_all($div->id);
+				$div->persons = $this->person->get_list($div->id);
 
 				foreach ($div->persons as &$person) {
 					$person->cards = $this->card->get_by_person($person->id);

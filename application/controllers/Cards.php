@@ -46,7 +46,7 @@ class Cards extends CI_Controller
 		$this->load->model('ac/task_model', 'task');
 
 		$this->user_id = $this->ion_auth->user()->row()->id;
-		$this->orgs = $this->org->get_all($this->user_id); //TODO
+		$this->orgs = $this->org->get_list($this->user_id); //TODO
 		$this->first_org = array_shift($this->orgs); //TODO
 	}
 
@@ -62,7 +62,7 @@ class Cards extends CI_Controller
 
 		$card->person_id = $person_id;
 
-		$ctrls = $this->ctrl->get_all($this->first_org->id);
+		$ctrls = $this->ctrl->get_list($this->first_org->id);
 
 		if ($card->person_id === 0) {
 			foreach ($ctrls as $ctrl) {
@@ -113,7 +113,7 @@ class Cards extends CI_Controller
 	/**
 	 * Получает все неизвестные карты
 	 */
-	public function get_all()
+	public function get_list()
 	{
 		header('Content-Type: application/json');
 

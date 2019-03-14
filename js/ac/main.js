@@ -13,7 +13,7 @@ function sendError(message) {
 function getCards(id) {
 	let cards = document.getElementById(`cards`);
 	$.ajax({
-		url: `[ci_site_url]cards/get_all`,
+		url: `[ci_site_url]cards/get_list`,
 		type: `GET`,
 		success: function(data) {
 			if (data) {

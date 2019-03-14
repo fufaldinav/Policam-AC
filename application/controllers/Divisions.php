@@ -39,16 +39,16 @@ class Divisions extends CI_Controller
 		$this->load->model('ac/person_model', 'person');
 
 		$this->user_id = $this->ion_auth->user()->row()->id;
-		$this->orgs = $this->org->get_all($this->user_id); //TODO
+		$this->orgs = $this->org->get_list($this->user_id); //TODO
 		$this->first_org = array_shift($this->orgs); //TODO
 	}
 
 	/**
 	 * Получает подразделения текущей организации
 	 */
-	public function get_all()
+	public function get_list()
 	{
-		$orgs = $this->org->get_all($this->user_id);
+		$orgs = $this->org->get_list($this->user_id);
 
 		$divs = [];
 		foreach ($orgs as $org) {
@@ -94,7 +94,7 @@ class Divisions extends CI_Controller
 		}
 
 		//Получаем всех людей в удаляемом подразделении
-		$persons = $this->person->get_all($div_id);
+		$persons = $this->person->get_list($div_id);
 
 		//"Пустое" подразделение
 		$new_div = $this->div->get_list($this->first_org->id, 0);

@@ -105,7 +105,7 @@ class Util extends CI_Controller
 
 			$div = $this->div->get($person->div);
 			$org = $this->org->get($div->org_id);
-			$ctrls = $this->ctrl->get_all($org->id);
+			$ctrls = $this->ctrl->get_list($org->id);
 
 			foreach ($cards as $card) {
 				$card->person_id = 0;

@@ -68,7 +68,7 @@ class Ctrl_model extends CI_Model
 	 *
 	 * @return object[] Массив с контроллерами или пустой массив
 	 */
-	public function get_all(int $org_id = null): array
+	public function get_list(int $org_id = null): array
 	{
 		if (isset($org_id)) {
 			$this->db->where('org_id', $org_id);

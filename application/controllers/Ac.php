@@ -44,7 +44,7 @@ class Ac extends CI_Controller
 		$this->load->helper('language');
 
 		$this->user_id = $this->ion_auth->user()->row()->id;
-		$this->orgs = $this->org->get_all($this->user_id); //TODO
+		$this->orgs = $this->org->get_list($this->user_id); //TODO
 		$this->first_org = array_shift($this->orgs); //TODO
 	}
 
@@ -173,7 +173,7 @@ class Ac extends CI_Controller
 
 		foreach ($divs as &$div) {
 			$data['divs_list'][$div->id] = $div->name;
-			$div->persons = $this->person->get_all($div->id);
+			$div->persons = $this->person->get_list($div->id);
 
 			foreach ($div->persons as &$person) {
 				$person->cards = $this->card->get_by_person($person->id);
