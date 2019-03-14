@@ -1,4 +1,4 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');?>
+<?php defined('BASEPATH') or exit('No direct script access allowed');?>
 		<div id="main"  class="main-grid-container">
 			<div id="menu">
 				<?php foreach ($divs as $div): ?>
@@ -45,7 +45,7 @@
 				</div>
 				<div id="info-card" class="info-item">
 					<?php echo lang('card');?><br />
-					<?php echo form_dropdown('card', $cards, '0', $cards_attr);?>
+					<?php echo form_dropdown('cards', $cards, '0', $cards_attr);?>
 				</div>
 				<div id="info-button1" class="info-item">
 					<button type="button" onclick="savePersonInfo();">

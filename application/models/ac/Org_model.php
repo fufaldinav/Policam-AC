@@ -18,131 +18,148 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
-* Class Org Model
-*/
+ * Class Org Model
+ */
 class Org_model extends CI_Model
 {
-	public function __construct()
-	{
-		parent::__construct();
+    public function __construct()
+    {
+        parent::__construct();
 
-		$this->load->database();
-	}
+        $this->load->database();
+    }
 
-	/**
-	 * Получает организацию по ID
-	 *
-	 * @param int $org_id ID организации
-	 *
-	 * @return object|null Организация или NULL, если не найдена
-	 */
-	public function get(int $org_id): ?object
-	{
-		$query = $this->db
-			->where('id', $org_id)
-			->get('organizations');
+    /**
+     * Получает организацию по ID
+     *
+     * @param int $org_id ID организации
+     *
+     * @return object|null Организация или NULL, если не найдена
+     */
+    public function get(int $org_id): ?object
+    {
+        $query = $this->db
+            ->where('id', $org_id)
+            ->get('organizations');
 
-		return $query->row();
-	}
+        return $query->row();
+    }
 
-	/**
-	 * Получает все организации по пользователю
-	 *
-	 * @param int|null $user_id ID пользователя
-	 *
-	 * @return object[] Массив с организациями или пустой массив
-	 */
-	public function get_all(int $user_id = null): array
-	{
-		if (isset($user_id)) {
-			$this->db->where('user_id', $user_id);
-		}
-		$query = $this->db
-			->join('organizations', 'organizations.id = organizations_users.org_id', 'left')
-			->order_by('name', 'ASC')
-			->get('organizations_users');
+    /**
+     * Получает все организации по пользователю
+     *
+     * @param int|null $user_id ID пользователя
+     *
+     * @return object[] Массив с организациями или пустой массив
+     */
+    public function get_list(int $user_id = null): array
+    {
+        if (isset($user_id)) {
+            $this->db->where('user_id', $user_id);
+        }
+        $query = $this->db
+            ->join('organizations', 'organizations.id = organizations_users.org_id', 'left')
+            ->order_by('name', 'ASC')
+            ->get('organizations_users');
 
-		return $query->result();
-	}
+        return $query->result();
+    }
 
-	/**
-	 * Получает полное имя организации
-	 *
-	 * @param int $org_id ID организации
-	 *
-	 * @return string Строка в формате 'номер (адресс при наличии)' или NULL, если организация не найдена
-	 */
-	public function get_full_name(int $org_id): string  //TODO check
-	{
-		$org = $this->get($org_id);
+    /**
+     * Получает пользователей организации
+     *
+     * @param int $org_id ID орагнизации
+     *
+     * @return int[] Список ID пользователей
+     */
+    public function get_users(int $org_id): array
+    {
+        $query = $this->db
+            ->select('user_id')
+            ->where('org_id', $org_id)
+            ->get('organizations_users');
 
-		$org_name = $org->name;
-		if (isset($org->address)) {
-			$org_name .= " ($org->address)";
-		}
+        return $query->result();
+    }
 
-		return $org_name;
-	}
+    /**
+     * Получает полное имя организации
+     *
+     * @param int $org_id ID организации
+     *
+     * @return string Строка в формате 'номер (адресс при наличии)' или NULL, если организация не найдена
+     */
+    public function get_full_name(int $org_id): string  //TODO check
+    {
+        $org = $this->get($org_id);
 
-	/**
-	 * Добавляет новую организацию
-	 *
-	 * @param object $org Организация
-	 *
-	 * @return int ID новой организации
-	 */
-	public function add(object $org): int
-	{
-		$this->db->insert('organizations', $this->_set($org));
+        $org_name = $org->name;
+        if (isset($org->address)) {
+            $org_name .= " ($org->address)";
+        }
 
-		return $this->db->insert_id();
-	}
+        return $org_name;
+    }
 
-	/**
-	 * Обновляет информацию об организации
-	 *
-	 * @param object $org Организация
-	 *
-	 * @return int Количество успешных записей
-	 */
-	public function update(object $org): int
-	{
-		$this->db
-			->where('id', $id)
-			->update('organizations', $this->_set($org));
+    /**
+     * Добавляет новую организацию
+     *
+     * @param object $org Организация
+     *
+     * @return int ID новой организации
+     */
+    public function add(object $org): int
+    {
+        $this->db->insert('organizations', $this->_set($org));
 
-		return $this->db->affected_rows();
-	}
+        return $this->db->insert_id();
+    }
 
-	/**
-	 * Удаляет организацию
-	 *
-	 * @param int $org_id ID организации
-	 *
-	 * @return int Количество успешных удалений
-	 */
-	public function delete(int $org_id): int
-	{
-		$this->db->delete('organizations', ['id' => $org_id]);
+    /**
+     * Обновляет информацию об организации
+     *
+     * @param object $org Организация
+     *
+     * @return int Количество успешных записей
+     */
+    public function update(object $org): int
+    {
+        $this->db
+            ->where('id', $id)
+            ->update('organizations', $this->_set($org));
 
-		return $this->db->affected_rows();
-	}
+        return $this->db->affected_rows();
+    }
 
-	/**
-	 * Получает объект и возвращает массив для записи
-	 *
-	 * @param object $org Организация
-	 *
-	 * @return mixed[] Массив с параметрами организации
-	 */
-	private function _set(object $org): array
-	{
-		$this->data = [
-			'name' => $org->name,
-			'addres' => $org->address,
-			'type' => $org->type
-		];
+    /**
+     * Удаляет организацию
+     *
+     * @param int $org_id ID организации
+     *
+     * @return int Количество успешных удалений
+     */
+    public function delete(int $org_id): int
+    {
+        $this->db->delete('organizations', ['id' => $org_id]);
 
-		return $data;
-	}
+        return $this->db->affected_rows();
+    }
+
+    /**
+     * Получает объект и возвращает массив для записи
+     *
+     * @param object $org Организация
+     *
+     * @return mixed[] Массив с параметрами организации
+     */
+    private function _set(object $org): array
+    {
+        $this->data = [
+            'name' => $org->name,
+            'addres' => $org->address,
+            'type' => $org->type ?? 1
+        ];
+
+        return $data;
+    }
 }

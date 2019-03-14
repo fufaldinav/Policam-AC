@@ -3,95 +3,128 @@
 /**
  * Class Cards
  * @property Card_model $card
+ * @property Ctrl_model $ctrl
+ * @property Org_model $org
+ * @property Task_model $org
  */
 class Cards extends CI_Controller
 {
-	public function __construct()
-	{
-		parent::__construct();
+    /**
+     * @var int $user_id
+     */
+    private $user_id;
 
-		$this->load->library('ion_auth');
+    /**
+     * @var mixed[] $orgs
+     */
+    private $orgs;
 
-		if (!$this->ion_auth->logged_in()) {
-			header("HTTP/1.1 401 Unauthorized");
-			exit;
-		}
+    public function __construct()
+    {
+        parent::__construct();
 
-		if (!$this->ion_auth->in_group(2) && !$this->ion_auth->is_admin()) {
-			header('HTTP/1.1 403 Forbidden');
-			exit;
-		}
+        $this->load->library('ion_auth');
 
-		$this->load->model('ac/card_model', 'card');
-	}
+        if (! $this->ion_auth->logged_in()) {
+            header("HTTP/1.1 401 Unauthorized");
+            exit;
+        }
 
-	/**
-	 * Добавление карты
-	 *
-	 * @param int $card_id   ID карты
-	 * @param int $person_id ID человека
-	 */
-	public function holder(int $card_id, int $person_id = -1)
-	{
-		echo $this->card->set_holder($card_id, $person_id);
-	}
+        if (! $this->ion_auth->in_group(2) && ! $this->ion_auth->is_admin()) {
+            header('HTTP/1.1 403 Forbidden');
+            exit;
+        }
 
-	/**
-	 * Удаление карты
-	 *
-	 * @param int $card_id ID карты
-	 */
-	public function delete($card_id)
-	{
-		echo $this->card->delete($card_id);
-	}
+        $this->load->model('ac/card_model', 'card');
+        $this->load->model('ac/ctrl_model', 'ctrl');
+        $this->load->model('ac/org_model', 'org');
+        $this->load->model('ac/task_model', 'task');
 
-	/**
-	 * Удаление всех неизвестных карт
-	 */
-	public function delete_all_unknowns()
-	{
-		if (!$this->ion_auth->is_admin()) {
-			header('HTTP/1.1 403 Forbidden');
-			exit;
-		}
+        $this->user_id = $this->ion_auth->user()->row()->id;
+        $this->orgs = $this->org->get_list($this->user_id); //TODO
+    }
 
-		$cards = $this->card->get_all();
+    /**
+     * Закрепляет карту за человеком
+     *
+     * @param int $card_id   ID карты
+     * @param int $person_id ID человека
+     */
+    public function holder(int $card_id, int $person_id = 0)
+    {
+        $this->card->get($card_id);
 
-		$count = 0;
+        $this->card->person_id = $person_id;
 
-		foreach ($cards as $card) {
-			if ($card->person_id == -1) {
-				$count += $this->card->delete($card->id);
-			}
-		}
+        $ctrls = $this->ctrl->get_list(current($this->orgs)->id);
 
-		echo $count;
-	}
+        if ($this->card->person_id === 0) {
+            foreach ($ctrls as $ctrl) {
+                $this->task->delete_cards($ctrl->id, [$this->card->wiegand]);
+            }
+        } else {
+            foreach ($ctrls as $ctrl) {
+                $this->task->add_cards($ctrl->id, [$this->card->wiegand]);
+            }
+        }
 
-	/**
-	 * Получение информации о всех картах
-	 */
-	public function get_all()
-	{
-		header('Content-Type: application/json');
+        echo $this->card->save();
+    }
 
-		echo json_encode(
-			$this->card->get_by_person()
-		);
-	}
+    /**
+     * Удаляет карту
+     *
+     * @param int $card_id ID карты
+     */
+    public function delete($card_id)
+    {
+        echo $this->card->delete($card_id);
+    }
 
-	/**
-	 * Получение информации о картах конкретного человека
-	 *
-	 * @param int $person_id ID человека
-	 */
-	public function get_by_person(int $person_id)
-	{
-		header('Content-Type: application/json');
+    /**
+     * Удаляет все неизвестные карты
+     */
+    public function delete_all_unknowns()
+    {
+        if (! $this->ion_auth->is_admin()) {
+            header('HTTP/1.1 403 Forbidden');
+            exit;
+        }
 
-		echo json_encode(
-			$this->card->get_by_person($person_id)
-		);
-	}
+        $cards = $this->card->get_list(0);
+
+        $count = 0;
+
+        foreach ($cards as $card) {
+            $count += $this->card->delete($card->id); //TODO события??
+        }
+
+        echo $count;
+    }
+
+    /**
+     * Получает все неизвестные карты
+     */
+    public function get_list()
+    {
+        header('Content-Type: application/json');
+
+        echo json_encode(
+            $this->card->get_list(0)
+        );
+    }
+
+    /**
+     * Получает карты конкретного человека
+     *
+     * @param int $person_id ID человека
+     */
+    public function get_by_person(int $person_id)
+    {
+        header('Content-Type: application/json');
+
+        echo json_encode(
+            $this->card->get_list($person_id)
+        );
+    }
 }

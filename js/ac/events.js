@@ -30,7 +30,7 @@ function getNewMsgs(events, time) {
 		},
 		success: function(data) {
 			time = data.time;
-			if (!document.getElementById(`card`).disabled) { //если меню неизвестных карт активно
+			if (!document.getElementById(`cards`).disabled) { //если меню неизвестных карт активно
 				if (data.msgs.length > 0) {
 					let o = confirm(`Введен неизвестный ключ. Выбрать его в качестве нового ключа пользователя?`); //TODO перевод
 					if (o) {
@@ -38,7 +38,7 @@ function getNewMsgs(events, time) {
 						getCards(card);
 					}
 				}
-			} else if (document.getElementById(`card_selector`).hidden) {
+			} else if (document.getElementById(`unknown_cards`).hidden) {
 				if (data.msgs.length > 0) {
 					let o = confirm(`Введен неизвестный ключ. Добавить его текущему пользователю?`); //TODO перевод
 					if (o) {

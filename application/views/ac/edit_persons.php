@@ -62,9 +62,9 @@
 				</div>
 				<div id="info-card" class="info-item">
 					<?php echo lang('card');?><br />
-					<div id="cards"></div>
-					<div id="card_selector">
-						<?php echo form_dropdown('card_menu', $cards, '0', $cards_attr);?>
+					<div id="person_cards"></div>
+					<div id="unknown_cards">
+						<?php echo form_dropdown('cards', $cards, '0', $cards_attr);?>
 					</div>
 				</div>
 				<div id="info-button1" class="info-item">

@@ -7,7 +7,7 @@ let person = {
 	'birthday': null,
 	'address': null,
 	'phone': null,
-	'card': null
+	'cards': []
 };
 let divs = [];
 
@@ -32,6 +32,10 @@ function savePersonInfo() {
 		}
 		if (k == `photo`) {
 			//TODO
+		} else if (k === `cards`) {
+			if (elem.value > 0) {
+				person[k].push(elem.value);
+			}
 		} else if (elem.value) {
 			person[k] = elem.value;
 		} else {
@@ -63,11 +67,15 @@ function savePersonInfo() {
 }
 
 function clearPersonInfo() {
-	document.getElementById(`card`).value = 0; //поставить в карты "Не выбрано"
 	Object.keys(person).map(function(k, index) {
 		let elem = document.getElementById(k);
-		person[k] = null;
-		elem.value = null;
+		if (k === `cards`) {
+			person[k] = [];
+			elem.value = 0;
+		} else {
+			person[k] = null;
+			elem.value = null;
+		}
 	});
 	document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/0.jpg)';
 	document.getElementById(`photo_del`).hidden = true;

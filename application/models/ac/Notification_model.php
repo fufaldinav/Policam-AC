@@ -4,7 +4,7 @@
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *
- * Created: 01.03.2019
+ * Created: 07.03.2019
  *
  * Description: Приложение для систем контроля и управления доступом.
  *
@@ -18,207 +18,144 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
-* Class Notification Model
-* @property Person_model $person
-* @property Photo_model $photo
-*/
+ * Class Notification Model
+ * @property Person_model $person
+ * @property Photo_model $photo
+ * @property Token_model $token
+ */
 class Notification_model extends CI_Model
 {
-	/**
-	 * Адрес сервера FCM
-	 *
-	 * @var string $fcm_url
-	 */
-	private $fcm_url;
+    /**
+     * Адрес сервера FCM
+     *
+     * @var string $fcm_url
+     */
+    private $fcm_url;
 
-	/**
-	 * Ключ сервера
-	 *
-	 * @var string $server_key
-	 */
-	private $server_key;
+    /**
+     * Ключ сервера
+     *
+     * @var string $server_key
+     */
+    private $server_key;
 
-	public function __construct()
-	{
-		parent::__construct();
+    public function __construct()
+    {
+        parent::__construct();
 
-		$this->config->load('ac', true);
+        $this->config->load('ac', true);
 
-		$this->lang->load('ac');
+        $this->load->database();
 
-		$this->load->database();
+        $this->load->model('ac/person_model', 'person');
+        $this->load->model('ac/photo_model', 'photo');
+        $this->load->model('ac/token_model', 'token');
 
-		$this->load->model('ac/person_model', 'person');
-		$this->load->model('ac/photo_model', 'photo');
+        $this->fcm_url = $this->config->item('fcm_url', 'ac');
+        $this->server_key = $this->config->item('server_key', 'ac');
+    }
 
-		$this->load->helper('language');
+    /**
+     * Проверяет подписки
+     *
+     * @param int      $person_id ID человека
+     * @param int|null $user_id   ID пользователя
+     *
+     * @return array Список подписок
+     */
+    public function check_subscription(int $person_id, int $user_id = null): array
+    {
+        if (isset($user_id)) {
+            $this->db->where('user_id', $user_id);
+        }
 
-		$this->fcm_url = $this->config->item('fcm_url', 'ac');
-		$this->server_key = $this->config->item('server_key', 'ac');
-	}
+        $query = $this->db
+            ->where('person_id', $person_id)
+            ->get('persons_users');
 
-	/**
-	 * Проверяет подписки
-	 *
-	 * @param int      $person_id ID человека
-	 * @param int|null $user_id   ID пользователя
-	 *
-	 * @return array Список подписок
-	 */
-	public function check_subscription(int $person_id, int $user_id = null): array
-	{
-		if (isset($user_id)) {
-			$this->db->where('user_id', $user_id);
-		}
+        return $query->result();
+    }
 
-		$query = $this->db
-			->where('person_id', $person_id)
-			->get('persons_users');
+    /**
+     * Генерирует уведомление
+     *
+     * @param int $person_id ID человека
+     * @param int $event_id  ID события
+     *
+     * @return array Параметры уведомления
+     */
+    public function generate(int $person_id, int $event_id): array
+    {
+        $this->lang->load('ac');
 
-		return $query->result();
-	}
+        $this->load->helper('language');
 
-	/**
-	 * Генерирует уведомление
-	 *
-	 * @param int $person_id ID человека
-	 * @param int $event_id  ID события
-	 *
-	 * @return array Параметры уведомления
-	 */
-	public function generate(int $person_id, int $event_id): array
-	{
-		switch ($event_id) {
-			case 4: //вход
-				$event = lang('entrace');
-				break;
+        switch ($event_id) {
+            case 4: //вход
+                $event = lang('entrace');
+                break;
 
-			case 5: //выход
-				$event = lang('exit');
-				break;
+            case 5: //выход
+                $event = lang('exit');
+                break;
 
-			default:
-				return [];
-		}
+            default:
+                return [];
+        }
 
-		$this->load->helper('url');
+        $this->load->helper('url');
 
-		$person = $this->person->get($person_id);
-		$photo = $this->photo->get_by_person($person->id);
+        $person = $this->person->get($person_id);
+        $photo = $this->photo->get_by_person($person->id);
 
-		$notification = [
-			'title' => $event,
-			'body' => "$person->f $person->i",
-			'icon' => (isset($photo)) ? ("https://" . $_SERVER['HTTP_HOST'] . "/img/ac/s/$photo->id.jpg") : "",
-			'click_action' => base_url('/')
-		];
+        $notification = [
+            'title' => $event,
+            'body' => "$person->f $person->i",
+            'icon' => (isset($photo)) ? ("https://" . $_SERVER['HTTP_HOST'] . "/img/ac/s/$photo->id.jpg") : "",
+            'click_action' => base_url('/')
+        ];
 
-		return $notification;
-	}
-	/**
-	 * Отправляет уведомление
-	 *
-	 * @param array    $notification Параметры уведомления
-	 * @param int|null $user_id      ID пользователя
-	 *
-	 * @return string Ответ на запрос
-	 */
-	public function send(array $notification, int $user_id = null): string
-	{
-		$registration_ids = [];
+        return $notification;
+    }
+    /**
+     * Отправляет уведомление
+     *
+     * @param array    $notification Параметры уведомления
+     * @param int|null $user_id      ID пользователя
+     *
+     * @return string Ответ на запрос
+     */
+    public function send(array $notification, int $user_id = null): string
+    {
+        $registration_ids = [];
 
-		$tokens = $this->get_all($user_id);
+        $tokens = $this->token->get_list($user_id);
 
-		foreach ($tokens as $token) {
-			$registration_ids[] = $token->token;
-		}
+        foreach ($tokens as $token) {
+            $registration_ids[] = $token->token;
+        }
 
-		$request_body = [
-			'notification' => $notification,
-			'registration_ids' => $registration_ids
-		];
-		$fields = json_encode($request_body);
+        $request_body = [
+            'notification' => $notification,
+            'registration_ids' => $registration_ids
+        ];
+        $fields = json_encode($request_body);
 
-		$request_headers = [
-			"Content-Type: application/json",
-			"Authorization: key=$this->server_key",
-		];
+        $request_headers = [
+            "Content-Type: application/json",
+            "Authorization: key=$this->server_key",
+        ];
 
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $this->fcm_url);
-		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-		curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-		$response = curl_exec($ch);
-		curl_close($ch);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $this->fcm_url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        $response = curl_exec($ch);
+        curl_close($ch);
 
-		return $response;
-	}
-
-	/**
-	 * Получает токен
-	 *
-	 * @param string $token Токен
-	 *
-	 * @return object|null Токен
-	 */
-	public function get_token(string $token): ?object
-	{
-		$query = $this->db
-			->where('token', $token)
-			->get('users_tokens');
-
-		return $query->row();
-	}
-
-	/**
-	 * Получает все токены пользователя
-	 *
-	 * @param int|null $user_id ID пользователя
-	 *
-	 * @return object[] Массив с токенами или пустой массив
-	 */
-	public function get_all(int $user_id = null): array
-	{
-		if (isset($user_id)) {
-			$this->db->where('user_id', $user_id);
-		}
-		$query = $this->db->get('users_tokens');
-
-		return $query->result();
-	}
-
-	/**
-	 * Добавляет токен
-	 *
-	 * @param int    $user_id ID пользователя
-	 * @param string $token   Токен
-	 *
-	 * @return int ID токена
-	 */
-	public function add_token(int $user_id, string $token): int
-	{
-		$this->db->insert('users_tokens', [
-			'user_id' => $user_id,
-			'token' => $token
-		]);
-
-		return $this->db->insert_id();
-	}
-
-	/**
-	 * Удаление токена
-	 *
-	 * @param string $token Токен
-	 *
-	 * @return int Количество успешных удалений
-	 */
-	public function delete_token(string $token): int
-	{
-		$this->db->delete('users_tokens', ['token' => $token]);
-
-		return $this->db->affected_rows();
-	}
+        return $response;
+    }
 }

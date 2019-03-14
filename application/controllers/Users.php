@@ -1,38 +1,43 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
- * Class Notification
- * @property Notification_model $server
+ * Class Users
+ * @property Token_model $token
  */
 class Users extends CI_Controller
 {
-	/**
-	 * @var int $user_id
-	 */
-	private $user_id;
+    /**
+     * @var int $user_id
+     */
+    private $user_id;
 
-	public function __construct()
-	{
-		parent::__construct();
+    public function __construct()
+    {
+        parent::__construct();
 
-		$this->load->library('ion_auth');
+        $this->load->library('ion_auth');
 
-		$this->load->model('ac/notification_model', 'notification');
+        if (! $this->ion_auth->logged_in()) {
+            header("HTTP/1.1 401 Unauthorized");
+            exit;
+        }
 
-		$this->user_id = $this->ion_auth->user()->row()->id;
-	}
+        $this->load->model('ac/token_model', 'token');
 
-	/**
-	 * Получение токенов от пользователя
-	 */
-	public function token()
-	{
-		$token_str = $this->input->post('token');
+        $this->user_id = $this->ion_auth->user()->row()->id;
+    }
 
-		if ($token_str === 'false') {
-			$this->notification->delete_token($token_str);
-		} elseif (!isset($this->notification->get_token($token_str))) {
-			$this->notification->add_token($this->user_id, $token_str);
-		}
-	}
+    /**
+     * Получает токен от пользователя
+     */
+    public function token()
+    {
+        $token = $this->input->post('token');
+
+        if ($token_key === 'false') {
+            $this->token->delete($token_key); //TODO удалять просроченный ключ
+        } elseif (! isset($this->token->get($token_key))) {
+            $this->token->add($this->user_id, $token_key);
+        }
+    }
 }

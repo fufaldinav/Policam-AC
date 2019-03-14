@@ -20,156 +20,87 @@ defined('BASEPATH') or exit('No direct script access allowed');
 /**
  * Class Div Model
  */
-class Div_model extends CI_Model
+class Div_model extends MY_Model
 {
-	public function __construct()
-	{
-		parent::__construct();
+    /**
+     * Список людей
+     *
+     * @var array
+     */
+    public $persons;
 
-		$this->load->database();
-	}
+    /**
+     * Тип подразделения
+     *
+     * @var int
+     */
+    public $type = 1;
 
-	/**
-	 * Получает подразделениe
-	 *
-	 * @param int $div_id ID подразделения
-	 *
-	 * @return object|null Подразделение или NULL, если не найдено
-	 */
-	public function get(int $div_id): ?object
-	{
-		$query = $this->db
-			->where('id', $div_id)
-			->get('divisions');
+    public function __construct()
+    {
+        parent::__construct();
 
-		return $query->row();
-	}
+        $this->_table = 'divisions';
+        $this->_foreing_key = 'org_id';
+    }
 
-	/**
-	 * Получает все подразделения по организации и/или типу
-	 *
-	 * @param int|null $org_id ID организации
-	 * @param int|null $type   Тип организации, по-умолчанию NULL - классы любого типа
-	 *
-	 * @return object[] Массив с подразделениями или пустой массив
-	 */
-	public function get_all(int $org_id = null, int $type = null): array
-	{
-		if (isset($org_id)) {
-			$this->db->where('org_id', $org_id);
-		}
-		if (isset($type)) {
-			$this->db->where('type', $type);
-		}
-		$query = $this->db
-			->order_by('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
-			->get('divisions');
+    /**
+     * Получает список подразделений по ID организации из БД
+     *
+     * @param int|null $org_id ID организации
+     *
+     * @return object[] Список подразделений
+     */
+    public function get_list(int $org_id = null): array
+    {
+        $this->db->order_by('type ASC, CAST(name AS UNSIGNED) ASC, name ASC');
 
-		return $query->result();
-	}
+        return parent::get_list($org_id);
+    }
 
-	/**
-	 * Добавляет новое подразделение
-	 *
-	 * @param object $div Подразделение
-	 *
-	 * @return int ID нового подразделения
-	 */
-	public function add(object $div): int
-	{
-		$this->db->insert('divisions', $this->_set($div));
+    /**
+     * Получает список подразделений по типу и ID организации из БД
+     *
+     * @param int|null $org_id ID организации
+     * @param int      $type   Тип подразделения, по-умолчанию 0 - подразделения-пустышки
+     *
+     * @return object[] Список подразделений
+     */
+    public function get_list_by_type(int $org_id = null, int $type = 0): array
+    {
+        $this->db->where('type', $type)
+                 ->order_by('type ASC, CAST(name AS UNSIGNED) ASC, name ASC');
 
-		return $this->db->insert_id();
-	}
+        return parent::get_list($org_id);
+    }
 
-	/**
-	 * Обновляет информацию о подразделении
-	 *
-	 * @param object $div Подразделение
-	 *
-	 * @return int Количество успешных записей
-	 */
-	public function update(object $div): int
-	{
-		$this->db
-			->where('id', $div->id)
-			->update('divisions', $this->_set($div));
+    /**
+     * Удаляет подразделение
+     *
+     * @param int|null $div_id ID подразделения
+     *
+     * @return int Количество успешных удалений
+     */
+    public function delete(int $div_id = null): int
+    {
+        $this->db->delete('persons_divisions', ['div_id' => $div_id ?? $this->id]);
 
-		return $this->db->affected_rows();
-	}
+        return parent::delete($div_id);
+    }
 
-	/**
-	 * Удаляет подразделение
-	 *
-	 * @param int $div_id ID подразделения
-	 *
-	 * @return int Количество успешных удалений
-	 */
-	public function delete(int $div_id): int
-	{
-		$this->db->delete('persons_divisions', ['div_id' => $div_id]);
-		$this->db->delete('divisions', ['id' => $div_id]);
+    /**
+     * Выделяет нужные свойства для записи в БД
+     *
+     * @return mixed[] Массив с параметрами контроллера
+     */
+    protected function _set(): array
+    {
+        $data = [
+            'name' => $this->name,
+            'org_id' => $this->org_id,
+            'type' => $this->type
+        ];
 
-		return $this->db->affected_rows();
-	}
-
-	/**
-	 * Добавляет людей в подразделение
-	 *
-	 * @param int[] $persons_ids Список ID людей
-	 * @param int   $div_id      ID подразделения
-	 *
-	 * @return int Количество успешных записей
-	 */
-	public function add_persons(array $persons_ids, int $div_id): int
-	{
-		$data = [];
-		foreach ($persons_ids as $person_id) {
-			$data[] = [
-				'div_id' => $div_id,
-				'person_id' => $person_id
-			];
-		}
-		$this->db->insert_batch('persons_divisions', $data);
-
-		return $this->db->affected_rows();
-	}
-
-	/**
-	 * Удаляет людей из подразделения или всех подразделений
-	 *
-	 * @param int[]    $persons_ids Список ID людей
-	 * @param int|null $div_id      ID подразделения, по-умолчанию NULL - из всех подразделений
-	 *
-	 * @return int Количество успешных удалений
-	 */
-	public function delete_persons(array $persons_ids, int $div_id = null): int
-	{
-		if (isset($div_id)) {
-			$this->db->where('div_id', $div_id);
-		}
-		$this->db
-			->where_in('person_id', $persons_ids)
-			->delete('persons_divisions');
-
-		return $this->db->affected_rows();
-	}
-
-	/**
-	 * Получает объект и возвращает массив для записи
-	 *
-	 * @param object $div Подразделение
-	 *
-	 * @return mixed[] Массив с параметрами контроллера
-	 */
-	private function _set($div): array
-	{
-		$data = [
-			'name' => $div->name,
-			'type' => $div->type ?? 1,
-			'org_id' => $div->org_id
-		];
-
-		return $data;
-	}
+        return $data;
+    }
 }

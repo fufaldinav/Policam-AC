@@ -8,101 +8,100 @@
  */
 class Divisions extends CI_Controller
 {
-	/**
-	 * @var int $user_id
-	 */
-	private $user_id;
+    /**
+     * @var int $user_id
+     */
+    private $user_id;
 
-	/**
-	 * @var mixed[] $orgs
-	 */
-	private $orgs;
+    /**
+     * @var mixed[] $orgs
+     */
+    private $orgs;
 
-	/**
-	 * @var mixed[] $first_org
-	 */
-	private $first_org;
+    public function __construct()
+    {
+        parent::__construct();
 
-	public function __construct()
-	{
-		parent::__construct();
+        $this->load->library('ion_auth');
 
-		$this->load->library('ion_auth');
+        if (! $this->ion_auth->logged_in()) {
+            header("HTTP/1.1 401 Unauthorized");
+            exit;
+        }
 
-		if (!$this->ion_auth->logged_in()) {
-			header("HTTP/1.1 401 Unauthorized");
-			exit;
-		}
+        $this->load->model('ac/div_model', 'div');
+        $this->load->model('ac/org_model', 'org');
+        $this->load->model('ac/person_model', 'person');
 
-		$this->load->model('ac/div_model', 'div');
-		$this->load->model('ac/org_model', 'org');
+        $this->user_id = $this->ion_auth->user()->row()->id;
+        $this->orgs = $this->org->get_list($this->user_id); //TODO
+    }
 
-		$this->user_id = $this->ion_auth->user()->row()->id;
-		$this->orgs = $this->org->get_all($this->user_id); //TODO
-		$this->first_org = array_shift($this->orgs); //TODO
-	}
+    /**
+     * Получает подразделения текущей организации
+     */
+    public function get_list()
+    {
+        $orgs = $this->org->get_list($this->user_id);
 
-	/**
-	 * Получение информации о подразделении
-	 */
-	public function get_all()
-	{
-		$orgs = $this->org->get_all($this->user_id);
+        $divs = [];
+        foreach ($orgs as $org) {
+            $divs = array_merge($divs, $this->div->get_list($org->id));
+        }
 
-		$divs = [];
-		foreach ($orgs as $org) {
-			$divs = array_merge($divs, $this->div->get_all($org->id));
-		}
+        header('Content-Type: application/json');
 
-		header('Content-Type: application/json');
+        echo json_encode($divs);
+    }
 
-		echo json_encode($divs);
-	}
+    /**
+     * Добавляет новое подразделение
+     */
+    public function add()
+    {
+        if (! $this->ion_auth->in_group(2)) {
+            header('HTTP/1.1 403 Forbidden');
+            exit;
+        }
 
-	/**
-	 * Добавляет новое подразделение
-	 */
-	public function add()
-	{
-		if (!$this->ion_auth->in_group(2)) {
-			header('HTTP/1.1 403 Forbidden');
-			exit;
-		}
+        $div = json_decode($this->input->post('div'));
 
-		$div = json_decode($this->input->post('div'));
+        $this->div->name = $div->name;
+        $this->div->org_id = $div->org_id;
 
-		$div_id = $this->div->add($div);
+        $this->div->save();
 
-		header('Content-Type: application/json');
+        header('Content-Type: application/json');
 
-		echo json_encode(
-			$this->div->get($div_id)
-		);
-	}
+        echo json_encode(
+            $this->div
+        );
+    }
 
-	/**
-	 * Удаляет подразделение
-	 *
-	 * @param int $div_id ID подразделения
-	 */
-	public function delete(int $div_id)
-	{
-		if (!$this->ion_auth->in_group(2)) {
-			header('HTTP/1.1 403 Forbidden');
-			exit;
-		}
+    /**
+     * Удаляет подразделение
+     *
+     * @param int $div_id ID подразделения
+     */
+    public function delete(int $div_id)
+    {
+        if (! $this->ion_auth->in_group(2)) {
+            header('HTTP/1.1 403 Forbidden');
+            exit;
+        }
 
-		$this->load->model('ac/person_model', 'person');
+        //Получаем всех людей в удаляемом подразделении
+        $persons = $this->person->get_list($div_id);
 
-		$persons = $this->person->get_all($div_id);
+        //"Пустое" подразделение
+        $new_div = $this->div->get_list_by_type(current($this->orgs)->id);
 
-		$new_div = $this->div->get_all($this->first_org->id, 0);
-		$new_div = array_shift($new_div);
+        //Переносим полученных людей в "пустое" подразделение
+        //TODO проверят наличие людей в других подразделениях и тогда не добавлять в пустое
+        foreach ($persons as $person) {
+            $this->person->add_to_div($person->id, current($new_div));
+        }
 
-		foreach ($persons as $person) {
-			$this->div->add_persons([$person->id], $new_div->id);
-		}
-
-		echo $this->div->delete($div_id);
-	}
+        echo $this->div->delete($div_id);
+    }
 }
