@@ -82,8 +82,9 @@ class Controllers extends CI_Controller
 		}
 
 		if (isset($ctrl_id)) {
-			if ($this->task->clear_cards($ctrl_id) > 0) {
-				echo 'Задания успешно отправлены'; //TODO перевод
+			$tasks = $this->task->clear_cards($ctrl_id);
+			if ($tasks > 0) {
+				echo "Заданий успешно отправлено: $tasks"; //TODO перевод
 			}
 		} else {
 			echo 'Не выбран контроллер'; //TODO перевод
