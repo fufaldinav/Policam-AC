@@ -66,6 +66,23 @@ class Org_model extends CI_Model
 	}
 
 	/**
+	 * Получает пользователей организации
+	 *
+	 * @param int $org_id ID орагнизации
+	 *
+	 * @return int[] Список ID пользователей
+	 */
+	public function get_users(int $org_id): array
+	{
+		$query = $this->db
+			->select('user_id')
+			->where('org_id', $org_id)
+			->get('organizations_users');
+
+		return $query->result();
+	}
+
+	/**
 	 * Получает полное имя организации
 	 *
 	 * @param int $org_id ID организации

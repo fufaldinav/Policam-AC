@@ -175,7 +175,8 @@ class Util_model extends CI_Model
 			return false;
 		}
 
-		preg_match_all('/\[(ci|config|lang)_[a-zA-Z0-9_]+\]/', $contents, $matches, PREG_PATTERN_ORDER); //строка вида [ci_VAR], [config_VAR] или [lang_VAR]
+		//строка вида [ci_VAR], [config_VAR] или [lang_VAR]
+		preg_match_all('/\[(ci|config|lang)_[a-zA-Z0-9_]+\]/', $contents, $matches, PREG_PATTERN_ORDER);
 
 		foreach ($matches[0] as $match) {
 			$var = trim($match, '[]');

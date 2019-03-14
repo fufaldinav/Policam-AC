@@ -88,7 +88,7 @@ class Div_model extends CI_Model
 	/**
 	 * Получает людей подразделения
 	 *
-	 * @param int $div_id ID человека
+	 * @param int $div_id ID подразделения
 	 *
 	 * @return int[] Список ID людей
 	 */
