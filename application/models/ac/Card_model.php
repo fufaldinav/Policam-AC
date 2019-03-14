@@ -22,6 +22,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 class Card_model extends MY_Model
 {
+    /**
+     * Владелец карты по-умолчанию
+     *
+     * @var int
+     */
+    public $person_id = 0;
+
     public function __construct()
     {
         parent::__construct();
@@ -41,7 +48,7 @@ class Card_model extends MY_Model
             'wiegand' => $this->wiegand,
             'last_conn' => $this->last_conn,
             'controller_id' => $this->controller_id,
-            'person_id' => $this->person_id ?? 0
+            'person_id' => $this->person_id
         ];
 
         return $data;

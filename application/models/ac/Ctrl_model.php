@@ -22,6 +22,41 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 class Ctrl_model extends MY_Model
 {
+    /**
+     * @var string
+     */
+    public $type = 'Z5RWEB';
+
+    /**
+     * @var int
+     */
+    public $mode = 0;
+
+    /**
+     * @var int
+     */
+    public $protocol = 1;
+
+    /**
+     * @var int
+     */
+    public $active = 1;
+
+    /**
+     * @var int
+     */
+    public $online = 0;
+
+    /**
+     * @var int
+     */
+    public $last_conn = 0;
+
+    /**
+     * @var int
+     */
+    public $org_id = 0;
+
     public function __construct()
     {
         parent::__construct();
@@ -40,16 +75,16 @@ class Ctrl_model extends MY_Model
         $data = [
             'name' => $this->name,
             'sn' => $this->sn,
-            'type' => $this->type ?? 'Z5RWEB',
+            'type' => $this->type,
             'fw' => $this->fw,
             'conn_fw' => $this->conn_fw,
-            'mode' => $this->mode ?? 0,
+            'mode' => $this->mode,
             'ip' => $this->ip,
-            'protocol' => $this->protocol ?? 1,
-            'active' => $this->active ?? 1,
-            'online' => $this->online ?? 0,
-            'last_conn' => $this->last_conn ?? 0,
-            'org_id' => $this->org_id ?? 0
+            'protocol' => $this->protocol,
+            'active' => $this->active,
+            'online' => $this->online,
+            'last_conn' => $this->last_conn,
+            'org_id' => $this->org_id
         ];
 
         return $data;
