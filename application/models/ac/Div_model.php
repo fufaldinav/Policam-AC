@@ -114,6 +114,23 @@ class Div_model extends CI_Model
 	}
 
 	/**
+	 * Получает людей подразделения
+	 *
+	 * @param int $div_id ID человека
+	 *
+	 * @return int[] Список ID людей
+	 */
+	public function get_persons(int $div_id): array
+	{
+		$query = $this->db
+			->select('person_id')
+			->where('div_id', $div_id)
+			->get('persons_divisions');
+
+		return $query->result();
+	}
+
+	/**
 	 * Добавляет людей в подразделение
 	 *
 	 * @param int[] $persons_ids Список ID людей
