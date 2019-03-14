@@ -165,6 +165,7 @@ function getCardsByPerson(person_id) {
 		url: `[ci_site_url]cards/get_by_person/${person_id}`,
 		type: `GET`,
 		success: function(data) {
+			person.cards = [];
 			let person_cards = document.getElementById(`person_cards`);
 			person_cards.innerHTML = ``;
 			if (data.length > 0) {
