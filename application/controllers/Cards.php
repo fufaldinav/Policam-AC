@@ -52,23 +52,23 @@ class Cards extends CI_Controller
 	 */
 	public function holder(int $card_id, int $person_id = 0)
 	{
-		$card = $this->card->get($card_id);
+		$this->card->get($card_id);
 
-		$card->person_id = $person_id;
+		$this->card->person_id = $person_id;
 
 		$ctrls = $this->ctrl->get_list(current($this->orgs)->id);
 
-		if ($card->person_id === 0) {
+		if ($this->card->person_id === 0) {
 			foreach ($ctrls as $ctrl) {
-				$this->task->delete_cards($ctrl->id, [$card->wiegand]);
+				$this->task->delete_cards($ctrl->id, [$this->card->wiegand]);
 			}
 		} else {
 			foreach ($ctrls as $ctrl) {
-				$this->task->add_cards($ctrl->id, [$card->wiegand]);
+				$this->task->add_cards($ctrl->id, [$this->card->wiegand]);
 			}
 		}
 
-		echo $this->card->update($card);
+		echo $this->card->save();
 	}
 
 	/**
@@ -91,14 +91,12 @@ class Cards extends CI_Controller
 			exit;
 		}
 
-		$cards = $this->card->get_list();
+		$cards = $this->card->get_list(0);
 
 		$count = 0;
 
 		foreach ($cards as $card) {
-			if ($card->person_id == -1) {
-				$count += $this->card->delete($card->id); //TODO события???
-			}
+        $count += $this->card->delete($card->id); //TODO события??
 		}
 
 		echo $count;
@@ -112,7 +110,7 @@ class Cards extends CI_Controller
 		header('Content-Type: application/json');
 
 		echo json_encode(
-			$this->card->get_by_person()
+		    $this->card->get_list(0)
 		);
 	}
 
@@ -126,7 +124,7 @@ class Cards extends CI_Controller
 		header('Content-Type: application/json');
 
 		echo json_encode(
-			$this->card->get_by_person($person_id)
+			$this->card->get_list($person_id)
 		);
 	}
 }

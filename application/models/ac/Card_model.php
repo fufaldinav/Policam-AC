@@ -20,139 +20,28 @@ defined('BASEPATH') or exit('No direct script access allowed');
 /**
  * Class Card Model
  */
-class Card_model extends CI_Model
+class Card_model extends MY_Model
 {
 	public function __construct()
 	{
 		parent::__construct();
 
-		$this->load->database();
+		$this->_table = 'cards';
+		$this->_foreing_key = 'person_id';
 	}
 
 	/**
-	 * Получает карту по ID
-	 *
-	 * @param int $card_id ID карты
-	 *
-	 * @return object|null Карта или NULL, если не найдена
-	 */
-	public function get(int $card_id): ?object
-	{
-		$query = $this->db
-			->where('id', $card_id)
-			->get('cards');
-
-		return $query->row();
-	}
-
-	/**
-	 * Получает карту по коду карты
-	 *
-	 * @param string $code Код карты
-	 *
-	 * @return object|null Карта или NULL, если не найдена
-	 */
-	public function get_by_code(string $code): ?object
-	{
-		$query = $this->db
-			->where('wiegand', $code)
-			->get('cards');
-
-		return $query->row();
-	}
-
-	/**
-	 * Получает список карт человека или никому не принадлежащие карты
-	 *
-	 * @param int $person_id ID человека, по-умолчанию 0 - никому не принадлежащие карты
-	 *
-	 * @return object[] Массив с картами или пустой массив
-	 */
-	public function get_by_person(int $person_id = 0): array
-	{
-		$query = $this->db
-			->where('person_id', $person_id)
-			->get('cards');
-
-		return $query->result();
-	}
-
-	/**
-	 * Получает список всех карт
-	 *
-	 * @param int|null $ctrl_id ID контроллера, по-умолчанию NULL - все карты, независимо от контроллера
-	 *
-	 * @return object[] Массив с картами или пустой массив
-	 */
-	public function get_list(int $ctrl_id = null): array
-	{
-		if (isset($ctrl_id)) {
-			$this->db->where('controller_id', $ctrl_id);
-		}
-		$query = $this->db->get('cards');
-
-		return $query->result();
-	}
-
-	/**
-	 * Добавляет новую карту
-	 *
-	 * @param object $card Карта
-	 *
-	 * @return int ID новой карты
-	 */
-	public function add(object $card): int
-	{
-		$this->db->insert('cards', $this->_set($card));
-
-		return $this->db->insert_id();
-	}
-
-	/**
-	 * Обновляет информацию о карте
-	 *
-	 * @param object $card Карта
-	 *
-	 * @return int Количество успешных записей
-	 */
-	public function update(object $card): int
-	{
-		$this->db
-			->where('id', $card->id)
-			->update('cards', $this->_set($card));
-
-		return $this->db->affected_rows();
-	}
-
-	/**
-	 * Удаляет карту
-	 *
-	 * @param int $card_id ID карты
-	 *
-	 * @return int Количество удаленных записей
-	 */
-	public function delete(int $card_id): int
-	{
-		$this->db->delete('events', ['card_id' => $card_id]);
-		$this->db->delete('cards', ['id' => $card_id]);
-
-		return $this->db->affected_rows();
-	}
-
-	/**
-	 * Получает объект и возвращает массив для записи
-	 *
-	 * @param object $card Карта
+	 * Выделяет нужные свойства для записи в БД
 	 *
 	 * @return mixed[] Массив с параметрами карты
 	 */
-	private function _set(object $card): array
+	protected function _set(): array
 	{
 		$data = [
-			'wiegand' => $card->wiegand,
-			'last_conn' => $card->last_conn,
-			'controller_id' => $card->controller_id,
-			'person_id' => $card->person_id ?? 0
+			'wiegand' => $this->wiegand,
+			'last_conn' => $this->last_conn,
+			'controller_id' => $this->controller_id,
+			'person_id' => $this->person_id ?? 0
 		];
 
 		return $data;

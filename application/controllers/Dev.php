@@ -86,7 +86,7 @@ class Dev extends CI_Controller
 		}
 
 		foreach ($this->persons as $person) {
-			$this->cards = array_merge($this->cards, $this->card->get_by_person($person->id));
+			$this->cards = array_merge($this->cards, $this->card->get_list($person->id));
 		}
 
 		echo 'орг: ' . count($this->orgs) . ' подр: ' . count($this->divs) . ' люди: ' . count($this->persons) . ' ключи: ' . count($this->cards) . '<br />';

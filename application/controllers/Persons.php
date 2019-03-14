@@ -77,14 +77,14 @@ class Persons extends CI_Controller
 			$ctrls = $this->ctrl->get_list(current($this->orgs)->id);
 
 			foreach ($person->cards as $card_id) {
-				$card = $this->card->get($card_id);
+				$this->card->get($card_id);
 
-				$card->person_id = $person_id;
+				$this->card->person_id = $person_id;
 
-				$this->card->update($card);
+				$this->card->save();
 
 				foreach ($ctrls as $ctrl) {
-					$this->task->add_cards($ctrl->id, [$card->wiegand]);
+					$this->task->add_cards($ctrl->id, [$this->card->wiegand]);
 				}
 			}
 		}
@@ -116,14 +116,14 @@ class Persons extends CI_Controller
 			$ctrls = $this->ctrl->get_list(current($this->orgs)->id);
 
 			foreach ($person->cards as $card_id) {
-				$card = $this->card->get($card_id);
+				$this->card->get($card_id);
 
-				$card->person_id = $person->id;
+				$this->card->person_id = $person->id;
 
-				$count += $this->card->update($card);
+				$count += $this->card->save();
 
 				foreach ($ctrls as $ctrl) {
-					$this->task->add_cards($ctrl->id, [$card->wiegand]);
+					$this->task->add_cards($ctrl->id, [$this->card->wiegand]);
 				}
 			}
 		}
@@ -143,19 +143,21 @@ class Persons extends CI_Controller
 			exit;
 		}
 
-		$cards = $this->card->get_by_person($person_id);
-		if (count($cards) > 0) {
+		$this->card->get_list($person_id);
+
+		if (count($this->card->list) > 0) {
 			$ctrls = $this->ctrl->get_list(current($this->orgs)->id);
 
-			foreach ($cards as $card) {
+			foreach ($this->card->list as &$card) {
 				$card->person_id = 0;
-
-				$this->card->update($card);
 
 				foreach ($ctrls as $ctrl) {
 					$this->task->delete_cards($ctrl->id, [$card->wiegand]);
 				}
 			}
+      unset($card);
+
+      $this->card->save_list();
 		}
 
 		$photo = $this->photo->get_by_person($person_id);
@@ -189,11 +191,11 @@ class Persons extends CI_Controller
 	 */
 	public function get_by_card(int $card_id)
 	{
-		$card = $this->card->get($card_id);
+		$this->card->get($card_id);
 
 		header('Content-Type: application/json');
 
-		$person = $this->person->get($card->person_id);
+		$person = $this->person->get($this->card->person_id);
 
 		$divs = $this->person->get_divs($person->id);
 

@@ -136,24 +136,17 @@ class Server_model extends CI_Model
 				$out_m->operation = 'check_access';
 				$out_m->granted = 0;
 
-				$card = $this->card->get_by_code($inc_m->card);
+        $this->card->get_by('wiegand', $inc_m->card);
 
-				if (isset($card)) {
-					if ($card->person_id > 0) {
-						$out_m->granted = 1;
-					}
+        if (isset($this->card->person_id) && $this->card->person_id > 0) {
+            $out_m->granted = 1;
+        }
 
-					$card->last_conn = $time;
-					$card->controller_id = $ctrl->id;
+        $this->card->wiegand = $inc_m->card;
+        $this->card->last_conn = $time;
+        $this->card->controller_id = $ctrl->id;
 
-					$this->card->update($card);
-				} else {
-					$card->wiegand = $inc_m->card;
-					$card->last_conn = $time;
-					$card->controller_id = $ctrl->id;
-
-					$this->card->add($card);
-				}
+        $this->card->save();
 
 				$out_msg->messages[] = $out_m;
 			}
@@ -172,22 +165,13 @@ class Server_model extends CI_Model
 
 				//чтение событий
 				foreach ($inc_m->events as $event) {
-					$card = $this->card->get_by_code($event->card);
-					//проверяем наличие карты в БД
-					if (isset($card)) {
-						$card->last_conn = $time;
-						$card->controller_id = $ctrl->id;
+          $this->card->get_by('wiegand', $event->card);
 
-						$this->card->update($card);
-					} else {
-						$card = new stdClass();
+          $this->card->wiegand = $event->card;
+          $this->card->last_conn = $time;
+          $this->card->controller_id = $ctrl->id;
 
-						$card->wiegand = $event->card;
-						$card->last_conn = $time;
-						$card->controller_id = $ctrl->id;
-
-						$card->id = $this->card->add($card);
-					}
+          $this->card->save();
 
 					$events[] = [
 						'controller_id' => $ctrl->id,

@@ -110,7 +110,7 @@ class Controllers extends CI_Controller
 				$div->persons = $this->person->get_list($div->id);
 
 				foreach ($div->persons as &$person) {
-					$person->cards = $this->card->get_by_person($person->id);
+					$person->cards = $this->card->get_list($person->id);
 
 					if (count($person->cards) > 0) {
 						$cards = array_merge($cards, $person->cards);

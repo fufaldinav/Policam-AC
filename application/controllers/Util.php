@@ -97,9 +97,9 @@ class Util extends CI_Controller
 				echo $response;
 			}
 		} elseif ($type === 2 || $type === 3) {
-			$cards = $this->card->get_by_person($person->id);
+			$this->card->get_list($person->id);
 
-			if (count($cards) === 0) {
+			if (count($this->card->list) === 0) {
 				return null;
 			}
 
@@ -107,15 +107,16 @@ class Util extends CI_Controller
 			$org = $this->org->get($div->org_id);
 			$ctrls = $this->ctrl->get_list($org->id);
 
-			foreach ($cards as $card) {
+			foreach ($this->card->list as &$card) {
 				$card->person_id = 0;
-
-				$this->card->update($card);
 
 				foreach ($ctrls as $ctrl) {
 					$this->task->delete_cards($ctrl->id, [$card->wiegand]);
 				}
 			}
+      unset($card);
+
+      $this->card->save_list();
 
 			$desc = "$person->id $person->f $person->i lost/broke card";
 
