@@ -139,7 +139,7 @@ class Server_model extends CI_Model
 				$card = $this->card->get_by_code($inc_m->card);
 
 				if (isset($card)) {
-					if ($card->person_id != -1) {
+					if ($card->person_id > 0) {
 						$out_m->granted = 1;
 					}
 
@@ -148,7 +148,6 @@ class Server_model extends CI_Model
 					$card->wiegand = $inc_m->card;
 					$card->last_conn = $time;
 					$card->controller_id = $ctrl->id;
-					$card->person_id = -1;
 
 					$this->card->add($card);
 				}
@@ -180,7 +179,6 @@ class Server_model extends CI_Model
 						$card->wiegand = $event->card;
 						$card->last_conn = $time;
 						$card->controller_id = $ctrl->id;
-						$card->person_id = -1;
 
 						$card->id = $this->card->add($card);
 					}
