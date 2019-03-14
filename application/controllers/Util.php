@@ -31,7 +31,7 @@ class Util extends CI_Controller
 	}
 
 	/**
-	 * Получение времени сервера
+	 * Получает время сервера
 	 */
 	public function get_time()
 	{
@@ -39,7 +39,7 @@ class Util extends CI_Controller
 	}
 
 	/**
-	 * Получение событий и начало long polling
+	 * Получает события и реализует long polling
 	 */
 	public function get_events()
 	{
@@ -55,7 +55,7 @@ class Util extends CI_Controller
 	}
 
 	/**
-	 * Сохранение ошибок от клиентов
+	 * Сохраняет ошибки от клиентов
 	 *
 	 * @param string|null $err Текст ошибки или NULL - получить POST-запрос
 	 */
@@ -67,7 +67,7 @@ class Util extends CI_Controller
 	}
 
 	/**
-	 * Обработка информации о проблеме с картой
+	 * Обрабатывает проблемы с картами
 	 */
 	public function card_problem()
 	{

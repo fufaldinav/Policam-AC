@@ -52,7 +52,7 @@ class Persons extends CI_Controller
 	}
 
 	/**
-	 * Добавление нового человека
+	 * Добавляет нового человека
 	 */
 	public function add()
 	{
@@ -95,7 +95,7 @@ class Persons extends CI_Controller
 	}
 
 	/**
-	 * Обновление информации о человеке
+	 * Обновляет информацию о человеке
 	 */
 	public function update()
 	{
@@ -129,7 +129,7 @@ class Persons extends CI_Controller
 	}
 
 	/**
-	 * Удаление человека
+	 * Удаляет человека
 	 *
 	 * @param int $person_id ID человека
 	 */
@@ -164,7 +164,7 @@ class Persons extends CI_Controller
 	}
 
 	/**
-	 * Получение информации о человеке
+	 * Получает человека
 	 *
 	 * @param int $person_id ID человека
 	 */
@@ -178,7 +178,7 @@ class Persons extends CI_Controller
 	}
 
 	/**
-	 * Получение информации о человеке
+	 * Получает человека по карте
 	 *
 	 * @param int $card_id ID карты
 	 */
@@ -203,7 +203,7 @@ class Persons extends CI_Controller
 	}
 
 	/**
-	 * Получение информации о людях в подразделении
+	 * Получает людей по подразделению
 	 *
 	 * @param int $div_id ID подразделения
 	 */

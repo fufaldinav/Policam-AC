@@ -26,7 +26,7 @@ class Photos extends CI_Controller
 	}
 
 	/**
-	 * Сохранение фотографии
+	 * Сохраняет фотографию
 	 */
 	public function save()
 	{
@@ -43,7 +43,7 @@ class Photos extends CI_Controller
 	}
 
 	/**
-	 * Удаление фотографии
+	 * Удаляет фотографию
 	 *
 	 * @param int $photo_id ID фотографии
 	 */

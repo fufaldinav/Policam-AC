@@ -23,7 +23,7 @@ class Users extends CI_Controller
 	}
 
 	/**
-	 * Получение токенов от пользователя
+	 * Получает токен от пользователя
 	 */
 	public function token()
 	{

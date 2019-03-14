@@ -48,7 +48,7 @@ class Controllers extends CI_Controller
 	}
 
 	/**
-	 * Установка времени открытия
+	 * Устанавливает время параметры открытия
 	 *
 	 * @param int|null $ctrl_id   ID контроллера
 	 * @param int|null $open_time Время открытия в 0.1 сек
@@ -70,7 +70,7 @@ class Controllers extends CI_Controller
 	}
 
 	/**
-	 * Удаление всех карт их контроллера
+	 * Удаляет все карты из контроллера
 	 *
 	 * @param int|null $ctrl_id ID контроллера
 	 */
@@ -91,7 +91,7 @@ class Controllers extends CI_Controller
 	}
 
 	/**
-	 * Выгрузка всех карт в контроллер
+	 * Выгружает все карты в контроллер
 	 *
 	 * @param int|null $ctrl_id ID контроллера
 	 */

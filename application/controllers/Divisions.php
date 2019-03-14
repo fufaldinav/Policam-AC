@@ -44,7 +44,7 @@ class Divisions extends CI_Controller
 	}
 
 	/**
-	 * Получение информации о подразделении
+	 * Получает подразделения текущей организации
 	 */
 	public function get_all()
 	{
@@ -93,11 +93,15 @@ class Divisions extends CI_Controller
 			exit;
 		}
 
+		//Получаем всех людей в удаляемом подразделении
 		$persons = $this->person->get_all($div_id);
 
+		//"Пустое" подразделение
 		$new_div = $this->div->get_all($this->first_org->id, 0);
 		$new_div = array_shift($new_div);
 
+		//Переносим полученных людей в "пустое" подразделение
+		//TODO проверят наличие людей в других подразделениях и тогда не добавлять в пустое
 		foreach ($persons as $person) {
 			$this->div->add_persons([$person->id], $new_div->id);
 		}

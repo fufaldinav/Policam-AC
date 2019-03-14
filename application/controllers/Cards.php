@@ -26,7 +26,7 @@ class Cards extends CI_Controller
 	}
 
 	/**
-	 * Добавление карты
+	 * Закрепляет карту за человеком
 	 *
 	 * @param int $card_id   ID карты
 	 * @param int $person_id ID человека
@@ -37,7 +37,7 @@ class Cards extends CI_Controller
 	}
 
 	/**
-	 * Удаление карты
+	 * Удаляет карту
 	 *
 	 * @param int $card_id ID карты
 	 */
@@ -47,7 +47,7 @@ class Cards extends CI_Controller
 	}
 
 	/**
-	 * Удаление всех неизвестных карт
+	 * Удаляет все неизвестные карты
 	 */
 	public function delete_all_unknowns()
 	{
@@ -70,7 +70,7 @@ class Cards extends CI_Controller
 	}
 
 	/**
-	 * Получение информации о всех картах
+	 * Получает все неизвестные карты
 	 */
 	public function get_all()
 	{
@@ -82,7 +82,7 @@ class Cards extends CI_Controller
 	}
 
 	/**
-	 * Получение информации о картах конкретного человека
+	 * Получает карты конкретного человека
 	 *
 	 * @param int $person_id ID человека
 	 */

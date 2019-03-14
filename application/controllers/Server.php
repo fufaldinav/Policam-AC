@@ -14,7 +14,7 @@ class Server extends CI_Controller
 	}
 
 	/**
-	 * Обработчик сообщений от контроллеров
+	 * Обрабатывает сообщения от контроллера
 	 */
 	public function index()
 	{
