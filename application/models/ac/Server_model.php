@@ -143,7 +143,10 @@ class Server_model extends CI_Model
 						$out_m->granted = 1;
 					}
 
-					$this->card->set_last_conn($card->id, $ctrl->id);
+					$card->last_conn = $time;
+					$card->controller_id = $ctrl->id;
+
+					$this->card->update($card);
 				} else {
 					$card->wiegand = $inc_m->card;
 					$card->last_conn = $time;
@@ -172,7 +175,10 @@ class Server_model extends CI_Model
 					$card = $this->card->get_by_code($event->card);
 					//проверяем наличие карты в БД
 					if (isset($card)) {
-						$this->card->set_last_conn($card->id, $ctrl->id);
+						$card->last_conn = $time;
+						$card->controller_id = $ctrl->id;
+
+						$this->card->update($card);
 					} else {
 						$card = new stdClass();
 

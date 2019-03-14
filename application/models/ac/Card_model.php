@@ -95,27 +95,6 @@ class Card_model extends CI_Model
 	}
 
 	/**
-	 * Записывает время последнего считывания карты на контроллере
-	 *
-	 * @param int $card_id ID карты
-	 * @param int $ctrl_id ID контроллера
-	 *
-	 * @return int Количество успешных записей
-	 */
-	public function set_last_conn(int $card_id, int $ctrl_id): int
-	{
-		$data = [
-			'last_conn' => now('Asia/Yekaterinburg'),
-			'controller_id' => $ctrl_id
-		];
-		$this->db
-			->where('id', $card_id)
-			->update('cards', $data);
-
-		return $this->db->affected_rows();
-	}
-
-	/**
 	 * Добавляет новую карту
 	 *
 	 * @param object $card Карта
