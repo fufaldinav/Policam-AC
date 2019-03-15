@@ -23,13 +23,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Div_model extends MY_Model
 {
     /**
-     * Список людей
-     *
-     * @var array
-     */
-    public $persons;
-
-    /**
      * Тип подразделения
      *
      * @var int
@@ -89,7 +82,7 @@ class Div_model extends MY_Model
     }
 
     /**
-     * Выделяет нужные свойства для записи в БД
+     * Выделяет нужные для записи в БД свойства
      *
      * @return mixed[] Массив с параметрами контроллера
      */

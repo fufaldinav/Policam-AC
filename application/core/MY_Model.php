@@ -62,7 +62,7 @@ class MY_Model extends CI_Model
      *
      * @param int $id ID объекта
      *
-     * @return bool
+     * @return bool TRUE - успешно, FALSE - ошибка
      */
     public function get(int $id = 0): bool
     {
@@ -87,7 +87,7 @@ class MY_Model extends CI_Model
      * @param string $attr  Признак
      * @param mixed  $value Значение признака
      *
-     * @return bool
+     * @return bool TRUE - успешно, FALSE - ошибка
      */
     public function get_by(string $attr, $value): bool
     {
@@ -170,10 +170,14 @@ class MY_Model extends CI_Model
     }
 
     /**
-     * Выделяет нужные свойства для записи в БД
+     * Выделяет нужные для записи в БД свойства
+     *
+     * @return mixed[] Массив с параметрами
      */
-    protected function _set()
+    protected function _set(): array
     {
-        return;
+        $data = [];
+
+        return $data;
     }
 }
