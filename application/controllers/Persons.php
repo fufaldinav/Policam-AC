@@ -145,10 +145,10 @@ class Persons extends CI_Controller
 
         $this->card->get_list($person_id);
 
-        if (count($this->card->list) > 0) {
+        if (count($this->card->get_list()) > 0) {
             $ctrls = $this->ctrl->get_list($this->org->first('id'));
 
-            foreach ($this->card->list as &$card) {
+            foreach ($this->card->get_list() as &$card) {
                 $card->person_id = 0;
 
                 foreach ($ctrls as $ctrl) {

@@ -48,7 +48,7 @@ class MY_Model extends CI_Model
      *
      * @var array
      */
-    public $list = [];
+    protected $list = [];
 
     public function __construct()
     {
@@ -145,9 +145,9 @@ class MY_Model extends CI_Model
     {
         if (isset($this->id)) {
             $this->db->where($this->_primary_key, $this->id)
-                     ->update($this->_table, $this->_set());
+                     ->update($this->_table, $this->_get_array());
         } else {
-            $this->db->insert($this->_table, $this->_set());
+            $this->db->insert($this->_table, $this->_get_array());
 
             $this->id = $this->db->insert_id();
         }
@@ -186,7 +186,7 @@ class MY_Model extends CI_Model
      *
      * @return mixed[] Массив с параметрами
      */
-    protected function _set(): array
+    protected function _get_array(): array
     {
         $data = [];
 

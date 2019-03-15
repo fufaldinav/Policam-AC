@@ -99,7 +99,7 @@ class Util extends CI_Controller
         } elseif ($type === 2 || $type === 3) {
             $this->card->get_list($person->id);
 
-            if (count($this->card->list) === 0) {
+            if (count($this->card->get_list()) === 0) {
                 return null;
             }
 
@@ -107,7 +107,7 @@ class Util extends CI_Controller
             $this->org->get($this->div->org_id);
             $ctrls = $this->ctrl->get_list($this->org->id);
 
-            foreach ($this->card->list as &$card) {
+            foreach ($this->card->get_list() as &$card) {
                 $card->person_id = 0;
 
                 foreach ($ctrls as $ctrl) {

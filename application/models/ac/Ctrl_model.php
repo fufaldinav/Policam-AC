@@ -70,7 +70,7 @@ class Ctrl_model extends MY_Model
      *
      * @return mixed[] Массив с параметрами контроллера
      */
-    protected function _set(): array
+    protected function _get_array(): array
     {
         $data = [
             'name' => $this->name,

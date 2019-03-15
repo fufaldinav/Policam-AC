@@ -119,7 +119,7 @@ class Org_model extends MY_Model
      *
      * @return mixed[] Массив с параметрами организации
      */
-    protected function _set(): array
+    protected function _get_array(): array
     {
         $data = [
             'name' => $this->name,
