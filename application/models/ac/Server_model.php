@@ -177,19 +177,19 @@ class Server_model extends CI_Model
                         'flag' => $event->flag,
                         'time' => human_to_unix($event->time),
                         'server_time' => $time,
-                        'card_id' => $card->id
+                        'card_id' => $this->card->id
                     ];
 
-                    $subscriptions = $this->notification->check_subscription($card->person_id);
+                    $subscriptions = $this->notification->check_subscription($this->card->person_id);
 
                     foreach ($subscriptions as $sub) {
-                        $notification = $this->notification->generate($card->person_id, $event->event);
+                        $notification = $this->notification->generate($this->card->person_id, $event->event);
 
                         if (count($notification) > 0) {
                             $response = $this->notification->send($notification, $sub->user_id);
 
                             $path = "$this->log_path/push-$log_date.txt";
-                            write_file($path, "USER: $sub->user_id || PERSON: $card->person_id || $response\n", 'a');
+                            write_file($path, "USER: $sub->user_id || PERSON: {$this->card->person_id} || $response\n", 'a');
                         }
                     }
 
