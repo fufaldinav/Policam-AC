@@ -142,7 +142,7 @@ class Person_model extends MY_Model
     public function unset_photo(int $person_id = null): int
     {
         if (! isset($person_id)) {
-          unset($this->photo);
+            unset($this->photo);
         }
 
         $this->db

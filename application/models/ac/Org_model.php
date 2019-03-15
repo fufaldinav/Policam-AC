@@ -79,11 +79,11 @@ class Org_model extends MY_Model
     public function get_full_name(int $org_id = null): ?string  //TODO check
     {
         if (isset($org_id)) {
-          $this->get($org_id);
+            $this->get($org_id);
         }
 
         if (! isset($this->name)) {
-          return null;
+            return null;
         }
 
         $org_name = $this->name;
@@ -104,11 +104,11 @@ class Org_model extends MY_Model
     public function first($property = null)
     {
         if (count($this->list) === 0) {
-          return null;
+            return null;
         }
 
         if (isset($property)) {
-          return $this->list[0]->$property;
+            return $this->list[0]->$property;
         }
 
         return $this->list[0];
