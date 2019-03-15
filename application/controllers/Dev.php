@@ -99,9 +99,9 @@ class Dev extends CI_Controller
 
         foreach ($divs as $div) {
             $this->div->get($div->div_id);
-            $org = $this->org->get($this->div->org_id);
+            $this->org->get($this->div->org_id);
 
-            $users = $this->org->get_users($org->id);
+            $users = $this->org->get_users($this->org->id);
 
             foreach ($users as $user) {
                 if ($user->user_id === $this->user_id) {

@@ -38,7 +38,7 @@ class Controllers extends CI_Controller
         $this->load->model('ac/task_model', 'task');
 
         $this->user_id = $this->ion_auth->user()->row()->id;
-        $this->orgs = $this->org->get_list($this->user_id); //TODO
+        $this->org->get_list($this->user_id); //TODO
     }
 
     /**
@@ -99,12 +99,12 @@ class Controllers extends CI_Controller
 
         if (! isset($ctrl_id)) {
             echo 'Не выбран контроллер'; //TODO перевод
-        } elseif (! isset(current($this->orgs))) {
+        } elseif (! isset($this->org->first())) {
             echo 'Нет организаций'; //TODO перевод
         } else {
             $cards = [];
 
-            $divs = $this->div->get_list(current($this->orgs)->id);
+            $divs = $this->div->get_list($this->org->first('id'));
 
             foreach ($divs as $div) {
                 $div->persons = $this->person->get_list($div->id);

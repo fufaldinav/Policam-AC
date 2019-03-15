@@ -42,7 +42,7 @@ class Persons extends CI_Controller
         $this->load->model('ac/task_model', 'task');
 
         $this->user_id = $this->ion_auth->user()->row()->id;
-        $this->orgs = $this->org->get_list($this->user_id); //TODO
+        $this->org->get_list($this->user_id); //TODO
     }
 
     /**
@@ -65,7 +65,7 @@ class Persons extends CI_Controller
                 $this->person->add_to_div($person_id, $div_id);
             }
         } else {
-            $divs = $this->div->get_list_by_type(current($this->orgs)->id);
+            $divs = $this->div->get_list_by_type($this->org->first('id'));
             $this->person->add_to_div($person_id, current($divs));
         }
 
@@ -74,7 +74,7 @@ class Persons extends CI_Controller
         }
 
         if (count($person->cards) > 0) {
-            $ctrls = $this->ctrl->get_list(current($this->orgs)->id);
+            $ctrls = $this->ctrl->get_list($this->org->first('id'));
 
             foreach ($person->cards as $card_id) {
                 $this->card->get($card_id);
@@ -113,7 +113,7 @@ class Persons extends CI_Controller
         }
 
         if (count($person->cards) > 0) {
-            $ctrls = $this->ctrl->get_list(current($this->orgs)->id);
+            $ctrls = $this->ctrl->get_list($this->org->first('id'));
 
             foreach ($person->cards as $card_id) {
                 $this->card->get($card_id);
@@ -146,7 +146,7 @@ class Persons extends CI_Controller
         $this->card->get_list($person_id);
 
         if (count($this->card->list) > 0) {
-            $ctrls = $this->ctrl->get_list(current($this->orgs)->id);
+            $ctrls = $this->ctrl->get_list($this->org->first('id'));
 
             foreach ($this->card->list as &$card) {
                 $card->person_id = 0;
