@@ -41,7 +41,7 @@ class Cards extends CI_Controller
         $this->load->model('ac/task_model', 'task');
 
         $this->user_id = $this->ion_auth->user()->row()->id;
-        $this->orgs = $this->org->get_list($this->user_id); //TODO
+        $this->org->get_list($this->user_id);
     }
 
     /**
@@ -56,7 +56,7 @@ class Cards extends CI_Controller
 
         $this->card->person_id = $person_id;
 
-        $ctrls = $this->ctrl->get_list(current($this->orgs)->id);
+        $ctrls = $this->ctrl->get_list($this->org->first('id'));
 
         if ($this->card->person_id === 0) {
             foreach ($ctrls as $ctrl) {

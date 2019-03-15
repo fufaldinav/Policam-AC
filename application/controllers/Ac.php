@@ -39,7 +39,7 @@ class Ac extends CI_Controller
         $this->load->helper('language');
 
         $this->user_id = $this->ion_auth->user()->row()->id;
-        $this->orgs = $this->org->get_list($this->user_id); //TODO
+        $this->org->get_list($this->user_id); //TODO
     }
 
     /**
@@ -62,14 +62,14 @@ class Ac extends CI_Controller
         /*
          | Подразделения
          */
-        $divs = $this->div->get_list(current($this->orgs)->id);
+        $divs = $this->div->get_list($this->org->first('id'));
 
         $data = [
             'divs' => $divs
         ];
 
         $header = [
-            'org_name' => $this->org->get_full_name(current($this->orgs)->id) ?? lang('missing'),
+            'org_name' => $this->org->get_full_name($this->org->first('id')) ?? lang('missing'),
             'css_list' => ['ac'],
             'js_list' => ['main', 'observ']
         ];
@@ -98,7 +98,7 @@ class Ac extends CI_Controller
             'divs_attr' => 'id="div"'
         ];
 
-        $divs = $this->div->get_list(current($this->orgs)->id);
+        $divs = $this->div->get_list($this->org->first('id'));
 
         $data['divs'] = $divs;
 
@@ -129,7 +129,7 @@ class Ac extends CI_Controller
         }
 
         $header = [
-            'org_name' => $this->org->get_full_name(current($this->orgs)->id) ?? lang('missing'),
+            'org_name' => $this->org->get_full_name($this->org->first('id')) ?? lang('missing'),
             'css_list' => ['ac'],
             'js_list' => ['add_person', 'events', 'main']
         ];
@@ -158,7 +158,7 @@ class Ac extends CI_Controller
             'divs_attr' => 'id="div" disabled'
         ];
 
-        $divs = $this->div->get_list(current($this->orgs)->id);
+        $divs = $this->div->get_list($this->org->first('id'));
 
         $data['divs'] = $divs;
 
@@ -195,7 +195,7 @@ class Ac extends CI_Controller
         }
 
         $header = [
-            'org_name' => $this->org->get_full_name(current($this->orgs)->id) ?? lang('missing'),
+            'org_name' => $this->org->get_full_name($this->org->first('id')) ?? lang('missing'),
             'css_list' => ['ac', 'edit_persons'],
             'js_list' => ['main', 'events', 'edit_persons', 'tree']
         ];
@@ -217,12 +217,12 @@ class Ac extends CI_Controller
         $this->load->library('table');
 
         $data = [
-            'org_id' => current($this->orgs)->id,
-            'divs' => $this->div->get_list(current($this->orgs)->id)
+            'org_id' => $this->org->first('id'),
+            'divs' => $this->div->get_list($this->org->first('id'))
         ];
 
         $header = [
-            'org_name' => $this->org->get_full_name(current($this->orgs)->id) ?? lang('missing'),
+            'org_name' => $this->org->get_full_name($this->org->first('id')) ?? lang('missing'),
             'css_list' => ['ac', 'tables'],
             'js_list' => ['classes']
         ];

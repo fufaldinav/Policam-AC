@@ -48,7 +48,7 @@ class MY_Model extends CI_Model
      *
      * @var array
      */
-    public $list;
+    public $list = [];
 
     public function __construct()
     {
@@ -111,15 +111,16 @@ class MY_Model extends CI_Model
      *
      * @param int|null $item_id ID элемента
      *
-     * @return object[] Список объектов
+     * @return object[] Ноый список объектов или текущий список, если $item_id не указан
      */
     public function get_list(int $item_id = null): array
     {
-        if (isset($this->_foreing_key) && isset($item_id)) {
-            $this->db->where($this->_foreing_key, $item_id);
+        if (! isset($this->_foreing_key) || ! isset($item_id)) {
+            return $this->list;
         }
 
-        return $this->list = $this->db->get($this->_table)
+        return $this->list = $this->db->where($this->_foreing_key, $item_id)
+                                      ->get($this->_table)
                                       ->result();
     }
 

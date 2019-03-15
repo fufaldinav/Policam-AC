@@ -34,7 +34,7 @@ class Divisions extends CI_Controller
         $this->load->model('ac/person_model', 'person');
 
         $this->user_id = $this->ion_auth->user()->row()->id;
-        $this->orgs = $this->org->get_list($this->user_id); //TODO
+        $this->org->get_list($this->user_id); //TODO
     }
 
     /**
@@ -42,7 +42,7 @@ class Divisions extends CI_Controller
      */
     public function get_list()
     {
-        $orgs = $this->org->get_list($this->user_id);
+        $orgs = $this->org->list;
 
         $divs = [];
         foreach ($orgs as $org) {
@@ -94,7 +94,7 @@ class Divisions extends CI_Controller
         $persons = $this->person->get_list($div_id);
 
         //"Пустое" подразделение
-        $new_div = $this->div->get_list_by_type(current($this->orgs)->id);
+        $new_div = $this->div->get_list_by_type($this->org->first('id'));
 
         //Переносим полученных людей в "пустое" подразделение
         //TODO проверят наличие людей в других подразделениях и тогда не добавлять в пустое
