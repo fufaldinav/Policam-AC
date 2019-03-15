@@ -20,6 +20,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 /**
  * Class Util Model
  * @property Ctrl_model $ctrl
+ * @property Event_model $event
  * @property Org_model $org
  */
 class Util_model extends CI_Model
@@ -61,52 +62,44 @@ class Util_model extends CI_Model
     /**
      * Реализует long polling
      *
-     * @param int|null $time   Время последнего запроса
-     * @param int[]    $events ID событий
+     * @param int|null $time        Время последнего запроса
+     * @param int[]    $event_types Типы событий
      *
      * @return mixed[] События от контроллера
      */
-    public function start_polling(int $time = null, array $events): array
+    public function start_polling(int $time = null, array $event_types): array
     {
         $time = $time ?? now('Asia/Yekaterinburg');
 
         $user_id = $this->ion_auth->user()->row()->id; //TODO
-        $orgs = $this->org->get_list($user_id); //TODO
+        $org_list = $this->org->get_list($user_id); //TODO
 
-        $ctrls = [];
+        $ctrl_list = [];
 
-        foreach ($orgs as $org) {
-            $ctrls = array_merge($ctrls, $this->ctrl->get_list($org->id));
+        foreach ($org_list as $org) {
+            $ctrl_list = array_merge($ctrl_list, $this->ctrl->get_list($org->id));
         }
 
-        if (count($ctrls) > 0) {
+        if (count($ctrl_list) > 0) {
             session_write_close();
             set_time_limit(0);
 
-            $timer = $this->timeout;
-            while ($timer > 0) {
-                $ctrl_ids = [];
-                foreach ($ctrls as $ctrl) {
-                    $ctrl_ids[] = $ctrl->id;
-                }
-                $query = $this->db
-                    ->where('server_time >', $time)
-                    ->where_in('controller_id', $ctrl_ids)
-                    ->where_in('event', $events)
-                    ->order_by('time', 'DESC')
-                    ->get('events');
+            $this->load->model('ac/event_model', 'event');
 
-                if ($query->num_rows() > 0) {
-                    $response = [];
+            while ($this->timeout > 0) {
+                $controllers = [];
 
-                    foreach ($query->result() as $row) {
-                        $response[] = $row;
-                    }
-
-                    return $response;
+                foreach ($ctrl_list as $ctrl) {
+                    $controllers[] = $ctrl->id;
                 }
 
-                $timer--;
+                $events = $this->event->list_get_last($time, $event_types, $controllers);
+
+                if (count($events) > 0) {
+                    return $events;
+                }
+
+                $this->timeout--;
                 sleep(1);
             }
         } else {

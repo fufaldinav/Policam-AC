@@ -48,7 +48,7 @@ class MY_Model extends CI_Model
      *
      * @var array
      */
-    public $list = [];
+    protected $list = [];
 
     public function __construct()
     {
@@ -62,21 +62,19 @@ class MY_Model extends CI_Model
      *
      * @param int $id ID объекта
      *
-     * @return bool
+     * @return bool TRUE - успешно, FALSE - ошибка
      */
     public function get(int $id = 0): bool
     {
         $query = $this->db->where($this->_primary_key, $id)
                           ->get($this->_table)
-                          ->row_array();
+                          ->row();
 
         if (! isset($query)) {
             return false;
         }
-        //записывает результат в свойства объекта
-        foreach ($query as $k => $val) {
-            $this->$k = $val;
-        }
+
+        $this->set($query);
 
         return true;
     }
@@ -87,21 +85,19 @@ class MY_Model extends CI_Model
      * @param string $attr  Признак
      * @param mixed  $value Значение признака
      *
-     * @return bool
+     * @return bool TRUE - успешно, FALSE - ошибка
      */
     public function get_by(string $attr, $value): bool
     {
         $query = $this->db->where($attr, $value)
                           ->get($this->_table)
-                          ->row_array();
+                          ->row();
 
         if (! isset($query)) {
             return false;
         }
-        //записывает результат в свойства объекта
-        foreach ($query as $k => $val) {
-            $this->$k = $val;
-        }
+
+        $this->set($query);
 
         return true;
     }
@@ -111,7 +107,8 @@ class MY_Model extends CI_Model
      *
      * @param int|null $item_id ID элемента
      *
-     * @return object[] Ноый список объектов или текущий список, если $item_id не указан
+     * @return object[] Новый список объектов или текущий список,
+     *                  если $item_id не указан
      */
     public function get_list(int $item_id = null): array
     {
@@ -125,6 +122,18 @@ class MY_Model extends CI_Model
     }
 
     /**
+     * Устанавливает свойства текущему объекту
+     *
+     * @param object $object Объект с набором свойств
+     */
+    public function set(object $object): void
+    {
+        foreach ($object as $key => $value) {
+            $this->$key = $value;
+        }
+    }
+
+    /**
      * Сохраняет объект в БД
      *
      * @return int Количество успешных записей
@@ -133,9 +142,9 @@ class MY_Model extends CI_Model
     {
         if (isset($this->id)) {
             $this->db->where($this->_primary_key, $this->id)
-                     ->update($this->_table, $this->_set());
+                     ->update($this->_table, $this->_get_array());
         } else {
-            $this->db->insert($this->_table, $this->_set());
+            $this->db->insert($this->_table, $this->_get_array());
 
             $this->id = $this->db->insert_id();
         }
@@ -150,9 +159,51 @@ class MY_Model extends CI_Model
      */
     public function save_list(): int
     {
-        $this->db->update_batch($this->_table, $this->list, $this->_primary_key);
+        $count = 0;
 
-        return $this->db->affected_rows();
+        $update_data = [];
+
+        foreach ($this->list as $object) {
+            if (isset($object->id)) {
+                $update_data[] = $object;
+            } else {
+                $count += $this->db->insert(
+                    $this->_table,
+                    $this->_get_array()
+                );
+
+                $object->id = $this->db->insert_id();
+            }
+        }
+
+        if (count($update_data) > 0) {
+            $count += $this->db->update_batch(
+                $this->_table,
+                $update_data,
+                $this->_primary_key
+            );
+        }
+
+        return $count;
+    }
+
+    /**
+     * Вносит новый объект в список, копируя свойства текущего
+     *
+     */
+    public function list_push(): void
+    {
+        $object = new stdClass();
+
+        foreach ($this as $key => $value) {
+            $rp = new ReflectionProperty($this, $key);
+
+            if ($rp->isPublic()) {
+                $object->$key = $value;
+            }
+        }
+
+        $this->list[] = $object;
     }
 
     /**
@@ -164,16 +215,22 @@ class MY_Model extends CI_Model
      */
     public function delete(int $id = null): int
     {
-        $this->db->delete($this->_table, [$this->_primary_key => $id ?? $this->id]);
+        $this->db->delete($this->_table, [
+            $this->_primary_key => $id ?? $this->id
+        ]);
 
         return $this->db->affected_rows();
     }
 
     /**
-     * Выделяет нужные свойства для записи в БД
+     * Выделяет нужные для записи в БД свойства
+     *
+     * @return mixed[] Массив с параметрами
      */
-    protected function _set()
+    protected function _get_array(): array
     {
-        return;
+        $data = [];
+
+        return $data;
     }
 }

@@ -66,11 +66,11 @@ class Ctrl_model extends MY_Model
     }
 
     /**
-     * Выделяет нужные свойства для записи в БД
+     * Выделяет нужные для записи в БД свойства
      *
      * @return mixed[] Массив с параметрами контроллера
      */
-    protected function _set(): array
+    protected function _get_array(): array
     {
         $data = [
             'name' => $this->name,

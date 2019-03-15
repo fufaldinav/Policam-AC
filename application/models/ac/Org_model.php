@@ -36,7 +36,7 @@ class Org_model extends MY_Model
     }
 
     /**
-     * Получает все организации по пользователю
+     * Получает список всех организаций по пользователю
      *
      * @param int|null $user_id ID пользователя
      *
@@ -47,8 +47,8 @@ class Org_model extends MY_Model
         if (! isset($user_id)) {
             return $this->list;
         }
-        return $this->list = $this->db->where($this->_foreing_key ?? 'user_id', $user_id)
-                                      ->join('organizations', 'organizations.id = organizations_users.org_id', 'left')
+        return $this->list = $this->db->where($this->_foreing_key, $user_id)
+                                      ->join($this->_table, "$this->_table.$this->_primary_key = organizations_users.org_id", 'left')
                                       ->order_by('name', 'ASC')
                                       ->get('organizations_users')
                                       ->result();
@@ -63,7 +63,7 @@ class Org_model extends MY_Model
      */
     public function get_users(int $org_id): array
     {
-        return $this->users = $this->db->select('user_id')
+        return $this->users = $this->db->select($this->_foreing_key)
                                        ->where('org_id', $org_id)
                                        ->get('organizations_users')
                                        ->result();
@@ -79,11 +79,11 @@ class Org_model extends MY_Model
     public function get_full_name(int $org_id = null): ?string  //TODO check
     {
         if (isset($org_id)) {
-          $this->get($org_id);
+            $this->get($org_id);
         }
 
         if (! isset($this->name)) {
-          return null;
+            return null;
         }
 
         $org_name = $this->name;
@@ -104,22 +104,22 @@ class Org_model extends MY_Model
     public function first($property = null)
     {
         if (count($this->list) === 0) {
-          return null;
+            return null;
         }
 
         if (isset($property)) {
-          return $this->list[0]->$property;
+            return $this->list[0]->$property;
         }
 
         return $this->list[0];
     }
 
     /**
-     * Выделяет нужные свойства для записи в БД
+     * Выделяет нужные для записи в БД свойства
      *
      * @return mixed[] Массив с параметрами организации
      */
-    protected function _set(): array
+    protected function _get_array(): array
     {
         $data = [
             'name' => $this->name,

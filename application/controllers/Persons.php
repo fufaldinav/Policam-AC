@@ -58,19 +58,20 @@ class Persons extends CI_Controller
         $divs = json_decode($this->input->post('divs'));
         $person = json_decode($this->input->post('person'));
 
-        $person_id = $this->person->add($person);
+        $this->person->set($person);
+        $this->person->save();
 
         if (count($divs) > 0) {
             foreach ($divs as $div_id) {
-                $this->person->add_to_div($person_id, $div_id);
+                $this->person->add_to_div($this->person->id, $div_id);
             }
         } else {
             $divs = $this->div->get_list_by_type($this->org->first('id'));
-            $this->person->add_to_div($person_id, current($divs));
+            $this->person->add_to_div($this->person->id, current($divs)->id);
         }
 
-        if (isset($person->photo)) {
-            $this->photo->set_person($person->photo, $person_id);
+        if (isset($this->person->photo)) {
+            $this->photo->set_person($this->person->photo, $this->person->id);
         }
 
         if (count($person->cards) > 0) {
@@ -79,7 +80,7 @@ class Persons extends CI_Controller
             foreach ($person->cards as $card_id) {
                 $this->card->get($card_id);
 
-                $this->card->person_id = $person_id;
+                $this->card->person_id = $this->person->id;
 
                 $this->card->save();
 
@@ -89,7 +90,7 @@ class Persons extends CI_Controller
             }
         }
 
-        echo $person_id;
+        echo $this->person->id;
     }
 
     /**
@@ -106,10 +107,12 @@ class Persons extends CI_Controller
 
         $count = 0;
 
-        $count += $this->person->update($person);
+        $this->person->set($person);
 
-        if (isset($person->photo)) {
-            $count += $this->photo->set_person($person->photo, $person->id);
+        $count += $this->person->save();
+
+        if (isset($this->person->photo)) {
+            $count += $this->photo->set_person($this->person->photo, $this->person->id);
         }
 
         if (count($person->cards) > 0) {
@@ -118,7 +121,7 @@ class Persons extends CI_Controller
             foreach ($person->cards as $card_id) {
                 $this->card->get($card_id);
 
-                $this->card->person_id = $person->id;
+                $this->card->person_id = $this->person->id;
 
                 $count += $this->card->save();
 
@@ -145,10 +148,10 @@ class Persons extends CI_Controller
 
         $this->card->get_list($person_id);
 
-        if (count($this->card->list) > 0) {
+        if (count($this->card->get_list()) > 0) { //TODO стилизовать/избавиться от $this->card->get_list()
             $ctrls = $this->ctrl->get_list($this->org->first('id'));
 
-            foreach ($this->card->list as &$card) {
+            foreach ($this->card->get_list() as &$card) {
                 $card->person_id = 0;
 
                 foreach ($ctrls as $ctrl) {
@@ -179,9 +182,9 @@ class Persons extends CI_Controller
     {
         header('Content-Type: application/json');
 
-        echo json_encode(
-            $this->person->get($person_id)
-        );
+        $this->person->get($person_id);
+
+        echo json_encode($this->person);
     }
 
     /**
@@ -195,17 +198,16 @@ class Persons extends CI_Controller
 
         header('Content-Type: application/json');
 
-        $person = $this->person->get($this->card->person_id);
+        $this->person->get($this->card->person_id);
 
-        $person->divs = $this->person->get_divs($person->id);
+        $this->person->get_divs($this->person->id);
 
-        foreach ($person->divs as &$div) {
+        foreach ($this->person->get_divs() as $div) {
             $this->div->get($div->div_id);
             $div = $this->div;
         }
-        unset($div);
 
-        echo json_encode($person);
+        echo json_encode($this->person);
     }
 
     /**

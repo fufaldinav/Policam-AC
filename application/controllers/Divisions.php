@@ -42,7 +42,7 @@ class Divisions extends CI_Controller
      */
     public function get_list()
     {
-        $orgs = $this->org->list;
+        $orgs = $this->org->get_list();
 
         $divs = [];
         foreach ($orgs as $org) {
@@ -99,7 +99,7 @@ class Divisions extends CI_Controller
         //Переносим полученных людей в "пустое" подразделение
         //TODO проверят наличие людей в других подразделениях и тогда не добавлять в пустое
         foreach ($persons as $person) {
-            $this->person->add_to_div($person->id, current($new_div));
+            $this->person->add_to_div($person->id, current($new_div)->id);
         }
 
         echo $this->div->delete($div_id);
