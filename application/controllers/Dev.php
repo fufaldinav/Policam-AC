@@ -115,4 +115,29 @@ class Dev extends CI_Controller
             }
         }
     }
+
+    public function test() {
+      $this->div->get_list(3);
+
+      //var_dump($this->div->get_list(3));
+
+      $divs = $this->div->get_list();
+
+      $divs2 = $divs;
+
+      foreach ($divs2 as $div) {
+        echo $div->name . '<br>';
+        if ($div->id == 136) {
+          $div->name = 'aaaaaaaaaaaa';
+        }
+      }
+
+      $this->div->save_list();
+
+      $this->div->get_list(3);
+
+      foreach ($this->div->get_list() as $div) {
+        echo $div->name . '<br>';
+      }
+    }
 }

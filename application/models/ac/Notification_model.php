@@ -105,12 +105,12 @@ class Notification_model extends CI_Model
 
         $this->load->helper('url');
 
-        $person = $this->person->get($person_id);
-        $photo = $this->photo->get_by_person($person->id);
+        $this->person->get($person_id);
+        $photo = $this->photo->get_by_person($this->person->id);
 
         $notification = [
             'title' => $event,
-            'body' => "$person->f $person->i",
+            'body' => "{$this->person->f} {$this->person->i}",
             'icon' => (isset($photo)) ? ("https://" . $_SERVER['HTTP_HOST'] . "/img/ac/s/$photo->id.jpg") : "",
             'click_action' => base_url('/')
         ];

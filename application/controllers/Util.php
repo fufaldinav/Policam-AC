@@ -88,22 +88,22 @@ class Util extends CI_Controller
 
         $response = lang('registred');
 
-        $person = $this->person->get($person_id);
+        $this->person->get($person_id);
 
-        if ($type === 1) {
-            $desc = "$person->id $person->f $person->i forgot card";
+        if ($type == 1) {
+            $desc = "{$this->person->id} {$this->person->f} {$this->person->i} forgot card";
 
             if ($this->util->add_user_event($user_id, $type, $desc) > 0) {
                 echo $response;
             }
-        } elseif ($type === 2 || $type === 3) {
-            $this->card->get_list($person->id);
+        } elseif ($type == 2 || $type == 3) {
+            $this->card->get_list($this->person->id);
 
             if (count($this->card->get_list()) === 0) {
                 return null;
             }
 
-            $this->div->get($person->div);
+            $this->div->get($this->person->div);
             $this->org->get($this->div->org_id);
             $ctrls = $this->ctrl->get_list($this->org->id);
 
@@ -118,7 +118,7 @@ class Util extends CI_Controller
 
             $this->card->save_list();
 
-            $desc = "$person->id $person->f $person->i lost/broke card";
+            $desc = "{$this->person->id} {$this->person->f} {$this->person->i} lost/broke card";
 
             $response .= ' ' . lang('and') . ' ' . lang('card_deleted');
 

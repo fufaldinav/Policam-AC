@@ -20,67 +20,78 @@ defined('BASEPATH') or exit('No direct script access allowed');
 /**
  * Class Person Model
  */
-class Person_model extends CI_Model
+class Person_model extends MY_Model
 {
+    /**
+     * @var int
+     */
+    public $type = 1;
+
+    /**
+     * @var array
+     */
+    private $divs = [];
+
     public function __construct()
     {
         parent::__construct();
 
-        $this->load->database();
+        $this->_table = 'persons';
+        $this->_foreing_key = 'div_id';
     }
 
     /**
-     * Получает человека по ID
+     * Получает человека по ID из БД
      *
      * @param int $person_id ID человека
      *
-     * @return object|null Человек или NULL, если не найдена
+     * @return bool TRUE - успешно, FALSE - ошибка
      */
-    public function get(int $person_id): ?object
+    public function get(int $person_id = 0): bool
     {
-        $query = $this->db->select('id, address, birthday, f, i, o, phone, type')
-            ->select("photo_id AS 'photo'")
-            ->where('id', $person_id)
-            ->get('persons');
+        $this->db->select("$this->_primary_key, address, birthday, f, i, o, phone, type")
+                 ->select("photo_id AS 'photo'");
 
-        return $query->row();
+        return parent::get($person_id);
     }
 
     /**
-     * Получает список всех людей по подразделению
+     * Получает список всех людей по подразделению из БД
      *
      * @param int|null $div_id ID подразделения
      *
-     * @return object[] Массив с людьми или пустой массив
+     * @return object[] Список людей или текущий список, если $div_id не указан
      */
     public function get_list(int $div_id = null): array
     {
-        if (isset($div_id)) {
-            $this->db->where('div_id', $div_id);
+        if (! isset($div_id)) {
+            return $this->list;
         }
-        $query = $this->db
-            ->join('persons', 'persons.id = persons_divisions.person_id', 'left')
-            ->order_by('f ASC, i ASC, o ASC')
-            ->get('persons_divisions');
 
-        return $query->result();
+        return $this->list = $this->db->where($this->_foreing_key, $div_id)
+                                      ->join($this->_table, "$this->_table.$this->_primary_key = persons_divisions.person_id", 'left')
+                                      ->order_by('f ASC, i ASC, o ASC')
+                                      ->get('persons_divisions')
+                                      ->result();
     }
 
     /**
-     * Получает подразделения человека
+     * Получает список ID подразделений человека из БД
      *
-     * @param int $person_id ID человека
+     * @param int|null $person_id ID человека
      *
-     * @return int[] Список ID подразделений
+     * @return int[] Список ID подразделений или текущий список, если $person_id не указан
      */
-    public function get_divs(int $person_id): array
+    public function get_divs(int $person_id = null): array
     {
-        $query = $this->db
-            ->select('div_id')
-            ->where('person_id', $person_id)
-            ->get('persons_divisions');
+        if (! isset($person_id)) {
+            return $this->divs;
+        }
 
-        return $query->result();
+        return $this->divs = $this->db->select($this->_foreing_key)
+                                      ->where('person_id', $person_id)
+                                      ->get('persons_divisions')
+                                      ->result();
     }
 
     /**
@@ -95,7 +106,7 @@ class Person_model extends CI_Model
     {
         $this->db->insert('persons_divisions', [
             'person_id' => $person_id,
-            'div_id' => $div_id
+            $this->_foreing_key => $div_id
         ]);
 
         return $this->db->affected_rows();
@@ -112,7 +123,7 @@ class Person_model extends CI_Model
     public function del_from_div(int $person_id, int $div_id = null): int
     {
         if (isset($div_id)) {
-            $this->db->where('div_id', $div_id);
+            $this->db->where($this->_foreing_key, $div_id);
         }
         $this->db
             ->where('person_id', $person_id)
@@ -122,85 +133,43 @@ class Person_model extends CI_Model
     }
 
     /**
-     * Добавляет нового человека
+     * Удаляет информацию о фотографии по ID человека, если ID не установлено, то удаляет по текущему человеку
      *
-     * @param object $person Человек
-     *
-     * @return int ID нового человека
-     */
-    public function add(object $person): int
-    {
-        $this->db->insert('persons', $this->_set($person));
-
-        return $this->db->insert_id();
-    }
-
-    /**
-     * Обновляет информацию о человеке
-     *
-     * @param object $person Человек
-     *
-     * @return int Количество успешных записей
-     */
-    public function update(object $person): int
-    {
-        $this->db
-            ->where('id', $person->id)
-            ->update('persons', $this->_set($person));
-
-        return $this->db->affected_rows();
-    }
-
-    /**
-     * Удаляет человека
-     *
-     * @param int $person_id ID человека
+     * @param int|null $person_id ID человека
      *
      * @return int Количество успешных удалений
      */
-    public function delete(int $person_id): int
+    public function unset_photo(int $person_id = null): int
     {
-        $this->db->delete('persons', ['id' => $person_id]);
+        if (! isset($person_id)) {
+          unset($this->photo);
+        }
+
+        $this->db
+            ->where($this->_primary_key, $person_id ?? $this->id)
+            ->update($this->_table, ['photo_id' => null]);
 
         return $this->db->affected_rows();
     }
 
     /**
-     * Получает объект и возвращает массив для записи
-     *
-     * @param object $person Человек
+     * Выделяет нужные для записи в БД свойства
      *
      * @return mixed[] Массив с параметрами человека
      */
-    private function _set(object $person): array
+    protected function _get_array(): array
     {
         $data = [
-            'f' => $person->f,
-            'i' => $person->i,
-            'o' => $person->o,
-            'type' => $person->type ?? 1,
-            'birthday' => $person->birthday,
-            'address' => $person->address,
-            'phone' => $person->phone,
-            'photo_id' => $person->photo
+            'f' => $this->f,
+            'i' => $this->i,
+            'o' => $this->o,
+            'type' => $this->type,
+            'birthday' => $this->birthday,
+            'address' => $this->address,
+            'phone' => $this->phone,
+            'photo_id' => $this->photo
         ];
 
         return $data;
-    }
-
-    /**
-     * Удаляет информацию о фотографии
-     *
-     * @param int $person_id ID человека
-     *
-     * @return int Количество успешных удалений
-     */
-    public function unset_photo(int $person_id): int
-    {
-        $this->db
-            ->where('id', $person_id)
-            ->update('persons', ['photo_id' => null]);
-
-        return $this->db->affected_rows();
     }
 }
