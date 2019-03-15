@@ -21,6 +21,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * Class Server Model
  * @property Card_model $card
  * @property Ctrl_model $ctrl
+ * @property Event_model $event
  * @property Notification_model $notification
  * @property Task_model $task
  */
@@ -158,8 +159,7 @@ class Server_model extends CI_Model
             //события на контроллере
             //
             elseif ($inc_m->operation === 'events') {
-                $events_count = 0;
-                $events = [];
+                $this->load->model('ac/event_model', 'event');
 
                 //чтение событий
                 foreach ($inc_m->events as $event) {
@@ -171,14 +171,14 @@ class Server_model extends CI_Model
 
                     $this->card->save();
 
-                    $events[] = [
-                        'controller_id' => $this->ctrl->id,
-                        'event' => $event->event,
-                        'flag' => $event->flag,
-                        'time' => human_to_unix($event->time),
-                        'server_time' => $time,
-                        'card_id' => $this->card->id
-                    ];
+                    $this->event->controller_id = $this->ctrl->id;
+                    $this->event->event = $event->event;
+                    $this->event->flag = $event->flag;
+                    $this->event->time = human_to_unix($event->time);
+                    $this->event->server_time = $time;
+                    $this->event->card_id = $this->card->id;
+
+                    $this->event->list_push();
 
                     $subscriptions = $this->notification->check_subscription($this->card->person_id);
 
@@ -192,16 +192,14 @@ class Server_model extends CI_Model
                             write_file($path, "USER: $sub->user_id || PERSON: {$this->card->person_id} || $response\n", 'a');
                         }
                     }
-
-                    $events_count++;
                 }
 
-                $this->save_events($events);
+                $this->event->save_list();
 
                 $out_m = new stdClass();
                 $out_m->id = $inc_m->id;
                 $out_m->operation = 'events';
-                $out_m->events_success = $events_count;
+                $out_m->events_success = count($this->event->get_list());
                 $out_msg->messages[] = $out_m;
             }
         }
@@ -218,19 +216,5 @@ class Server_model extends CI_Model
         write_file($path, "TYPE: $type || SN: $sn || $out_json_msg\n", 'a');
 
         return $out_json_msg;
-    }
-
-    /**
-     * Сохраняет события
-     *
-     * @param mixed[] $events События для сохранения в БД
-     *
-     * @return int Количество успешных записей
-     */
-    public function save_events(array $events): int
-    {
-        $this->db->insert_batch('events', $events);
-
-        return $this->db->affected_rows();
     }
 }
