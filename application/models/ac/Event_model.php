@@ -22,6 +22,48 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 class Event_model extends MY_Model
 {
+    /**
+     * Контроллер, от которого пришло событие
+     *
+     * @var int
+     */
+    public $controller_id;
+
+    /**
+     * Тип события
+     *
+     * @var int
+     */
+    public $event;
+
+    /**
+     * Флаг события
+     *
+     * @var int
+     */
+    public $flag;
+
+    /**
+     * Время события на контроллере
+     *
+     * @var int
+     */
+    public $time;
+
+    /**
+     * Время получения события сервером
+     *
+     * @var int
+     */
+    public $server_time;
+
+    /**
+     * Карта, вызвавшая событие
+     *
+     * @var int
+     */
+    public $card_id;
+
     public function __construct()
     {
         parent::__construct();

@@ -23,6 +23,22 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Org_model extends MY_Model
 {
     /**
+     * Название организации
+     *
+     * @var string
+     */
+    public $name;
+
+    /**
+     * Адрес организации
+     *
+     * @var string
+     */
+    public $address;
+
+    /**
+     * Тип организации
+     *
      * @var int
      */
     public $type = 1;

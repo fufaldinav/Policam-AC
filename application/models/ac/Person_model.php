@@ -23,11 +23,64 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Person_model extends MY_Model
 {
     /**
+     * Фамилия
+     *
+     * @var string
+     */
+    public $f;
+
+    /**
+     * Имя
+     *
+     * @var string
+     */
+    public $i;
+
+    /**
+     * Отвество
+     *
+     * @var string
+     */
+    public $o;
+
+    /**
+     * Тип/должность человека
+     *
      * @var int
      */
     public $type = 1;
 
     /**
+     * Дата рождения
+     *
+     * @var string
+     */
+    public $birthday;
+
+    /**
+     * Адрес
+     *
+     * @var string
+     */
+    public $address;
+
+    /**
+     * Номер телефона
+     *
+     * @var string
+     */
+    public $phone;
+
+    /**
+     * Фотография
+     *
+     * @var string
+     */
+    public $photo;
+
+    /**
+     * Подразделения
+     *
      * @var array
      */
     private $divs = [];

@@ -23,6 +23,20 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Div_model extends MY_Model
 {
     /**
+     * Название подразделения
+     *
+     * @var string
+     */
+    public $name;
+
+    /**
+     * Организация, которой принадлежит подразделение
+     *
+     * @var int
+     */
+    public $org_id;
+
+    /**
      * Тип подразделения
      *
      * @var int
