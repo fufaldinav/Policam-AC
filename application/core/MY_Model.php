@@ -68,15 +68,13 @@ class MY_Model extends CI_Model
     {
         $query = $this->db->where($this->_primary_key, $id)
                           ->get($this->_table)
-                          ->row_array();
+                          ->row();
 
         if (! isset($query)) {
             return false;
         }
-        //записывает результат в свойства объекта
-        foreach ($query as $k => $val) {
-            $this->$k = $val;
-        }
+
+        $this->set($query);
 
         return true;
     }
@@ -93,15 +91,13 @@ class MY_Model extends CI_Model
     {
         $query = $this->db->where($attr, $value)
                           ->get($this->_table)
-                          ->row_array();
+                          ->row();
 
         if (! isset($query)) {
             return false;
         }
-        //записывает результат в свойства объекта
-        foreach ($query as $k => $val) {
-            $this->$k = $val;
-        }
+
+        $this->set($query);
 
         return true;
     }
@@ -111,7 +107,8 @@ class MY_Model extends CI_Model
      *
      * @param int|null $item_id ID элемента
      *
-     * @return object[] Ноый список объектов или текущий список, если $item_id не указан
+     * @return object[] Новый список объектов или текущий список,
+     *                  если $item_id не указан
      */
     public function get_list(int $item_id = null): array
     {
@@ -162,9 +159,51 @@ class MY_Model extends CI_Model
      */
     public function save_list(): int
     {
-        $this->db->update_batch($this->_table, $this->list, $this->_primary_key);
+        $count = 0;
 
-        return $this->db->affected_rows();
+        $update_data = [];
+
+        foreach ($this->list as $object) {
+            if (isset($object->id)) {
+                $update_data[] = $object;
+            } else {
+                $count += $this->db->insert(
+                    $this->_table,
+                    $this->_get_array()
+                );
+
+                $object->id = $this->db->insert_id();
+            }
+        }
+
+        if (count($update_data) > 0) {
+            $count += $this->db->update_batch(
+                $this->_table,
+                $update_data,
+                $this->_primary_key
+            );
+        }
+
+        return $count;
+    }
+
+    /**
+     * Вносит новый объект в список, копируя свойства текущего
+     *
+     */
+    public function list_push(): void
+    {
+        $object = new stdClass();
+
+        foreach ($this as $key => $value) {
+            $rp = new ReflectionProperty($this, $key);
+
+            if ($rp->isPublic()) {
+                $object->$key = $value;
+            }
+        }
+
+        $this->list[] = $object;
     }
 
     /**
@@ -176,7 +215,9 @@ class MY_Model extends CI_Model
      */
     public function delete(int $id = null): int
     {
-        $this->db->delete($this->_table, [$this->_primary_key => $id ?? $this->id]);
+        $this->db->delete($this->_table, [
+            $this->_primary_key => $id ?? $this->id
+        ]);
 
         return $this->db->affected_rows();
     }
