@@ -125,6 +125,18 @@ class MY_Model extends CI_Model
     }
 
     /**
+     * Устанавливает свойства текущему объекту
+     *
+     * @param object $object Объект с набором свойств
+     */
+    public function set(object $object): void
+    {
+        foreach ($object as $key => $value) {
+            $this->$key = $value;
+        }
+    }
+
+    /**
      * Сохраняет объект в БД
      *
      * @return int Количество успешных записей
