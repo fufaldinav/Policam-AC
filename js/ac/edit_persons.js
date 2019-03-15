@@ -66,10 +66,13 @@ function deletePerson() {
 		success: function(res) {
 			if (res > 0) {
 				document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/0.jpg)';
-				let li = document.getElementById(`person${person.id}`); //текущий элемент в ветке
-				let ul = li.parentElement; //родитель этого элемента
-				li.remove(); //удаляем элемент
-				ul.lastElementChild.classList.add(`tree-is-last`); //устанавливаем последний элемент в ветке
+				let currentElement = document.getElementById(`person${person.id}`);
+				let parentElement = currentElement.parentElement; //родитель этого элемента
+				currentElement.remove(); //удаляем элемент
+        let lastElement = parentElement.lastElementChild;
+        if (lastElement !== null) {
+          lastElement.classList.add(`tree-is-last`); //устанавливаем последний элемент в ветке
+        }
 				Object.keys(person).map(function(k) { //перебор элементов формы
 					let elem = document.getElementById(k);
 					if (k === `photo`) { //скрыть поле загрузки фото
