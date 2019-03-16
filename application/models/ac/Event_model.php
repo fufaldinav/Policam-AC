@@ -68,7 +68,7 @@ class Event_model extends MY_Model
     {
         parent::__construct();
 
-        $this->_table = 'test';
+        $this->_table = 'events';
         $this->_foreing_key = 'controller_id';
     }
 
