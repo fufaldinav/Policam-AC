@@ -35,9 +35,12 @@ class Users extends CI_Controller
         $token = $this->input->post('token');
 
         if ($token_key === 'false') {
-            $this->token->delete($token_key); //TODO удалять просроченный ключ
-        } elseif (! isset($this->token->get($token_key))) {
-            $this->token->add($this->user_id, $token_key);
+            // $this->token->get_by('token', $token_key);
+            // $this->token->delete(); //TODO удалять просроченный ключ
+        } elseif (! ($this->token->get_by('token', $token_key))) {
+            $this->token->user_id = $this->user_id;
+            $this->token->token = $token_key;
+            $this->token->save();
         }
     }
 }

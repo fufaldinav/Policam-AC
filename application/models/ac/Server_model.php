@@ -59,7 +59,8 @@ class Server_model extends CI_Model
      *
      * @param string $inc_json_msg Входящее JSON сообщение
      *
-     * @return string|null Сообщение в формате JSON или NULL, если сообщение от неизвестного контроллера
+     * @return string|null Сообщение в формате JSON или NULL,
+     *                     если сообщение от неизвестного контроллера
      */
     public function handle_msg(string $inc_json_msg): ?string
     {

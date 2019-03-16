@@ -32,11 +32,10 @@ class Photos extends CI_Controller
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (isset($_FILES['file'])) {
-                $file = $_FILES['file'];
                 header('Content-Type: application/json');
 
                 echo json_encode(
-                    $this->photo->save($file)
+                    $this->photo->save($_FILES['file'])
                 );
             }
         }

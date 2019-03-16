@@ -62,14 +62,12 @@ class Ac extends CI_Controller
         /*
          | Подразделения
          */
-        $divs = $this->div->get_list($this->org->first('id'));
-
         $data = [
-            'divs' => $divs
+            'divs' => $this->div->get_list($this->org->first('id'))
         ];
 
         $header = [
-            'org_name' => $this->org->get_full_name($this->org->first('id')) ?? lang('missing'),
+            'org_name' => $this->org->first('name') ?? lang('missing'),
             'css_list' => ['ac'],
             'js_list' => ['main', 'observ']
         ];
@@ -94,21 +92,8 @@ class Ac extends CI_Controller
          | Подразделения
          */
         $data = [
-            'divs_list' => [],
-            'divs_attr' => 'id="div"'
-        ];
-
-        $divs = $this->div->get_list($this->org->first('id'));
-
-        $data['divs'] = $divs;
-
-        if (count($divs) === 0) {
-            $data['divs_list'][] = lang('missing');
-        } else {
-            foreach ($divs as $div) {
-                $data['divs_list'][$div->id] = $div->name;
-            }
-        }
+             'divs' => $this->div->get_list($this->org->first('id'))
+         ];
 
         /*
          | Карты
@@ -129,7 +114,7 @@ class Ac extends CI_Controller
         }
 
         $header = [
-            'org_name' => $this->org->get_full_name($this->org->first('id')) ?? lang('missing'),
+            'org_name' => $this->org->first('name') ?? lang('missing'),
             'css_list' => ['ac'],
             'js_list' => ['add_person', 'events', 'main']
         ];
@@ -154,20 +139,10 @@ class Ac extends CI_Controller
          | Подразделения
          */
         $data = [
-            'divs_list' => [],
-            'divs_attr' => 'id="div" disabled'
+            'divs' => $this->div->get_list($this->org->first('id'))
         ];
 
-        $divs = $this->div->get_list($this->org->first('id'));
-
-        $data['divs'] = $divs;
-
-        if (count($divs) === 0) {
-            $data['divs_list'][] = lang('missing');
-        }
-
-        foreach ($divs as &$div) {
-            $data['divs_list'][$div->id] = $div->name;
+        foreach ($data['divs'] as &$div) {
             $div->persons = $this->person->get_list($div->id);
 
             foreach ($div->persons as &$person) {
@@ -195,7 +170,7 @@ class Ac extends CI_Controller
         }
 
         $header = [
-            'org_name' => $this->org->get_full_name($this->org->first('id')) ?? lang('missing'),
+            'org_name' => $this->org->first('name') ?? lang('missing'),
             'css_list' => ['ac', 'edit_persons'],
             'js_list' => ['main', 'events', 'edit_persons', 'tree']
         ];
@@ -222,7 +197,7 @@ class Ac extends CI_Controller
         ];
 
         $header = [
-            'org_name' => $this->org->get_full_name($this->org->first('id')) ?? lang('missing'),
+            'org_name' => $this->org->first('name') ?? lang('missing'),
             'css_list' => ['ac', 'tables'],
             'js_list' => ['classes']
         ];

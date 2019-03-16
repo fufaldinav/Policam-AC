@@ -64,10 +64,10 @@ class Org_model extends MY_Model
             return $this->_list;
         }
         return $this->_list = $this->CI->db->where($this->_foreing_key, $user_id)
-                                          ->join($this->_table, "$this->_table.$this->_primary_key = organizations_users.org_id", 'left')
-                                          ->order_by('name', 'ASC')
-                                          ->get('organizations_users')
-                                          ->result();
+                                           ->join($this->_table, "$this->_table.$this->_primary_key = organizations_users.org_id", 'left')
+                                           ->order_by('name', 'ASC')
+                                           ->get('organizations_users')
+                                           ->result();
     }
 
     /**
@@ -83,31 +83,6 @@ class Org_model extends MY_Model
                                            ->where('org_id', $org_id)
                                            ->get('organizations_users')
                                            ->result();
-    }
-
-    /**
-     * Получает полное имя организации
-     *
-     * @param int|null $org_id ID организации
-     *
-     * @return string|null Строка в формате 'номер (адресс при наличии)' или NULL, если организация не найдена
-     */
-    public function get_full_name(int $org_id = null): ?string  //TODO check
-    {
-        if (isset($org_id)) {
-            $this->get($org_id);
-        }
-
-        if (! isset($this->name)) {
-            return null;
-        }
-
-        $org_name = $this->name;
-        if (isset($this->address)) {
-            $org_name .= " ($this->address)";
-        }
-
-        return $org_name;
     }
 
     /**

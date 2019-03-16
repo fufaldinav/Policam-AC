@@ -78,24 +78,37 @@ class Dev extends CI_Controller
         $this->orgs = $this->org->get_list($this->user_id);
 
         foreach ($this->orgs as $org) {
-            $this->divs = array_merge($this->divs, $this->div->get_list($org->id));
+            $this->divs = array_merge(
+                $this->divs,
+                $this->div->get_list($org->id)
+            );
         }
 
         foreach ($this->divs as $div) {
-            $this->persons = array_merge($this->persons, $this->person->get_list($div->id));
+            $this->persons = array_merge(
+                $this->persons,
+                $this->person->get_list($div->id)
+            );
         }
 
         foreach ($this->persons as $person) {
-            $this->cards = array_merge($this->cards, $this->card->get_list($person->id));
+            $this->cards = array_merge(
+                $this->cards,
+                $this->card->get_list($person->id)
+            );
         }
 
-        echo 'орг: ' . count($this->orgs) . ' подр: ' . count($this->divs) . ' люди: ' . count($this->persons) . ' ключи: ' . count($this->cards) . '<br />';
+        echo 'орг: ' . count($this->orgs) .
+             ' подр: ' . count($this->divs) .
+             ' люди: ' . count($this->persons) .
+             ' ключи: ' . count($this->cards) .
+             '<br />';
 
-        $person = $this->person->get(1982);
+        $this->person->get(1982);
 
         //var_dump($person);
 
-        $divs = $this->person->get_divs($person->id);
+        $divs = $this->person->get_divs($this->person->id);
 
         foreach ($divs as $div) {
             $this->div->get($div->div_id);
@@ -118,27 +131,6 @@ class Dev extends CI_Controller
 
     public function test()
     {
-        $this->div->get_list(3);
-
-        //var_dump($this->div->get_list(3));
-
-        $divs = $this->div->get_list();
-
-        $divs2 = $divs;
-
-        foreach ($divs2 as $div) {
-            echo $div->name . '<br>';
-            if ($div->id == 136) {
-                $div->name = 'aaaaaaaaaaaa';
-            }
-        }
-
-        $this->div->save_list();
-
-        $this->div->get_list(3);
-
-        foreach ($this->div->get_list() as $div) {
-            echo $div->name . '<br>';
-        }
+        header('Content-Type: text/plain');
     }
 }

@@ -143,12 +143,12 @@ class Task_model extends MY_Model
         $this->_request->cards = [];
 
         foreach ($codes as $code) {
-          $card = new stdClass;
-          $card->card = $code;
-          $card->flags = 32;
-          $card->tz = 255;
+            $card = new stdClass;
+            $card->card = $code;
+            $card->flags = 32;
+            $card->tz = 255;
 
-          $this->_request->cards[] = $card;
+            $this->_request->cards[] = $card;
         }
     }
 
