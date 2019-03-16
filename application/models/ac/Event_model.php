@@ -94,7 +94,7 @@ class Event_model extends MY_Model
             $this->CI->db->where_in($this->_foreing_key, $controllers);
         }
 
-        return $this->list = $this->CI->db->where('server_time >', $time)
+        return $this->_list = $this->CI->db->where('server_time >', $time)
                                           ->order_by('time', 'DESC')
                                           ->get('events')
                                           ->result();

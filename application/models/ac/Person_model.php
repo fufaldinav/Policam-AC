@@ -118,10 +118,10 @@ class Person_model extends MY_Model
     public function get_list(int $div_id = null): array
     {
         if (! isset($div_id)) {
-            return $this->list;
+            return $this->_list;
         }
 
-        return $this->list = $this->CI->db->where($this->_foreing_key, $div_id)
+        return $this->_list = $this->CI->db->where($this->_foreing_key, $div_id)
                                           ->join($this->_table, "$this->_table.$this->_primary_key = persons_divisions.person_id", 'left')
                                           ->order_by('f ASC, i ASC, o ASC')
                                           ->get('persons_divisions')

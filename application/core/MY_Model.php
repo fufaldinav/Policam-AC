@@ -55,14 +55,14 @@ class MY_Model extends CI_Model
      *
      * @var array
      */
-    protected $list = [];
+    protected $_list = [];
 
     /**
      * Хранилище неизвестных свойств
      *
      * @var array
      */
-    protected $data = [];
+    protected $_data = [];
 
     /**
      * ID объекта
@@ -81,8 +81,8 @@ class MY_Model extends CI_Model
 
     public function __get($name)
     {
-        if (array_key_exists($name, $this->data)) {
-            return $this->data[$name];
+        if (array_key_exists($name, $this->_data)) {
+            return $this->_data[$name];
         }
 
         return null;
@@ -90,17 +90,17 @@ class MY_Model extends CI_Model
 
     public function __set($name, $value)
     {
-        $this->data[$name] = $value;
+        $this->_data[$name] = $value;
     }
 
     public function __isset($name)
     {
-        return isset($this->data[$name]);
+        return isset($this->_data[$name]);
     }
 
     public function __unset($name)
     {
-        unset($this->data[$name]);
+        unset($this->_data[$name]);
     }
 
     /**
@@ -159,10 +159,10 @@ class MY_Model extends CI_Model
     public function get_list(int $item_id = null): array
     {
         if (! isset($this->_foreing_key) || ! isset($item_id)) {
-            return $this->list;
+            return $this->_list;
         }
 
-        return $this->list = $this->CI->db->where($this->_foreing_key, $item_id)
+        return $this->_list = $this->CI->db->where($this->_foreing_key, $item_id)
                                           ->get($this->_table)
                                           ->result();
     }
@@ -213,7 +213,7 @@ class MY_Model extends CI_Model
 
         $update_data = [];
 
-        foreach ($this->list as $object) {
+        foreach ($this->_list as $object) {
             if (isset($object->id)) {
                 $update_data[] = $object;
             } else {
@@ -250,7 +250,7 @@ class MY_Model extends CI_Model
             }
         }
 
-        $this->list[] = $object;
+        $this->_list[] = $object;
     }
 
     /**
@@ -262,9 +262,10 @@ class MY_Model extends CI_Model
      */
     public function delete(int $id = null): int
     {
-        $this->CI->db->delete($this->_table, [
-            $this->_primary_key => $id ?? $this->id
-        ]);
+        $this->CI->db->delete(
+            $this->_table,
+            [$this->_primary_key => $id ?? $this->id]
+          );
 
         return $this->CI->db->affected_rows();
     }
