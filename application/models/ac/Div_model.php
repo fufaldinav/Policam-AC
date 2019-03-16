@@ -60,7 +60,7 @@ class Div_model extends MY_Model
      */
     public function get_list(int $org_id = null): array
     {
-        $this->db->order_by('type ASC, CAST(name AS UNSIGNED) ASC, name ASC');
+        $this->CI->db->order_by('type ASC, CAST(name AS UNSIGNED) ASC, name ASC');
 
         return parent::get_list($org_id);
     }
@@ -75,8 +75,8 @@ class Div_model extends MY_Model
      */
     public function get_list_by_type(int $org_id = null, int $type = 0): array
     {
-        $this->db->where('type', $type)
-                 ->order_by('type ASC, CAST(name AS UNSIGNED) ASC, name ASC');
+        $this->CI->db->where('type', $type)
+                     ->order_by('type ASC, CAST(name AS UNSIGNED) ASC, name ASC');
 
         return parent::get_list($org_id);
     }
@@ -90,7 +90,7 @@ class Div_model extends MY_Model
      */
     public function delete(int $div_id = null): int
     {
-        $this->db->delete('persons_divisions', ['div_id' => $div_id ?? $this->id]);
+        $this->CI->db->delete('persons_divisions', ['div_id' => $div_id ?? $this->id]);
 
         return parent::delete($div_id);
     }

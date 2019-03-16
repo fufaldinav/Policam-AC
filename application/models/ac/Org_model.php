@@ -63,11 +63,11 @@ class Org_model extends MY_Model
         if (! isset($user_id)) {
             return $this->list;
         }
-        return $this->list = $this->db->where($this->_foreing_key, $user_id)
-                                      ->join($this->_table, "$this->_table.$this->_primary_key = organizations_users.org_id", 'left')
-                                      ->order_by('name', 'ASC')
-                                      ->get('organizations_users')
-                                      ->result();
+        return $this->list = $this->CI->db->where($this->_foreing_key, $user_id)
+                                          ->join($this->_table, "$this->_table.$this->_primary_key = organizations_users.org_id", 'left')
+                                          ->order_by('name', 'ASC')
+                                          ->get('organizations_users')
+                                          ->result();
     }
 
     /**
@@ -79,10 +79,10 @@ class Org_model extends MY_Model
      */
     public function get_users(int $org_id): array
     {
-        return $this->users = $this->db->select($this->_foreing_key)
-                                       ->where('org_id', $org_id)
-                                       ->get('organizations_users')
-                                       ->result();
+        return $this->users = $this->CI->db->select($this->_foreing_key)
+                                           ->where('org_id', $org_id)
+                                           ->get('organizations_users')
+                                           ->result();
     }
 
     /**
