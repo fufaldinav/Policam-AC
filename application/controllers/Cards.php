@@ -85,26 +85,26 @@ class Cards extends CI_Controller
         echo $this->card->delete($card_id);
     }
 
-    /**
-     * Удаляет все неизвестные карты
-     */
-    public function delete_all_unknowns()
-    {
-        if (! $this->ion_auth->is_admin()) {
-            header('HTTP/1.1 403 Forbidden');
-            exit;
-        }
-
-        $cards = $this->card->get_list(0);
-
-        $count = 0;
-
-        foreach ($cards as $card) {
-            $count += $this->card->delete($card->id); //TODO события??
-        }
-
-        echo $count;
-    }
+    // /**
+    //  * Удаляет все неизвестные карты
+    //  */
+    // public function delete_all_unknowns()
+    // {
+    //     if (! $this->ion_auth->is_admin()) {
+    //         header('HTTP/1.1 403 Forbidden');
+    //         exit;
+    //     }
+    //
+    //     $cards = $this->card->get_list(0);
+    //
+    //     $count = 0;
+    //
+    //     foreach ($cards as $card) {
+    //         $count += $this->card->delete($card->id); //TODO события??
+    //     }
+    //
+    //     echo $count;
+    // }
 
     /**
      * Получает все неизвестные карты

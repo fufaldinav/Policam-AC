@@ -64,10 +64,10 @@ class Org_model extends MY_Model
             return $this->_list;
         }
         return $this->_list = $this->CI->db->where($this->_foreing_key, $user_id)
-                                          ->join($this->_table, "$this->_table.$this->_primary_key = organizations_users.org_id", 'left')
-                                          ->order_by('name', 'ASC')
-                                          ->get('organizations_users')
-                                          ->result();
+                                           ->join($this->_table, "$this->_table.$this->_primary_key = organizations_users.org_id", 'left')
+                                           ->order_by('name', 'ASC')
+                                           ->get('organizations_users')
+                                           ->result();
     }
 
     /**

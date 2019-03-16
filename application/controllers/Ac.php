@@ -62,10 +62,8 @@ class Ac extends CI_Controller
         /*
          | Подразделения
          */
-        $divs = $this->div->get_list($this->org->first('id'));
-
         $data = [
-            'divs' => $divs
+            'divs' => $this->div->get_list($this->org->first('id'))
         ];
 
         $header = [
@@ -94,21 +92,8 @@ class Ac extends CI_Controller
          | Подразделения
          */
         $data = [
-            'divs_list' => [],
-            'divs_attr' => 'id="div"'
-        ];
-
-        $divs = $this->div->get_list($this->org->first('id'));
-
-        $data['divs'] = $divs;
-
-        if (count($divs) === 0) {
-            $data['divs_list'][] = lang('missing');
-        } else {
-            foreach ($divs as $div) {
-                $data['divs_list'][$div->id] = $div->name;
-            }
-        }
+             'divs' => $this->div->get_list($this->org->first('id'))
+         ];
 
         /*
          | Карты
@@ -154,20 +139,10 @@ class Ac extends CI_Controller
          | Подразделения
          */
         $data = [
-            'divs_list' => [],
-            'divs_attr' => 'id="div" disabled'
+            'divs' => $this->div->get_list($this->org->first('id'))
         ];
 
-        $divs = $this->div->get_list($this->org->first('id'));
-
-        $data['divs'] = $divs;
-
-        if (count($divs) === 0) {
-            $data['divs_list'][] = lang('missing');
-        }
-
-        foreach ($divs as &$div) {
-            $data['divs_list'][$div->id] = $div->name;
+        foreach ($data['divs'] as &$div) {
             $div->persons = $this->person->get_list($div->id);
 
             foreach ($div->persons as &$person) {

@@ -90,7 +90,10 @@ class Div_model extends MY_Model
      */
     public function delete(int $div_id = null): int
     {
-        $this->CI->db->delete('persons_divisions', ['div_id' => $div_id ?? $this->id]);
+        $this->CI->db->delete(
+            'persons_divisions',
+            ['div_id' => $div_id ?? $this->id]
+        );
 
         return parent::delete($div_id);
     }

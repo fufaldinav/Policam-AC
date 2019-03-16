@@ -94,21 +94,6 @@ class Person_model extends MY_Model
     }
 
     /**
-     * Получает человека по ID из БД
-     *
-     * @param int $person_id ID человека
-     *
-     * @return bool TRUE - успешно, FALSE - ошибка
-     */
-    public function get(int $person_id = 0): bool
-    {
-        $this->CI->db->select("$this->_primary_key, address, birthday, f, i, o, phone, type")
-                     ->select("photo_id AS 'photo'");
-
-        return parent::get($person_id);
-    }
-
-    /**
      * Получает список всех людей по подразделению из БД
      *
      * @param int|null $div_id ID подразделения
@@ -133,7 +118,8 @@ class Person_model extends MY_Model
      *
      * @param int|null $person_id ID человека
      *
-     * @return int[] Список ID подразделений или текущий список, если $person_id не указан
+     * @return int[] Список ID подразделений или текущий список,
+     *               если $person_id не указан
      */
     public function get_divs(int $person_id = null): array
     {
@@ -185,7 +171,8 @@ class Person_model extends MY_Model
     }
 
     /**
-     * Удаляет информацию о фотографии по ID человека, если ID не установлено, то удаляет по текущему человеку
+     * Удаляет информацию о фотографии по ID человека, если ID не установлено,
+     * то удаляет по текущему человеку
      *
      * @param int|null $person_id ID человека
      *
