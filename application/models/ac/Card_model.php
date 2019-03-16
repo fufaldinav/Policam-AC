@@ -23,7 +23,28 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Card_model extends MY_Model
 {
     /**
-     * Владелец карты по-умолчанию
+     * Код карты
+     *
+     * @var string
+     */
+    public $wiegand;
+
+    /**
+     * Время последней попытки доступа
+     *
+     * @var int
+     */
+    public $last_conn;
+
+    /**
+     * Контроллер, на котором была совершена попытка доступа
+     *
+     * @var int
+     */
+    public $controller_id;
+
+    /**
+     * Владелец карты
      *
      * @var int
      */

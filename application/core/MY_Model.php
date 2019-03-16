@@ -23,6 +23,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class MY_Model extends CI_Model
 {
     /**
+     * Суперобъект Codeigniter
+     *
+     * @var object
+     */
+    protected $CI;
+
+    /**
      * Таблица в БД
      *
      * @var string
@@ -50,11 +57,50 @@ class MY_Model extends CI_Model
      */
     protected $list = [];
 
+    /**
+     * Хранилище неизвестных свойств
+     *
+     * @var array
+     */
+    private $data = [];
+
+    /**
+     * ID объекта
+     *
+     * @var int
+     */
+    public $id;
+
     public function __construct()
     {
         parent::__construct();
 
-        $this->load->database();
+        $this->CI =& get_instance();
+        $this->CI->load->database();
+    }
+
+    public function __get($name)
+    {
+        if (array_key_exists($name, $this->data)) {
+            return $this->data[$name];
+        }
+
+        return null;
+    }
+
+    public function __set($name, $value)
+    {
+        $this->data[$name] = $value;
+    }
+
+    public function __isset($name)
+    {
+        return isset($this->data[$name]);
+    }
+
+    public function __unset($name)
+    {
+        unset($this->data[$name]);
     }
 
     /**
@@ -66,9 +112,9 @@ class MY_Model extends CI_Model
      */
     public function get(int $id = 0): bool
     {
-        $query = $this->db->where($this->_primary_key, $id)
-                          ->get($this->_table)
-                          ->row();
+        $query = $this->CI->db->where($this->_primary_key, $id)
+                              ->get($this->_table)
+                              ->row();
 
         if (! isset($query)) {
             return false;
@@ -89,9 +135,9 @@ class MY_Model extends CI_Model
      */
     public function get_by(string $attr, $value): bool
     {
-        $query = $this->db->where($attr, $value)
-                          ->get($this->_table)
-                          ->row();
+        $query = $this->CI->db->where($attr, $value)
+                              ->get($this->_table)
+                              ->row();
 
         if (! isset($query)) {
             return false;
@@ -116,18 +162,22 @@ class MY_Model extends CI_Model
             return $this->list;
         }
 
-        return $this->list = $this->db->where($this->_foreing_key, $item_id)
-                                      ->get($this->_table)
-                                      ->result();
+        return $this->list = $this->CI->db->where($this->_foreing_key, $item_id)
+                                          ->get($this->_table)
+                                          ->result();
     }
 
     /**
      * Устанавливает свойства текущему объекту
      *
-     * @param object $object Объект с набором свойств
+     * @param array|object $object Объект или массив с набором свойств
      */
-    public function set(object $object): void
+    public function set($object): void
     {
+        if (! is_array($object) && ! is_object($object)) {
+            throw new Exception('Argument 1 passed to ' . __METHOD__ . '() must be array or object, ' . gettype($object) . ' given, called in ' . __FILE__ . ' on line ' . __LINE__);
+        }
+
         foreach ($object as $key => $value) {
             $this->$key = $value;
         }
@@ -141,15 +191,15 @@ class MY_Model extends CI_Model
     public function save(): int
     {
         if (isset($this->id)) {
-            $this->db->where($this->_primary_key, $this->id)
-                     ->update($this->_table, $this->_get_array());
+            $this->CI->db->where($this->_primary_key, $this->id)
+                         ->update($this->_table, $this->_get_array());
         } else {
-            $this->db->insert($this->_table, $this->_get_array());
+            $this->CI->db->insert($this->_table, $this->_get_array());
 
-            $this->id = $this->db->insert_id();
+            $this->id = $this->CI->db->insert_id();
         }
 
-        return $this->db->affected_rows();
+        return $this->CI->db->affected_rows();
     }
 
     /**
@@ -167,17 +217,17 @@ class MY_Model extends CI_Model
             if (isset($object->id)) {
                 $update_data[] = $object;
             } else {
-                $count += $this->db->insert(
+                $count += $this->CI->db->insert(
                     $this->_table,
                     $this->_get_array()
                 );
 
-                $object->id = $this->db->insert_id();
+                $object->id = $this->CI->db->insert_id();
             }
         }
 
         if (count($update_data) > 0) {
-            $count += $this->db->update_batch(
+            $count += $this->CI->db->update_batch(
                 $this->_table,
                 $update_data,
                 $this->_primary_key
@@ -215,11 +265,11 @@ class MY_Model extends CI_Model
      */
     public function delete(int $id = null): int
     {
-        $this->db->delete($this->_table, [
+        $this->CI->db->delete($this->_table, [
             $this->_primary_key => $id ?? $this->id
         ]);
 
-        return $this->db->affected_rows();
+        return $this->CI->db->affected_rows();
     }
 
     /**

@@ -23,11 +23,64 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Person_model extends MY_Model
 {
     /**
+     * Фамилия
+     *
+     * @var string
+     */
+    public $f;
+
+    /**
+     * Имя
+     *
+     * @var string
+     */
+    public $i;
+
+    /**
+     * Отвество
+     *
+     * @var string
+     */
+    public $o;
+
+    /**
+     * Тип/должность человека
+     *
      * @var int
      */
     public $type = 1;
 
     /**
+     * Дата рождения
+     *
+     * @var string
+     */
+    public $birthday;
+
+    /**
+     * Адрес
+     *
+     * @var string
+     */
+    public $address;
+
+    /**
+     * Номер телефона
+     *
+     * @var string
+     */
+    public $phone;
+
+    /**
+     * Фотография
+     *
+     * @var string
+     */
+    public $photo;
+
+    /**
+     * Подразделения
+     *
      * @var array
      */
     private $divs = [];
@@ -49,8 +102,8 @@ class Person_model extends MY_Model
      */
     public function get(int $person_id = 0): bool
     {
-        $this->db->select("$this->_primary_key, address, birthday, f, i, o, phone, type")
-                 ->select("photo_id AS 'photo'");
+        $this->CI->db->select("$this->_primary_key, address, birthday, f, i, o, phone, type")
+                     ->select("photo_id AS 'photo'");
 
         return parent::get($person_id);
     }
@@ -68,11 +121,11 @@ class Person_model extends MY_Model
             return $this->list;
         }
 
-        return $this->list = $this->db->where($this->_foreing_key, $div_id)
-                                      ->join($this->_table, "$this->_table.$this->_primary_key = persons_divisions.person_id", 'left')
-                                      ->order_by('f ASC, i ASC, o ASC')
-                                      ->get('persons_divisions')
-                                      ->result();
+        return $this->list = $this->CI->db->where($this->_foreing_key, $div_id)
+                                          ->join($this->_table, "$this->_table.$this->_primary_key = persons_divisions.person_id", 'left')
+                                          ->order_by('f ASC, i ASC, o ASC')
+                                          ->get('persons_divisions')
+                                          ->result();
     }
 
     /**
@@ -88,10 +141,10 @@ class Person_model extends MY_Model
             return $this->divs;
         }
 
-        return $this->divs = $this->db->select($this->_foreing_key)
-                                      ->where('person_id', $person_id)
-                                      ->get('persons_divisions')
-                                      ->result();
+        return $this->divs = $this->CI->db->select($this->_foreing_key)
+                                          ->where('person_id', $person_id)
+                                          ->get('persons_divisions')
+                                          ->result();
     }
 
     /**
@@ -104,12 +157,12 @@ class Person_model extends MY_Model
      */
     public function add_to_div(int $person_id, int $div_id): int
     {
-        $this->db->insert('persons_divisions', [
+        $this->CI->db->insert('persons_divisions', [
             'person_id' => $person_id,
             $this->_foreing_key => $div_id
         ]);
 
-        return $this->db->affected_rows();
+        return $this->CI->db->affected_rows();
     }
 
     /**
@@ -123,13 +176,12 @@ class Person_model extends MY_Model
     public function del_from_div(int $person_id, int $div_id = null): int
     {
         if (isset($div_id)) {
-            $this->db->where($this->_foreing_key, $div_id);
+            $this->CI->db->where($this->_foreing_key, $div_id);
         }
-        $this->db
-            ->where('person_id', $person_id)
-            ->delete('persons_divisions');
+        $this->CI->db->where('person_id', $person_id)
+                     ->delete('persons_divisions');
 
-        return $this->db->affected_rows();
+        return $this->CI->db->affected_rows();
     }
 
     /**
@@ -145,11 +197,10 @@ class Person_model extends MY_Model
             unset($this->photo);
         }
 
-        $this->db
-            ->where($this->_primary_key, $person_id ?? $this->id)
-            ->update($this->_table, ['photo_id' => null]);
+        $this->CI->db->where($this->_primary_key, $person_id ?? $this->id)
+                     ->update($this->_table, ['photo_id' => null]);
 
-        return $this->db->affected_rows();
+        return $this->CI->db->affected_rows();
     }
 
     /**

@@ -23,36 +23,81 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Ctrl_model extends MY_Model
 {
     /**
+     * Имя контроллера
+     *
+     * @var string
+     */
+    public $name;
+
+    /**
+     * Серийный номер
+     *
+     * @var int
+     */
+    public $sn;
+
+    /**
+     * Модель контроллера
+     *
      * @var string
      */
     public $type = 'Z5RWEB';
 
     /**
+     * Версия прошивки контроллера
+     *
+     * @var string
+     */
+    public $fw;
+
+    /**
+     * Версия прошивки модуля связи
+     *
+     * @var string
+     */
+    public $conn_fw;
+
+    /**
+     * Режимы: 0 - норма,
+     *         1 - блок,
+     *         2 - свободный проход,
+     *         3 - ожидание свободного прохода
+     *
      * @var int
      */
     public $mode = 0;
 
     /**
-     * @var int
+     * IP адрес контроллера в локальной сети
+     *
+     * @var string
      */
-    public $protocol = 1;
+    public $ip;
 
     /**
+     * Признак активированности контроллера
+     *
      * @var int
      */
     public $active = 1;
 
     /**
+     * ONLINE проверка доступа
+     *
      * @var int
      */
     public $online = 0;
 
     /**
+     * Последнее соединение контроллера с сервером
+     *
      * @var int
      */
     public $last_conn = 0;
 
     /**
+     * Организация, в которой установлен контроллер
+     *
      * @var int
      */
     public $org_id = 0;
@@ -80,7 +125,6 @@ class Ctrl_model extends MY_Model
             'conn_fw' => $this->conn_fw,
             'mode' => $this->mode,
             'ip' => $this->ip,
-            'protocol' => $this->protocol,
             'active' => $this->active,
             'online' => $this->online,
             'last_conn' => $this->last_conn,

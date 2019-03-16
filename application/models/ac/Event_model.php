@@ -22,11 +22,53 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 class Event_model extends MY_Model
 {
+    /**
+     * Контроллер, от которого пришло событие
+     *
+     * @var int
+     */
+    public $controller_id;
+
+    /**
+     * Тип события
+     *
+     * @var int
+     */
+    public $event;
+
+    /**
+     * Флаг события
+     *
+     * @var int
+     */
+    public $flag;
+
+    /**
+     * Время события на контроллере
+     *
+     * @var int
+     */
+    public $time;
+
+    /**
+     * Время получения события сервером
+     *
+     * @var int
+     */
+    public $server_time;
+
+    /**
+     * Карта, вызвавшая событие
+     *
+     * @var int
+     */
+    public $card_id;
+
     public function __construct()
     {
         parent::__construct();
 
-        $this->_table = 'test';
+        $this->_table = 'events';
         $this->_foreing_key = 'controller_id';
     }
 
@@ -46,16 +88,16 @@ class Event_model extends MY_Model
         array $controllers = null
     ): array {
         if (isset($event_types)) {
-            $this->db->where_in('event', $event_types);
+            $this->CI->db->where_in('event', $event_types);
         }
         if (isset($controllers)) {
-            $this->db->where_in($this->_foreing_key, $controllers);
+            $this->CI->db->where_in($this->_foreing_key, $controllers);
         }
 
-        return $this->list = $this->db->where('server_time >', $time)
-                                      ->order_by('time', 'DESC')
-                                      ->get('events')
-                                      ->result();
+        return $this->list = $this->CI->db->where('server_time >', $time)
+                                          ->order_by('time', 'DESC')
+                                          ->get('events')
+                                          ->result();
     }
 
     /**
