@@ -170,10 +170,14 @@ class MY_Model extends CI_Model
     /**
      * Устанавливает свойства текущему объекту
      *
-     * @param object $object Объект с набором свойств
+     * @param array|object $object Объект или массив с набором свойств
      */
-    public function set(object $object): void
+    public function set($object): void
     {
+        if (! is_array($object) && ! is_object($object)) {
+            throw new Exception('Argument 1 passed to ' . __METHOD__ . '() must be array or object, ' . gettype($object) . ' given, called in ' . __FILE__ . ' on line ' . __LINE__);
+        }
+
         foreach ($object as $key => $value) {
             $this->$key = $value;
         }
