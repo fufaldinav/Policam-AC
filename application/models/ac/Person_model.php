@@ -202,25 +202,4 @@ class Person_model extends MY_Model
 
         return $this->CI->db->affected_rows();
     }
-
-    /**
-     * Выделяет нужные для записи в БД свойства
-     *
-     * @return mixed[] Массив с параметрами человека
-     */
-    protected function _get_array(): array
-    {
-        $data = [
-            'f' => $this->f,
-            'i' => $this->i,
-            'o' => $this->o,
-            'type' => $this->type,
-            'birthday' => $this->birthday,
-            'address' => $this->address,
-            'phone' => $this->phone,
-            'photo_id' => $this->photo
-        ];
-
-        return $data;
-    }
 }

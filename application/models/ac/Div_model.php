@@ -82,7 +82,7 @@ class Div_model extends MY_Model
     }
 
     /**
-     * Удаляет подразделение
+     * Удаляет подразделение и все связи с людьми
      *
      * @param int|null $div_id ID подразделения
      *
@@ -93,21 +93,5 @@ class Div_model extends MY_Model
         $this->CI->db->delete('persons_divisions', ['div_id' => $div_id ?? $this->id]);
 
         return parent::delete($div_id);
-    }
-
-    /**
-     * Выделяет нужные для записи в БД свойства
-     *
-     * @return mixed[] Массив с параметрами контроллера
-     */
-    protected function _get_array(): array
-    {
-        $data = [
-            'name' => $this->name,
-            'org_id' => $this->org_id,
-            'type' => $this->type
-        ];
-
-        return $data;
     }
 }

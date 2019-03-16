@@ -129,20 +129,4 @@ class Org_model extends MY_Model
 
         return $this->list[0];
     }
-
-    /**
-     * Выделяет нужные для записи в БД свойства
-     *
-     * @return mixed[] Массив с параметрами организации
-     */
-    protected function _get_array(): array
-    {
-        $data = [
-            'name' => $this->name,
-            'addres' => $this->address,
-            'type' => $this->type
-        ];
-
-        return $data;
-    }
 }

@@ -192,9 +192,9 @@ class MY_Model extends CI_Model
     {
         if (isset($this->id)) {
             $this->CI->db->where($this->_primary_key, $this->id)
-                         ->update($this->_table, $this->_get_array());
+                         ->update($this->_table, $this);
         } else {
-            $this->CI->db->insert($this->_table, $this->_get_array());
+            $this->CI->db->insert($this->_table, $this);
 
             $this->id = $this->CI->db->insert_id();
         }
@@ -217,10 +217,7 @@ class MY_Model extends CI_Model
             if (isset($object->id)) {
                 $update_data[] = $object;
             } else {
-                $count += $this->CI->db->insert(
-                    $this->_table,
-                    $this->_get_array()
-                );
+                $count += $this->CI->db->insert($this->_table, $this);
 
                 $object->id = $this->CI->db->insert_id();
             }
@@ -270,17 +267,5 @@ class MY_Model extends CI_Model
         ]);
 
         return $this->CI->db->affected_rows();
-    }
-
-    /**
-     * Выделяет нужные для записи в БД свойства
-     *
-     * @return mixed[] Массив с параметрами
-     */
-    protected function _get_array(): array
-    {
-        $data = [];
-
-        return $data;
     }
 }

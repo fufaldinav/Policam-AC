@@ -99,23 +99,4 @@ class Event_model extends MY_Model
                                           ->get('events')
                                           ->result();
     }
-
-    /**
-     * Выделяет нужные для записи в БД свойства
-     *
-     * @return mixed[] Массив с параметрами карты
-     */
-    protected function _get_array(): array
-    {
-        $data = [
-            'controller_id' => $this->controller_id,
-            'event' => $this->event,
-            'flag' => $this->flag,
-            'time' => $this->time,
-            'server_time' => $this->server_time,
-            'card_id' => $this->card_id
-        ];
-
-        return $data;
-    }
 }
