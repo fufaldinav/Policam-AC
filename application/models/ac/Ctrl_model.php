@@ -109,28 +109,4 @@ class Ctrl_model extends MY_Model
         $this->_table = 'controllers';
         $this->_foreing_key = 'org_id';
     }
-
-    /**
-     * Выделяет нужные для записи в БД свойства
-     *
-     * @return mixed[] Массив с параметрами контроллера
-     */
-    protected function _get_array(): array
-    {
-        $data = [
-            'name' => $this->name,
-            'sn' => $this->sn,
-            'type' => $this->type,
-            'fw' => $this->fw,
-            'conn_fw' => $this->conn_fw,
-            'mode' => $this->mode,
-            'ip' => $this->ip,
-            'active' => $this->active,
-            'online' => $this->online,
-            'last_conn' => $this->last_conn,
-            'org_id' => $this->org_id
-        ];
-
-        return $data;
-    }
 }

@@ -61,9 +61,9 @@ class Org_model extends MY_Model
     public function get_list(int $user_id = null): array
     {
         if (! isset($user_id)) {
-            return $this->list;
+            return $this->_list;
         }
-        return $this->list = $this->CI->db->where($this->_foreing_key, $user_id)
+        return $this->_list = $this->CI->db->where($this->_foreing_key, $user_id)
                                           ->join($this->_table, "$this->_table.$this->_primary_key = organizations_users.org_id", 'left')
                                           ->order_by('name', 'ASC')
                                           ->get('organizations_users')
@@ -119,30 +119,14 @@ class Org_model extends MY_Model
      */
     public function first($property = null)
     {
-        if (count($this->list) === 0) {
+        if (count($this->_list) === 0) {
             return null;
         }
 
         if (isset($property)) {
-            return $this->list[0]->$property;
+            return $this->_list[0]->$property;
         }
 
-        return $this->list[0];
-    }
-
-    /**
-     * Выделяет нужные для записи в БД свойства
-     *
-     * @return mixed[] Массив с параметрами организации
-     */
-    protected function _get_array(): array
-    {
-        $data = [
-            'name' => $this->name,
-            'addres' => $this->address,
-            'type' => $this->type
-        ];
-
-        return $data;
+        return $this->_list[0];
     }
 }

@@ -20,150 +20,184 @@ defined('BASEPATH') or exit('No direct script access allowed');
 /**
  * Class Task Model
  */
-class Task_model extends CI_Model
+class Task_model extends MY_Model
 {
+    /**
+     * Контроллер, которому предназначено задание
+     *
+     * @var int
+     */
+    public $controller_id;
+
+    /**
+     * Сообщение в формате JSON
+     *
+     * @var string
+     */
+    public $json;
+
+    /**
+     * Время формирования сообщения
+     *
+     * @var int
+     */
+    public $time;
+
+    /**
+     * Тело запроса, отправляемого на контроллер, после указания всех
+     * параметров, перед записью в БД, необходимо конвертировать в JSON формат
+     *
+     * @var object
+     */
+    private $_request;
+
     public function __construct()
     {
         parent::__construct();
 
-        $this->load->database();
+        $this->_table = 'tasks';
+        $this->_foreing_key = 'controller_id';
+
+        $this->_request = new stdClass;
     }
 
     /**
-     * Добавляет задания для отправки на контроллер
-     *
-     * @param string      $operation Операция, отправляемая на контроллер
-     * @param int         $ctrl_id   ID контроллера
-     * @param string|null $data      Дополнительные данные
-     *
-     * @return int Количество успешных записей
-     */
-    public function add(string $operation, int $ctrl_id, string $data = null): int
-    {
-        $id = mt_rand(500000, 999999999);
-
-        $json = '{"id":' . $id . ',';
-        $json .= '"operation":"' . $operation . '"';
-        $json .= isset($data) ? ',' : '';
-        $json .= isset($data) ? $data : '';
-        $json .= '}';
-
-        $data =	[
-            'id' => $id,
-            'controller_id' => $ctrl_id,
-            'json' => $json,
-            'time' => now('Asia/Yekaterinburg')
-        ];
-
-        $this->db->insert('tasks', $data);
-
-        return $this->db->affected_rows();
-    }
-
-    /**
-     * Удаляет задания, отправленные на контроллер
-     *
-     * @param int $task_id ID задания
-     *
-     * @return int Количество успешных удалений
-     */
-    public function delete(int $task_id): int
-    {
-        $this->db
-            ->where('id', $task_id)
-            ->delete('tasks');
-
-        return $this->db->affected_rows();
-    }
-
-    /**
-     * Получает последнее задание для отправки на контроллер
+     * Получает последнее задание для контроллера
      *
      * @param int $ctrl_id ID контроллера
      *
-     * @return object|null Задание или NULL, если не найден
+     * @return bool TRUE - успешно, FALSE - ошибка
      */
-    public function get_last(int $ctrl_id): ?object
+    public function get_last(int $ctrl_id): bool
     {
-        $query = $this->db
-            ->where('controller_id', $ctrl_id)
-            ->order_by('time', 'ASC')
-            ->get('tasks');
+        $query = $this->CI->db->where($this->_foreing_key, $ctrl_id)
+                              ->order_by('time', 'ASC')
+                              ->get($this->_table)
+                              ->row();
 
-        return $query->row();
+        if (! isset($query)) {
+            return false;
+        }
+
+        $this->set($query);
+
+        return true;
     }
 
     /**
-     * Установливает параметры открытия
+     * Сохраняет задание в БД
      *
-     * @param int $ctrl_id       ID контроллера
+     * @return int Количество успешных записей
+     */
+    public function save(): int
+    {
+        $this->id = $this->_request->id;
+        $this->json = json_encode($this->_request);
+        $this->time = now('Asia/Yekaterinburg');
+
+        $this->CI->db->insert($this->_table, $this);
+
+        return $this->CI->db->affected_rows();
+    }
+
+    /**
+     * Устанавливает параметры открывания и контроля состояния двери
+     *
      * @param int $open_time     Время открытия в 0.1 сек
-     * @param int $open_control  Контроль открытия в 0.1 сек, по-умолчанию 0 - без контроля
-     * @param int $close_control Контроль закрытия в 0.1 сек, по-умолчанию 0 - без контроля
+     * @param int $open_control  Контроль открытия в 0.1 сек,
+     *                           по-умолчанию 0 - без контроля
+     * @param int $close_control Контроль закрытия в 0.1 сек,
+     *                           по-умолчанию 0 - без контроля
      *
-     * @return int Количество успешных записей
+     * @return void
      */
-    public function set_door_params(int $ctrl_id, int $open_time, int $open_control = 0, int $close_control = 0): int
-    {
-        $data = sprintf('"open": %d, "open_control": %d, "close_control": %d', $open_time, $open_control, $close_control);
+    public function set_door_params(
+        int $open_time,
+        int $open_control = 0,
+        int $close_control = 0
+    ): void {
+        $this->_request_clear();
 
-        return $this->add('set_door_params', $ctrl_id, $data);
+        $this->_request->id = mt_rand(500000, 999999999);
+        $this->_request->operation = __FUNCTION__;
+        $this->_request->open = $open_time;
+        $this->_request->open_control = $open_control;
+        $this->_request->close_control = $close_control;
     }
 
     /**
-     * Добавляет карты в контроллер
+     * Добавляет карты в память контроллера. Если в памяти контроллера уже
+     * имеется карта с таким-же номером, для этой карты обновляются флаги и
+     * временные зоны.
      *
-     * @param int      $ctrl_id ID контроллера
-     * @param string[] $codes   Коды карт
+     * @param string[] $codes Коды карт
      *
-     * @return int Количество успешных записей
+     * @return void
      */
-    public function add_cards(int $ctrl_id, array $codes): int
+    public function add_cards(array $codes): void
     {
-        $data = '"cards": [';
+        $this->_request_clear();
+
+        $this->_request->id = mt_rand(500000, 999999999);
+        $this->_request->operation = __FUNCTION__;
+        $this->_request->cards = [];
 
         foreach ($codes as $code) {
-            $data .= '{"card":"' . $code . '","flags":32,"tz":255},';
+          $card = new stdClass;
+          $card->card = $code;
+          $card->flags = 32;
+          $card->tz = 255;
+
+          $this->_request->cards[] = $card;
         }
-        $data = substr($data, 0, -1);
-
-        $data .= ']';
-
-        return $this->add('add_cards', $ctrl_id, $data);
     }
 
     /**
-     * Удаляет карты из контроллера
+     * Удаляет карты из памяти контроллера
      *
-     * @param int      $ctrl_id ID контроллера
-     * @param string[] $codes   Коды карт
+     * @param string[] $codes Коды карт
      *
-     * @return int Количество успешных удалений
+     * @return void
      */
-    public function delete_cards(int $ctrl_id, array $codes): int
+    public function del_cards(array $codes): void
     {
-        $data = '"cards": [';
+        $this->_request_clear();
+
+        $this->_request->id = mt_rand(500000, 999999999);
+        $this->_request->operation = __FUNCTION__;
+        $this->_request->cards = [];
 
         foreach ($codes as $code) {
-            $data .= '{"card":"' . $code . '"},';
+            $card = new stdClass;
+            $card->card = $code;
+
+            $this->_request->cards[] = $card;
         }
-        $data = substr($data, 0, -1);
-
-        $data .= ']';
-
-        return $this->add('del_cards', $ctrl_id, $data);
     }
 
 
     /**
-     * Удаляет все карты из контроллера
+     * Удаляет все карты из памяти контроллера
      *
-     * @param int $ctrl_id ID контроллера
-     *
-     * @return int Количество успешных удалений
+     * @return void
      */
-    public function clear_cards(int $ctrl_id): int
+    public function clear_cards(): void
     {
-        return $this->add('clear_cards', $ctrl_id);
+        $this->_request_clear();
+
+        $this->_request->id = mt_rand(500000, 999999999);
+        $this->_request->operation = __FUNCTION__;
+    }
+
+    /**
+     * Очищает тело запроса
+     *
+     * @return void
+     */
+    private function _request_clear(): void
+    {
+        foreach ($this->_request as $key => $value) {
+            unset($this->_request->$key);
+        }
     }
 }

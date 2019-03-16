@@ -118,10 +118,10 @@ class Person_model extends MY_Model
     public function get_list(int $div_id = null): array
     {
         if (! isset($div_id)) {
-            return $this->list;
+            return $this->_list;
         }
 
-        return $this->list = $this->CI->db->where($this->_foreing_key, $div_id)
+        return $this->_list = $this->CI->db->where($this->_foreing_key, $div_id)
                                           ->join($this->_table, "$this->_table.$this->_primary_key = persons_divisions.person_id", 'left')
                                           ->order_by('f ASC, i ASC, o ASC')
                                           ->get('persons_divisions')
@@ -201,26 +201,5 @@ class Person_model extends MY_Model
                      ->update($this->_table, ['photo_id' => null]);
 
         return $this->CI->db->affected_rows();
-    }
-
-    /**
-     * Выделяет нужные для записи в БД свойства
-     *
-     * @return mixed[] Массив с параметрами человека
-     */
-    protected function _get_array(): array
-    {
-        $data = [
-            'f' => $this->f,
-            'i' => $this->i,
-            'o' => $this->o,
-            'type' => $this->type,
-            'birthday' => $this->birthday,
-            'address' => $this->address,
-            'phone' => $this->phone,
-            'photo_id' => $this->photo
-        ];
-
-        return $data;
     }
 }

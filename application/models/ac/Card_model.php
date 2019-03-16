@@ -57,21 +57,4 @@ class Card_model extends MY_Model
         $this->_table = 'cards';
         $this->_foreing_key = 'person_id';
     }
-
-    /**
-     * Выделяет нужные для записи в БД свойства
-     *
-     * @return mixed[] Массив с параметрами карты
-     */
-    protected function _get_array(): array
-    {
-        $data = [
-            'wiegand' => $this->wiegand,
-            'last_conn' => $this->last_conn,
-            'controller_id' => $this->controller_id,
-            'person_id' => $this->person_id
-        ];
-
-        return $data;
-    }
 }

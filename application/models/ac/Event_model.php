@@ -94,28 +94,9 @@ class Event_model extends MY_Model
             $this->CI->db->where_in($this->_foreing_key, $controllers);
         }
 
-        return $this->list = $this->CI->db->where('server_time >', $time)
+        return $this->_list = $this->CI->db->where('server_time >', $time)
                                           ->order_by('time', 'DESC')
                                           ->get('events')
                                           ->result();
-    }
-
-    /**
-     * Выделяет нужные для записи в БД свойства
-     *
-     * @return mixed[] Массив с параметрами карты
-     */
-    protected function _get_array(): array
-    {
-        $data = [
-            'controller_id' => $this->controller_id,
-            'event' => $this->event,
-            'flag' => $this->flag,
-            'time' => $this->time,
-            'server_time' => $this->server_time,
-            'card_id' => $this->card_id
-        ];
-
-        return $data;
     }
 }
