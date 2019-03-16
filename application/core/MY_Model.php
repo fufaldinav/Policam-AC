@@ -62,7 +62,7 @@ class MY_Model extends CI_Model
      *
      * @var array
      */
-    private $data = [];
+    protected $data = [];
 
     /**
      * ID объекта
