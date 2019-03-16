@@ -69,7 +69,7 @@ class Ac extends CI_Controller
         ];
 
         $header = [
-            'org_name' => $this->org->get_full_name($this->org->first('id')) ?? lang('missing'),
+            'org_name' => $this->org->first('name') ?? lang('missing'),
             'css_list' => ['ac'],
             'js_list' => ['main', 'observ']
         ];
@@ -129,7 +129,7 @@ class Ac extends CI_Controller
         }
 
         $header = [
-            'org_name' => $this->org->get_full_name($this->org->first('id')) ?? lang('missing'),
+            'org_name' => $this->org->first('name') ?? lang('missing'),
             'css_list' => ['ac'],
             'js_list' => ['add_person', 'events', 'main']
         ];
@@ -195,7 +195,7 @@ class Ac extends CI_Controller
         }
 
         $header = [
-            'org_name' => $this->org->get_full_name($this->org->first('id')) ?? lang('missing'),
+            'org_name' => $this->org->first('name') ?? lang('missing'),
             'css_list' => ['ac', 'edit_persons'],
             'js_list' => ['main', 'events', 'edit_persons', 'tree']
         ];
@@ -222,7 +222,7 @@ class Ac extends CI_Controller
         ];
 
         $header = [
-            'org_name' => $this->org->get_full_name($this->org->first('id')) ?? lang('missing'),
+            'org_name' => $this->org->first('name') ?? lang('missing'),
             'css_list' => ['ac', 'tables'],
             'js_list' => ['classes']
         ];

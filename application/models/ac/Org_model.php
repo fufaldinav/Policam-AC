@@ -86,31 +86,6 @@ class Org_model extends MY_Model
     }
 
     /**
-     * Получает полное имя организации
-     *
-     * @param int|null $org_id ID организации
-     *
-     * @return string|null Строка в формате 'номер (адресс при наличии)' или NULL, если организация не найдена
-     */
-    public function get_full_name(int $org_id = null): ?string  //TODO check
-    {
-        if (isset($org_id)) {
-            $this->get($org_id);
-        }
-
-        if (! isset($this->name)) {
-            return null;
-        }
-
-        $org_name = $this->name;
-        if (isset($this->address)) {
-            $org_name .= " ($this->address)";
-        }
-
-        return $org_name;
-    }
-
-    /**
      * Возвращает первую организацию из списка или свойство первой организации
      *
      * @param string|null $property Свойство
