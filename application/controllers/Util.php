@@ -111,7 +111,9 @@ class Util extends CI_Controller
                 $card->person_id = 0;
 
                 foreach ($ctrls as $ctrl) {
-                    $this->task->delete_cards($ctrl->id, [$card->wiegand]);
+                    $this->task->controller_id = $ctrl->id;
+                    $this->task->del_cards([$card->wiegand]);
+                    $this->task->save();
                 }
             }
             unset($card);

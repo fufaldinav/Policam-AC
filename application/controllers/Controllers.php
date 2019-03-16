@@ -55,8 +55,11 @@ class Controllers extends CI_Controller
         }
 
         if (isset($ctrl_id) && isset($open_time)) {
-            if ($this->task->set_door_params($ctrl_id, $open_time) > 0) {
-                echo 'Задания успешно отправлены'; //TODO перевод
+            $this->task->controller_id = $ctrl_id;
+            $this->task->set_door_params($open_time);
+            $count = $this->task->save();
+            if ($count > 0) {
+                echo "Заданий успешно отправлено: $count"; //TODO перевод
             }
         } else {
             echo 'Не выбран контроллер или не задано время открытия'; //TODO перевод
@@ -76,9 +79,11 @@ class Controllers extends CI_Controller
         }
 
         if (isset($ctrl_id)) {
-            $tasks = $this->task->clear_cards($ctrl_id);
-            if ($tasks > 0) {
-                echo "Заданий успешно отправлено: $tasks"; //TODO перевод
+            $this->task->controller_id = $ctrl_id;
+            $this->task->clear_cards();
+            $count = $this->task->save();
+            if ($count > 0) {
+                echo "Заданий успешно отправлено: $count"; //TODO перевод
             }
         } else {
             echo 'Не выбран контроллер'; //TODO перевод
@@ -99,9 +104,11 @@ class Controllers extends CI_Controller
 
         if (! isset($ctrl_id)) {
             echo 'Не выбран контроллер'; //TODO перевод
-        } elseif (! isset($this->org->first())) {
+        } elseif (is_null($this->org->first())) {
             echo 'Нет организаций'; //TODO перевод
         } else {
+            $this->task->controller_id = $ctrl_id;
+
             $cards = [];
 
             $divs = $this->div->get_list($this->org->first('id'));
@@ -112,9 +119,7 @@ class Controllers extends CI_Controller
                 foreach ($div->persons as $person) {
                     $person->cards = $this->card->get_list($person->id);
 
-                    if (count($person->cards) > 0) {
-                        $cards = array_merge($cards, $person->cards);
-                    }
+                    $cards = array_merge($cards, $person->cards);
                 }
             }
 
@@ -124,8 +129,19 @@ class Controllers extends CI_Controller
             for ($i = 0; $i < $card_count; $i++) {
                 $codes[] = $cards[$i]->wiegand;
 
-                if (($i > 0 && ($i % 10 === 0)) || $i === ($card_count - 1)) {
-                    $counter += $this->task->add_cards($ctrl_id, $codes);
+                /*
+                | 1. Запишем задания если: а) это не первый проход
+                |                          и
+                |                          б) это десятый проход
+                |                          или
+                |                          в) это последний проход
+                | 2. Очистим список кодов карт на отправку
+                |
+                | Таким образом сформируем задания на отправку по 10 за раз
+                */
+                if (($i > 0 && ($i % 10 === 0)) || ($i === ($card_count - 1))) {
+                    $this->task->add_cards($codes);
+                    $counter += $this->task->save();
 
                     $codes = [];
                 }

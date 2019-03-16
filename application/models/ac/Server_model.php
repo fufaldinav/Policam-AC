@@ -204,10 +204,8 @@ class Server_model extends CI_Model
             }
         }
 
-        $task = $this->task->get_last($this->ctrl->id);
-
-        if (isset($task)) {
-            $out_msg->messages[] = json_decode($task->json);
+        if ($this->task->get_last($this->ctrl->id)) {
+            $out_msg->messages[] = json_decode($this->task->json);
         }
 
         $out_json_msg = json_encode($out_msg);
