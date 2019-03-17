@@ -4,7 +4,7 @@
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *
- * Created: 07.03.2019
+ * Created: 17.03.2019
  *
  * Description: Приложение для систем контроля и управления доступом.
  *
@@ -18,41 +18,40 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
- * Class Notification Model
+ * Class Notificator
  * @property Person_model $person
  * @property Photo_model $photo
  * @property Token_model $token
  */
-class Notification_model extends CI_Model
+class Notificator extends Ac
 {
     /**
      * Адрес сервера FCM
      *
-     * @var string $fcm_url
+     * @var string
      */
-    private $fcm_url;
+    private $_fcm_url;
 
     /**
      * Ключ сервера
      *
-     * @var string $server_key
+     * @var string
      */
-    private $server_key;
+    private $_server_key;
+
+    /**
+     * Параметры уведомления
+     *
+     * @var string
+     */
+    private $_notification;
 
     public function __construct()
     {
         parent::__construct();
 
-        $this->config->load('ac', true);
-
-        $this->load->database();
-
-        $this->load->model('ac/person_model', 'person');
-        $this->load->model('ac/photo_model', 'photo');
-        $this->load->model('ac/token_model', 'token');
-
-        $this->fcm_url = $this->config->item('fcm_url', 'ac');
-        $this->server_key = $this->config->item('server_key', 'ac');
+        $this->_fcm_url = $this->CI->config->item('fcm_url', 'ac');
+        $this->_server_key = $this->CI->config->item('server_key', 'ac');
     }
 
     /**
@@ -61,13 +60,13 @@ class Notification_model extends CI_Model
      * @param int $person_id ID человека
      * @param int $event_id  ID события
      *
-     * @return array Параметры уведомления
+     * @return mixed[] Параметры уведомления
      */
     public function generate(int $person_id, int $event_id): array
     {
-        $this->lang->load('ac');
+        $this->CI->lang->load('ac');
 
-        $this->load->helper('language');
+        $this->CI->load->helper('language');
 
         switch ($event_id) {
             case 4: //вход
@@ -82,31 +81,40 @@ class Notification_model extends CI_Model
                 return [];
         }
 
-        $this->load->helper('url');
+        $this->CI->load->helper('url');
+
+        $this->load('person');
 
         $this->person->get($person_id);
+
+        $this->load('photo');
+
         $photo = $this->photo->get_by_person($this->person->id);
 
-        $notification = [
+        return $this->_notification = [
             'title' => $event,
             'body' => "{$this->person->f} {$this->person->i}",
             'icon' => (isset($photo)) ? ("https://" . $_SERVER['HTTP_HOST'] . "/img/ac/s/$photo->id.jpg") : "",
             'click_action' => base_url('/')
         ];
-
-        return $notification;
     }
+
     /**
      * Отправляет уведомление
      *
-     * @param array    $notification Параметры уведомления
-     * @param int|null $user_id      ID пользователя
+     * @param array|null $notification Параметры уведомления
+     * @param int|null   $user_id      ID пользователя, по-умолчанию не указан,
+     *                                 тогда будет отправлено всем пользователям
      *
      * @return string Ответ на запрос
      */
-    public function send(array $notification, int $user_id = null): string
+    public function send(array $notification = null, int $user_id = null): string
     {
+        $notification = $notification ?? $this->_notification;
+
         $registration_ids = [];
+
+        $this->load('token');
 
         $tokens = $this->token->get_list($user_id);
 
@@ -115,18 +123,18 @@ class Notification_model extends CI_Model
         }
 
         $request_body = [
-            'notification' => $notification,
+            'notification' => $this->_notification,
             'registration_ids' => $registration_ids
         ];
         $fields = json_encode($request_body);
 
         $request_headers = [
             "Content-Type: application/json",
-            "Authorization: key=$this->server_key",
+            "Authorization: key=$this->_server_key",
         ];
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->fcm_url);
+        curl_setopt($ch, CURLOPT_URL, $this->_fcm_url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);

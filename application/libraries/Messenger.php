@@ -19,10 +19,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
  * Class Messenger
+ * @property Notificator $notificator
  * @property Card_model $card
  * @property Ctrl_model $ctrl
  * @property Event_model $event
- * @property Notification_model $notification
  * @property Person_model $person
  * @property Task_model $task
  */
@@ -194,13 +194,13 @@ class Messenger extends Ac
 
                     $subscribers = $this->person->get_users($this->card->person_id);
 
-                    $this->load('notification');
+                    $this->CI->load->library('notificator');
 
                     foreach ($subscribers as $sub) {
-                        $notification = $this->notification->generate($this->card->person_id, $event->event);
+                        $notification = $this->notificator->generate($this->card->person_id, $event->event);
 
                         if (count($notification) > 0) {
-                            $response = $this->notification->send($notification, $sub->user_id);
+                            $response = $this->notificator->send($sub->user_id, $notification);
 
                             $path = "$this->log_path/push-$log_date.txt";
                             write_file($path, "USER: $sub->user_id || PERSON: {$this->card->person_id} || $response\n", 'a');
