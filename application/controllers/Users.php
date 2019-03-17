@@ -2,14 +2,15 @@
 
 /**
  * Class Users
+ *
  * @property Token_model $token
  */
 class Users extends CI_Controller
 {
     /**
-     * @var int $user_id
+     * @var int
      */
-    private $user_id;
+    private $_user_id;
 
     public function __construct()
     {
@@ -22,9 +23,7 @@ class Users extends CI_Controller
             exit;
         }
 
-        $this->load->model('ac/token_model', 'token');
-
-        $this->user_id = $this->ion_auth->user()->row()->id;
+        $this->_user_id = $this->ion_auth->user()->row()->id;
     }
 
     /**
@@ -32,13 +31,15 @@ class Users extends CI_Controller
      */
     public function token()
     {
+        $this->ac->load('token');
+
         $token = $this->input->post('token');
 
         if ($token_key === 'false') {
             // $this->token->get_by('token', $token_key);
             // $this->token->delete(); //TODO удалять просроченный ключ
         } elseif (! ($this->token->get_by('token', $token_key))) {
-            $this->token->user_id = $this->user_id;
+            $this->token->user_id = $this->_user_id;
             $this->token->token = $token_key;
             $this->token->save();
         }

@@ -4,7 +4,7 @@
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *
- * Created: 01.03.2019
+ * Created: 17.03.2019
  *
  * Description: Приложение для систем контроля и управления доступом.
  *
@@ -18,50 +18,43 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
- * Class Card Model
+ * Class Users_events Model
  */
-class Card_model extends MY_Model
+class Users_events_model extends MY_Model
 {
     /**
-     * Код карты
+     * Пользователь, от которого пришло сообщение
+     *
+     * @var int
+     */
+    public $user_id;
+
+    /**
+     * Тип сообщения
+     *
+     * @var int
+     */
+    public $type;
+
+    /**
+     * Описание сообщения
      *
      * @var string
      */
-    public $wiegand;
+    public $description;
 
     /**
-     * Время последней попытки доступа
+     * Время сообщения
      *
      * @var int
      */
-    public $last_conn;
-
-    /**
-     * Контроллер, на котором была совершена попытка доступа
-     *
-     * @var int
-     */
-    public $controller_id;
-
-    /**
-     * Владелец карты
-     *
-     * @var int
-     */
-    public $person_id = 0;
-
-    /**
-     * Признак активированности карты
-     *
-     * @var int
-     */
-    public $active = 1;
+    public $time;
 
     public function __construct()
     {
         parent::__construct();
 
-        $this->_table = 'cards';
-        $this->_foreing_key = 'person_id';
+        $this->_table = 'users_events';
+        $this->_foreing_key = 'user_id';
     }
 }

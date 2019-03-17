@@ -23,6 +23,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class MY_Model extends CI_Model
 {
     /**
+     * ID объекта
+     *
+     * @var int
+     */
+    public $id;
+
+    /**
      * Суперобъект Codeigniter
      *
      * @var object
@@ -63,13 +70,6 @@ class MY_Model extends CI_Model
      * @var array
      */
     protected $_data = [];
-
-    /**
-     * ID объекта
-     *
-     * @var int
-     */
-    public $id;
 
     public function __construct()
     {
@@ -238,7 +238,7 @@ class MY_Model extends CI_Model
      * Вносит новый объект в список, копируя свойства текущего
      *
      */
-    public function list_push(): void
+    public function add_to_list(): void
     {
         $object = new stdClass();
 

@@ -1,9 +1,12 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
- * Class Cp
+ * Class Observ
+ *
+ * @property Div_model $div
+ * @property Org_model $org
  */
-class Cp extends CI_Controller
+class Observ extends CI_Controller
 {
     /**
      * @var int
@@ -24,22 +27,33 @@ class Cp extends CI_Controller
     }
 
     /**
-     * Главная
+     * Наблюдение
      *
      * @return void
      */
     public function index(): void
     {
+        $this->ac->load('div');
+        $this->ac->load('org');
+
         $this->load->helper('language');
 
+        $this->org->get_list($this->_user_id); //TODO
+        /*
+         | Подразделения
+         */
+        $data = [
+            'divs' => $this->div->get_list($this->org->first('id'))
+        ];
+
         $header = [
-            'org_name' => lang('missing'),
+            'org_name' => $this->org->first('name') ?? lang('missing'),
             'css_list' => ['ac'],
-            'js_list' => ['push']
+            'js_list' => ['main', 'observ']
         ];
 
         $this->load->view('ac/header', $header);
-        $this->load->view('ac/cp');
+        $this->load->view('ac/observation', $data);
         $this->load->view('ac/footer');
     }
 }

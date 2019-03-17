@@ -52,20 +52,22 @@ function setPersonInfo(card_id) {
 		type: `GET`,
 		success: function(data) {
 			if (data) {
-				Object.keys(data).map(function(k) { //перебор полученных данных
+				for (let k in data.person) {
 					if (k === `divs`) {
-						data[k].forEach(function(div) {
+						data.person[k].forEach(function(div) {
 							document.getElementById(k).innerHTML = div.name; //TODO списком
 						});
-					} else if (document.getElementById(k)) {
-						document.getElementById(k).value = data[k];
+					} else {
+						document.getElementById(k).value = data.person[k];
 					}
-				});
-				let photo = document.getElementById(`photo_bg`);
-				if (!data.photo) {
-					data.photo = `0`;
 				}
-				photo.style.backgroundImage = 'url(/img/ac/s/' + data.photo + '.jpg)';
+
+				let photo_id = 0;
+				let photo = document.getElementById(`photo_bg`);
+				if (data.photos.length > 0) {
+					photo_id = data.photos[0].id;
+				}
+				photo.style.backgroundImage = 'url(/img/ac/s/' + photo_id + '.jpg)';
 			} else {
 				alert(`Пустой ответ от сервера`); //TODO перевод
 			}

@@ -2,6 +2,7 @@
 
 /**
  * Class Controllers
+ *
  * @property Card_model $card
  * @property Div_model $div
  * @property Org_model $org
@@ -11,9 +12,9 @@
 class Controllers extends CI_Controller
 {
     /**
-     * @var int $user_id
+     * @var int
      */
-    private $user_id;
+    private $_user_id;
 
     /**
      * @var mixed[] $orgs
@@ -31,14 +32,12 @@ class Controllers extends CI_Controller
             exit;
         }
 
-        $this->load->model('ac/card_model', 'card');
-        $this->load->model('ac/div_model', 'div');
-        $this->load->model('ac/org_model', 'org');
-        $this->load->model('ac/person_model', 'person');
-        $this->load->model('ac/task_model', 'task');
+        if (! $this->ion_auth->is_admin()) {
+            header('HTTP/1.1 403 Forbidden');
+            exit;
+        }
 
-        $this->user_id = $this->ion_auth->user()->row()->id;
-        $this->org->get_list($this->user_id); //TODO
+        $this->_user_id = $this->ion_auth->user()->row()->id;
     }
 
     /**
@@ -46,15 +45,14 @@ class Controllers extends CI_Controller
      *
      * @param int|null $ctrl_id   ID контроллера
      * @param int|null $open_time Время открытия в 0.1 сек
+     *
+     * @return void
      */
-    public function set_door_params(int $ctrl_id = null, int $open_time = null)
+    public function set_door_params(int $ctrl_id = null, int $open_time = null): void
     {
-        if (! $this->ion_auth->is_admin()) {
-            header('HTTP/1.1 403 Forbidden');
-            exit;
-        }
-
         if (isset($ctrl_id) && isset($open_time)) {
+            $this->ac->load('task');
+
             $this->task->controller_id = $ctrl_id;
             $this->task->set_door_params($open_time);
             $count = $this->task->save();
@@ -70,15 +68,14 @@ class Controllers extends CI_Controller
      * Удаляет все карты из контроллера
      *
      * @param int|null $ctrl_id ID контроллера
+     *
+     * @return void
      */
-    public function clear(int $ctrl_id = null)
+    public function clear(int $ctrl_id = null): void
     {
-        if (! $this->ion_auth->is_admin()) {
-            header('HTTP/1.1 403 Forbidden');
-            exit;
-        }
-
         if (isset($ctrl_id)) {
+            $this->ac->load('task');
+
             $this->task->controller_id = $ctrl_id;
             $this->task->clear_cards();
             $count = $this->task->save();
@@ -94,19 +91,23 @@ class Controllers extends CI_Controller
      * Выгружает все карты в контроллер
      *
      * @param int|null $ctrl_id ID контроллера
+     *
+     * @return void
      */
-    public function reload_cards(int $ctrl_id = null)
+    public function reload_cards(int $ctrl_id = null): void
     {
-        if (! $this->ion_auth->is_admin()) {
-            header('HTTP/1.1 403 Forbidden');
-            exit;
-        }
+        $this->ac->load('org');
+
+        $this->org->get_list($this->_user_id); //TODO
 
         if (! isset($ctrl_id)) {
             echo 'Не выбран контроллер'; //TODO перевод
         } elseif (is_null($this->org->first())) {
             echo 'Нет организаций'; //TODO перевод
         } else {
+            $this->ac->load('div');
+            $this->ac->load('task');
+
             $this->task->controller_id = $ctrl_id;
 
             $cards = [];
@@ -114,9 +115,13 @@ class Controllers extends CI_Controller
             $divs = $this->div->get_list($this->org->first('id'));
 
             foreach ($divs as $div) {
+                $this->ac->load('person');
+
                 $div->persons = $this->person->get_list($div->id);
 
                 foreach ($div->persons as $person) {
+                    $this->ac->load('card');
+
                     $person->cards = $this->card->get_list($person->id);
 
                     $cards = array_merge($cards, $person->cards);

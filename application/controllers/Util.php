@@ -2,13 +2,15 @@
 
 /**
  * Class Util
+ *
+ * @property Messenger $messenger
  * @property Card_model $card
  * @property Ctrl_model $ctrl
  * @property Div_model $div
  * @property Org_model $org
  * @property Person_model $person
  * @property Task_model $task
- * @property Util_model $util
+ * @property Users_events_model $users_events
  */
 class Util extends CI_Controller
 {
@@ -22,14 +24,6 @@ class Util extends CI_Controller
             header("HTTP/1.1 401 Unauthorized");
             exit;
         }
-
-        $this->load->model('ac/card_model', 'card');
-        $this->load->model('ac/ctrl_model', 'ctrl');
-        $this->load->model('ac/div_model', 'div');
-        $this->load->model('ac/org_model', 'org');
-        $this->load->model('ac/person_model', 'person');
-        $this->load->model('ac/task_model', 'task');
-        $this->load->model('ac/util_model', 'util');
     }
 
     /**
@@ -45,13 +39,15 @@ class Util extends CI_Controller
      */
     public function get_events()
     {
+        $this->load->library('messenger');
+
         $time = $this->input->post('time');
         $events = $this->input->post('events');
 
         header('Content-Type: application/json');
 
         echo json_encode([
-                'msgs' => $this->util->start_polling($time, $events),
+                'msgs' => $this->messenger->polling($events, $time),
                 'time' => now('Asia/Yekaterinburg')
         ]);
     }
@@ -63,9 +59,11 @@ class Util extends CI_Controller
      */
     public function save_js_errors(string $err = null)
     {
+        $this->load->library('logger');
+
         $err = $err ?? $this->input->post('error');
 
-        $this->util->save_errors($err);
+        $this->logger->save_errors($err);
     }
 
     /**
@@ -73,7 +71,8 @@ class Util extends CI_Controller
      */
     public function card_problem()
     {
-        $this->lang->load('ac');
+        $this->ac->load('person');
+        $this->ac->load('users_events');
 
         $this->load->helper('language');
 
@@ -91,12 +90,21 @@ class Util extends CI_Controller
         $this->person->get($person_id);
 
         if ($type == 1) {
-            $desc = "{$this->person->id} {$this->person->f} {$this->person->i} forgot card";
+            $this->users_events->user_id = $user_id;
+            $this->users_events->type = $type;
+            $this->users_events->description = "{$this->person->id} {$this->person->f} {$this->person->i} forgot card";
+            $this->users_events->time = now('Asia/Yekaterinburg');
 
-            if ($this->util->add_user_event($user_id, $type, $desc) > 0) {
+            if ($this->users_events->save() > 0) {
                 echo $response;
             }
         } elseif ($type == 2 || $type == 3) {
+            $this->ac->load('card');
+            $this->ac->load('ctrl');
+            $this->ac->load('div');
+            $this->ac->load('org');
+            $this->ac->load('task');
+
             $this->card->get_list($this->person->id);
 
             if (count($this->card->get_list()) === 0) {
@@ -120,11 +128,14 @@ class Util extends CI_Controller
 
             $this->card->save_list();
 
-            $desc = "{$this->person->id} {$this->person->f} {$this->person->i} lost/broke card";
+            $this->users_events->user_id = $user_id;
+            $this->users_events->type = $type;
+            $this->users_events->description = "{$this->person->id} {$this->person->f} {$this->person->i} lost/broke card";
+            $this->users_events->time = now('Asia/Yekaterinburg');
 
             $response .= ' ' . lang('and') . ' ' . lang('card_deleted');
 
-            if ($this->util->add_user_event($user_id, $type, $desc) > 0) {
+            if ($this->users_events->save() > 0) {
                 echo $response;
             }
         }

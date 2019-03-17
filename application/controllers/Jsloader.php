@@ -3,32 +3,34 @@
 /**
  * Class Jsloader
  *
- * @property Util_model $util
+ * @property Jsparser $jsparser
  */
 class Jsloader extends CI_Controller
 {
     public function __construct()
     {
         parent::__construct();
-
-        $this->load->model('ac/util_model', 'util');
     }
 
     /**
      * Принимает файл и отправляет на поиск переменных
      *
      * @param mixed $file
+     *
+     * @return void
      */
     public function file($file = null): void
     {
+        $this->load->library('jsparser');
+
         if (! isset($file)) {
             header('HTTP/1.1 404 Not Found');
             exit;
         }
 
-        $contents = $this->util->parse_js($file);
+        $contents = $this->jsparser->parse($file);
 
-        if (! $contents) {
+        if (! isset($contents)) {
             header('HTTP/1.1 404 Not Found');
             exit;
         } else {

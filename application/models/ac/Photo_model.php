@@ -19,98 +19,54 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
  * Class Photo Model
- * @property Person_model $person
- * @property Util_model $util
  */
-class Photo_model extends CI_Model
+class Photo_model extends MY_Model
 {
+    /**
+     * MD5 хэш фотографии
+     *
+     * @var string
+     */
+    public $hash;
+
+    /**
+     * Человек, которому принадлежит фотография
+     *
+     * @var int
+     */
+    public $person_id;
+
+    /**
+     * Время сохранения фотографии
+     *
+     * @var int
+     */
+    public $time;
+
     /**
      * Каталог с фото
      *
-     * @var string $img_path
+     * @var string $_img_path
      */
-    private $img_path;
+    private $_img_path;
 
     public function __construct()
     {
         parent::__construct();
 
-        $this->config->load('ac', true);
+        $this->_table = 'photo';
+        $this->_foreing_key = 'person_id';
 
-        $this->load->database();
+        $this->CI->config->load('ac', true);
 
-        $this->load->model('ac/person_model', 'person');
-        $this->load->model('ac/util_model', 'util');
+        $this->_img_path = $this->CI->config->item('img_path', 'ac');
 
-        $this->img_path = $this->config->item('img_path', 'ac');
-
-        if (! is_dir($this->img_path)) {
-            mkdir($this->img_path, 0755, true);
+        if (! is_dir($this->_img_path)) {
+            mkdir($this->_img_path, 0755, true);
         }
-    }
-
-    /**
-     * Получает фотографию по ID
-     *
-     * @param int $photo_id ID фотографии
-     *
-     * @return object|null Фотография или NULL, если не найдена
-     */
-    public function get(int $photo_id): ?object
-    {
-        $query = $this->db
-            ->where('id', $photo_id)
-            ->get('photo');
-
-        return $query->row();
-    }
-
-    /**
-     * Получает фотографию по хэшу
-     *
-     * @param string $hash Хэш-сумма фотографии
-     *
-     * @return object|null Фотография или NULL, если не найдена
-     */
-    public function get_by_hash(string $hash): ?object
-    {
-        $query = $this->db
-            ->where('hash', $hash)
-            ->get('photo');
-
-        return $query->row();
-    }
-
-    /**
-     * Получает фотографию по человеку
-     *
-     * @param int $person_id ID человека
-     *
-     * @return object|null Фотография или NULL, если не найдена
-     */
-    public function get_by_person(int $person_id): ?object
-    {
-        $query = $this->db
-            ->where('person_id', $person_id)
-            ->get('photo');
-
-        return $query->row();
-    }
-    /**
-     * Устанавливает владельца фотографии
-     *
-     * @param int $photo_id  ID фотографии
-     * @param int $person_id ID человека
-     *
-     * @return int Количество успешных записей
-     */
-    public function set_person(int $photo_id, int $person_id): int
-    {
-        $this->db
-            ->where('id', $photo_id)
-            ->update('photo', ['person_id' => $person_id]);
-
-        return $this->db->affected_rows();
+        if (! is_dir("$this->_img_path/s")) {
+            mkdir("$this->_img_path/s", 0755, true);
+        }
     }
 
     /**
@@ -120,7 +76,7 @@ class Photo_model extends CI_Model
      *
      * @return mixed[] Отчет о сохранении
      */
-    public function save(array $file): array //TODO проверка уже имеющейся фото за человеком
+    public function save_file(array $file): array //TODO проверка уже имеющейся фото за человеком
     {
         $response = [
             'id' => 0,
@@ -155,42 +111,44 @@ class Photo_model extends CI_Model
         if ($response['error'] === '') {
             $time = now('Asia/Yekaterinburg');
 
-            $photo = $this->get_by_hash($file_hash);
+            $this->get_by('hash', $file_hash);
 
-            if (! isset($photo)) {
-                $this->db->insert('photo', ['hash' => $file_hash, 'time' => $time]);
-                $photo = $this->get($this->db->insert_id());
-            } else {
-                $this->db
-                    ->where('hash', $file_hash)
-                    ->update('photo', ['time' => $time]);
-            }
-            $response['id'] = $photo->id;
+            $this->hash = $file_hash;
+            $this->time = $time;
+
+            $this->save();
+
+            $response['id'] = $this->id;
 
             $this->delete_old();
 
             try {
-                $file_path = "$this->img_path/$photo->id.jpg";
+                $file_path = "$this->_img_path/$this->id.jpg";
 
                 move_uploaded_file($file_tmp, $file_path);
                 //сохранение уменьшенной копии
                 $params = [
                     'src_path' => $file_path,
-                    'width' => 320,
-                    'height' => 240,
-                    'dst_path' => "$this->img_path/s/$photo->id.jpg"
+                    'width' => 240,
+                    'height' => 320,
+                    'dst_path' => "$this->_img_path/s/$this->id.jpg"
                 ];
 
-                $this->create_thumbnail($params);
+                $this->_create_thumbnail($params);
 
                 return $response;
             } catch (Exception $e) {
                 $response['error'] = $e;
-                $this->util->save_errors($response['error']);
+
+                $this->CI->load->library('logger');
+                $this->CI->logger->save_errors($response['error']);
+
                 return $response;
             }
         } else {
-            $this->util->save_errors($response['error']);
+            $this->CI->load->library('logger');
+            $this->CI->logger->save_errors($response['error']);
+
             return $response;
         }
     }
@@ -198,35 +156,31 @@ class Photo_model extends CI_Model
     /**
      * Удаляет фото из БД и диска
      *
-     * @param int $photo_id ID фотографии
+     * @param int|null $id ID фотографии
      *
-     * @return bool TRUE - успешно, FALSE - ошибка
+     * @return int Количество успешных удалений
      */
-    public function delete(int $photo_id): bool
+    public function delete_file($id = null): int
     {
-        $photo = $this->get($photo_id);
-
-        if (isset($photo->person_id)) {
-            $this->person->unset_photo($photo->person_id);
-        }
-
-        $this->db->delete('photo', ['id' => $photo->id]);
+        $id = $id ?? $this->id;
 
         try {
-            $file_path = "$this->img_path/$photo->id.jpg";
+            $file_path = "$this->_img_path/$id.jpg";
             if (file_exists($file_path)) {
                 unlink($file_path);
             }
 
-            $file_path = "$this->img_path/s/$photo->id.jpg";
+            $file_path = "$this->_img_path/s/$id.jpg";
             if (file_exists($file_path)) {
                 unlink($file_path);
             }
 
-            return true;
+            return $this->delete($id);
         } catch (Exception $e) {
-            $this->util->save_errors($e);
-            return false;
+            $this->CI->load->library('logger');
+            $this->CI->logger->save_errors($e);
+
+            return 0;
         }
     }
 
@@ -237,14 +191,14 @@ class Photo_model extends CI_Model
      */
     private function delete_old(): int
     {
-        $query =  $this->db
-            ->where('person_id', null)
-            ->where('time <', now('Asia/Yekaterinburg') - 86400)
-            ->get('photo');
+        $query = $this->CI->db->where('person_id', null)
+                              ->where('time <', now('Asia/Yekaterinburg') - 86400)
+                              ->get('photo')
+                              ->result();
 
         $counter = 0;
 
-        foreach ($query->result() as $photo) {
+        foreach ($query as $photo) {
             $counter += $this->delete($photo->id);
         }
 
@@ -263,15 +217,17 @@ class Photo_model extends CI_Model
      *
      * @return bool TRUE - успешно, FALSE - ошибка
      */
-    private function create_thumbnail(array $params): bool
+    private function _create_thumbnail(array $params): bool
     {
         $src_img = imagecreatefromjpeg($params['src_path']);
 
         list($width, $height) = getimagesize($params['src_path']);
+
         $delta = max([
             ($width / $params['width']),
             ($height / $params['height'])
         ]);
+
         $new_width = $width / $delta;
         $new_height = $height / $delta;
 

@@ -2,6 +2,7 @@
 
 /**
  * Class Photos
+ *
  * @property Photo_model $photo
  */
 class Photos extends CI_Controller
@@ -21,33 +22,37 @@ class Photos extends CI_Controller
             header('HTTP/1.1 403 Forbidden');
             exit;
         }
-
-        $this->load->model('ac/photo_model', 'photo');
     }
 
     /**
      * Сохраняет фотографию
+     *
+     * @return void
      */
-    public function save()
+    public function save(): void
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if (isset($_FILES['file'])) {
-                header('Content-Type: application/json');
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
+            $this->ac->load('photo');
 
-                echo json_encode(
-                    $this->photo->save($_FILES['file'])
-                );
-            }
+            header('Content-Type: application/json');
+
+            echo json_encode(
+                $this->photo->save_file($_FILES['file'])
+            );
         }
     }
 
     /**
      * Удаляет фотографию
      *
-     * @param int $photo_id ID фотографии
+     * @param int $id ID фотографии
+     *
+     * @return void
      */
-    public function delete(int $photo_id)
+    public function delete(int $id): void
     {
-        echo $this->photo->delete($photo_id);
+        $this->ac->load('photo');
+
+        echo $this->photo->delete_file($id);
     }
 }
