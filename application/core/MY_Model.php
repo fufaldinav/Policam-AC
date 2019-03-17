@@ -238,7 +238,7 @@ class MY_Model extends CI_Model
      * Вносит новый объект в список, копируя свойства текущего
      *
      */
-    public function list_push(): void
+    public function add_to_list(): void
     {
         $object = new stdClass();
 

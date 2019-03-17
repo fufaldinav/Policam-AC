@@ -179,7 +179,7 @@ class Server_model extends CI_Model
                     $this->event->server_time = $time;
                     $this->event->card_id = $this->card->id;
 
-                    $this->event->list_push();
+                    $this->event->add_to_list();
 
                     $subscriptions = $this->notification->check_subscription($this->card->person_id);
 
