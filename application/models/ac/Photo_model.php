@@ -141,14 +141,14 @@ class Photo_model extends MY_Model
             } catch (Exception $e) {
                 $response['error'] = $e;
 
-                $this->CI->load->model('ac/util_model', 'util');
-                $this->CI->util->save_errors($response['error']);
+                $this->CI->load->library('logger');
+                $this->CI->logger->save_errors($response['error']);
 
                 return $response;
             }
         } else {
-            $this->CI->load->model('ac/util_model', 'util');
-            $this->CI->util->save_errors($response['error']);
+            $this->CI->load->library('logger');
+            $this->CI->logger->save_errors($response['error']);
 
             return $response;
         }
@@ -178,8 +178,8 @@ class Photo_model extends MY_Model
 
             return $this->delete($id);
         } catch (Exception $e) {
-            $this->CI->load->model('ac/util_model', 'util');
-            $this->CI->util->save_errors($e);
+            $this->CI->load->library('logger');
+            $this->CI->logger->save_errors($e);
 
             return 0;
         }

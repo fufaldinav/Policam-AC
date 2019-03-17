@@ -19,35 +19,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
  * Class Util Model
- * @property Ctrl_model $ctrl
- * @property Event_model $event
- * @property Org_model $org
  */
 class Util_model extends CI_Model
 {
-    /**
-     * Каталог с логами
-     *
-     * @var string $log_path
-     */
-    private $log_path;
-
     public function __construct()
     {
         parent::__construct();
 
-        $this->config->load('ac', true);
-
         $this->load->database();
-
-        $this->load->model('ac/org_model', 'org');
-        $this->load->model('ac/ctrl_model', 'ctrl');
-
-        $this->log_path = $this->config->item('log_path', 'ac');
-
-        if (! is_dir($this->log_path)) {
-            mkdir($this->log_path, 0755, true);
-        }
     }
 
     /**
@@ -71,25 +50,6 @@ class Util_model extends CI_Model
         $this->db->insert('users_events', $data);
 
         return $this->db->affected_rows();
-    }
-
-    /**
-     * Сохраняет ошибки
-     *
-     * @param string $err Текст ошибки
-     */
-    public function save_errors(string $err): void
-    {
-        $this->load->helper('file');
-
-        $time = now('Asia/Yekaterinburg');
-        $datestring = '%Y-%m-%d';
-        $date = mdate($datestring, $time);
-        $timestring = '%H:%i:%s';
-        $time = mdate($timestring, $time);
-
-        $path = "$this->log_path/err-$date.txt";
-        write_file($path, "$time $err\n", 'a');
     }
 
     /**
