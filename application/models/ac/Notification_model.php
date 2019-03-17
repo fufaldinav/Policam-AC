@@ -56,27 +56,6 @@ class Notification_model extends CI_Model
     }
 
     /**
-     * Проверяет подписки
-     *
-     * @param int      $person_id ID человека
-     * @param int|null $user_id   ID пользователя
-     *
-     * @return array Список подписок
-     */
-    public function check_subscription(int $person_id, int $user_id = null): array
-    {
-        if (isset($user_id)) {
-            $this->db->where('user_id', $user_id);
-        }
-
-        $query = $this->db
-            ->where('person_id', $person_id)
-            ->get('persons_users');
-
-        return $query->result();
-    }
-
-    /**
      * Генерирует уведомление
      *
      * @param int $person_id ID человека

@@ -23,6 +23,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @property Ctrl_model $ctrl
  * @property Event_model $event
  * @property Notification_model $notification
+ * @property Person_model $person
  * @property Task_model $task
  */
 class Server_model extends CI_Model
@@ -45,6 +46,7 @@ class Server_model extends CI_Model
         $this->load->model('ac/card_model', 'card');
         $this->load->model('ac/ctrl_model', 'ctrl');
         $this->load->model('ac/notification_model', 'notification');
+        $this->load->model('ac/person_model', 'person');
         $this->load->model('ac/task_model', 'task');
 
         $this->log_path = $this->config->item('log_path', 'ac');
@@ -181,9 +183,9 @@ class Server_model extends CI_Model
 
                     $this->event->add_to_list();
 
-                    $subscriptions = $this->notification->check_subscription($this->card->person_id);
+                    $subscribers = $this->person->get_users($this->card->person_id);
 
-                    foreach ($subscriptions as $sub) {
+                    foreach ($subscribers as $sub) {
                         $notification = $this->notification->generate($this->card->person_id, $event->event);
 
                         if (count($notification) > 0) {

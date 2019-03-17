@@ -78,6 +78,13 @@ class Person_model extends MY_Model
      */
     private $divs = [];
 
+    /**
+     * Подписанные пользователи
+     *
+     * @var array
+     */
+    private $users = [];
+
     public function __construct()
     {
         parent::__construct();
@@ -109,21 +116,40 @@ class Person_model extends MY_Model
     /**
      * Получает список ID подразделений человека из БД
      *
-     * @param int|null $person_id ID человека
+     * @param int|null $id ID человека
      *
      * @return int[] Список ID подразделений или текущий список,
-     *               если $person_id не указан
+     *               если $id не указан
      */
-    public function get_divs(int $person_id = null): array
+    public function get_divs(int $id = null): array
     {
-        if (! isset($person_id)) {
+        if (! isset($id)) {
             return $this->divs;
         }
 
         return $this->divs = $this->CI->db->select($this->_foreing_key)
-                                          ->where('person_id', $person_id)
+                                          ->where('person_id', $id)
                                           ->get('persons_divisions')
                                           ->result();
+    }
+
+    /**
+     * Проверяет подписки
+     *
+     * @param int|null $id ID человека
+     *
+     * @return array Список подписок
+     */
+    public function get_users($id = null): array
+    {
+        if (! isset($id)) {
+            return $this->users;
+        }
+
+        return $this->users = $this->db->select('user_id')
+                                       ->where('person_id', $id)
+                                       ->get('persons_users')
+                                       ->result();
     }
 
     /**
