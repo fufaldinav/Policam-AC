@@ -132,5 +132,7 @@ class Dev extends CI_Controller
     public function test()
     {
         header('Content-Type: text/plain');
+
+        $this->load->library('ac');
     }
 }
