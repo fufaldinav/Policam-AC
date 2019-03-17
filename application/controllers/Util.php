@@ -10,6 +10,7 @@
  * @property Org_model $org
  * @property Person_model $person
  * @property Task_model $task
+ * @property Users_events_model $users_events
  * @property Util_model $util
  */
 class Util extends CI_Controller
@@ -33,6 +34,7 @@ class Util extends CI_Controller
         $this->load->model('ac/org_model', 'org');
         $this->load->model('ac/person_model', 'person');
         $this->load->model('ac/task_model', 'task');
+        $this->load->model('ac/users_events_model', 'users_events');
         $this->load->model('ac/util_model', 'util');
     }
 
@@ -99,9 +101,12 @@ class Util extends CI_Controller
         $this->person->get($person_id);
 
         if ($type == 1) {
-            $desc = "{$this->person->id} {$this->person->f} {$this->person->i} forgot card";
+            $this->users_events->user_id = $user_id;
+            $this->users_events->type = $type;
+            $this->users_events->description = "{$this->person->id} {$this->person->f} {$this->person->i} forgot card";
+            $this->users_events->time = now('Asia/Yekaterinburg');
 
-            if ($this->util->add_user_event($user_id, $type, $desc) > 0) {
+            if ($this->users_events->save() > 0) {
                 echo $response;
             }
         } elseif ($type == 2 || $type == 3) {
@@ -128,11 +133,14 @@ class Util extends CI_Controller
 
             $this->card->save_list();
 
-            $desc = "{$this->person->id} {$this->person->f} {$this->person->i} lost/broke card";
+            $this->users_events->user_id = $user_id;
+            $this->users_events->type = $type;
+            $this->users_events->description = "{$this->person->id} {$this->person->f} {$this->person->i} lost/broke card";
+            $this->users_events->time = now('Asia/Yekaterinburg');
 
             $response .= ' ' . lang('and') . ' ' . lang('card_deleted');
 
-            if ($this->util->add_user_event($user_id, $type, $desc) > 0) {
+            if ($this->users_events->save() > 0) {
                 echo $response;
             }
         }

@@ -30,29 +30,6 @@ class Util_model extends CI_Model
     }
 
     /**
-     * Сохраняет полученное от пользователя событие
-     *
-     * @param int    $user_id ID пользователя
-     * @param int    $type    Тип события
-     * @param string $desc    Описание события
-     *
-     * @return int Количество успешных сохранений
-     */
-    public function add_user_event(int $user_id, int $type, string $desc): int
-    {
-        $data =	[
-            'user_id' => $user_id,
-            'type' => $type,
-            'description' => $desc,
-            'time' => now('Asia/Yekaterinburg')
-        ];
-
-        $this->db->insert('users_events', $data);
-
-        return $this->db->affected_rows();
-    }
-
-    /**
      * Парсинг JS. Ищет [PREFIX_VAR] в тексте,
      * заменяет соответственно найденым префиксу и имени переменной
      *
