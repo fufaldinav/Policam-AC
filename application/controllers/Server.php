@@ -10,7 +10,7 @@ class Server extends CI_Controller
     {
         parent::__construct();
 
-        $this->load->model('ac/server_model', 'server');
+        $this->load->library('ac');
     }
 
     /**
@@ -18,9 +18,10 @@ class Server extends CI_Controller
      */
     public function index()
     {
+        $this->load->library('messenger');
         $inc_json_msg = file_get_contents('php://input');
 
-        $out_json_msg = $this->server->handle_msg($inc_json_msg);
+        $out_json_msg = $this->messenger->handle($inc_json_msg);
 
         header('Content-Type: application/json');
 

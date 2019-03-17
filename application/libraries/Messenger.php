@@ -4,7 +4,7 @@
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *
- * Created: 01.03.2019
+ * Created: 17.03.2019
  *
  * Description: Приложение для систем контроля и управления доступом.
  *
@@ -18,7 +18,7 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
- * Class Server Model
+ * Class Messenger
  * @property Card_model $card
  * @property Ctrl_model $ctrl
  * @property Event_model $event
@@ -26,33 +26,23 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @property Person_model $person
  * @property Task_model $task
  */
-class Server_model extends CI_Model
+class Messenger extends Ac
 {
     /**
      * Каталог с логами
      *
-     * @var string $log_path
+     * @var string
      */
-    private $log_path;
+    private $_log_path;
 
     public function __construct()
     {
         parent::__construct();
 
-        $this->config->load('ac', true);
+        $this->_log_path = $this->CI->config->item('log_path', 'ac');
 
-        $this->load->database();
-
-        $this->load->model('ac/card_model', 'card');
-        $this->load->model('ac/ctrl_model', 'ctrl');
-        $this->load->model('ac/notification_model', 'notification');
-        $this->load->model('ac/person_model', 'person');
-        $this->load->model('ac/task_model', 'task');
-
-        $this->log_path = $this->config->item('log_path', 'ac');
-
-        if (! is_dir($this->log_path)) {
-            mkdir($this->log_path, 0755, true);
+        if (! is_dir($this->_log_path)) {
+            mkdir($this->_log_path, 0755, true);
         }
     }
 
@@ -64,11 +54,11 @@ class Server_model extends CI_Model
      * @return string|null Сообщение в формате JSON или NULL,
      *                     если сообщение от неизвестного контроллера
      */
-    public function handle_msg(string $inc_json_msg): ?string
+    public function handle(string $inc_json_msg): ?string
     {
-        $this->load->helper(['date', 'file']);
+        $this->CI->load->helper(['date', 'file']);
 
-        $out_msg = new stdClass();
+        $out_msg = new stdClass;
 
         $time = now('Asia/Yekaterinburg');
 
@@ -90,6 +80,8 @@ class Server_model extends CI_Model
 
         $path = "$this->log_path/inc-$log_date.txt";
 
+        $this->load('ctrl');
+
         if ($this->ctrl->get_by('sn', $sn)) {
             $this->ctrl->last_conn = $time;
 
@@ -101,6 +93,8 @@ class Server_model extends CI_Model
 
             return null;
         }
+
+        $this->load('task');
 
         //чтение json сообщения
         foreach ($inc_msgs as $inc_m) {
@@ -138,6 +132,8 @@ class Server_model extends CI_Model
                 $out_m->operation = 'check_access';
                 $out_m->granted = 0;
 
+                $this->load('card');
+
                 $this->card->get_by('wiegand', $inc_m->card);
 
                 if (isset($this->card->person_id) && $this->card->person_id > 0) {
@@ -162,10 +158,12 @@ class Server_model extends CI_Model
             //события на контроллере
             //
             elseif ($inc_m->operation === 'events') {
-                $this->load->model('ac/event_model', 'event');
+                $this->load('event');
 
                 //чтение событий
                 foreach ($inc_m->events as $event) {
+                    $this->load('card');
+
                     $this->card->get_by('wiegand', $event->card);
 
                     $this->card->wiegand = $event->card;
@@ -183,7 +181,11 @@ class Server_model extends CI_Model
 
                     $this->event->add_to_list();
 
+                    $this->load('person');
+
                     $subscribers = $this->person->get_users($this->card->person_id);
+
+                    $this->load('notification');
 
                     foreach ($subscribers as $sub) {
                         $notification = $this->notification->generate($this->card->person_id, $event->event);
