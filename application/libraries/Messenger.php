@@ -35,6 +35,13 @@ class Messenger extends Ac
      */
     private $_log_path;
 
+    /**
+     * Таймаут одного long poll
+     *
+     * @var int
+     */
+    private $_timeout;
+
     public function __construct()
     {
         parent::__construct();
@@ -44,6 +51,8 @@ class Messenger extends Ac
         if (! is_dir($this->_log_path)) {
             mkdir($this->_log_path, 0755, true);
         }
+
+        $this->_timeout = $this->CI->config->item('long_poll_timeout', 'ac');
     }
 
     /**
@@ -219,5 +228,58 @@ class Messenger extends Ac
         write_file($path, "TYPE: $type || SN: $sn || $out_json_msg\n", 'a');
 
         return $out_json_msg;
+    }
+
+    /**
+     * Реализует long polling
+     *
+     * @param int[]    $event_types Типы событий
+     * @param int|null $time        Время последнего запроса
+     *
+     * @return mixed[] События от контроллера
+     */
+    public function polling(array $event_types, int $time = null): array
+    {
+        $time = $time ?? now('Asia/Yekaterinburg');
+
+        $user_id = $this->CI->ion_auth->user()->row()->id; //TODO
+
+        $this->load('org');
+        $this->load('ctrl');
+
+        $org_list = $this->org->get_list($user_id); //TODO
+
+        $ctrl_list = [];
+
+        foreach ($org_list as $org) {
+            $ctrl_list = array_merge($ctrl_list, $this->ctrl->get_list($org->id));
+        }
+
+        if ($ctrl_list) {
+            session_write_close();
+
+            $this->load('event');
+
+            while ($this->_timeout > 0) {
+                $controllers = [];
+
+                foreach ($ctrl_list as $ctrl) {
+                    $controllers[] = $ctrl->id;
+                }
+
+                $events = $this->event->list_get_last($time, $event_types, $controllers);
+
+                if (count($events) > 0) {
+                    return $events;
+                }
+
+                $this->_timeout--;
+                sleep(1);
+            }
+        } else {
+            return [];
+        }
+
+        return [];
     }
 }

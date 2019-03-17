@@ -2,6 +2,8 @@
 
 /**
  * Class Util
+ * @property Ac $ac
+ * @property Messenger $messenger
  * @property Card_model $card
  * @property Ctrl_model $ctrl
  * @property Div_model $div
@@ -22,6 +24,8 @@ class Util extends CI_Controller
             header("HTTP/1.1 401 Unauthorized");
             exit;
         }
+
+        $this->load->library('ac');
 
         $this->load->model('ac/card_model', 'card');
         $this->load->model('ac/ctrl_model', 'ctrl');
@@ -45,13 +49,15 @@ class Util extends CI_Controller
      */
     public function get_events()
     {
+        $this->load->library('messenger');
+
         $time = $this->input->post('time');
         $events = $this->input->post('events');
 
         header('Content-Type: application/json');
 
         echo json_encode([
-                'msgs' => $this->util->start_polling($time, $events),
+                'msgs' => $this->messenger->polling($events, $time),
                 'time' => now('Asia/Yekaterinburg')
         ]);
     }

@@ -26,13 +26,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Util_model extends CI_Model
 {
     /**
-     * Таймаут одного long poll
-     *
-     * @var int $timeout
-     */
-    private $timeout;
-
-    /**
      * Каталог с логами
      *
      * @var string $log_path
@@ -55,58 +48,6 @@ class Util_model extends CI_Model
         if (! is_dir($this->log_path)) {
             mkdir($this->log_path, 0755, true);
         }
-
-        $this->timeout = $this->config->item('long_poll_timeout', 'ac');
-    }
-
-    /**
-     * Реализует long polling
-     *
-     * @param int|null $time        Время последнего запроса
-     * @param int[]    $event_types Типы событий
-     *
-     * @return mixed[] События от контроллера
-     */
-    public function start_polling(int $time = null, array $event_types): array
-    {
-        $time = $time ?? now('Asia/Yekaterinburg');
-
-        $user_id = $this->ion_auth->user()->row()->id; //TODO
-        $org_list = $this->org->get_list($user_id); //TODO
-
-        $ctrl_list = [];
-
-        foreach ($org_list as $org) {
-            $ctrl_list = array_merge($ctrl_list, $this->ctrl->get_list($org->id));
-        }
-
-        if (count($ctrl_list) > 0) {
-            session_write_close();
-            set_time_limit(0);
-
-            $this->load->model('ac/event_model', 'event');
-
-            while ($this->timeout > 0) {
-                $controllers = [];
-
-                foreach ($ctrl_list as $ctrl) {
-                    $controllers[] = $ctrl->id;
-                }
-
-                $events = $this->event->list_get_last($time, $event_types, $controllers);
-
-                if (count($events) > 0) {
-                    return $events;
-                }
-
-                $this->timeout--;
-                sleep(1);
-            }
-        } else {
-            return [];
-        }
-
-        return [];
     }
 
     /**
