@@ -3,7 +3,8 @@
 /**
  * Class Jsloader
  *
- * @property Util_model $util
+ * @property Ac $ac
+ * @property Jsparser $jsparser
  */
 class Jsloader extends CI_Controller
 {
@@ -11,13 +12,16 @@ class Jsloader extends CI_Controller
     {
         parent::__construct();
 
-        $this->load->model('ac/util_model', 'util');
+        $this->load->library('ac');
+        $this->load->library('jsparser');
     }
 
     /**
      * Принимает файл и отправляет на поиск переменных
      *
      * @param mixed $file
+     *
+     * @return void
      */
     public function file($file = null): void
     {
@@ -26,7 +30,7 @@ class Jsloader extends CI_Controller
             exit;
         }
 
-        $contents = $this->util->parse_js($file);
+        $contents = $this->jsparser->parse($file);
 
         if (! $contents) {
             header('HTTP/1.1 404 Not Found');

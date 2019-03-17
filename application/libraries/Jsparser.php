@@ -4,7 +4,7 @@
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *
- * Created: 02.03.2019
+ * Created: 17.03.2019
  *
  * Description: Приложение для систем контроля и управления доступом.
  *
@@ -18,15 +18,13 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
- * Class Util Model
+ * Class Jsparser
  */
-class Util_model extends CI_Model
+class Jsparser extends Ac
 {
     public function __construct()
     {
         parent::__construct();
-
-        $this->load->database();
     }
 
     /**
@@ -37,9 +35,9 @@ class Util_model extends CI_Model
      *
      * @return string Готовый к выводу в браузер JS
      */
-    public function parse_js(string $file): string
+    public function parse(string $file): string
     {
-        $this->load->helper('file');
+        $this->CI->load->helper('file');
 
         $contents = read_file("./js/ac/$file");
 
@@ -79,14 +77,14 @@ class Util_model extends CI_Model
         if ($prefix === 'ci') {
             switch ($var) {
                 case 'base_url':
-                    $this->load->helper('url');
+                    $this->CI->load->helper('url');
 
                     $value = base_url();
 
                     break;
 
                 case 'site_url':
-                    $this->load->helper('url');
+                    $this->CI->load->helper('url');
 
                     $value = site_url();
 
@@ -97,11 +95,11 @@ class Util_model extends CI_Model
                     break;
             }
         } elseif ($prefix === 'config') {
-            $value = $this->config->item($var, 'ac');
+            $value = $this->CI->config->item($var, 'ac');
         } elseif ($prefix === 'lang') {
-            $this->lang->load('ac');
+            $this->CI->lang->load('ac');
 
-            $this->load->helper('language');
+            $this->CI->load->helper('language');
 
             $value = lang($var);
         }
