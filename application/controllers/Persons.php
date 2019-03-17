@@ -47,20 +47,27 @@ class Persons extends CI_Controller
 
     /**
      * Добавляет нового человека
+     *
+     * @return void
      */
-    public function add()
+    public function add(): void
     {
         if (! $this->ion_auth->in_group(2)) {
             header('HTTP/1.1 403 Forbidden');
             exit;
         }
 
-        $divs = json_decode($this->input->post('divs'));
         $person = json_decode($this->input->post('person'));
+        $cards = json_decode($this->input->post('cards'));
+        $divs = json_decode($this->input->post('divs'));
+        $photos = json_decode($this->input->post('photos'));
 
         $this->person->set($person);
         $this->person->save();
 
+        /*
+        | Подразделения
+        */
         if (count($divs) > 0) {
             foreach ($divs as $div_id) {
                 $this->person->add_to_div($this->person->id, $div_id);
@@ -70,25 +77,29 @@ class Persons extends CI_Controller
             $this->person->add_to_div($this->person->id, current($divs)->id);
         }
 
-        if (isset($this->person->photo)) {
-            $this->photo->set_person($this->person->photo, $this->person->id);
+        /*
+        | Фотографии
+        */
+        foreach ($photos as $photo_id) {
+            $this->photo->get($photo_id);
+            $this->photo->person_id = $this->person->id;
+            $this->photo->save();
         }
 
-        if (count($person->cards) > 0) {
-            $ctrls = $this->ctrl->get_list($this->org->first('id'));
+        /*
+        | Карты
+        */
+        $ctrls = $this->ctrl->get_list($this->org->first('id'));
 
-            foreach ($person->cards as $card_id) {
-                $this->card->get($card_id);
+        foreach ($cards as $card_id) {
+            $this->card->get($card_id);
+            $this->card->person_id = $this->person->id;
+            $this->card->save();
 
-                $this->card->person_id = $this->person->id;
-
-                $this->card->save();
-
-                foreach ($ctrls as $ctrl) {
-                    $this->task->controller_id = $ctrl->id;
-                    $this->task->add_cards([$this->card->wiegand]);
-                    $this->task->save();
-                }
+            foreach ($ctrls as $ctrl) {
+                $this->task->controller_id = $ctrl->id;
+                $this->task->add_cards([$this->card->wiegand]);
+                $this->task->save();
             }
         }
 
@@ -97,8 +108,10 @@ class Persons extends CI_Controller
 
     /**
      * Обновляет информацию о человеке
+     *
+     * @return void
      */
-    public function update()
+    public function update(): void
     {
         if (! $this->ion_auth->in_group(2)) {
             header('HTTP/1.1 403 Forbidden');
@@ -106,32 +119,37 @@ class Persons extends CI_Controller
         }
 
         $person = json_decode($this->input->post('person'));
+        $cards = json_decode($this->input->post('cards'));
+        $photos = json_decode($this->input->post('photos'));
 
         $count = 0;
 
         $this->person->set($person);
-
         $count += $this->person->save();
 
-        if (isset($this->person->photo)) {
-            $count += $this->photo->set_person($this->person->photo, $this->person->id);
+        /*
+        | Фотографии
+        */
+        foreach ($photos as $photo_id) {
+            $this->photo->get($photo_id);
+            $this->photo->person_id = $this->person->id;
+            $count += $this->photo->save();
         }
 
-        if (count($person->cards) > 0) {
-            $ctrls = $this->ctrl->get_list($this->org->first('id'));
+        /*
+        | Карты
+        */
+        $ctrls = $this->ctrl->get_list($this->org->first('id'));
 
-            foreach ($person->cards as $card_id) {
-                $this->card->get($card_id);
+        foreach ($cards as $card_id) {
+            $this->card->get($card_id);
+            $this->card->person_id = $this->person->id;
+            $count += $this->card->save();
 
-                $this->card->person_id = $this->person->id;
-
-                $count += $this->card->save();
-
-                foreach ($ctrls as $ctrl) {
-                    $this->task->controller_id = $ctrl->id;
-                    $this->task->add_cards([$this->card->wiegand]);
-                    $this->task->save();
-                }
+            foreach ($ctrls as $ctrl) {
+                $this->task->controller_id = $ctrl->id;
+                $this->task->add_cards([$this->card->wiegand]);
+                $this->task->save();
             }
         }
 
@@ -142,8 +160,10 @@ class Persons extends CI_Controller
      * Удаляет человека
      *
      * @param int $person_id ID человека
+     *
+     * @return void
      */
-    public function delete(int $person_id)
+    public function delete(int $person_id): void
     {
         if (! $this->ion_auth->in_group(2)) {
             header('HTTP/1.1 403 Forbidden');
@@ -152,28 +172,36 @@ class Persons extends CI_Controller
 
         $this->card->get_list($person_id);
 
-        if (count($this->card->get_list()) > 0) { //TODO стилизовать/избавиться от $this->card->get_list()
-            $ctrls = $this->ctrl->get_list($this->org->first('id'));
+        /*
+        | Карты
+        */
+        $ctrls = $this->ctrl->get_list($this->org->first('id'));
 
-            foreach ($this->card->get_list() as &$card) {
-                $card->person_id = 0;
+        foreach ($this->card->get_list() as &$card) {
+            $card->person_id = 0;
 
-                foreach ($ctrls as $ctrl) {
-                    $this->task->controller_id = $ctrl->id;
-                    $this->task->del_cards([$card->wiegand]);
-                    $this->task->save();
-                }
+            foreach ($ctrls as $ctrl) {
+                $this->task->controller_id = $ctrl->id;
+                $this->task->del_cards([$card->wiegand]);
+                $this->task->save();
             }
-            unset($card);
+        }
+        unset($card);
 
-            $this->card->save_list();
+        $this->card->save_list();
+
+        /*
+        | Фотографии
+        */
+        $photos = $this->photo->get_list($person_id);
+
+        foreach ($photos as $photo) {
+            $this->photo->delete_file($photo->id);
         }
 
-        $photo = $this->photo->get_by_person($person_id);
-        if (isset($photo)) {
-            $this->photo->delete($photo->id);
-        }
-
+        /*
+        | Подразделения
+        */
         $this->person->del_from_div($person_id);
 
         echo $this->person->delete($person_id);
@@ -183,22 +211,29 @@ class Persons extends CI_Controller
      * Получает человека
      *
      * @param int $person_id ID человека
+     *
+     * @return void
      */
-    public function get(int $person_id)
+    public function get(int $person_id): void
     {
         header('Content-Type: application/json');
 
         $this->person->get($person_id);
 
-        echo json_encode($this->person);
+        echo json_encode([
+          'person' => $this->person,
+          'photos' => $this->photo->get_list($person_id)
+        ]);
     }
 
     /**
      * Получает человека по карте
      *
      * @param int $card_id ID карты
+     *
+     * @return void
      */
-    public function get_by_card(int $card_id)
+    public function get_by_card(int $card_id): void
     {
         $this->card->get($card_id);
 
@@ -213,15 +248,20 @@ class Persons extends CI_Controller
             $div = $this->div;
         }
 
-        echo json_encode($this->person);
+        echo json_encode([
+          'person' => $this->person,
+          'photos' => $this->photo->get_list($person_id)
+        ]);
     }
 
     /**
      * Получает людей по подразделению
      *
      * @param int $div_id ID подразделения
+     *
+     * @return void
      */
-    public function get_list(int $div_id)
+    public function get_list(int $div_id): void
     {
         header('Content-Type: application/json');
 

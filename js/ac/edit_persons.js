@@ -5,32 +5,34 @@ let person = {
 	'o': null,
 	'birthday': null,
 	'address': null,
-	'phone': null,
-	'photo': null,
-	'cards': []
+	'phone': null
 };
+
+let cards = [],
+	photos = [];
 
 //обновление информации пользователя в БД
 function updatePersonInfo() {
 	let checkValidity = true;
-	Object.keys(person).map(function(k) {
+
+	for (let k in person) {
 		let elem = document.getElementById(k);
 		if (elem.required && elem.value === ``) {
 			elem.classList.add(`no-data`);
 			checkValidity = false;
 		}
-		if (k === `photo`) {
-			//TODO
-		} else if (k === `cards`) {
-			if (elem.value > 0) {
-				person[k].push(elem.value);
-			}
-		} else if (elem.value) {
+		if (elem.value) {
 			person[k] = elem.value;
 		} else {
 			person[k] = null;
 		}
-	});
+	}
+
+	let elem = document.getElementById(`cards`);
+	if (elem.value > 0) {
+		cards.push(elem.value);
+	}
+
 	if (!checkValidity) {
 		alert(`Введены не все данные`); //TODO перевод
 	} else {
@@ -38,7 +40,9 @@ function updatePersonInfo() {
 			url: `[ci_site_url]persons/update`,
 			type: `POST`,
 			data: {
-				person: JSON.stringify(person)
+				cards: JSON.stringify(cards),
+				person: JSON.stringify(person),
+				photos: JSON.stringify(photos)
 			},
 			success: function(res) {
 				if (res > 0) {
@@ -65,31 +69,24 @@ function deletePerson() {
 		type: `GET`,
 		success: function(res) {
 			if (res > 0) {
-				document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/0.jpg)';
 				let currentElement = document.getElementById(`person${person.id}`);
 				let parentElement = currentElement.parentElement; //родитель этого элемента
 				currentElement.remove(); //удаляем элемент
-        let lastElement = parentElement.lastElementChild;
-        if (lastElement !== null) {
-          lastElement.classList.add(`tree-is-last`); //устанавливаем последний элемент в ветке
-        }
-				Object.keys(person).map(function(k) { //перебор элементов формы
+				let lastElement = parentElement.lastElementChild;
+				if (lastElement !== null) {
+					lastElement.classList.add(`tree-is-last`); //устанавливаем последний элемент в ветке
+				}
+
+				for (let k in person) {
 					let elem = document.getElementById(k);
-					if (k === `photo`) { //скрыть поле загрузки фото
-						elem.hidden = true;
-						person[k] = null;
-					} else if (k === `cards`) {
-						elem.value = 0;
-						person[k] = [];
-					} else { //запретить редактирование полей
-						elem.value = null;
-						elem.readOnly = true;
-						person[k] = null;
-					}
-				});
-				document.getElementById(`person_cards`).innerHTML = ``; //очистка списка привязанных карт
-				document.getElementById(`unknown_cards`).hidden = false; //отобразим меню с неизвестными картами
-				document.getElementById(`cards`).disabled = true; //но запретим редактирование
+					elem.value = null;
+					elem.readOnly = true;
+					person[k] = null;
+				}
+
+				photos = [];
+				document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/0.jpg)';
+				document.getElementById(`photo`).hidden = true;
 				document.getElementById(`photo`).onchange = function() {
 					return false;
 				};
@@ -97,6 +94,13 @@ function deletePerson() {
 					return false;
 				};
 				document.getElementById(`photo_del`).hidden = true;
+
+				cards = [];
+				document.getElementById(`cards`).value = 0;
+				document.getElementById(`person_cards`).innerHTML = ``; //очистка списка привязанных карт
+				document.getElementById(`unknown_cards`).hidden = false; //отобразим меню с неизвестными картами
+				document.getElementById(`cards`).disabled = true; //но запретим редактирование
+
 				document.getElementById(`save`).onclick = function() {
 					return false;
 				};
@@ -121,36 +125,36 @@ function getPersonInfo(person_id) {
 		type: `GET`,
 		success: function(data) {
 			if (data) {
-				Object.keys(data).map(function(k) { //перебор полученных данных
-					person[k] = data[k];
-					if (document.getElementById(k)) { //существует ли элемент с id = свойство объекта, т.к. могут быть "посторонние" данные
-						if (k == `photo`) { //отобразим поле загрузки фото
-							document.getElementById(k).value = null;
-						} else { //в остальные поля запишем данные и разрешим для записи
-							document.getElementById(k).value = data[k];
-							document.getElementById(k).readOnly = false;
-						}
-					}
-				});
-				let photo = document.getElementById(`photo_bg`);
-				if (!data.photo) {
-					data.photo = `0`;
+				for (let k in data.person) {
+					person[k] = data.person[k];
+					document.getElementById(k).value = data.person[k];
+					document.getElementById(k).readOnly = false;
+				}
+
+				let photo_id = 0;
+				photos = [];
+				document.getElementById(`photo`).value = null;
+				if (data.photos.length === 0) {
 					document.getElementById(`photo`).hidden = false;
 					document.getElementById(`photo_del`).hidden = true;
 					document.getElementById(`photo_del`).onclick = function() {
 						return false;
 					};
 				} else {
+					photo_id = data.photos[0].id;
+					photos.unshift(photo_id);
 					document.getElementById(`photo`).hidden = true;
 					document.getElementById(`photo_del`).hidden = false;
 					document.getElementById(`photo_del`).onclick = deletePhoto;
 				}
-				photo.style.backgroundImage = 'url(/img/ac/s/' + data.photo + '.jpg)';
+				document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/' + photo_id + '.jpg)';
 				document.getElementById(`photo`).onchange = function() {
 					handleFiles(this.files);
 				};
+
 				document.getElementById(`save`).onclick = updatePersonInfo;
 				document.getElementById(`delete`).onclick = deletePerson;
+
 				getCardsByPerson(person.id);
 			} else {
 				alert(`Пустой ответ от сервера`); //TODO перевод
@@ -168,15 +172,15 @@ function getCardsByPerson(person_id) {
 		url: `[ci_site_url]cards/get_by_person/${person_id}`,
 		type: `GET`,
 		success: function(data) {
-			person.cards = [];
+			cards = [];
 			let person_cards = document.getElementById(`person_cards`);
 			person_cards.innerHTML = ``;
 			if (data.length > 0) {
 				document.getElementById(`unknown_cards`).hidden = true; //спрячем неизвестные карты
 				document.getElementById(`cards`).disabled = true; //отключим меню неизвеснтых карт
-				data.forEach(function(c) { //добавим каждую карту в список привязанных
-					person_cards.innerHTML += `<div id="card${c.id}">${c.wiegand} <button type="button" onclick="delCard(${c.id});">Отвязать</button><br /></div>`
-				});
+				for (let k in data) { //добавим каждую карту в список привязанных
+					person_cards.innerHTML += `<div id="card${data[k].id}">${data[k].wiegand} <button type="button" onclick="delCard(${data[k].id});">Отвязать</button><br /></div>`
+				}
 				let li = document.getElementById(`person${person.id}`); //добавим пользователю метку наличия ключей
 				let a = li.querySelector(`.person`);
 				a.classList.remove(`no-card`);

@@ -72,13 +72,6 @@ class Person_model extends MY_Model
     public $phone;
 
     /**
-     * Фотография
-     *
-     * @var string
-     */
-    public $photo;
-
-    /**
      * Подразделения
      *
      * @var array
@@ -166,26 +159,6 @@ class Person_model extends MY_Model
         }
         $this->CI->db->where('person_id', $person_id)
                      ->delete('persons_divisions');
-
-        return $this->CI->db->affected_rows();
-    }
-
-    /**
-     * Удаляет информацию о фотографии по ID человека, если ID не установлено,
-     * то удаляет по текущему человеку
-     *
-     * @param int|null $person_id ID человека
-     *
-     * @return int Количество успешных удалений
-     */
-    public function unset_photo(int $person_id = null): int
-    {
-        if (! isset($person_id)) {
-            unset($this->photo);
-        }
-
-        $this->CI->db->where($this->_primary_key, $person_id ?? $this->id)
-                     ->update($this->_table, ['photo_id' => null]);
 
         return $this->CI->db->affected_rows();
     }

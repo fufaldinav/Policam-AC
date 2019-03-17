@@ -11,12 +11,12 @@ function sendError(message) {
 
 //получим список неизвестных карт (брелоков) из БД
 function getCards(id) {
-	let cards = document.getElementById(`cards`);
 	$.ajax({
 		url: `[ci_site_url]cards/get_list`,
 		type: `GET`,
 		success: function(data) {
 			if (data) {
+				let cards = document.getElementById(`cards`);
 				while (cards.length > 0) { //удалить все элементы из меню карт
 					cards.remove(cards.length - 1);
 				}
@@ -64,7 +64,7 @@ function handleFiles(files) {
 			if (data) {
 				if (data.error === ``) {
 					document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/' + data.id + '.jpg)';
-					person.photo = data.id;
+					photos.unshift(data.id);
 					document.getElementById(`photo`).hidden = true;
 					document.getElementById(`photo_del`).hidden = false;
 					document.getElementById(`photo_del`).onclick = deletePhoto;
@@ -88,7 +88,7 @@ function deletePhoto() {
 		return;
 	}
 	$.ajax({
-		url: `[ci_site_url]photos/delete/${person.photo}`,
+		url: `[ci_site_url]photos/delete/${photos.shift()}`,
 		type: `GET`,
 		success: function(res) {
 			if (res) {
@@ -99,7 +99,6 @@ function deletePhoto() {
 				};
 				document.getElementById(`photo`).hidden = false;
 				document.getElementById(`photo`).value = null;
-				person.photo = null;
 			} else {
 				alert(`Неизвестная ошибка`); //TODO перевод
 			}

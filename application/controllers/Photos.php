@@ -27,27 +27,29 @@ class Photos extends CI_Controller
 
     /**
      * Сохраняет фотографию
+     *
+     * @return void
      */
-    public function save()
+    public function save(): void
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if (isset($_FILES['file'])) {
-                header('Content-Type: application/json');
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
+            header('Content-Type: application/json');
 
-                echo json_encode(
-                    $this->photo->save($_FILES['file'])
-                );
-            }
+            echo json_encode(
+                $this->photo->save_file($_FILES['file'])
+            );
         }
     }
 
     /**
      * Удаляет фотографию
      *
-     * @param int $photo_id ID фотографии
+     * @param int $id ID фотографии
+     *
+     * @return void
      */
-    public function delete(int $photo_id)
+    public function delete(int $id): void
     {
-        echo $this->photo->delete($photo_id);
+        echo $this->photo->delete_file($id);
     }
 }
