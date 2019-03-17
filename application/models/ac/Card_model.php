@@ -50,6 +50,13 @@ class Card_model extends MY_Model
      */
     public $person_id = 0;
 
+    /**
+     * Признак активированности карты
+     *
+     * @var int
+     */
+    public $active = 1;
+
     public function __construct()
     {
         parent::__construct();
