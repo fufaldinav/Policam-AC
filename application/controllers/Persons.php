@@ -26,6 +26,8 @@ class Persons extends CI_Controller
     {
         parent::__construct();
 
+        $this->lang->load('ac');
+
         $this->load->library('ion_auth');
 
         if (! $this->ion_auth->logged_in()) {
@@ -41,16 +43,125 @@ class Persons extends CI_Controller
         $this->load->model('ac/photo_model', 'photo');
         $this->load->model('ac/task_model', 'task');
 
+        $this->load->helper('language');
+
         $this->user_id = $this->ion_auth->user()->row()->id;
         $this->org->get_list($this->user_id); //TODO
     }
 
     /**
-     * Добавляет нового человека
+     * Добавление человека
      *
      * @return void
      */
     public function add(): void
+    {
+        if (! $this->ion_auth->in_group(2)) {
+            redirect('/');
+        }
+
+        $this->load->helper('form');
+
+        /*
+         | Подразделения
+         */
+        $data = [
+             'divs' => $this->div->get_list($this->org->first('id'))
+         ];
+
+        /*
+         | Карты
+         */
+        $data['cards'] = [];
+        $data['cards_attr'] = 'id="cards"';
+
+        $cards = $this->card->get_list(0);
+        ;
+
+        if (count($cards) === 0) {
+            $data['cards'][] = lang('missing');
+        } else {
+            $data['cards'][] = lang('not_selected');
+            foreach ($cards as $card) {
+                $data['cards'][$card->id] = $card->wiegand;
+            }
+        }
+
+        $header = [
+            'org_name' => $this->org->first('name') ?? lang('missing'),
+            'css_list' => ['ac'],
+            'js_list' => ['add_person', 'events', 'main']
+        ];
+
+        $this->load->view('ac/header', $header);
+        $this->load->view('ac/add_person', $data);
+        $this->load->view('ac/footer');
+    }
+
+    /**
+     * Редактирование людей
+     *
+     * @return void
+     */
+    public function edit(): void
+    {
+        if (! $this->ion_auth->in_group(2)) {
+            redirect('/');
+        }
+
+        $this->load->helper('form');
+
+        /*
+         | Подразделения
+         */
+        $data = [
+            'divs' => $this->div->get_list($this->org->first('id'))
+        ];
+
+        foreach ($data['divs'] as &$div) {
+            $div->persons = $this->person->get_list($div->id);
+
+            foreach ($div->persons as &$person) {
+                $person->cards = $this->card->get_list($person->id);
+            }
+            unset($person);
+        }
+        unset($div);
+
+        /*
+         | Карты
+         */
+        $data['cards'] = [];
+        $data['cards_attr'] = 'id="cards" disabled';
+
+        $cards = $this->card->get_list(0);
+
+        if (count($cards) === 0) {
+            $data['cards'][] = lang('missing');
+        } else {
+            $data['cards'][] = lang('not_selected');
+            foreach ($cards as $card) {
+                $data['cards'][$card->id] = $card->wiegand;
+            }
+        }
+
+        $header = [
+            'org_name' => $this->org->first('name') ?? lang('missing'),
+            'css_list' => ['ac', 'edit_persons'],
+            'js_list' => ['main', 'events', 'edit_persons', 'tree']
+        ];
+
+        $this->load->view('ac/header', $header);
+        $this->load->view('ac/edit_persons', $data);
+        $this->load->view('ac/footer');
+    }
+
+    /**
+     * Сохраняет нового человека
+     *
+     * @return void
+     */
+    public function save(): void
     {
         if (! $this->ion_auth->in_group(2)) {
             header('HTTP/1.1 403 Forbidden');

@@ -22,6 +22,8 @@ class Divisions extends CI_Controller
     {
         parent::__construct();
 
+        $this->lang->load('ac');
+
         $this->load->library('ion_auth');
 
         if (! $this->ion_auth->logged_in()) {
@@ -33,8 +35,39 @@ class Divisions extends CI_Controller
         $this->load->model('ac/org_model', 'org');
         $this->load->model('ac/person_model', 'person');
 
+        $this->load->helper('language');
+
         $this->user_id = $this->ion_auth->user()->row()->id;
         $this->org->get_list($this->user_id); //TODO
+    }
+
+    /**
+     * Управление классами
+     *
+     * @return void
+     */
+    public function classes(): void
+    {
+        if (! $this->ion_auth->in_group(2)) {
+            redirect('observ');
+        }
+
+        $this->load->library('table');
+
+        $data = [
+            'org_id' => $this->org->first('id'),
+            'divs' => $this->div->get_list($this->org->first('id'))
+        ];
+
+        $header = [
+            'org_name' => $this->org->first('name') ?? lang('missing'),
+            'css_list' => ['ac', 'tables'],
+            'js_list' => ['classes']
+        ];
+
+        $this->load->view('ac/header', $header);
+        $this->load->view('ac/classes', $data);
+        $this->load->view('ac/footer');
     }
 
     /**

@@ -50,7 +50,7 @@ function savePersonInfo() {
 		alert(`Введены не все данные`); //TODO перевод
 	} else {
 		$.ajax({
-			url: `[ci_site_url]persons/add`,
+			url: `[ci_site_url]persons/save`,
 			type: `POST`,
 			data: {
 				cards: JSON.stringify(cards),
