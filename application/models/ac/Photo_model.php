@@ -19,7 +19,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
  * Class Photo Model
- * @property Util_model $util
  */
 class Photo_model extends MY_Model
 {

@@ -2,7 +2,7 @@
 
 /**
  * Class Util
- * @property Ac $ac
+ *
  * @property Messenger $messenger
  * @property Card_model $card
  * @property Ctrl_model $ctrl
@@ -11,7 +11,6 @@
  * @property Person_model $person
  * @property Task_model $task
  * @property Users_events_model $users_events
- * @property Util_model $util
  */
 class Util extends CI_Controller
 {
@@ -25,17 +24,6 @@ class Util extends CI_Controller
             header("HTTP/1.1 401 Unauthorized");
             exit;
         }
-
-        $this->load->library('ac');
-
-        $this->load->model('ac/card_model', 'card');
-        $this->load->model('ac/ctrl_model', 'ctrl');
-        $this->load->model('ac/div_model', 'div');
-        $this->load->model('ac/org_model', 'org');
-        $this->load->model('ac/person_model', 'person');
-        $this->load->model('ac/task_model', 'task');
-        $this->load->model('ac/users_events_model', 'users_events');
-        $this->load->model('ac/util_model', 'util');
     }
 
     /**
@@ -83,7 +71,8 @@ class Util extends CI_Controller
      */
     public function card_problem()
     {
-        $this->lang->load('ac');
+        $this->ac->load('person');
+        $this->ac->load('users_events');
 
         $this->load->helper('language');
 
@@ -110,6 +99,12 @@ class Util extends CI_Controller
                 echo $response;
             }
         } elseif ($type == 2 || $type == 3) {
+            $this->ac->load('card');
+            $this->ac->load('ctrl');
+            $this->ac->load('div');
+            $this->ac->load('org');
+            $this->ac->load('task');
+
             $this->card->get_list($this->person->id);
 
             if (count($this->card->get_list()) === 0) {

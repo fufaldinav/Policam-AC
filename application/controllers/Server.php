@@ -2,15 +2,14 @@
 
 /**
  * Class Server
- * @property Server_model $server
+ *
+ * @property Messenger_model $messenger
  */
 class Server extends CI_Controller
 {
     public function __construct()
     {
         parent::__construct();
-
-        $this->load->library('ac');
     }
 
     /**

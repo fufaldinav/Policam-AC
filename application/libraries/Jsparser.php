@@ -33,16 +33,16 @@ class Jsparser extends Ac
      *
      * @param string $file Файл JS
      *
-     * @return string Готовый к выводу в браузер JS
+     * @return string|null Готовый к выводу в браузер JS
      */
-    public function parse(string $file): string
+    public function parse(string $file): ?string
     {
         $this->CI->load->helper('file');
 
         $contents = read_file("./js/ac/$file");
 
         if (! $contents) {
-            return false;
+            return null;
         }
 
         //строка вида [ci_VAR], [config_VAR] или [lang_VAR]

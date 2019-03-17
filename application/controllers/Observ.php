@@ -9,7 +9,7 @@
 class Observ extends CI_Controller
 {
     /**
-     * @var int $user_id
+     * @var int
      */
     private $_user_id;
 
@@ -17,21 +17,13 @@ class Observ extends CI_Controller
     {
         parent::__construct();
 
-        $this->lang->load('ac');
-
         $this->load->library('ion_auth');
 
         if (! $this->ion_auth->logged_in()) {
             redirect('auth/login');
         }
 
-        $this->load->model('ac/div_model', 'div');
-        $this->load->model('ac/org_model', 'org');
-
-        $this->load->helper('language');
-
         $this->_user_id = $this->ion_auth->user()->row()->id;
-        $this->org->get_list($this->_user_id); //TODO
     }
 
     /**
@@ -41,6 +33,12 @@ class Observ extends CI_Controller
      */
     public function index(): void
     {
+        $this->ac->load('div');
+        $this->ac->load('org');
+
+        $this->load->helper('language');
+
+        $this->org->get_list($this->_user_id); //TODO
         /*
          | Подразделения
          */

@@ -2,6 +2,7 @@
 
 /**
  * Class Divisions
+ *
  * @property Div_model $div
  * @property Org_model $org
  * @property Person_model $person
@@ -9,36 +10,17 @@
 class Divisions extends CI_Controller
 {
     /**
-     * @var int $user_id
+     * @var int
      */
-    private $user_id;
-
-    /**
-     * @var mixed[] $orgs
-     */
-    private $orgs;
+    private $_user_id;
 
     public function __construct()
     {
         parent::__construct();
 
-        $this->lang->load('ac');
-
         $this->load->library('ion_auth');
 
-        if (! $this->ion_auth->logged_in()) {
-            header("HTTP/1.1 401 Unauthorized");
-            exit;
-        }
-
-        $this->load->model('ac/div_model', 'div');
-        $this->load->model('ac/org_model', 'org');
-        $this->load->model('ac/person_model', 'person');
-
-        $this->load->helper('language');
-
-        $this->user_id = $this->ion_auth->user()->row()->id;
-        $this->org->get_list($this->user_id); //TODO
+        $this->_user_id = $this->ion_auth->user()->row()->id;
     }
 
     /**
@@ -48,11 +30,22 @@ class Divisions extends CI_Controller
      */
     public function classes(): void
     {
-        if (! $this->ion_auth->in_group(2)) {
-            redirect('observ');
+        if (! $this->ion_auth->logged_in()) {
+            redirect('auth/login');
         }
 
+        if (! $this->ion_auth->in_group(2)) {
+            redirect('/');
+        }
+
+        $this->ac->load('div');
+        $this->ac->load('org');
+
         $this->load->library('table');
+
+        $this->load->helper('language');
+
+        $this->org->get_list($this->_user_id); //TODO
 
         $data = [
             'org_id' => $this->org->first('id'),
@@ -72,12 +65,28 @@ class Divisions extends CI_Controller
 
     /**
      * Получает подразделения текущей организации
+     *
+     * @return void
      */
-    public function get_list()
+    public function get_list(): void
     {
+        if (! $this->ion_auth->logged_in()) {
+            header("HTTP/1.1 401 Unauthorized");
+            exit;
+        }
+
+        if (! $this->ion_auth->in_group(2)) {
+            header('HTTP/1.1 403 Forbidden');
+            exit;
+        }
+
+        $this->ac->load('div');
+        $this->ac->load('org');
+
         $orgs = $this->org->get_list();
 
         $divs = [];
+
         foreach ($orgs as $org) {
             $divs = array_merge($divs, $this->div->get_list($org->id));
         }
@@ -89,13 +98,22 @@ class Divisions extends CI_Controller
 
     /**
      * Добавляет новое подразделение
+     *
+     * @return void
      */
-    public function add()
+    public function add(): void
     {
+        if (! $this->ion_auth->logged_in()) {
+            header("HTTP/1.1 401 Unauthorized");
+            exit;
+        }
+
         if (! $this->ion_auth->in_group(2)) {
             header('HTTP/1.1 403 Forbidden');
             exit;
         }
+
+        $this->ac->load('div');
 
         $div = json_decode($this->input->post('div'));
 
@@ -113,16 +131,29 @@ class Divisions extends CI_Controller
      * Удаляет подразделение
      *
      * @param int $div_id ID подразделения
+     *
+     * @return void
      */
-    public function delete(int $div_id)
+    public function delete(int $div_id): void
     {
+        if (! $this->ion_auth->logged_in()) {
+            header("HTTP/1.1 401 Unauthorized");
+            exit;
+        }
+
         if (! $this->ion_auth->in_group(2)) {
             header('HTTP/1.1 403 Forbidden');
             exit;
         }
 
+        $this->ac->load('div');
+        $this->ac->load('org');
+        $this->ac->load('person');
+
         //Получаем всех людей в удаляемом подразделении
         $persons = $this->person->get_list($div_id);
+
+        $this->org->get_list($this->_user_id); //TODO
 
         //"Пустое" подразделение
         $new_div = $this->div->get_list_by_type($this->org->first('id'));

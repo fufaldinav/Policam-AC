@@ -2,24 +2,24 @@
 
 /**
  * Class Dev
+ *
  * @property Card_model $card
  * @property Ctrl_model $ctrl
  * @property Div_model $div
- * @property Notification_model $notification
+ * @property Event_model $event
  * @property Org_model $org
  * @property Person_model $person
  * @property Photo_model $photo
- * @property Server_model $server
  * @property Task_model $task
  * @property Token_model $token
- * @property Util_model $util
+ * @property Users_events_model $users_events
  */
 class Dev extends CI_Controller
 {
     /**
-     * @var int $user_id
+     * @var int
      */
-    private $user_id;
+    private $_user_id;
 
     /**
      * @var array $orgs
@@ -45,37 +45,41 @@ class Dev extends CI_Controller
     {
         parent::__construct();
 
-        $this->lang->load('ac');
-
         $this->load->library('ion_auth');
 
         if (! $this->ion_auth->logged_in()) {
             redirect('auth/login');
         }
 
-        $this->load->model('ac/card_model', 'card');
-        $this->load->model('ac/ctrl_model', 'ctrl');
-        $this->load->model('ac/div_model', 'div');
-        $this->load->model('ac/notification_model', 'notification');
-        $this->load->model('ac/org_model', 'org');
-        $this->load->model('ac/person_model', 'person');
-        $this->load->model('ac/photo_model', 'photo');
-        $this->load->model('ac/server_model', 'server');
-        $this->load->model('ac/taskmodel', 'task');
-        $this->load->model('ac/token_model', 'token');
-        $this->load->model('ac/util_model', 'util');
+        if (! $this->ion_auth->is_admin()) {
+            header('HTTP/1.1 403 Forbidden');
+            exit;
+        }
+
+        $this->ac->load('card');
+        $this->ac->load('ctrl');
+        $this->ac->load('div');
+        $this->ac->load('event');
+        $this->ac->load('org');
+        $this->ac->load('person');
+        $this->ac->load('photo');
+        $this->ac->load('task');
+        $this->ac->load('token');
+        $this->ac->load('users_events');
 
         $this->load->helper('language');
 
-        $this->user_id = $this->ion_auth->user()->row()->id;
+        $this->_user_id = $this->ion_auth->user()->row()->id;
     }
 
     /**
      * Главная
+     *
+     * @return void
      */
-    public function index()
+    public function index(): void
     {
-        $this->orgs = $this->org->get_list($this->user_id);
+        $this->orgs = $this->org->get_list($this->_user_id);
 
         foreach ($this->orgs as $org) {
             $this->divs = array_merge(
@@ -106,8 +110,6 @@ class Dev extends CI_Controller
 
         $this->person->get(1982);
 
-        //var_dump($person);
-
         $divs = $this->person->get_divs($this->person->id);
 
         foreach ($divs as $div) {
@@ -117,22 +119,25 @@ class Dev extends CI_Controller
             $users = $this->org->get_users($this->org->id);
 
             foreach ($users as $user) {
-                if ($user->user_id === $this->user_id) {
+                if ($user->user_id === $this->_user_id) {
                     echo "TRUE <br />";
                 } else {
                     echo "FALSE <br />";
                 }
             }
-            if (in_array($this->user_id, $users)) {
+            if (in_array($this->_user_id, $users)) {
                 echo "TRUE";
             }
         }
     }
 
-    public function test()
+    /**
+     * Тест
+     *
+     * @return void
+     */
+    public function test(): void
     {
         header('Content-Type: text/plain');
-
-        $this->load->library('ac');
     }
 }
