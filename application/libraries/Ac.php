@@ -39,6 +39,8 @@ class Ac
     public function __construct()
     {
         $this->CI =& get_instance();
+
+        $this->CI->config->load('ac', true);
     }
 
     public function __get($name)
@@ -63,5 +65,20 @@ class Ac
     public function __unset($name)
     {
         unset($this->_data[$name]);
+    }
+
+    /**
+     * Упрощенная загрузка моделей
+     *
+     * @param string $model Имя модели
+     * @param string $name  Альтернативное имя
+     */
+    public function load($model, $name = null)
+    {
+        $name = $name ?? $model;
+
+        $this->CI->load->model("ac/{$model}_model", $name);
+
+        $this->$name = $this->CI->$name;
     }
 }
