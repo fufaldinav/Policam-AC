@@ -423,7 +423,7 @@ class Persons extends CI_Controller
 
         echo json_encode([
           'person' => $this->person,
-          'photos' => $this->photo->get_list($person_id)
+          'photos' => $this->photo->get_list($this->person->id)
         ]);
     }
 
