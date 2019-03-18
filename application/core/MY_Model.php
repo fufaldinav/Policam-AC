@@ -163,14 +163,16 @@ class MY_Model extends CI_Model
         }
 
         return $this->_list = $this->CI->db->where($this->_foreing_key, $item_id)
-                                          ->get($this->_table)
-                                          ->result();
+                                           ->get($this->_table)
+                                           ->result();
     }
 
     /**
      * Устанавливает свойства текущему объекту
      *
      * @param array|object $object Объект или массив с набором свойств
+     *
+     * @return void
      */
     public function set($object): void
     {
@@ -217,13 +219,13 @@ class MY_Model extends CI_Model
             if (isset($object->id)) {
                 $update_data[] = $object;
             } else {
-                $count += $this->CI->db->insert($this->_table, $this);
+                $count += $this->CI->db->insert($this->_table, $object);
 
                 $object->id = $this->CI->db->insert_id();
             }
         }
 
-        if (count($update_data) > 0) {
+        if ($update_data) {
             $count += $this->CI->db->update_batch(
                 $this->_table,
                 $update_data,
@@ -237,10 +239,11 @@ class MY_Model extends CI_Model
     /**
      * Вносит новый объект в список, копируя свойства текущего
      *
+     * @return void
      */
     public function add_to_list(): void
     {
-        $object = new stdClass();
+        $object = new stdClass;
 
         foreach ($this as $key => $value) {
             $rp = new ReflectionProperty($this, $key);

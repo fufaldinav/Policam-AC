@@ -56,7 +56,7 @@ class Logger extends Ac
      */
     public function save_errors(string $err): void
     {
-        $this->load->helper('file');
+        $this->CI->load->helper('file');
 
         $time = now('Asia/Yekaterinburg');
         $datestring = '%Y-%m-%d';
