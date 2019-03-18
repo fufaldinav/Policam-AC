@@ -41,6 +41,8 @@ class Ac
         $this->CI =& get_instance();
 
         $this->CI->config->load('ac', true);
+
+        include APPPATH . 'third_party/MicroORM.php';
     }
 
     public function __get($name)
@@ -80,5 +82,15 @@ class Ac
         $this->CI->load->model("ac/{$model}_model", $name);
 
         $this->$name = $this->CI->$name;
+    }
+
+    /**
+     * Упрощенная загрузка классов
+     *
+     * @param string $class Имя модели
+     */
+    public function class($class)
+    {
+        include APPPATH . "third_party/$class.php";
     }
 }

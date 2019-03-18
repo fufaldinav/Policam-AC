@@ -51,10 +51,10 @@ class Dev extends CI_Controller
             redirect('auth/login');
         }
 
-        if (! $this->ion_auth->is_admin()) {
-            header('HTTP/1.1 403 Forbidden');
-            exit;
-        }
+        // if (! $this->ion_auth->is_admin()) {
+        //     header('HTTP/1.1 403 Forbidden');
+        //     exit;
+        // }
 
         $this->ac->load('card');
         $this->ac->load('ctrl');
@@ -139,5 +139,24 @@ class Dev extends CI_Controller
     public function test(): void
     {
         header('Content-Type: text/plain');
+
+        $this->ac->class('Cards');
+        $this->ac->class('Persons');
+
+        $card = new Cards(150);
+        //var_dump($card);
+        //$card->get(1);
+
+        foreach ($card as $key => $value) {
+          echo "$key = $value\n";
+        }
+
+        $person = new Persons($card->person_id);
+        //$card->get(1);
+
+        foreach ($person as $key => $value) {
+          echo "$key = $value\n";
+        }
+
     }
 }
