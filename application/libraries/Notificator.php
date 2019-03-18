@@ -89,12 +89,12 @@ class Notificator extends Ac
 
         $this->load('photo');
 
-        $photo = $this->photo->get_by_person($this->person->id);
+        $photo = $this->photo->get_by('person_id', $this->person->id);
 
         return $this->_notification = [
             'title' => $event,
             'body' => "{$this->person->f} {$this->person->i}",
-            'icon' => (isset($photo)) ? ("https://" . $_SERVER['HTTP_HOST'] . "/img/ac/s/$photo->id.jpg") : "",
+            'icon' => ($photo) ? ("https://" . $_SERVER['HTTP_HOST'] . "/img/ac/s/{$this->photo->id}.jpg") : "",
             'click_action' => base_url('/')
         ];
     }

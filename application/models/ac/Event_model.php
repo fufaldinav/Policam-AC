@@ -95,8 +95,8 @@ class Event_model extends MY_Model
         }
 
         return $this->_list = $this->CI->db->where('server_time >', $time)
-                                          ->order_by('time', 'DESC')
-                                          ->get('events')
-                                          ->result();
+                                           ->order_by('time', 'DESC')
+                                           ->get('events')
+                                           ->result();
     }
 }

@@ -197,10 +197,10 @@ class Messenger extends Ac
                     $this->CI->load->library('notificator');
 
                     foreach ($subscribers as $sub) {
-                        $notification = $this->notificator->generate($this->card->person_id, $event->event);
+                        $notification = $this->CI->notificator->generate($this->card->person_id, $event->event);
 
                         if (count($notification) > 0) {
-                            $response = $this->notificator->send($sub->user_id, $notification);
+                            $response = $this->CI->notificator->send($notification, $sub->user_id);
 
                             $path = "$this->log_path/push-$log_date.txt";
                             write_file($path, "USER: $sub->user_id || PERSON: {$this->card->person_id} || $response\n", 'a');
@@ -269,7 +269,7 @@ class Messenger extends Ac
 
                 $events = $this->event->list_get_last($time, $event_types, $controllers);
 
-                if (count($events) > 0) {
+                if ($events) {
                     return $events;
                 }
 
