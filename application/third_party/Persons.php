@@ -4,7 +4,7 @@
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *
- * Created: 01.03.2019
+ * Created: 18.03.2019
  *
  * Description: Приложение для систем контроля и управления доступом.
  *
@@ -22,6 +22,21 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 class Persons extends MicroORM
 {
+    protected $_has_many = [
+      'cards' => [
+        'class' => 'cards',
+        'foreign_key' => 'person_id'
+      ],
+      'divisions' => [
+        'class' => 'divisions',
+        'foreign_key' => [
+          'person_id',
+          'div_id'
+        ],
+        'through' => 'persons_divisions'
+      ]
+    ];
+
     /**
      * Фамилия
      *
@@ -71,23 +86,16 @@ class Persons extends MicroORM
      */
     public $phone;
 
-    /**
-     * Карты
-     *
-     * @var array
-     */
-    private $cards = [];
-
     public function __construct($param = null)
     {
-      parent::__construct();
+        parent::__construct();
 
-      $this->table = strtolower(get_class($this));
+        $this->_table = strtolower(get_class($this));
 
-      if (is_numeric($param)) {
-          $this->get($param);
-      } elseif (is_array($param)) {
-          $this->get_by($param);
-      }
+        if (is_numeric($param)) {
+            $this->get($param);
+        } elseif (is_array($param)) {
+            $this->get_by($param);
+        }
     }
 }

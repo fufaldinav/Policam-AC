@@ -18,51 +18,47 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
- * Class Cards
+ * Class Divisions
  */
-class Cards extends MicroORM
+class Divisions extends MicroORM
 {
     protected $_belongs_to = [
-      'person' => [
+      'organization' => [
+        'class' => 'organizations',
+        'foreign_key' => 'org_id'
+      ]
+    ];
+    protected $_has_many = [
+      'persons' => [
         'class' => 'persons',
-        'foreign_key' => 'person_id'
+        'foreign_key' => [
+          'div_id',
+          'person_id'
+        ],
+        'through' => 'persons_divisions'
       ]
     ];
 
     /**
-     * Код карты
+     * Название подразделения
      *
      * @var string
      */
-    public $wiegand;
+    public $name;
 
     /**
-     * Время последней попытки доступа
+     * Организация, которой принадлежит подразделение
      *
      * @var int
      */
-    public $last_conn;
+    public $org_id;
 
     /**
-     * Контроллер, на котором была совершена попытка доступа
+     * Тип подразделения
      *
      * @var int
      */
-    public $controller_id;
-
-    /**
-     * Владелец карты
-     *
-     * @var int
-     */
-    public $person_id = 0;
-
-    /**
-     * Признак активированности карты
-     *
-     * @var int
-     */
-    public $active = 1;
+    public $type = 1;
 
     public function __construct($param = null)
     {

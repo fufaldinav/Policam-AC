@@ -48,22 +48,20 @@ abstract class MicroORM
      *
      * @var string
      */
-    protected $table;
-
-
-    /**
-     * Список дочерних объектов
-     *
-     * @var array
-     */
-    protected $list = [];
+    protected $_table;
 
     /**
      * Хранилище неизвестных свойств
      *
      * @var array
      */
-    protected $data = [];
+    protected $_data = [];
+
+    private $_relationship = [
+      '_belongs_to',
+      '_has_one',
+      '_has_many'
+    ];
 
     public function __construct()
     {
@@ -74,8 +72,18 @@ abstract class MicroORM
 
     public function __get($name)
     {
-        if (array_key_exists($name, $this->data)) {
-            return $this->data[$name];
+        if (array_key_exists($name, $this->_data)) {
+            return $this->_data[$name];
+        }
+
+        $vars = get_object_vars($this);
+
+        foreach ($this->_relationship as $rel) {
+            if (array_key_exists($rel, $vars)) {
+                if (array_key_exists($name, $vars[$rel])) {
+                    return $this->_data[$name] = $this->$rel($name);
+                }
+            }
         }
 
         return null;
@@ -83,31 +91,31 @@ abstract class MicroORM
 
     public function __set($name, $value)
     {
-        $this->data[$name] = $value;
+        $this->_data[$name] = $value;
     }
 
     public function __isset($name)
     {
-        return isset($this->data[$name]);
+        return isset($this->_data[$name]);
     }
 
     public function __unset($name)
     {
-        unset($this->data[$name]);
+        unset($this->_data[$name]);
     }
 
     /**
-     * Получает объект по ID из БД
+     * Получает объект по ID
      *
      * @param int $id ID объекта
      *
-     * @return object|false Объект класса или FALSE, если объект отсутвствует
+     * @return bool TRUE - успешно, FALSE - ошибка
      */
-    public function get(int $id)
+    public function get(int $id): bool
     {
         $query = $this->db
             ->where('id', $id)
-            ->get($this->table)
+            ->get($this->_table)
             ->row();
 
         if (! isset($query)) {
@@ -120,17 +128,17 @@ abstract class MicroORM
     }
 
     /**
-     * Получает объект по параметрам из БД
+     * Получает объект по параметрам
      *
      * @param array $attr Набор параметров
      *
-     * @return object|false Объект класса или FALSE, если объект отсутвствует
+     * @return bool TRUE - успешно, FALSE - ошибка
      */
-    public function get_by(array $attr)
+    public function get_by(array $attr): bool
     {
         $query = $this->db
             ->where($attr)
-            ->get($this->table)
+            ->get($this->_table)
             ->row();
 
         if (! isset($query)) {
@@ -140,40 +148,6 @@ abstract class MicroORM
         $this->_set($query);
 
         return true;
-    }
-
-    /**
-     * Получает список объектов по ID элемента из БД
-     *
-     * @param int|null $item_id ID элемента
-     *
-     * @return object[] Новый список объектов или текущий список,
-     *                  если $item_id не указан
-     */
-    public function get_list(int $item_id = null): array
-    {
-        if (! isset($this->_foreing_key) || ! isset($item_id)) {
-            return $this->_list;
-        }
-
-        return $this->_list = $this->db
-            ->where($this->_foreing_key, $item_id)
-            ->get($this->table)
-            ->result();
-    }
-
-    /**
-     * Устанавливает свойства текущему объекту
-     *
-     * @param object $object Объект с набором свойств
-     *
-     * @return void
-     */
-    private function _set(object $object): void
-    {
-        foreach ($object as $key => $value) {
-            $this->$key = $value;
-        }
     }
 
     /**
@@ -205,67 +179,16 @@ abstract class MicroORM
     public function save(): int
     {
         if (isset($this->id)) {
-            $this->db->where('id', $this->id)
-                     ->update($this->table, $this);
+            $this->db
+                ->where('id', $this->id)
+                ->update($this->_table, $this);
         } else {
-            $this->db->insert($this->table, $this);
+            $this->db->insert($this->_table, $this);
 
             $this->id = $this->db->insert_id();
         }
 
         return $this->db->affected_rows();
-    }
-
-    /**
-     * Сохраняет список объектов в БД
-     *
-     * @return int Количество успешных записей
-     */
-    public function save_list(): int
-    {
-        $count = 0;
-
-        $updatedata = [];
-
-        foreach ($this->_list as $object) {
-            if (isset($object->id)) {
-                $updatedata[] = $object;
-            } else {
-                $count += $this->db->insert($this->table, $object);
-
-                $object->id = $this->db->insert_id();
-            }
-        }
-
-        if ($updatedata) {
-            $count += $this->db->update_batch(
-                $this->table,
-                $updatedata,
-                'id'
-            );
-        }
-
-        return $count;
-    }
-
-    /**
-     * Вносит новый объект в список, копируя свойства текущего
-     *
-     * @return void
-     */
-    public function add_to_list(): void
-    {
-        $object = new stdClass;
-
-        foreach ($this as $key => $value) {
-            $rp = new ReflectionProperty($this, $key);
-
-            if ($rp->isPublic()) {
-                $object->$key = $value;
-            }
-        }
-
-        $this->_list[] = $object;
     }
 
     /**
@@ -275,8 +198,110 @@ abstract class MicroORM
      */
     public function remove(): int
     {
-        $this->db->delete($this->table, ['id' => $this->id]);
+        $this->db->delete($this->_table, ['id' => $this->id]);
 
         return $this->db->affected_rows();
+    }
+
+    /**
+     * Устанавливает свойства текущему объекту
+     *
+     * @param object $object Объект с набором свойств
+     *
+     * @return void
+     */
+    private function _set(object $object): void
+    {
+        foreach ($object as $key => $value) {
+            $this->$key = $value;
+        }
+    }
+
+    /**
+     * Получает владельца //TODO нормальное описание
+     *
+     * @param string $name
+     *
+     * @return object|null
+     */
+    private function _belongs_to($name): ?object
+    {
+        $classname = $this->_belongs_to[$name]['class'];
+        $foreign_key = $this->_belongs_to[$name]['foreign_key'];
+
+        $query = $this->db
+            ->where('id', $this->$foreign_key)
+            ->get($classname)
+            ->row();
+
+        if (! isset($query)) {
+            return null;
+        }
+
+        $object = new $classname($query->id);
+
+        return $object;
+    }
+
+    /**
+     * Получает "имущество" объекта //TODO нормальное описание
+     *
+     * @param string $name
+     *
+     * @return object|null
+     */
+    private function _has_one($name): ?object
+    {
+        $classname = $this->_has_one[$name]['model'];
+        $foreign_key = $this->_has_one[$name]['foreign_key'];
+
+        $query = $this->db
+            ->where($foreign_key, $this->id)
+            ->get($classname)
+            ->row();
+
+        if (! isset($query)) {
+            return null;
+        }
+
+        $object = new $classname($query->id);
+
+        return $object;
+    }
+
+    /**
+     * Получает "имущество" объекта //TODO нормальное описание
+     *
+     * @param string $name
+     *
+     * @return array
+     */
+    private function _has_many($name): array
+    {
+        $classname = $this->_has_many[$name]['class'];
+        $foreign_key = $this->_has_many[$name]['foreign_key'];
+        $through = $this->_has_many[$name]['through'] ?? null;
+
+        if (isset($through)) {
+            $this->db
+                ->select("{$foreign_key[1]} AS id")
+                ->from($through)
+                ->where($foreign_key[0], $this->id);
+        } else {
+            $this->db
+                ->select('id')
+                ->from($classname)
+                ->where($foreign_key, $this->id);
+        }
+
+        $query = $this->db
+            ->get()
+            ->result();
+
+        foreach ($query as &$row) {
+            $row = new $classname($row->id);
+        }
+
+        return $query;
     }
 }

@@ -142,21 +142,6 @@ class Dev extends CI_Controller
 
         $this->ac->class('Cards');
         $this->ac->class('Persons');
-
-        $card = new Cards(150);
-        //var_dump($card);
-        //$card->get(1);
-
-        foreach ($card as $key => $value) {
-          echo "$key = $value\n";
-        }
-
-        $person = new Persons($card->person_id);
-        //$card->get(1);
-
-        foreach ($person as $key => $value) {
-          echo "$key = $value\n";
-        }
-
+        $this->ac->class('Divisions');
     }
 }
