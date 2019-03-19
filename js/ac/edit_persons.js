@@ -169,7 +169,7 @@ function getPersonInfo(person_id) {
 //получение списка карт (брелоков) от сервера
 function getCardsByPerson(person_id) {
 	$.ajax({
-		url: `[ci_site_url]cards/get_by_person/${person_id}`,
+		url: `[ci_site_url]cards/get_list/${person_id}`,
 		type: `GET`,
 		success: function(data) {
 			cards = [];

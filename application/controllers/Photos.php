@@ -32,12 +32,12 @@ class Photos extends CI_Controller
     public function save(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
-            $this->ac->load('photo');
+            $this->ac->model('photos');
 
             header('Content-Type: application/json');
 
             echo json_encode(
-                $this->photo->save_file($_FILES['file'])
+                $this->photos->save_file($_FILES['file'])
             );
         }
     }
@@ -51,8 +51,8 @@ class Photos extends CI_Controller
      */
     public function delete(int $id): void
     {
-        $this->ac->load('photo');
+        $this->ac->model('photos');
 
-        echo $this->photo->delete_file($id);
+        echo $this->photos->delete_file($id);
     }
 }

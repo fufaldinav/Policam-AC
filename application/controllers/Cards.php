@@ -11,9 +11,11 @@
 class Cards extends CI_Controller
 {
     /**
+     * Текущий пользователь
+     *
      * @var int
      */
-    private $_user_id;
+    private $_user;
 
     public function __construct()
     {
@@ -31,94 +33,94 @@ class Cards extends CI_Controller
             exit;
         }
 
-        $this->_user_id = $this->ion_auth->user()->row()->id;
+        $this->ac->load('Users');
+
+        $user_id = $this->ion_auth->user()->row()->id;
+        $this->_user = new \Orm\Users($user_id);
     }
 
     /**
      * Закрепляет карту за человеком
      *
-     * @param int $card_id   ID карты
-     * @param int $person_id ID человека
+     * @param int|null $card_id   ID карты
+     * @param int      $person_id ID человека
      *
      * @return void
      */
-    public function holder(int $card_id, int $person_id = 0): void
+    public function holder(int $card_id = null, int $person_id = 0): void
     {
-        $this->ac->load('card');
-        $this->ac->load('ctrl');
-        $this->ac->load('org');
-        $this->ac->load('task');
-
-        $this->card->get($card_id);
-
-        $this->card->person_id = $person_id;
-
-        $this->org->get_list($this->_user_id);
-
-        $ctrls = $this->ctrl->get_list($this->org->first('id'));
-
-        if ($this->card->person_id === 0) {
-            foreach ($ctrls as $ctrl) {
-                $this->task->controller_id = $ctrl->id;
-                $this->task->del_cards([$this->card->wiegand]);
-                $this->task->save();
-            }
-        } else {
-            foreach ($ctrls as $ctrl) {
-                $this->task->controller_id = $ctrl->id;
-                $this->task->add_cards([$this->card->wiegand]);
-                $this->task->save();
-            }
+        if (! isset($card_id)) {
+            echo 0;
+            exit;
         }
 
-        echo $this->card->save();
+        $this->ac->load('Cards');
+        $this->ac->load('Controllers');
+        $this->ac->load('Organizations');
+
+        $this->load->library('task');
+
+        $card = new \Orm\Cards($card_id);
+
+        $card->person_id = $person_id;
+
+        $org = $this->_user->first('organizations');
+
+        $ctrls = $org->controllers;
+
+        if ($card->person_id == 0) {
+            $this->task->del_cards([$this->card->wiegand]);
+        } else {
+            $this->task->add_cards([$this->card->wiegand]);
+        }
+
+        foreach ($ctrls as $ctrl) {
+            $this->task->add($ctrl->id);
+            $this->task->send();
+        }
+
+        echo $card->save();
     }
 
     /**
      * Удаляет карту
      *
-     * @param int $card_id ID карты
+     * @param int|null $card_id ID карты
      *
      * @return void
      */
-    public function delete($card_id): void
+    public function delete(int $card_id = null): void
     {
-        $this->ac->load('card');
+        if (! isset($card_id)) {
+            echo 0;
+            exit;
+        }
 
-        echo $this->card->delete($card_id);
+        $this->ac->load('Cards');
+
+        $card = new \Orm\Cards($card_id);
+
+        echo $card->remove();
     }
 
     /**
-     * Получает все неизвестные карты
+     * Получает список карт
+     *
+     * @param int|null $person_id ID человека
      *
      * @return void
      */
-    public function get_list(): void
+    public function get_list(int $person_id = null): void
     {
-        $this->ac->load('card');
+        $person_id = $person_id ?? 0;
+
+        $this->ac->load('Cards');
+        $this->ac->load('Persons');
+
+        $person = new \Orm\Persons($person_id);
 
         header('Content-Type: application/json');
 
-        echo json_encode(
-            $this->card->get_list(0)
-        );
-    }
-
-    /**
-     * Получает карты конкретного человека
-     *
-     * @param int $person_id ID человека
-     *
-     * @return void
-     */
-    public function get_by_person(int $person_id): void
-    {
-        $this->ac->load('card');
-
-        header('Content-Type: application/json');
-
-        echo json_encode(
-            $this->card->get_list($person_id)
-        );
+        echo json_encode($person->cards);
     }
 }

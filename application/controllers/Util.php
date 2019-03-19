@@ -71,8 +71,8 @@ class Util extends CI_Controller
      */
     public function card_problem()
     {
-        $this->ac->load('person');
-        $this->ac->load('users_events');
+        $this->ac->model('person');
+        $this->ac->model('users_events');
 
         $this->load->helper('language');
 
@@ -99,11 +99,11 @@ class Util extends CI_Controller
                 echo $response;
             }
         } elseif ($type == 2 || $type == 3) {
-            $this->ac->load('card');
-            $this->ac->load('ctrl');
-            $this->ac->load('div');
-            $this->ac->load('org');
-            $this->ac->load('task');
+            $this->ac->model('card');
+            $this->ac->model('ctrl');
+            $this->ac->model('div');
+            $this->ac->model('org');
+            $this->ac->model('task');
 
             $this->card->get_list($this->person->id);
 

@@ -3,16 +3,15 @@
 /**
  * Class Divisions
  *
- * @property Div_model $div
- * @property Org_model $org
- * @property Person_model $person
  */
 class Divisions extends CI_Controller
 {
     /**
+     * Текущий пользователь
+     *
      * @var int
      */
-    private $_user_id;
+    private $_user;
 
     public function __construct()
     {
@@ -20,7 +19,10 @@ class Divisions extends CI_Controller
 
         $this->load->library('ion_auth');
 
-        $this->_user_id = $this->ion_auth->user()->row()->id;
+        $this->ac->load('Users');
+
+        $user_id = $this->ion_auth->user()->row()->id;
+        $this->_user = new \Orm\Users($user_id);
     }
 
     /**
@@ -38,22 +40,22 @@ class Divisions extends CI_Controller
             redirect('/');
         }
 
-        $this->ac->load('div');
-        $this->ac->load('org');
+        $this->ac->load('Divisions');
+        $this->ac->load('Organizations');
 
         $this->load->library('table');
 
         $this->load->helper('language');
 
-        $this->org->get_list($this->_user_id); //TODO
+        $org = $this->_user->first('organizations');
 
         $data = [
-            'org_id' => $this->org->first('id'),
-            'divs' => $this->div->get_list($this->org->first('id'))
+            'org_id' => $org->id,
+            'divs' => $org->divisions
         ];
 
         $header = [
-            'org_name' => $this->org->first('name') ?? lang('missing'),
+            'org_name' => $org->name ?? lang('missing'),
             'css_list' => ['ac', 'tables'],
             'js_list' => ['classes']
         ];
@@ -80,15 +82,15 @@ class Divisions extends CI_Controller
             exit;
         }
 
-        $this->ac->load('div');
-        $this->ac->load('org');
+        $this->ac->load('Divisions');
+        $this->ac->load('Organizations');
 
-        $orgs = $this->org->get_list();
+        $orgs = $this->_user->organizations;
 
         $divs = [];
 
         foreach ($orgs as $org) {
-            $divs = array_merge($divs, $this->div->get_list($org->id));
+            $divs = array_merge($divs, $org->divisions);
         }
 
         header('Content-Type: application/json');
@@ -113,18 +115,18 @@ class Divisions extends CI_Controller
             exit;
         }
 
-        $this->ac->load('div');
+        $this->ac->load('Divisions');
 
-        $div = json_decode($this->input->post('div'));
+        $div_data = json_decode($this->input->post('div'));
 
-        $this->div->name = $div->name;
-        $this->div->org_id = $div->org_id;
+        $div = new \Orm\Divisions();
 
-        $this->div->save();
+        $div->set($div_data);
+        $div->save();
 
         header('Content-Type: application/json');
 
-        echo json_encode($this->div);
+        echo json_encode($div);
     }
 
     /**
@@ -146,24 +148,34 @@ class Divisions extends CI_Controller
             exit;
         }
 
-        $this->ac->load('div');
-        $this->ac->load('org');
-        $this->ac->load('person');
+        $this->ac->load('Divisions');
+        $this->ac->load('Organizations');
+        $this->ac->load('Persons');
 
-        //Получаем всех людей в удаляемом подразделении
-        $persons = $this->person->get_list($div_id);
+        $cur_div = new \Orm\Divisions($div_id);
 
-        $this->org->get_list($this->_user_id); //TODO
+        $org = $this->_user->first('organizations');
 
         //"Пустое" подразделение
-        $new_div = $this->div->get_list_by_type($this->org->first('id'));
+        $empty_div = new \Orm\Divisions([
+          'org_id' => $org->id,
+          'type' => 0
+        ]);
 
         //Переносим полученных людей в "пустое" подразделение
         //TODO проверят наличие людей в других подразделениях и тогда не добавлять в пустое
-        foreach ($persons as $person) {
-            $this->person->add_to_div($person->id, current($new_div)->id);
+        foreach ($cur_div->persons as $person) {
+            $person->unbind($cur_div);
+
+            foreach ($person->divisions as $div) {
+                if ($div->id == $empty_div->id) {
+                    continue 2; //пропустим выполнение, если у пользователя уже есть "пустое" подразделение
+                }
+            }
+
+            $empty_div->bind($person);
         }
 
-        echo $this->div->delete($div_id);
+        echo $cur_div->remove();
     }
 }

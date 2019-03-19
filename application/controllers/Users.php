@@ -31,7 +31,7 @@ class Users extends CI_Controller
      */
     public function token()
     {
-        $this->ac->load('token');
+        $this->ac->model('token');
 
         $token = $this->input->post('token');
 

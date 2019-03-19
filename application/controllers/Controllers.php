@@ -7,19 +7,16 @@
  * @property Div_model $div
  * @property Org_model $org
  * @property Person_model $person
- * @property Task_mode $task
+ * @property Task_mode $tasks
  */
 class Controllers extends CI_Controller
 {
     /**
+     * Текущий пользователь
+     *
      * @var int
      */
-    private $_user_id;
-
-    /**
-     * @var mixed[] $orgs
-     */
-    private $orgs;
+    private $_user;
 
     public function __construct()
     {
@@ -32,12 +29,15 @@ class Controllers extends CI_Controller
             exit;
         }
 
-        if (! $this->ion_auth->is_admin()) {
-            header('HTTP/1.1 403 Forbidden');
-            exit;
-        }
+        // if (! $this->ion_auth->is_admin()) {
+        //     header('HTTP/1.1 403 Forbidden');
+        //     exit;
+        // }
 
-        $this->_user_id = $this->ion_auth->user()->row()->id;
+        $this->ac->load('Users');
+
+        $user_id = $this->ion_auth->user()->row()->id;
+        $this->_user = new \Orm\Users($user_id);
     }
 
     /**
@@ -50,17 +50,21 @@ class Controllers extends CI_Controller
      */
     public function set_door_params(int $ctrl_id = null, int $open_time = null): void
     {
-        if (isset($ctrl_id) && isset($open_time)) {
-            $this->ac->load('task');
-
-            $this->task->controller_id = $ctrl_id;
-            $this->task->set_door_params($open_time);
-            $count = $this->task->save();
-            if ($count > 0) {
-                echo "Заданий успешно отправлено: $count"; //TODO перевод
-            }
-        } else {
+        if (! isset($ctrl_id) || ! isset($open_time)) {
             echo 'Не выбран контроллер или не задано время открытия'; //TODO перевод
+            exit;
+        }
+
+        $this->load->library('task');
+
+        $this->task->set_door_params($open_time);
+        $this->task->add($ctrl_id);
+        $count = $this->task->send();
+
+        if ($count > 0) {
+            echo "Заданий успешно отправлено: $count"; //TODO перевод
+        } else {
+            echo "Нет отправленных заданий"; //TODO перевод
         }
     }
 
@@ -73,17 +77,21 @@ class Controllers extends CI_Controller
      */
     public function clear(int $ctrl_id = null): void
     {
-        if (isset($ctrl_id)) {
-            $this->ac->load('task');
-
-            $this->task->controller_id = $ctrl_id;
-            $this->task->clear_cards();
-            $count = $this->task->save();
-            if ($count > 0) {
-                echo "Заданий успешно отправлено: $count"; //TODO перевод
-            }
-        } else {
+        if (! isset($ctrl_id)) {
             echo 'Не выбран контроллер'; //TODO перевод
+            exit;
+        }
+
+        $this->load->library('task');
+
+        $this->task->clear_cards();
+        $this->task->add($ctrl_id);
+        $count = $this->task->send();
+
+        if ($count > 0) {
+            echo "Заданий успешно отправлено: $count"; //TODO перевод
+        } else {
+            echo "Нет отправленных заданий"; //TODO перевод
         }
     }
 
@@ -96,63 +104,59 @@ class Controllers extends CI_Controller
      */
     public function reload_cards(int $ctrl_id = null): void
     {
-        $this->ac->load('org');
-
-        $this->org->get_list($this->_user_id); //TODO
-
         if (! isset($ctrl_id)) {
             echo 'Не выбран контроллер'; //TODO перевод
-        } elseif (is_null($this->org->first())) {
-            echo 'Нет организаций'; //TODO перевод
-        } else {
-            $this->ac->load('div');
-            $this->ac->load('task');
-
-            $this->task->controller_id = $ctrl_id;
-
-            $cards = [];
-
-            $divs = $this->div->get_list($this->org->first('id'));
-
-            foreach ($divs as $div) {
-                $this->ac->load('person');
-
-                $div->persons = $this->person->get_list($div->id);
-
-                foreach ($div->persons as $person) {
-                    $this->ac->load('card');
-
-                    $person->cards = $this->card->get_list($person->id);
-
-                    $cards = array_merge($cards, $person->cards);
-                }
-            }
-
-            $card_count = count($cards);
-            $counter = 0;
-            $codes = [];
-            for ($i = 0; $i < $card_count; $i++) {
-                $codes[] = $cards[$i]->wiegand;
-
-                /*
-                | 1. Запишем задания если: а) это не первый проход
-                |                          и
-                |                          б) это десятый проход
-                |                          или
-                |                          в) это последний проход
-                | 2. Очистим список кодов карт на отправку
-                |
-                | Таким образом сформируем задания на отправку по 10 за раз
-                */
-                if (($i > 0 && ($i % 10 === 0)) || ($i === ($card_count - 1))) {
-                    $this->task->add_cards($codes);
-                    $counter += $this->task->save();
-
-                    $codes = [];
-                }
-            }
-
-            echo "Отправлено заданий: $counter"; //TODO перевод
+            exit;
         }
+
+        $this->ac->load('Organizations');
+
+        $org = $this->_user->first('organizations');
+
+        if (is_null($org)) {
+            echo 'Нет организаций'; //TODO перевод
+            exit;
+        }
+
+        $this->ac->load('Cards');
+        $this->ac->load('Divisions');
+        $this->ac->load('Persons');
+
+        $this->load->library('task');
+
+        //$this->task->controller_id = $ctrl_id;
+
+        $cards = [];
+
+        $divs = $org->divisions;
+
+        foreach ($divs as $div) {
+            foreach ($div->persons as $person) {
+                $cards = array_merge($cards, $person->cards);
+            }
+        }
+
+        for ($i = 0, $codes = [], $card_count = count($cards); $i < $card_count; $i++) {
+            $codes[] = $cards[$i]->wiegand;
+
+            /*
+            | 1. Запишем задания если: а) это не первый проход
+            |                          и
+            |                          б) это десятый проход
+            |                          или
+            |                          в) это последний проход
+            | 2. Очистим список кодов карт на отправку
+            |
+            | Таким образом сформируем задания на отправку по 10 за раз
+            */
+            if (($i > 0 && ($i % 10 === 0)) || ($i === ($card_count - 1))) {
+                $this->task->add_cards($codes);
+                $this->task->add($ctrl_id);
+
+                $codes = [];
+            }
+        }
+
+        echo "Отправлено заданий: {$this->task->send()}"; //TODO перевод
     }
 }
