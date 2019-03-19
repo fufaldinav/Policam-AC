@@ -62,4 +62,29 @@ class Tasks extends MicroORM
             $this->get_by($param);
         }
     }
+
+    /**
+     * Сохраняет объект в БД
+     *
+     * @return int Количество успешных записей
+     */
+    public function save(): int
+    {
+        $query = $this->db
+            ->where('id', $this->id)
+            ->get($this->_table);
+
+        if ($query->num_rows > 0) {
+            $this->db
+                ->where('id', $this->id)
+                ->update($this->_table, $this);
+        } else {
+            $this->db->insert($this->_table, $this);
+
+            $this->id = $this->db->insert_id();
+        }
+
+
+        return $this->db->affected_rows();
+    }
 }
