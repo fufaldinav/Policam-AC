@@ -42,7 +42,7 @@ class Ac
 
         $this->CI->config->load('ac', true);
 
-        include APPPATH . 'third_party/MicroORM.php';
+        include_once APPPATH . 'third_party/MicroORM.php';
     }
 
     public function __get($name)
@@ -91,6 +91,6 @@ class Ac
      */
     public function class($class)
     {
-        include APPPATH . "third_party/$class.php";
+        include_once APPPATH . "third_party/$class.php";
     }
 }
