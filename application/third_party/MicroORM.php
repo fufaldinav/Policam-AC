@@ -1,4 +1,5 @@
 <?php
+namespace Orm;
 /**
  * Name:   Policam AC
  * Author: Artem Fufaldin
@@ -362,6 +363,8 @@ abstract class MicroORM
         $query = $this->db
             ->get()
             ->result();
+
+        $classname = (new \ReflectionClass($this))->getNamespaceName() . '\\' . $classname;
 
         foreach ($query as &$row) {
             $row = new $classname($row->id);

@@ -1,4 +1,5 @@
 <?php
+namespace Orm;
 /**
  * Name:   Policam AC
  * Author: Artem Fufaldin
@@ -49,7 +50,7 @@ class Users extends MicroORM
     {
         parent::__construct();
 
-        $this->_table = strtolower(get_class($this));
+        $this->_table = strtolower((new \ReflectionClass($this))->getShortName());
 
         if (is_numeric($param)) {
             $this->get($param);
