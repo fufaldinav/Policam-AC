@@ -34,6 +34,14 @@ class Persons extends MicroORM
           'div_id'
         ],
         'through' => 'persons_divisions'
+      ],
+      'users' => [
+        'class' => 'users',
+        'foreign_key' => [
+          'person_id',
+          'user_id'
+        ],
+        'through' => 'persons_users'
       ]
     ];
 
@@ -56,7 +64,7 @@ class Persons extends MicroORM
      *
      * @var string
      */
-    public $o;
+    public $o = null;
 
     /**
      * Тип/должность человека
@@ -77,14 +85,14 @@ class Persons extends MicroORM
      *
      * @var string
      */
-    public $address;
+    public $address = null;
 
     /**
      * Номер телефона
      *
      * @var string
      */
-    public $phone;
+    public $phone = null;
 
     public function __construct($param = null)
     {
