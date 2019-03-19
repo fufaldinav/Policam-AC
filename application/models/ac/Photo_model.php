@@ -138,7 +138,7 @@ class Photo_model extends MY_Model
 
                 return $response;
             } catch (Exception $e) {
-                $response['error'] = $e;
+                $response['error'] = $e->getMessage();
 
                 $this->CI->load->library('logger');
                 $this->CI->logger->save_errors($response['error']);
@@ -178,7 +178,7 @@ class Photo_model extends MY_Model
             return $this->delete($id);
         } catch (Exception $e) {
             $this->CI->load->library('logger');
-            $this->CI->logger->save_errors($e);
+            $this->CI->logger->save_errors($e->getMessage());
 
             return 0;
         }
