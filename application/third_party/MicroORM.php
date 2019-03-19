@@ -115,14 +115,14 @@ abstract class MicroORM
     {
         $query = $this->db
             ->where('id', $id)
-            ->get($this->_table)
-            ->row();
+            ->limit(1)
+            ->get($this->_table);
 
-        if (! isset($query)) {
+        if ($query->num_rows() == 0) {
             return false;
         }
 
-        $this->_set($query);
+        $this->_set($query->row());
 
         return true;
     }
@@ -138,14 +138,14 @@ abstract class MicroORM
     {
         $query = $this->db
             ->where($attr)
-            ->get($this->_table)
-            ->row();
+            ->limit(1)
+            ->get($this->_table);
 
-        if (! isset($query)) {
+        if ($query->num_rows() == 0) {
             return false;
         }
 
-        $this->_set($query);
+        $this->_set($query->row());
 
         return true;
     }
