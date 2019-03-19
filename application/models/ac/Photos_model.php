@@ -18,9 +18,9 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
- * Class Photo Model
+ * Class Photos Model
  */
-class Photo_model extends MY_Model
+class Photos_model extends MY_Model
 {
     /**
      * MD5 хэш фотографии
@@ -54,7 +54,7 @@ class Photo_model extends MY_Model
     {
         parent::__construct();
 
-        $this->_table = 'photo';
+        $this->_table = 'photos';
         $this->_foreing_key = 'person_id';
 
         $this->CI->config->load('ac', true);
@@ -193,7 +193,7 @@ class Photo_model extends MY_Model
     {
         $query = $this->CI->db->where('person_id', null)
                               ->where('time <', now('Asia/Yekaterinburg') - 86400)
-                              ->get('photo')
+                              ->get('photos')
                               ->result();
 
         $counter = 0;

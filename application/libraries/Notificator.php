@@ -83,18 +83,18 @@ class Notificator extends Ac
 
         $this->CI->load->helper('url');
 
-        $this->load('person');
+        $this->model('person');
 
         $this->person->get($person_id);
 
-        $this->load('photo');
+        $this->model('photos');
 
-        $photo = $this->photo->get_by('person_id', $this->person->id);
+        $photo = $this->photos->get_by('person_id', $this->person->id);
 
         return $this->_notification = [
             'title' => $event,
             'body' => "{$this->person->f} {$this->person->i}",
-            'icon' => ($photo) ? ("https://" . $_SERVER['HTTP_HOST'] . "/img/ac/s/{$this->photo->id}.jpg") : "",
+            'icon' => ($photo) ? ("https://" . $_SERVER['HTTP_HOST'] . "/img/ac/s/{$this->photos->id}.jpg") : "",
             'click_action' => base_url('/')
         ];
     }
@@ -114,7 +114,7 @@ class Notificator extends Ac
 
         $registration_ids = [];
 
-        $this->load('token');
+        $this->model('token');
 
         $tokens = $this->token->get_list($user_id);
 

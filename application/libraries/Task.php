@@ -73,7 +73,7 @@ class Task extends Ac
             return false;
         }
 
-        $this->load('Tasks');
+        $this->model('Tasks');
 
         $task = new Tasks();
 

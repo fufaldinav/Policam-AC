@@ -89,7 +89,7 @@ class Messenger extends Ac
 
         $path = "$this->log_path/inc-$log_date.txt";
 
-        $this->load('ctrl');
+        $this->model('ctrl');
 
         if ($this->ctrl->get_by('sn', $sn)) {
             $this->ctrl->last_conn = $time;
@@ -103,7 +103,7 @@ class Messenger extends Ac
             return null;
         }
 
-        $this->load('task');
+        $this->model('task');
 
         //чтение json сообщения
         foreach ($inc_msgs as $inc_m) {
@@ -141,7 +141,7 @@ class Messenger extends Ac
                 $out_m->operation = 'check_access';
                 $out_m->granted = 0;
 
-                $this->load('card');
+                $this->model('card');
 
                 $this->card->get_by('wiegand', $inc_m->card);
 
@@ -167,11 +167,11 @@ class Messenger extends Ac
             //события на контроллере
             //
             elseif ($inc_m->operation === 'events') {
-                $this->load('event');
+                $this->model('event');
 
                 //чтение событий
                 foreach ($inc_m->events as $event) {
-                    $this->load('card');
+                    $this->model('card');
 
                     $this->card->get_by('wiegand', $event->card);
 
@@ -190,7 +190,7 @@ class Messenger extends Ac
 
                     $this->event->add_to_list();
 
-                    $this->load('person');
+                    $this->model('person');
 
                     $subscribers = $this->person->get_users($this->card->person_id);
 
@@ -244,8 +244,8 @@ class Messenger extends Ac
 
         $user_id = $this->CI->ion_auth->user()->row()->id; //TODO
 
-        $this->load('org');
-        $this->load('ctrl');
+        $this->model('org');
+        $this->model('ctrl');
 
         $org_list = $this->org->get_list($user_id); //TODO
 
@@ -258,7 +258,7 @@ class Messenger extends Ac
         if ($ctrl_list) {
             session_write_close();
 
-            $this->load('event');
+            $this->model('event');
 
             while ($this->_timeout > 0) {
                 $controllers = [];

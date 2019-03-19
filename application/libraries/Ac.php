@@ -75,7 +75,7 @@ class Ac
      * @param string $model Имя модели
      * @param string $name  Альтернативное имя
      */
-    public function load($model, $name = null)
+    public function model($model, $name = null)
     {
         $name = $name ?? $model;
 
@@ -89,7 +89,7 @@ class Ac
      *
      * @param string $class Имя модели
      */
-    public function class($class)
+    public function load($class)
     {
         include_once APPPATH . "third_party/$class.php";
     }

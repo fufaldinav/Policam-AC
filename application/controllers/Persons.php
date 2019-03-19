@@ -42,9 +42,9 @@ class Persons extends CI_Controller
             redirect('/');
         }
 
-        $this->ac->load('card');
-        $this->ac->load('div');
-        $this->ac->load('org');
+        $this->ac->model('card');
+        $this->ac->model('div');
+        $this->ac->model('org');
 
         $this->load->helper('form');
         $this->load->helper('language');
@@ -101,10 +101,10 @@ class Persons extends CI_Controller
             redirect('/');
         }
 
-        $this->ac->load('card');
-        $this->ac->load('div');
-        $this->ac->load('org');
-        $this->ac->load('person');
+        $this->ac->model('card');
+        $this->ac->model('div');
+        $this->ac->model('org');
+        $this->ac->model('person');
 
         $this->load->helper('form');
         $this->load->helper('language');
@@ -173,12 +173,12 @@ class Persons extends CI_Controller
             exit;
         }
 
-        $this->ac->load('card');
-        $this->ac->load('ctrl');
-        $this->ac->load('org');
-        $this->ac->load('person');
-        $this->ac->load('photo');
-        $this->ac->load('task');
+        $this->ac->model('card');
+        $this->ac->model('ctrl');
+        $this->ac->model('org');
+        $this->ac->model('person');
+        $this->ac->model('photos');
+        $this->ac->model('task');
 
         $this->org->get_list($this->_user_id); //TODO
 
@@ -198,7 +198,7 @@ class Persons extends CI_Controller
                 $this->person->add_to_div($this->person->id, $div_id);
             }
         } else {
-            $this->ac->load('div');
+            $this->ac->model('div');
 
             $divs = $this->div->get_list_by_type($this->org->first('id'));
             $this->person->add_to_div($this->person->id, current($divs)->id);
@@ -208,9 +208,9 @@ class Persons extends CI_Controller
         | Фотографии
         */
         foreach ($photos as $photo_id) {
-            $this->photo->get($photo_id);
-            $this->photo->person_id = $this->person->id;
-            $this->photo->save();
+            $this->photos->get($photo_id);
+            $this->photos->person_id = $this->person->id;
+            $this->photos->save();
         }
 
         /*
@@ -250,12 +250,12 @@ class Persons extends CI_Controller
             exit;
         }
 
-        $this->ac->load('card');
-        $this->ac->load('ctrl');
-        $this->ac->load('org');
-        $this->ac->load('person');
-        $this->ac->load('photo');
-        $this->ac->load('task');
+        $this->ac->model('card');
+        $this->ac->model('ctrl');
+        $this->ac->model('org');
+        $this->ac->model('person');
+        $this->ac->model('photos');
+        $this->ac->model('task');
 
         $this->org->get_list($this->_user_id); //TODO
 
@@ -272,9 +272,9 @@ class Persons extends CI_Controller
         | Фотографии
         */
         foreach ($photos as $photo_id) {
-            $this->photo->get($photo_id);
-            $this->photo->person_id = $this->person->id;
-            $count += $this->photo->save();
+            $this->photos->get($photo_id);
+            $this->photos->person_id = $this->person->id;
+            $count += $this->photos->save();
         }
 
         /*
@@ -316,12 +316,12 @@ class Persons extends CI_Controller
             exit;
         }
 
-        $this->ac->load('card');
-        $this->ac->load('ctrl');
-        $this->ac->load('org');
-        $this->ac->load('person');
-        $this->ac->load('photo');
-        $this->ac->load('task');
+        $this->ac->model('card');
+        $this->ac->model('ctrl');
+        $this->ac->model('org');
+        $this->ac->model('person');
+        $this->ac->model('photos');
+        $this->ac->model('task');
 
         $this->org->get_list($this->_user_id); //TODO
 
@@ -348,10 +348,10 @@ class Persons extends CI_Controller
         /*
         | Фотографии
         */
-        $photos = $this->photo->get_list($person_id);
+        $photos = $this->photos->get_list($person_id);
 
         foreach ($photos as $photo) {
-            $this->photo->delete_file($photo->id);
+            $this->photos->delete_file($photo->id);
         }
 
         /*
@@ -376,8 +376,8 @@ class Persons extends CI_Controller
             exit;
         }
 
-        $this->ac->load('person');
-        $this->ac->load('photo');
+        $this->ac->model('person');
+        $this->ac->model('photos');
 
         $this->person->get($person_id);
 
@@ -385,7 +385,7 @@ class Persons extends CI_Controller
 
         echo json_encode([
           'person' => $this->person,
-          'photos' => $this->photo->get_list($person_id)
+          'photos' => $this->photos->get_list($person_id)
         ]);
     }
 
@@ -403,10 +403,10 @@ class Persons extends CI_Controller
             exit;
         }
 
-        $this->ac->load('card');
-        $this->ac->load('div');
-        $this->ac->load('person');
-        $this->ac->load('photo');
+        $this->ac->model('card');
+        $this->ac->model('div');
+        $this->ac->model('person');
+        $this->ac->model('photos');
 
         $this->card->get($card_id);
 
@@ -423,7 +423,7 @@ class Persons extends CI_Controller
 
         echo json_encode([
           'person' => $this->person,
-          'photos' => $this->photo->get_list($this->person->id)
+          'photos' => $this->photos->get_list($this->person->id)
         ]);
     }
 
@@ -441,7 +441,7 @@ class Persons extends CI_Controller
             exit;
         }
 
-        $this->ac->load('person');
+        $this->ac->model('person');
 
         header('Content-Type: application/json');
 
