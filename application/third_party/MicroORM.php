@@ -204,6 +204,26 @@ abstract class MicroORM
     }
 
     /**
+     * Возвращает первый элемент или единственный объект владельца
+     *
+     * @param string $name
+     *
+     * @return object|null Объект или NULL - имя задано неверно или объект
+     *                     отсутствует
+     */
+    public function first(string $name): ?object
+    {
+        if (is_array($this->$name)) {
+            $array = $this->$name;
+            reset($array);
+
+            return current($array);
+        } else {
+            return $this->$name;
+        }
+    }
+
+    /**
      * Устанавливает свойства текущему объекту
      *
      * @param object $object Объект с набором свойств
