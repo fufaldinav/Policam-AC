@@ -76,11 +76,11 @@ abstract class MicroORM
             return $this->_data[$name];
         }
 
-        $vars = get_object_vars($this);
+        $props = get_object_vars($this);
 
         foreach ($this->_relationship as $rel) {
-            if (array_key_exists($rel, $vars)) {
-                if (array_key_exists($name, $vars[$rel])) {
+            if (array_key_exists($rel, $props)) {
+                if (array_key_exists($name, $props[$rel])) {
                     return $this->_data[$name] = $this->$rel($name);
                 }
             }
@@ -224,6 +224,51 @@ abstract class MicroORM
     }
 
     /**
+     * Связать объекты
+     *
+     * @param object $bindable Связываемый объект
+     *
+     * @return bool TRUE - успешно, FALSE - ошибка
+     */
+    public function bind(object $bindable)
+    {
+        $rel = $this->_check_rel($bindable);
+
+        if (isset($rel)) {
+            $this->db->insert($rel['through'], [
+                $rel['foreign_key'][0] => $this->id,
+                $rel['foreign_key'][1] => $bindable->id
+            ]);
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Удалить связь объектов
+     *
+     * @param object $bindable Связываемый объект
+     *
+     * @return bool TRUE - успешно, FALSE - ошибка
+     */
+    public function unbind(object $bindable): bool
+    {
+        $rel = $this->_check_rel($bindable);
+
+        if (isset($rel)) {
+            $this->db->where([
+                $rel['foreign_key'][0] => $this->id,
+                $rel['foreign_key'][1] => $bindable->id
+            ]);
+            $this->db->delete($rel['through']);
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Устанавливает свойства текущему объекту
      *
      * @param object $object Объект с набором свойств
@@ -323,5 +368,29 @@ abstract class MicroORM
         }
 
         return $query;
+    }
+
+    /**
+     * Проверяет связь с классом объекта и возвращает параметры
+     *
+     * @param object $bindable Связываемый объект
+     *
+     * @return array|null Параметры связи
+     */
+    private function _check_rel($bindable): ?array
+    {
+        $props = get_object_vars($this);
+
+        $classname = strtolower(get_class($bindable));
+
+        if (array_key_exists('_has_many', $props)) { //если связь есть у объекта
+            foreach ($props['_has_many'] as $rel) {
+                if ($rel['class'] == $classname && array_key_exists('through', $rel)) { //если класс О1 связан с классом О2
+                    return $rel;
+                }
+            }
+        }
+
+        return null;
     }
 }
