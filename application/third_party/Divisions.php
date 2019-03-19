@@ -1,5 +1,6 @@
 <?php
 namespace Orm;
+
 /**
  * Name:   Policam AC
  * Author: Artem Fufaldin
@@ -23,12 +24,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 class Divisions extends MicroORM
 {
+    /**
+     * @var array
+     */
     protected $_belongs_to = [
       'organization' => [
         'class' => 'organizations',
         'foreign_key' => 'org_id'
       ]
     ];
+
+    /**
+     * @var array
+     */
     protected $_has_many = [
       'persons' => [
         'class' => 'persons',

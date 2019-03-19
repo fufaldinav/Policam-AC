@@ -1,5 +1,6 @@
 <?php
 namespace Orm;
+
 /**
  * Name:   Policam AC
  * Author: Artem Fufaldin
@@ -56,9 +57,14 @@ abstract class MicroORM
      *
      * @var array
      */
-    protected $_data = [];
+    protected $_storage = [];
 
-    private $_relationship = [
+    /**
+     * Типы связей
+     *
+     * @var array
+     */
+    private $_relationship_types = [
       '_belongs_to',
       '_has_one',
       '_has_many'
@@ -71,18 +77,23 @@ abstract class MicroORM
         $this->db = $this->CI->db;
     }
 
+    /**
+     * @param string $name Имя свойства
+     *
+     * @return mixed|null
+     */
     public function __get($name)
     {
-        if (array_key_exists($name, $this->_data)) {
-            return $this->_data[$name];
+        if (array_key_exists($name, $this->_storage)) {
+            return $this->_storage[$name];
         }
 
         $props = get_object_vars($this);
 
-        foreach ($this->_relationship as $rel) {
-            if (array_key_exists($rel, $props)) {
-                if (array_key_exists($name, $props[$rel])) {
-                    return $this->_data[$name] = $this->$rel($name);
+        foreach ($this->_relationship_types as $type) {
+            if (array_key_exists($type, $props)) {
+                if (array_key_exists($name, $props[$type])) {
+                    return $this->_storage[$name] = $this->$type($name);
                 }
             }
         }
@@ -90,19 +101,35 @@ abstract class MicroORM
         return null;
     }
 
+    /**
+     * @param string $name Имя свойства
+     * @param mixed $value Значение свойства
+     *
+     * @return void
+     */
     public function __set($name, $value)
     {
-        $this->_data[$name] = $value;
+        $this->_storage[$name] = $value;
     }
 
+    /**
+     * @param string $name Имя свойства
+     *
+     * @return bool
+     */
     public function __isset($name)
     {
-        return isset($this->_data[$name]);
+        return isset($this->_storage[$name]);
     }
 
+    /**
+     * @param string $name Имя свойства
+     *
+     * @return void
+     */
     public function __unset($name)
     {
-        unset($this->_data[$name]);
+        unset($this->_storage[$name]);
     }
 
     /**
@@ -233,7 +260,7 @@ abstract class MicroORM
      */
     public function bind(object $bindable)
     {
-        $rel = $this->_check_rel($bindable);
+        $rel = $this->_get_relation_model($bindable);
 
         if (isset($rel)) {
             $this->db->insert($rel['through'], [
@@ -249,21 +276,25 @@ abstract class MicroORM
     /**
      * Удалить связь объектов
      *
-     * @param object $bindable Связываемый объект
+     * @param object $binded Связанный объект
      *
      * @return bool TRUE - успешно, FALSE - ошибка
      */
-    public function unbind(object $bindable): bool
+    public function unbind(object $binded): bool
     {
-        $rel = $this->_check_rel($bindable);
+        $rel = $this->_get_relation_model($binded);
 
         if (isset($rel)) {
             $this->db->where([
                 $rel['foreign_key'][0] => $this->id,
-                $rel['foreign_key'][1] => $bindable->id
+                $rel['foreign_key'][1] => $binded->id
             ]);
+
             $this->db->delete($rel['through']);
-            return true;
+
+            if ($this->db->affected_rows() > 0) {
+                return true;
+            }
         }
 
         return false;
@@ -297,14 +328,17 @@ abstract class MicroORM
 
         $query = $this->db
             ->where('id', $this->$foreign_key)
-            ->get($classname)
-            ->row();
+            ->limit(1)
+            ->get($classname);
 
-        if (! isset($query)) {
+        if ($query->num_rows() == 0) {
             return null;
         }
 
-        $object = new $classname($query->id);
+        $namespace = (new \ReflectionClass($this))->getNamespaceName();
+        $classname =  "$namespace\\$classname";
+
+        $object = $query->row(0, $classname);
 
         return $object;
     }
@@ -323,14 +357,17 @@ abstract class MicroORM
 
         $query = $this->db
             ->where($foreign_key, $this->id)
-            ->get($classname)
-            ->row();
+            ->limit(1)
+            ->get($classname);
 
-        if (! isset($query)) {
+        if ($query->num_rows() == 0) {
             return null;
         }
 
-        $object = new $classname($query->id);
+        $namespace = (new \ReflectionClass($this))->getNamespaceName();
+        $classname =  "$namespace\\$classname";
+
+        $object = $query->row(0, $classname);
 
         return $object;
     }
@@ -364,11 +401,13 @@ abstract class MicroORM
             ->get()
             ->result();
 
-        $classname = (new \ReflectionClass($this))->getNamespaceName() . '\\' . $classname;
+        $namespace = (new \ReflectionClass($this))->getNamespaceName();
+        $classname =  "$namespace\\$classname";
 
         foreach ($query as &$row) {
             $row = new $classname($row->id);
         }
+        unset($row);
 
         return $query;
     }
@@ -376,15 +415,16 @@ abstract class MicroORM
     /**
      * Проверяет связь с классом объекта и возвращает параметры
      *
-     * @param object $bindable Связываемый объект
+     * @param object $object Связываемый объект
      *
      * @return array|null Параметры связи
      */
-    private function _check_rel($bindable): ?array
+    private function _get_relation_model($object): ?array
     {
         $props = get_object_vars($this);
 
-        $classname = strtolower(get_class($bindable));
+        $classname = (new \ReflectionClass($object))->getShortName();
+        $classname = strtolower($classname);
 
         if (array_key_exists('_has_many', $props)) { //если связь есть у объекта
             foreach ($props['_has_many'] as $rel) {

@@ -84,7 +84,9 @@ class Dev extends CI_Controller
     {
         header('Content-Type: text/plain');
 
-        $resp = null;
+        $person = new \Orm\Persons(0);
+
+        $resp = count($person->users);
 
         echo "\n";
         echo "\n";

@@ -8,9 +8,11 @@
 class Users extends CI_Controller
 {
     /**
+     * Текущий пользователь
+     *
      * @var int
      */
-    private $_user_id;
+    private $_user;
 
     public function __construct()
     {
@@ -23,7 +25,10 @@ class Users extends CI_Controller
             exit;
         }
 
-        $this->_user_id = $this->ion_auth->user()->row()->id;
+        $this->ac->load('Users');
+
+        $user_id = $this->ion_auth->user()->row()->id;
+        $this->_user = new \Orm\Users($user_id);
     }
 
     /**
@@ -31,17 +36,22 @@ class Users extends CI_Controller
      */
     public function token()
     {
-        $this->ac->model('token');
+        $this->ac->load('Tokens');
 
-        $token = $this->input->post('token');
+        $token_key = $this->input->post('token');
+
+
 
         if ($token_key === 'false') {
             // $this->token->get_by('token', $token_key);
             // $this->token->delete(); //TODO удалять просроченный ключ
-        } elseif (! ($this->token->get_by('token', $token_key))) {
-            $this->token->user_id = $this->_user_id;
-            $this->token->token = $token_key;
-            $this->token->save();
+        } else {
+            $token = new \Orm\Tokens(['token' => $token_key]);
+
+            $token->user_id = $this->_user_id;
+            $token->token = $token_key;
+
+            $token->save();
         }
     }
 }
