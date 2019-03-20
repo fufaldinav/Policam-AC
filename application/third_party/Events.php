@@ -80,19 +80,6 @@ class Events extends MicroORM
      */
     public $card_id;
 
-    public function __construct($param = null)
-    {
-        parent::__construct();
-
-        $this->_table = strtolower((new \ReflectionClass($this))->getShortName());
-
-        if (is_numeric($param)) {
-            $this->get($param);
-        } elseif (is_array($param)) {
-            $this->get_by($param);
-        }
-    }
-
     /**
      * Получает список последних событий из БД, пришедших после установленного
      * времени, фильтруя список по типу событий и контроллерам

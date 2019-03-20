@@ -44,7 +44,7 @@ class Task extends Ac
     {
         parent::__construct();
 
-        $this->_request = new stdClass();
+        $this->_request = new stdClass;
     }
 
     /**
@@ -78,14 +78,14 @@ class Task extends Ac
             return false;
         }
 
-        $this->model('Tasks');
+        $this->load('Tasks');
 
         $task = new \Orm\Tasks();
 
-        $task->id = $this->_request->id = mt_rand(500000, 999999999);
+        $task->task_id = $this->_request->id = mt_rand(500000, 999999999);
         $task->controller_id = $ctrl_id;
         $task->json = json_encode($this->_request);
-        $task->time = now('Asia/Yekaterinburg');
+        $task->time = now();
 
         $this->_to_send[] = $task;
 

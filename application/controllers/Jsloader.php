@@ -33,9 +33,9 @@ class Jsloader extends CI_Controller
         if (! isset($contents)) {
             header('HTTP/1.1 404 Not Found');
             exit;
-        } else {
-            header('Content-Type: text/javascript');
-            echo $contents;
         }
+
+        header('Content-Type: text/javascript');
+        echo $contents;
     }
 }

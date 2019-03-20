@@ -25,10 +25,10 @@ class Controllers extends CI_Controller
             exit;
         }
 
-        // if (! $this->ion_auth->is_admin()) {
-        //     header('HTTP/1.1 403 Forbidden');
-        //     exit;
-        // }
+        if (! $this->ion_auth->is_admin()) {
+            header('HTTP/1.1 403 Forbidden');
+            exit;
+        }
 
         $this->ac->load('Users');
 
@@ -55,9 +55,8 @@ class Controllers extends CI_Controller
 
         $this->task->set_door_params($open_time);
         $this->task->add($ctrl_id);
-        $count = $this->task->send();
 
-        if ($count > 0) {
+        if ($this->task->send() > 0) {
             echo "Заданий успешно отправлено: $count"; //TODO перевод
         } else {
             echo "Нет отправленных заданий"; //TODO перевод
@@ -82,9 +81,8 @@ class Controllers extends CI_Controller
 
         $this->task->clear_cards();
         $this->task->add($ctrl_id);
-        $count = $this->task->send();
 
-        if ($count > 0) {
+        if ($this->task->send() > 0) {
             echo "Заданий успешно отправлено: $count"; //TODO перевод
         } else {
             echo "Нет отправленных заданий"; //TODO перевод
@@ -109,18 +107,14 @@ class Controllers extends CI_Controller
 
         $org = $this->_user->first('organizations');
 
-        if (is_null($org)) {
+        if (! isset($org)) {
             echo 'Нет организаций'; //TODO перевод
             exit;
         }
 
-        $this->ac->load('Cards');
-        $this->ac->load('Divisions');
-        $this->ac->load('Persons');
+        $this->ac->load(['Cards', 'Divisions', 'Persons']);
 
         $this->load->library('task');
-
-        //$this->task->controller_id = $ctrl_id;
 
         $cards = [];
 

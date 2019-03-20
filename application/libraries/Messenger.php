@@ -56,7 +56,7 @@ class Messenger extends Ac
 
         $out_msg = new stdClass;
 
-        $time = now('Asia/Yekaterinburg');
+        $time = now();
 
         $out_msg->date = mdate('%Y-%m-%d %H:%i:%s', $time);
         $out_msg->interval = 10;
@@ -99,7 +99,7 @@ class Messenger extends Ac
              */
             if (! isset($inc_m->operation) && isset($inc_m->success)) {
                 if ($inc_m->success === 1) {
-                    $task = new \Orm\Tasks($inc_m->id);
+                    $task = new \Orm\Tasks(['task_id' => $inc_m->id]);
                     $task->remove();
                 }
             }
@@ -158,10 +158,7 @@ class Messenger extends Ac
              | Cобытия на контроллере
              */
             elseif ($inc_m->operation === 'events') {
-                $this->load('Cards');
-                $this->load('Events');
-                $this->load('Persons');
-                $this->load('Users');
+                $this->load(['Cards', 'Events', 'Persons', 'Users']);
 
                 $this->_CI->load->library('notificator');
 
@@ -214,7 +211,7 @@ class Messenger extends Ac
 
         $task = $ctrl->first('tasks');
 
-        if ($task) {
+        if (isset($task)) {
             $out_msg->messages[] = json_decode($task->json);
         }
 
@@ -236,11 +233,9 @@ class Messenger extends Ac
      */
     public function polling(array $event_types, int $time = null): array
     {
-        $time = $time ?? now('Asia/Yekaterinburg');
+        $time = $time ?? now();
 
-        $this->load('Controllers');
-        $this->load('Organizations');
-        $this->load('Users');
+        $this->load(['Controllers', 'Organizations', 'Users']);
 
         $user = new \Orm\Users($this->_CI->ion_auth->user()->row()->id);
 

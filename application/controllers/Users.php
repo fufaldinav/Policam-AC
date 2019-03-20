@@ -31,14 +31,14 @@ class Users extends CI_Controller
 
     /**
      * Получает токен от пользователя
+     *
+     * @return void
      */
-    public function token()
+    public function token(): void
     {
         $this->ac->load('Tokens');
 
         $token_key = $this->input->post('token');
-
-
 
         if ($token_key === 'false') {
             // $this->token->get_by('token', $token_key);
@@ -46,9 +46,8 @@ class Users extends CI_Controller
         } else {
             $token = new \Orm\Tokens(['token' => $token_key]);
 
-            $token->user_id = $this->_user_id;
+            $token->user_id = $this->_user->id;
             $token->token = $token_key;
-
             $token->save();
         }
     }

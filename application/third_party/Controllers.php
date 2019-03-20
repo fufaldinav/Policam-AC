@@ -123,22 +123,4 @@ class Controllers extends MicroORM
      * @var int
      */
     public $org_id = 0;
-
-    /**
-     * @param string $param
-     *
-     * @return void
-     */
-    public function __construct($param = null)
-    {
-        parent::__construct();
-
-        $this->_table = strtolower((new \ReflectionClass($this))->getShortName());
-
-        if (is_numeric($param)) {
-            $this->get($param);
-        } elseif (is_array($param)) {
-            $this->get_by($param);
-        }
-    }
 }

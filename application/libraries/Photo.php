@@ -94,7 +94,7 @@ class Photo extends Ac
                 $photo->hash = $file_hash;
             }
 
-            $time = now('Asia/Yekaterinburg');
+            $time = now();
             $photo->time = $time;
             $photo->save();
 

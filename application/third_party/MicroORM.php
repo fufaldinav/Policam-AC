@@ -71,13 +71,23 @@ abstract class MicroORM
     ];
 
     /**
+     * @param mixed $param
+     *
      * @return void
      */
-    public function __construct()
+    public function __construct($param = null)
     {
         self::$_CI =& get_instance();
         self::$_CI->load->database();
         self::$_db = self::$_CI->db;
+
+        $this->_table = strtolower((new \ReflectionClass($this))->getShortName());
+
+        if (is_numeric($param)) {
+            $this->get($param);
+        } elseif (is_array($param)) {
+            $this->get_by($param);
+        }
     }
 
     /**
@@ -239,10 +249,10 @@ abstract class MicroORM
      *
      * @param string $name
      *
-     * @return object|null Объект или NULL - имя задано неверно или объект
+     * @return MicroORM|null Объект или NULL - имя задано неверно или объект
      *                     отсутствует
      */
-    public function first(string $name): ?object
+    public function first(string $name): ?MicroORM
     {
         if (is_array($this->$name)) {
             $array = $this->$name;
@@ -262,18 +272,22 @@ abstract class MicroORM
     /**
      * Связать объекты
      *
-     * @param object $bindable Связываемый объект
+     * @param MicroORM $bindable Связываемый объект
      *
      * @return bool TRUE - успешно, FALSE - ошибка
      */
-    public function bind(object $bindable): bool
+    public function bind(MicroORM $bindable): bool
     {
-        $rel = $this->_get_relation_model($bindable);
+        $model = $this->_get_relation_model($bindable);
 
-        if (isset($rel)) {
-            self::$_db->insert($rel['through'], [
-                $rel['foreign_key'][0] => $this->id,
-                $rel['foreign_key'][1] => $bindable->id
+        if ($this->_check_relation($bindable, $model)) {
+            return false;
+        }
+
+        if (isset($model)) {
+            self::$_db->insert($model['through'], [
+                $model['foreign_key'][0] => $this->id,
+                $model['foreign_key'][1] => $bindable->id
             ]);
             return true;
         }
@@ -284,21 +298,25 @@ abstract class MicroORM
     /**
      * Удалить связь объектов
      *
-     * @param object $binded Связанный объект
+     * @param MicroORM $binded Связанный объект
      *
      * @return bool TRUE - успешно, FALSE - ошибка
      */
-    public function unbind(object $binded): bool
+    public function unbind(MicroORM $binded): bool
     {
-        $rel = $this->_get_relation_model($binded);
+        $model = $this->_get_relation_model($binded);
 
-        if (isset($rel)) {
+        if (! $this->_check_relation($binded, $model)) {
+            return false;
+        }
+
+        if (isset($model)) {
             self::$_db->where([
-                $rel['foreign_key'][0] => $this->id,
-                $rel['foreign_key'][1] => $binded->id
+                $model['foreign_key'][0] => $this->id,
+                $model['foreign_key'][1] => $binded->id
             ]);
 
-            self::$_db->delete($rel['through']);
+            self::$_db->delete($model['through']);
 
             if (self::$_db->affected_rows() > 0) {
                 return true;
@@ -327,9 +345,9 @@ abstract class MicroORM
      *
      * @param string $name
      *
-     * @return object|null
+     * @return MicroORM|null
      */
-    private function _belongs_to($name): ?object
+    private function _belongs_to(string $name): ?MicroORM
     {
         $classname = $this->_belongs_to[$name]['class'];
         $foreign_key = $this->_belongs_to[$name]['foreign_key'];
@@ -356,9 +374,9 @@ abstract class MicroORM
      *
      * @param string $name
      *
-     * @return object|null
+     * @return MicroORM|null
      */
-    private function _has_one($name): ?object
+    private function _has_one(string $name): ?MicroORM
     {
         $classname = $this->_has_one[$name]['model'];
         $foreign_key = $this->_has_one[$name]['foreign_key'];
@@ -387,7 +405,7 @@ abstract class MicroORM
      *
      * @return array
      */
-    private function _has_many($name): array
+    private function _has_many(string $name): array
     {
         $classname = $this->_has_many[$name]['class'];
         $foreign_key = $this->_has_many[$name]['foreign_key'];
@@ -421,13 +439,13 @@ abstract class MicroORM
     }
 
     /**
-     * Проверяет связь с классом объекта и возвращает параметры
+     * Возвращает парамеры связи с классом объекта
      *
-     * @param object $object Связываемый объект
+     * @param MicroORM $object Связываемый объект
      *
-     * @return array|null Параметры связи
+     * @return array|null Параметры связи или NULL - параметры не установлены
      */
-    private function _get_relation_model($object): ?array
+    private function _get_relation_model(MicroORM $object): ?array
     {
         $props = get_object_vars($this);
 
@@ -443,5 +461,31 @@ abstract class MicroORM
         }
 
         return null;
+    }
+
+    /**
+     * Проверяет связь с классом объекта, используя модель связи
+     *
+     * @param MicroORM $object Связываемый объект
+     * @param array $model Параметры связи
+     *
+     * @return bool TRUE - объекты связаны, FALSE - связь отсутствует
+     */
+    private function _check_relation(MicroORM $object, array $model): bool
+    {
+        if (isset($model)) {
+            self::$_db->where([
+              $model['foreign_key'][0] => $this->id,
+              $model['foreign_key'][1] => $object->id
+            ]);
+
+            $query = self::$_db->get($model['through']);
+
+            if ($query->num_rows() > 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

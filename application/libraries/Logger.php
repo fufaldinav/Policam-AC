@@ -84,7 +84,7 @@ class Logger extends Ac
     {
         $this->_CI->load->helper(['date', 'file']);
 
-        $time = now('Asia/Yekaterinburg');
+        $time = now();
         $date = mdate('%Y-%m-%d', $time);
         $time = mdate('%H:%i:%s', $time);
 

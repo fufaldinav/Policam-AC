@@ -45,7 +45,7 @@ class Ac
 
         $this->_CI->config->load('ac', true);
 
-        include_once APPPATH . 'third_party/MicroORM.php';
+        $this->load('MicroORM');
     }
 
     /**
@@ -53,7 +53,7 @@ class Ac
      *
      * @return mixed|null
      */
-    public function __get($name)
+    public function __get(string $name)
     {
         if (array_key_exists($name, $this->_data)) {
             return $this->_data[$name];
@@ -68,7 +68,7 @@ class Ac
      *
      * @return void
      */
-    public function __set($name, $value)
+    public function __set(string $name, $value): void
     {
         $this->_data[$name] = $value;
     }
@@ -78,7 +78,7 @@ class Ac
      *
      * @return bool
      */
-    public function __isset($name)
+    public function __isset(string $name): bool
     {
         return isset($this->_data[$name]);
     }
@@ -88,7 +88,7 @@ class Ac
      *
      * @return void
      */
-    public function __unset($name)
+    public function __unset(string $name): void
     {
         unset($this->_data[$name]);
     }
@@ -98,8 +98,14 @@ class Ac
      *
      * @param string $class Имя класса
      */
-    public function load($class)
+    public function load($class): void
     {
-        include_once APPPATH . "third_party/$class.php";
+        if (is_array($class)) {
+            foreach ($class as $value) {
+                include_once APPPATH . "third_party/$value.php";
+            }
+        } elseif (is_string($class)) {
+            include_once APPPATH . "third_party/$class.php";
+        }
     }
 }

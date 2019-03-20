@@ -44,14 +44,14 @@ class Util extends CI_Controller
     {
         $this->load->library('messenger');
 
-        $time = $this->input->post('time');
         $events = $this->input->post('events');
+        $time = $this->input->post('time');
 
         header('Content-Type: application/json');
 
         echo json_encode([
                 'msgs' => $this->messenger->polling($events, $time),
-                'time' => now('Asia/Yekaterinburg')
+                'time' => now()
         ]);
     }
 
@@ -79,8 +79,7 @@ class Util extends CI_Controller
      */
     public function card_problem(): void
     {
-        $this->ac->load('Persons');
-        $this->ac->load('User_events');
+        $this->ac->load(['Cards', 'Persons', 'User_events']);
 
         $this->load->helper('language');
 
@@ -88,6 +87,7 @@ class Util extends CI_Controller
         $person_id = $this->input->post('person_id');
 
         if (! isset($problem_type) || ! isset($person_id)) {
+            echo 1;
             exit;
         }
 
@@ -95,23 +95,27 @@ class Util extends CI_Controller
 
         $person = new \Orm\Persons($person_id);
 
+        $cards = $person->cards;
+
+        if (! $cards) {
+            echo 2;
+            exit;
+        }
+
         $description = "{$person->id} {$person->f} {$person->i} ";
 
-        if ($problem_type === 1) {
+        if ($problem_type == 1) {
             $description .= 'forgot card';
-        } elseif ($problem_type === 2 || $problem_type === 3) {
-            $this->ac->load('Cards');
-            $this->ac->load('Controllers');
-            $this->ac->load('Divisions');
-            $this->ac->load('Organizations');
+        } elseif ($problem_type == 2 || $problem_type == 3) {
+            $this->ac->load([
+              'Cards',
+              'Controllers',
+              'Divisions',
+              'Organizations',
+              'User_events'
+            ]);
 
             $this->load->library('task');
-
-            $cards = $person->cards;
-
-            if (! $cards) {
-                exit;
-            }
 
             $ctrls = [];
             $cards_to_delete = [];
@@ -151,7 +155,7 @@ class Util extends CI_Controller
         $event->user_id = $this->_user->id;
         $event->type = $problem_type;
         $event->description = $description;
-        $event->time = now('Asia/Yekaterinburg');
+        $event->time = now();
 
         if ($event->save() > 0) {
             echo $response;

@@ -47,17 +47,4 @@ class Tokens extends MicroORM
      * @var string
      */
     public $token;
-
-    public function __construct($param = null)
-    {
-        parent::__construct();
-
-        $this->_table = strtolower((new \ReflectionClass($this))->getShortName());
-
-        if (is_numeric($param)) {
-            $this->get($param);
-        } elseif (is_array($param)) {
-            $this->get_by($param);
-        }
-    }
 }

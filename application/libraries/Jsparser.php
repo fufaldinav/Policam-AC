@@ -33,7 +33,7 @@ class Jsparser extends Ac
      *
      * @param string $file Файл JS
      *
-     * @return string|null Готовый к выводу в браузер JS
+     * @return string|null Готовый к выводу в браузер JS или NULL - ошибка чтения файла
      */
     public function parse(string $file): ?string
     {

@@ -14,8 +14,10 @@ class Server extends CI_Controller
 
     /**
      * Обрабатывает сообщения от контроллера
+     *
+     * @return void
      */
-    public function index()
+    public function index(): void
     {
         $this->load->library('messenger');
         $inc_json_msg = file_get_contents('php://input');

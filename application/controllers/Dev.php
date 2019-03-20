@@ -14,26 +14,6 @@ class Dev extends CI_Controller
      */
     private $_user;
 
-    /**
-     * @var array $orgs
-     */
-    private $orgs = [];
-
-    /**
-     * @var array $divs
-     */
-    private $divs = [];
-
-    /**
-     * @var array $persons
-     */
-    private $persons = [];
-
-    /**
-     * @var array $cards
-     */
-    private $cards = [];
-
     public function __construct()
     {
         parent::__construct();
@@ -61,8 +41,6 @@ class Dev extends CI_Controller
         $this->ac->load('Users');
         $this->ac->load('User_events');
 
-        $this->load->helper('language');
-
         $user_id = $this->ion_auth->user()->row()->id;
         $this->_user = new \Orm\Users($user_id);
     }
@@ -75,15 +53,5 @@ class Dev extends CI_Controller
     public function index(): void
     {
         header('Content-Type: text/plain');
-
-        $this->load->library('task');
-
-        $card = new \Orm\Cards(['wiegand' => '00']);
-
-        echo "\n";
-        echo "\n";
-        echo "\n";
-        echo "\n";
-        var_dump(isset($card->wiegand));
     }
 }

@@ -3,6 +3,7 @@
 /**
  * Class Persons
  *
+ * @property Photo $photo
  * @property Task $task
  */
 class Persons extends CI_Controller
@@ -41,21 +42,23 @@ class Persons extends CI_Controller
             redirect('/');
         }
 
-        $this->ac->load('Cards');
-        $this->ac->load('Divisions');
-        $this->ac->load('Organizations');
-        $this->ac->load('Persons');
+        $this->ac->load([
+          'Cards',
+          'Divisions',
+          'Organizations',
+          'Persons'
+        ]);
 
-        $this->load->helper('form');
-        $this->load->helper('language');
+        $this->load->helper(['form', 'language']);
 
         $org = $this->_user->first('organizations');
 
         /*
         | Подразделения
         */
+        $divs = @$org->divisions;
         $data = [
-            'divs' => $org->divisions
+            'divs' => $divs ?? []
         ];
 
         /*
@@ -103,21 +106,23 @@ class Persons extends CI_Controller
             redirect('/');
         }
 
-        $this->ac->load('Cards');
-        $this->ac->load('Divisions');
-        $this->ac->load('Organizations');
-        $this->ac->load('Persons');
+        $this->ac->load([
+          'Cards',
+          'Divisions',
+          'Organizations',
+          'Persons'
+        ]);
 
-        $this->load->helper('form');
-        $this->load->helper('language');
+        $this->load->helper(['form', 'language']);
 
         $org = $this->_user->first('organizations');
 
         /*
         | Подразделения
         */
+        $divs = @$org->divisions;
         $data = [
-            'divs' => $org->divisions
+            'divs' => $divs ?? []
         ];
 
         /*
@@ -169,12 +174,14 @@ class Persons extends CI_Controller
             exit;
         }
 
-        $this->ac->load('Cards');
-        $this->ac->load('Divisions');
-        $this->ac->load('Controllers');
-        $this->ac->load('Organizations');
-        $this->ac->load('Persons');
-        $this->ac->load('Photos');
+        $this->ac->load([
+          'Cards',
+          'Divisions',
+          'Controllers',
+          'Organizations',
+          'Persons',
+          'Photos'
+        ]);
 
         $this->load->library('task');
 
@@ -191,6 +198,27 @@ class Persons extends CI_Controller
         $person->save();
 
         /*
+        | Карты
+        */
+        $ctrls = @$org->controllers;
+        $ctrls = $ctrls ?? [];
+
+        foreach ($card_list as $card_id) {
+            $card = new \Orm\Cards($card_id);
+
+            $card->person_id = $person->id;
+            $card->save();
+
+            $this->task->add_cards([$card->wiegand]);
+
+            foreach ($ctrls as $ctrl) {
+                $this->task->add($ctrl->id);
+            }
+        }
+
+        $this->task->send();
+
+        /*
         | Подразделения
         */
         if ($div_list) {
@@ -201,7 +229,7 @@ class Persons extends CI_Controller
             }
         } else {
             $div = new \Orm\Divisions([
-              'org_id' => $org->id,
+              'org_id' => $org->id ?? 0,
               'type' => 0
             ]);
 
@@ -218,35 +246,17 @@ class Persons extends CI_Controller
             $photo->save();
         }
 
-        /*
-        | Карты
-        */
-        $ctrls = $org->controllers;
-
-        foreach ($card_list as $card_id) {
-            $card = new \Orm\Cards($card_id);
-
-            $card->person_id = $person->id;
-            $card->save();
-
-            foreach ($ctrls as $ctrl) {
-                $this->task->add_cards([$card->wiegand]);
-                $this->task->add($ctrl->id);
-                $this->task->send();
-            }
-        }
-
         echo $person->id;
     }
 
     /**
      * Удаляет человека
      *
-     * @param int $person_id ID человека
+     * @param int|null $person_id ID человека
      *
      * @return void
      */
-    public function delete(int $person_id): void
+    public function delete(int $person_id = null): void
     {
         if (! $this->ion_auth->logged_in()) {
             header("HTTP/1.1 401 Unauthorized");
@@ -258,14 +268,21 @@ class Persons extends CI_Controller
             exit;
         }
 
-        $this->ac->load('Cards');
-        $this->ac->load('Divisions');
-        $this->ac->load('Controllers');
-        $this->ac->load('Organizations');
-        $this->ac->load('Persons');
-        $this->ac->load('Photos');
+        if (! isset($person_id)) {
+            echo 0;
+            exit;
+        }
 
-        $this->load->library('task');
+        $this->ac->load([
+          'Cards',
+          'Divisions',
+          'Controllers',
+          'Organizations',
+          'Persons',
+          'Photos'
+        ]);
+
+        $this->load->library(['task', 'photo']);
 
         $org = $this->_user->first('organizations');
 
@@ -274,39 +291,35 @@ class Persons extends CI_Controller
         /*
         | Подразделения
         */
-        $divs = $person->divisions;
-
-        foreach ($divs as $div) {
+        foreach ($person->divisions as $div) {
             $person->unbind($div);
         }
 
         /*
         | Фотографии
         */
-        $photos = $person->photos;
-
-        foreach ($photos as $photo) {
-            $photo->person_id = null; //TODO удаление файла
-            $photo->save();
+        foreach ($person->photos as $photo) {
+            $this->photo->remove($photo->id);
         }
 
         /*
         | Карты
         */
-        $cards = $person->cards;
+        $ctrls = @$org->controllers;
+        $ctrls = $ctrls ?? [];
 
-        $ctrls = $org->controllers;
-
-        foreach ($cards as $card) {
+        foreach ($person->cards as $card) {
             $card->person_id = 0;
             $card->save();
 
+            $this->task->del_cards([$card->wiegand]);
+
             foreach ($ctrls as $ctrl) {
-                $this->task->del_cards([$card->wiegand]);
                 $this->task->add($ctrl->id);
-                $this->task->send();
             }
         }
+
+        $this->task->send();
 
         /*
         | Подписки
@@ -323,20 +336,22 @@ class Persons extends CI_Controller
     /**
      * Получает человека
      *
-     * @param int $person_id ID человека
+     * @param int|null $person_id ID человека
      *
      * @return void
      */
-    public function get(int $person_id): void
+    public function get(int $person_id = null): void
     {
         if (! $this->ion_auth->logged_in()) {
             header("HTTP/1.1 401 Unauthorized");
             exit;
         }
 
-        $this->ac->load('Divisions');
-        $this->ac->load('Persons');
-        $this->ac->load('Photos');
+        if (! isset($person_id)) {
+            exit;
+        }
+
+        $this->ac->load(['Divisions', 'Persons', 'Photos']);
 
         $person = new \Orm\Persons($person_id);
 
@@ -352,20 +367,27 @@ class Persons extends CI_Controller
     /**
      * Получает человека по карте
      *
-     * @param int $card_id ID карты
+     * @param int|null $card_id ID карты
      *
      * @return void
      */
-    public function get_by_card(int $card_id): void
+    public function get_by_card(int $card_id = null): void
     {
         if (! $this->ion_auth->logged_in()) {
             header("HTTP/1.1 401 Unauthorized");
             exit;
         }
 
-        $this->ac->load('Cards');
-        $this->ac->load('Persons');
-        $this->ac->load('Photos');
+        if (! isset($person_id)) {
+            exit;
+        }
+
+        $this->ac->load([
+          'Cards',
+          'Divisions',
+          'Persons',
+          'Photos'
+        ]);
 
         $card = new \Orm\Cards($card_id);
 
@@ -374,7 +396,7 @@ class Persons extends CI_Controller
         header('Content-Type: application/json');
 
         echo json_encode([
-          'person' => $person,
+          'person' => $person ?? [],
           'photos' => $person->photos
         ]);
     }
@@ -382,19 +404,22 @@ class Persons extends CI_Controller
     /**
      * Получает людей по подразделению
      *
-     * @param int $div_id ID подразделения
+     * @param int|null $div_id ID подразделения
      *
      * @return void
      */
-    public function get_list(int $div_id): void
+    public function get_list(int $div_id = null): void
     {
         if (! $this->ion_auth->logged_in()) {
             header("HTTP/1.1 401 Unauthorized");
             exit;
         }
 
-        $this->ac->load('Divisions');
-        $this->ac->load('Persons');
+        if (! isset($div_id)) {
+            exit;
+        }
+
+        $this->ac->load(['Divisions', 'Persons']);
 
         $div = new \Orm\Divisions($div_id);
 

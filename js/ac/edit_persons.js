@@ -156,7 +156,7 @@ function getPersonInfo(person_id) {
 					handleFiles(this.files);
 				};
 
-        console.log(data.divs);
+        divs = [];
 				for (let k in data.divs) {
 					divs.push(data.divs[k].id);
 				}

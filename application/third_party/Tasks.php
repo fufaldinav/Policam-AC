@@ -35,6 +35,12 @@ class Tasks extends MicroORM
     ];
 
     /**
+     * ID задания
+     *
+     * @var int
+     */
+    public $task_id;
+    /**
      * Контроллер, которому предназначено задание
      *
      * @var int
@@ -54,42 +60,4 @@ class Tasks extends MicroORM
      * @var int
      */
     public $time;
-
-    public function __construct($param = null)
-    {
-        parent::__construct();
-
-        $this->_table = strtolower((new \ReflectionClass($this))->getShortName());
-
-        if (is_numeric($param)) {
-            $this->get($param);
-        } elseif (is_array($param)) {
-            $this->get_by($param);
-        }
-    }
-
-    /**
-     * Сохраняет объект в БД
-     *
-     * @return int Количество успешных записей
-     */
-    public function save(): int
-    {
-        $query = parent::$_db
-            ->where('id', $this->id)
-            ->get($this->_table);
-
-        if ($query->num_rows > 0) {
-            parent::$_db
-                ->where('id', $this->id)
-                ->update($this->_table, $this);
-        } else {
-            parent::$_db->insert($this->_table, $this);
-
-            $this->id = parent::$_db->insert_id();
-        }
-
-
-        return parent::$_db->affected_rows();
-    }
 }

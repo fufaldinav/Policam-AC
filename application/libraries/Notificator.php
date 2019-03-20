@@ -83,16 +83,15 @@ class Notificator extends Ac
                 return null;
         }
 
-        $this->load('Persons');
-        $this->load('Photos');
+        $this->load('Persons', 'Photos');
 
         $this->_CI->load->helper('url');
 
         $person = new \Orm\Persons($person_id);
 
-        $photo_id = $person->first('photos')->id ?? 0;
+        $photo = $person->first('photos');
 
-        $photo_url = "https://{$_SERVER['HTTP_HOST']}/img/ac/s/$photo_id.jpg";
+        $photo_url = "https://{$_SERVER['HTTP_HOST']}/img/ac/s/" . ($photo->id ?? 0) . ".jpg";
 
         return $this->_notification = [
             'title' => $event,

@@ -39,8 +39,7 @@ class Divisions extends CI_Controller
             redirect('/');
         }
 
-        $this->ac->load('Divisions');
-        $this->ac->load('Organizations');
+        $this->ac->load(['Divisions', 'Organizations']);
 
         $this->load->library('table');
 
@@ -48,9 +47,10 @@ class Divisions extends CI_Controller
 
         $org = $this->_user->first('organizations');
 
+        $divs = @$org->divisions;
         $data = [
-            'org_id' => $org->id,
-            'divs' => $org->divisions
+            'org_id' => $org->id ?? 0,
+            'divs' => $divs ?? []
         ];
 
         $header = [
@@ -65,7 +65,7 @@ class Divisions extends CI_Controller
     }
 
     /**
-     * Получает подразделения текущей организации
+     * Получает подразделения организаций пользователя
      *
      * @return void
      */
@@ -81,8 +81,7 @@ class Divisions extends CI_Controller
             exit;
         }
 
-        $this->ac->load('Divisions');
-        $this->ac->load('Organizations');
+        $this->ac->load(['Divisions', 'Organizations']);
 
         $orgs = $this->_user->organizations;
 
@@ -131,11 +130,11 @@ class Divisions extends CI_Controller
     /**
      * Удаляет подразделение
      *
-     * @param int $div_id ID подразделения
+     * @param int|null $div_id ID подразделения
      *
      * @return void
      */
-    public function delete(int $div_id): void
+    public function delete(int $div_id = null): void
     {
         if (! $this->ion_auth->logged_in()) {
             header("HTTP/1.1 401 Unauthorized");
@@ -147,32 +146,30 @@ class Divisions extends CI_Controller
             exit;
         }
 
-        $this->ac->load('Divisions');
-        $this->ac->load('Organizations');
-        $this->ac->load('Persons');
+        if (! isset($div_id)) {
+            echo 0;
+            exit;
+        }
 
-        $cur_div = new \Orm\Divisions($div_id);
+        $this->ac->load(['Divisions', 'Organizations', 'Persons']);
 
         $org = $this->_user->first('organizations');
 
+        $cur_div = new \Orm\Divisions($div_id);
+
         //"Пустое" подразделение
         $empty_div = new \Orm\Divisions([
-          'org_id' => $org->id,
+          'org_id' => $org->id ?? 0,
           'type' => 0
         ]);
 
         //Переносим полученных людей в "пустое" подразделение
-        //TODO проверят наличие людей в других подразделениях и тогда не добавлять в пустое
         foreach ($cur_div->persons as $person) {
             $person->unbind($cur_div);
 
-            foreach ($person->divisions as $div) {
-                if ($div->id == $empty_div->id) {
-                    continue 2; //пропустим выполнение, если у пользователя уже есть "пустое" подразделение
-                }
+            if (! $person->divisions) {
+                $empty_div->bind($person);
             }
-
-            $empty_div->bind($person);
         }
 
         echo $cur_div->remove();

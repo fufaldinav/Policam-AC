@@ -16,7 +16,7 @@
 							<td><button onclick="saveDivision(<?php echo $org_id;?>)"><?php echo lang('save');?></button></td>
 						</tr>
 						<?php foreach ($divs as $div):?>
-						<?php if ($div->type == 0) { continue; } ?>
+						<?php if ($div->type != 1) { continue; } ?>
 						<tr>
 							<?php $name = explode(' ', $div->name);?>
 							<td><?php echo $name[0];?></td>

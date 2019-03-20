@@ -51,9 +51,7 @@ class Cards extends CI_Controller
             exit;
         }
 
-        $this->ac->load('Cards');
-        $this->ac->load('Controllers');
-        $this->ac->load('Organizations');
+        $this->ac->load(['Cards', 'Controllers', 'Organizations']);
 
         $this->load->library('task');
 
@@ -63,18 +61,20 @@ class Cards extends CI_Controller
 
         $org = $this->_user->first('organizations');
 
-        $ctrls = $org->controllers;
+        $ctrls = @$org->controllers;
+        if (isset($ctrls)) {
+            if ($card->person_id == 0) {
+                $this->task->del_cards([$card->wiegand]);
+            } else {
+                $this->task->add_cards([$card->wiegand]);
+            }
 
-        if ($card->person_id == 0) {
-            $this->task->del_cards([$card->wiegand]);
-        } else {
-            $this->task->add_cards([$card->wiegand]);
+            foreach ($ctrls as $ctrl) {
+                $this->task->add($ctrl->id);
+                $this->task->send();
+            }
         }
 
-        foreach ($ctrls as $ctrl) {
-            $this->task->add($ctrl->id);
-            $this->task->send();
-        }
 
         echo $card->save();
     }
@@ -111,8 +111,7 @@ class Cards extends CI_Controller
     {
         $person_id = $person_id ?? 0;
 
-        $this->ac->load('Cards');
-        $this->ac->load('Persons');
+        $this->ac->load(['Cards', 'Persons']);
 
         $person = new \Orm\Persons($person_id);
 

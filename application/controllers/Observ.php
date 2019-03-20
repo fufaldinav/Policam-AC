@@ -35,17 +35,18 @@ class Observ extends CI_Controller
      */
     public function index(): void
     {
-        $this->ac->load('Divisions');
-        $this->ac->load('Organizations');
+        $this->ac->load(['Divisions', 'Organizations']);
 
         $this->load->helper('language');
 
         $org = $this->_user->first('organizations');
+
         /*
          | Подразделения
          */
+        $divs = @$org->divisions;
         $data = [
-            'divs' => $org->divisions
+            'divs' => $divs ?? []
         ];
 
         $header = [
