@@ -2,6 +2,8 @@
 
 /**
  * Class Dev
+ *
+ * @property Task $task
  */
 class Dev extends CI_Controller
 {
@@ -57,6 +59,7 @@ class Dev extends CI_Controller
         $this->ac->load('Tasks');
         $this->ac->load('Tokens');
         $this->ac->load('Users');
+        $this->ac->load('User_events');
 
         $this->load->helper('language');
 
@@ -73,12 +76,14 @@ class Dev extends CI_Controller
     {
         header('Content-Type: text/plain');
 
-        $resp = null;
+        $this->load->library('task');
+
+        $card = new \Orm\Cards(['wiegand' => '00']);
 
         echo "\n";
         echo "\n";
         echo "\n";
         echo "\n";
-        var_dump($resp);
+        var_dump(isset($card->wiegand));
     }
 }

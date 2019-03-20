@@ -66,9 +66,9 @@ class Cards extends CI_Controller
         $ctrls = $org->controllers;
 
         if ($card->person_id == 0) {
-            $this->task->del_cards([$this->card->wiegand]);
+            $this->task->del_cards([$card->wiegand]);
         } else {
-            $this->task->add_cards([$this->card->wiegand]);
+            $this->task->add_cards([$card->wiegand]);
         }
 
         foreach ($ctrls as $ctrl) {

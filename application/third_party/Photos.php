@@ -80,13 +80,13 @@ class Photos extends MicroORM
      */
     public static function get_old(): array
     {
-        $query = $this->_db
+        $query = parent::$_db
             ->where('person_id', null)
             ->where('time <', now('Asia/Yekaterinburg') - 86400)
             ->get('photos')
             ->result();
 
-        $classname =  static::class;
+        $classname = static::class;
 
         foreach ($query as &$row) {
             $row = new $classname($row->id);

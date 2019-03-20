@@ -60,11 +60,13 @@ class Task extends Ac
             $counter += $task->save();
         }
 
+        $this->_to_send = [];
+
         return $counter;
     }
 
     /**
-     * Сохраняет задание в БД
+     * Добавляет задание на отправку
      *
      * @param int $ctrl_id ID контроллера, для которого предназначено задание
      *
@@ -76,11 +78,11 @@ class Task extends Ac
             return false;
         }
 
-        $this->model('Tasks');
+        $this->load('Tasks');
 
         $task = new \Orm\Tasks();
 
-        $task->id = $this->_request->id;
+        $task->id = $this->_request->id = mt_rand(500000, 999999999);
         $task->controller_id = $ctrl_id;
         $task->json = json_encode($this->_request);
         $task->time = now('Asia/Yekaterinburg');
@@ -108,7 +110,6 @@ class Task extends Ac
     ): void {
         $this->_request_clear();
 
-        $this->_request->id = mt_rand(500000, 999999999);
         $this->_request->operation = __FUNCTION__;
         $this->_request->open = $open_time;
         $this->_request->open_control = $open_control;
@@ -128,7 +129,6 @@ class Task extends Ac
     {
         $this->_request_clear();
 
-        $this->_request->id = mt_rand(500000, 999999999);
         $this->_request->operation = __FUNCTION__;
         $this->_request->cards = [];
 
@@ -153,7 +153,6 @@ class Task extends Ac
     {
         $this->_request_clear();
 
-        $this->_request->id = mt_rand(500000, 999999999);
         $this->_request->operation = __FUNCTION__;
         $this->_request->cards = [];
 
@@ -175,7 +174,6 @@ class Task extends Ac
     {
         $this->_request_clear();
 
-        $this->_request->id = mt_rand(500000, 999999999);
         $this->_request->operation = __FUNCTION__;
     }
 

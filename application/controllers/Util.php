@@ -68,7 +68,8 @@ class Util extends CI_Controller
 
         $err = $err ?? $this->input->post('error') ?? 'Неизвестная ошибка или ошибка не указана';
 
-        $this->logger->save_errors($err);
+        $this->logger->add('err', $err);
+        $this->logger->write();
     }
 
     /**
@@ -79,7 +80,7 @@ class Util extends CI_Controller
     public function card_problem(): void
     {
         $this->ac->load('Persons');
-        $this->ac->model('users_events');
+        $this->ac->load('User_events');
 
         $this->load->helper('language');
 
@@ -145,12 +146,14 @@ class Util extends CI_Controller
             exit;
         }
 
-        $this->users_events->user_id = $this->_user->id;
-        $this->users_events->type = $problem_type;
-        $this->users_events->description = $description;
-        $this->users_events->time = now('Asia/Yekaterinburg');
+        $event = new \Orm\User_events();
 
-        if ($this->users_events->save() > 0) {
+        $event->user_id = $this->_user->id;
+        $event->type = $problem_type;
+        $event->description = $description;
+        $event->time = now('Asia/Yekaterinburg');
+
+        if ($event->save() > 0) {
             echo $response;
         }
     }

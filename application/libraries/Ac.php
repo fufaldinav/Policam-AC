@@ -94,21 +94,6 @@ class Ac
     }
 
     /**
-     * Загрузка моделей
-     *
-     * @param string $model Имя модели
-     * @param string $name  Альтернативное имя
-     */
-    public function model($model, $name = null)
-    {
-        $name = $name ?? $model;
-
-        $this->_CI->load->model("ac/{$model}_model", $name);
-
-        $this->$name = $this->_CI->$name;
-    }
-
-    /**
      * Загрузка классов
      *
      * @param string $class Имя класса

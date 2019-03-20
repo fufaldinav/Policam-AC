@@ -121,13 +121,15 @@ class Photo extends Ac
                 $response['error'] = $e->getMessage();
 
                 $this->_CI->load->library('logger');
-                $this->_CI->logger->save_errors($response['error']);
+                $this->_CI->logger->add('err', $response['error']);
+                $this->_CI->logger->write();
 
                 return $response;
             }
         } else {
             $this->_CI->load->library('logger');
-            $this->_CI->logger->save_errors($response['error']);
+            $this->_CI->logger->add('err', $response['error']);
+            $this->_CI->logger->write();
 
             return $response;
         }
@@ -160,7 +162,9 @@ class Photo extends Ac
             return $photo->remove();
         } catch (Exception $e) {
             $this->_CI->load->library('logger');
-            $this->_CI->logger->save_errors($e->getMessage());
+
+            $this->_CI->logger->add('err', $e->getMessage());
+            $this->_CI->logger->write();
 
             return 0;
         }
