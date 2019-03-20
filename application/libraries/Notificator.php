@@ -50,8 +50,8 @@ class Notificator extends Ac
     {
         parent::__construct();
 
-        $this->_fcm_url = self::$_CI->config->item('fcm_url', 'ac');
-        $this->_server_key = self::$_CI->config->item('server_key', 'ac');
+        $this->_fcm_url = $this->_CI->config->item('fcm_url', 'ac');
+        $this->_server_key = $this->_CI->config->item('server_key', 'ac');
     }
 
     /**
@@ -64,9 +64,9 @@ class Notificator extends Ac
      */
     public function generate(int $person_id, int $event_id): array
     {
-        self::$_CI->lang->load('ac');
+        $this->_CI->lang->load('ac');
 
-        self::$_CI->load->helper('language');
+        $this->_CI->load->helper('language');
 
         switch ($event_id) {
             case 4: //вход
@@ -81,7 +81,7 @@ class Notificator extends Ac
                 return [];
         }
 
-        self::$_CI->load->helper('url');
+        $this->_CI->load->helper('url');
 
         $this->model('person');
 

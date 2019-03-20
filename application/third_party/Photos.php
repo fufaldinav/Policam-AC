@@ -80,7 +80,7 @@ class Photos extends MicroORM
      */
     public static function get_old(): array
     {
-        $query = self::$_db
+        $query = $this->_db
             ->where('person_id', null)
             ->where('time <', now('Asia/Yekaterinburg') - 86400)
             ->get('photos')

@@ -27,7 +27,7 @@ class Ac
      *
      * @var object
      */
-    protected static $_CI;
+    protected $_CI;
 
     /**
      * Хранилище неизвестных свойств
@@ -41,9 +41,9 @@ class Ac
      */
     public function __construct()
     {
-        self::$_CI =& get_instance();
+        $this->_CI =& get_instance();
 
-        self::$_CI->config->load('ac', true);
+        $this->_CI->config->load('ac', true);
 
         include_once APPPATH . 'third_party/MicroORM.php';
     }
@@ -103,9 +103,9 @@ class Ac
     {
         $name = $name ?? $model;
 
-        self::$_CI->load->model("ac/{$model}_model", $name);
+        $this->_CI->load->model("ac/{$model}_model", $name);
 
-        $this->$name = self::$_CI->$name;
+        $this->$name = $this->_CI->$name;
     }
 
     /**

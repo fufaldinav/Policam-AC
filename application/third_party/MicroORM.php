@@ -36,14 +36,14 @@ abstract class MicroORM
      *
      * @var object
      */
-    protected static $_CI;
+    protected $_CI;
 
     /**
      * Объект БД
      *
      * @var object
      */
-    protected static $_db;
+    protected $_db;
 
     /**
      * Таблица в БД
@@ -64,7 +64,7 @@ abstract class MicroORM
      *
      * @var array
      */
-    private static $_relationship_types = [
+    private $_relationship_types = [
       '_belongs_to',
       '_has_one',
       '_has_many'
@@ -75,9 +75,9 @@ abstract class MicroORM
      */
     public function __construct()
     {
-        self::$_CI =& get_instance();
-        self::$_CI->load->database();
-        self::$_db = self::$_CI->db;
+        $this->_CI =& get_instance();
+        $this->_CI->load->database();
+        $this->_db = $this->_CI->db;
     }
 
     /**
@@ -93,7 +93,7 @@ abstract class MicroORM
 
         $props = get_object_vars($this);
 
-        foreach (self::$_relationship_types as $type) {
+        foreach ($this->_relationship_types as $type) {
             if (array_key_exists($type, $props)) {
                 if (array_key_exists($name, $props[$type])) {
                     return $this->_storage[$name] = $this->$type($name);
@@ -144,7 +144,7 @@ abstract class MicroORM
      */
     public function get(int $id): bool
     {
-        $query = self::$_db
+        $query = $this->_db
             ->where('id', $id)
             ->limit(1)
             ->get($this->_table);
@@ -167,7 +167,7 @@ abstract class MicroORM
      */
     public function get_by(array $attr): bool
     {
-        $query = self::$_db
+        $query = $this->_db
             ->where($attr)
             ->limit(1)
             ->get($this->_table);
@@ -210,16 +210,16 @@ abstract class MicroORM
     public function save(): int
     {
         if (isset($this->id)) {
-            self::$_db
+            $this->_db
                 ->where('id', $this->id)
                 ->update($this->_table, $this);
         } else {
-            self::$_db->insert($this->_table, $this);
+            $this->_db->insert($this->_table, $this);
 
-            $this->id = self::$_db->insert_id();
+            $this->id = $this->_db->insert_id();
         }
 
-        return self::$_db->affected_rows();
+        return $this->_db->affected_rows();
     }
 
     /**
@@ -229,9 +229,9 @@ abstract class MicroORM
      */
     public function remove(): int
     {
-        self::$_db->delete($this->_table, ['id' => $this->id]);
+        $this->_db->delete($this->_table, ['id' => $this->id]);
 
-        return self::$_db->affected_rows();
+        return $this->_db->affected_rows();
     }
 
     /**
@@ -266,7 +266,7 @@ abstract class MicroORM
         $rel = $this->_get_relation_model($bindable);
 
         if (isset($rel)) {
-            self::$_db->insert($rel['through'], [
+            $this->_db->insert($rel['through'], [
                 $rel['foreign_key'][0] => $this->id,
                 $rel['foreign_key'][1] => $bindable->id
             ]);
@@ -288,14 +288,14 @@ abstract class MicroORM
         $rel = $this->_get_relation_model($binded);
 
         if (isset($rel)) {
-            self::$_db->where([
+            $this->_db->where([
                 $rel['foreign_key'][0] => $this->id,
                 $rel['foreign_key'][1] => $binded->id
             ]);
 
-            self::$_db->delete($rel['through']);
+            $this->_db->delete($rel['through']);
 
-            if (self::$_db->affected_rows() > 0) {
+            if ($this->_db->affected_rows() > 0) {
                 return true;
             }
         }
@@ -329,7 +329,7 @@ abstract class MicroORM
         $classname = $this->_belongs_to[$name]['class'];
         $foreign_key = $this->_belongs_to[$name]['foreign_key'];
 
-        $query = self::$_db
+        $query = $this->_db
             ->where('id', $this->$foreign_key)
             ->limit(1)
             ->get($classname);
@@ -358,7 +358,7 @@ abstract class MicroORM
         $classname = $this->_has_one[$name]['model'];
         $foreign_key = $this->_has_one[$name]['foreign_key'];
 
-        $query = self::$_db
+        $query = $this->_db
             ->where($foreign_key, $this->id)
             ->limit(1)
             ->get($classname);
@@ -389,18 +389,18 @@ abstract class MicroORM
         $through = $this->_has_many[$name]['through'] ?? null;
 
         if (isset($through)) {
-            self::$_db
+            $this->_db
                 ->select("{$foreign_key[1]} AS id")
                 ->from($through)
                 ->where($foreign_key[0], $this->id);
         } else {
-            self::$_db
+            $this->_db
                 ->select('id')
                 ->from($classname)
                 ->where($foreign_key, $this->id);
         }
 
-        $query = self::$_db
+        $query = $this->_db
             ->get()
             ->result();
 

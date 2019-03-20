@@ -36,7 +36,7 @@ class Photo extends Ac
     {
         parent::__construct();
 
-        $this->_img_path = self::$_CI->config->item('img_path', 'ac');
+        $this->_img_path = $this->_CI->config->item('img_path', 'ac');
 
         if (! is_dir($this->_img_path)) {
             mkdir($this->_img_path, 0755, true);
@@ -120,14 +120,14 @@ class Photo extends Ac
             } catch (Exception $e) {
                 $response['error'] = $e->getMessage();
 
-                self::$_CI->load->library('logger');
-                self::$_CI->logger->save_errors($response['error']);
+                $this->_CI->load->library('logger');
+                $this->_CI->logger->save_errors($response['error']);
 
                 return $response;
             }
         } else {
-            self::$_CI->load->library('logger');
-            self::$_CI->logger->save_errors($response['error']);
+            $this->_CI->load->library('logger');
+            $this->_CI->logger->save_errors($response['error']);
 
             return $response;
         }
@@ -159,8 +159,8 @@ class Photo extends Ac
 
             return $photo->remove();
         } catch (Exception $e) {
-            self::$_CI->load->library('logger');
-            self::$_CI->logger->save_errors($e->getMessage());
+            $this->_CI->load->library('logger');
+            $this->_CI->logger->save_errors($e->getMessage());
 
             return 0;
         }

@@ -43,13 +43,13 @@ class Logger extends Ac
     {
         parent::__construct();
 
-        $this->_log_path = self::$_CI->config->item('log_path', 'ac');
+        $this->_log_path = $this->_CI->config->item('log_path', 'ac');
 
         if (! is_dir($this->_log_path)) {
             mkdir($this->_log_path, 0755, true);
         }
 
-        $this->_timeout = self::$_CI->config->item('long_poll_timeout', 'ac');
+        $this->_timeout = $this->_CI->config->item('long_poll_timeout', 'ac');
     }
 
     /**
@@ -59,7 +59,7 @@ class Logger extends Ac
      */
     public function save_errors(string $err): void
     {
-        self::$_CI->load->helper('file');
+        $this->_CI->load->helper('file');
 
         $time = now('Asia/Yekaterinburg');
         $datestring = '%Y-%m-%d';

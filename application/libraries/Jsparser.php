@@ -37,7 +37,7 @@ class Jsparser extends Ac
      */
     public function parse(string $file): ?string
     {
-        self::$_CI->load->helper('file');
+        $this->_CI->load->helper('file');
 
         $contents = read_file("./js/ac/$file");
 
@@ -77,14 +77,14 @@ class Jsparser extends Ac
         if ($prefix === 'ci') {
             switch ($var) {
                 case 'base_url':
-                    self::$_CI->load->helper('url');
+                    $this->_CI->load->helper('url');
 
                     $value = base_url();
 
                     break;
 
                 case 'site_url':
-                    self::$_CI->load->helper('url');
+                    $this->_CI->load->helper('url');
 
                     $value = site_url();
 
@@ -95,11 +95,11 @@ class Jsparser extends Ac
                     break;
             }
         } elseif ($prefix === 'config') {
-            $value = self::$_CI->config->item($var, 'ac');
+            $value = $this->_CI->config->item($var, 'ac');
         } elseif ($prefix === 'lang') {
-            self::$_CI->lang->load('ac');
+            $this->_CI->lang->load('ac');
 
-            self::$_CI->load->helper('language');
+            $this->_CI->load->helper('language');
 
             $value = lang($var);
         }
