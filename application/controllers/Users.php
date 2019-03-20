@@ -2,8 +2,6 @@
 
 /**
  * Class Users
- *
- * @property Token_model $token
  */
 class Users extends CI_Controller
 {

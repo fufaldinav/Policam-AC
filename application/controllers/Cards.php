@@ -3,10 +3,7 @@
 /**
  * Class Cards
  *
- * @property Card_model $card
- * @property Ctrl_model $ctrl
- * @property Org_model $org
- * @property Task_model $org
+ * @property Task $task
  */
 class Cards extends CI_Controller
 {

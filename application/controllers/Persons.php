@@ -3,13 +3,7 @@
 /**
  * Class Persons
  *
- * @property Card_model $card
- * @property Ctrl_model $ctrl
- * @property Div_model $div
- * @property Org_model $org
- * @property Person_model $person
- * @property Photo_model $photo
- * @property Task_model $task
+ * @property Task $task
  */
 class Persons extends CI_Controller
 {

@@ -42,17 +42,20 @@ class Messenger extends Ac
      */
     private $_timeout;
 
+    /**
+     * @return void
+     */
     public function __construct()
     {
         parent::__construct();
 
-        $this->_log_path = $this->CI->config->item('log_path', 'ac');
+        $this->_log_path = self::$_CI->config->item('log_path', 'ac');
 
         if (! is_dir($this->_log_path)) {
             mkdir($this->_log_path, 0755, true);
         }
 
-        $this->_timeout = $this->CI->config->item('long_poll_timeout', 'ac');
+        $this->_timeout = self::$_CI->config->item('long_poll_timeout', 'ac');
     }
 
     /**
@@ -65,7 +68,7 @@ class Messenger extends Ac
      */
     public function handle(string $inc_json_msg): ?string
     {
-        $this->CI->load->helper(['date', 'file']);
+        self::$_CI->load->helper(['date', 'file']);
 
         $out_msg = new stdClass;
 
@@ -194,13 +197,13 @@ class Messenger extends Ac
 
                     $subscribers = $this->person->get_users($this->card->person_id);
 
-                    $this->CI->load->library('notificator');
+                    self::$_CI->load->library('notificator');
 
                     foreach ($subscribers as $sub) {
-                        $notification = $this->CI->notificator->generate($this->card->person_id, $event->event);
+                        $notification = self::$_CI->notificator->generate($this->card->person_id, $event->event);
 
                         if (count($notification) > 0) {
-                            $response = $this->CI->notificator->send($notification, $sub->user_id);
+                            $response = self::$_CI->notificator->send($notification, $sub->user_id);
 
                             $path = "$this->log_path/push-$log_date.txt";
                             write_file($path, "USER: $sub->user_id || PERSON: {$this->card->person_id} || $response\n", 'a');
@@ -242,7 +245,7 @@ class Messenger extends Ac
     {
         $time = $time ?? now('Asia/Yekaterinburg');
 
-        $user_id = $this->CI->ion_auth->user()->row()->id; //TODO
+        $user_id = self::$_CI->ion_auth->user()->row()->id; //TODO
 
         $this->model('org');
         $this->model('ctrl');

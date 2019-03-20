@@ -3,7 +3,7 @@
 /**
  * Class Server
  *
- * @property Messenger_model $messenger
+ * @property Messenger $messenger
  */
 class Server extends CI_Controller
 {

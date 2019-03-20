@@ -2,17 +2,6 @@
 
 /**
  * Class Dev
- *
- * @property Card_model $card
- * @property Ctrl_model $ctrl
- * @property Div_model $div
- * @property Event_model $event
- * @property Org_model $org
- * @property Person_model $person
- * @property Photo_model $photo
- * @property Task_model $task
- * @property Token_model $token
- * @property Users_events_model $users_events
  */
 class Dev extends CI_Controller
 {

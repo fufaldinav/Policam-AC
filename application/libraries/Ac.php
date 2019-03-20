@@ -27,7 +27,7 @@ class Ac
      *
      * @var object
      */
-    protected $CI;
+    protected static $_CI;
 
     /**
      * Хранилище неизвестных свойств
@@ -36,15 +36,23 @@ class Ac
      */
     protected $_data = [];
 
+    /**
+     * @return void
+     */
     public function __construct()
     {
-        $this->CI =& get_instance();
+        self::$_CI =& get_instance();
 
-        $this->CI->config->load('ac', true);
+        self::$_CI->config->load('ac', true);
 
         include_once APPPATH . 'third_party/MicroORM.php';
     }
 
+    /**
+     * @param string $name Имя свойства
+     *
+     * @return mixed|null
+     */
     public function __get($name)
     {
         if (array_key_exists($name, $this->_data)) {
@@ -54,23 +62,39 @@ class Ac
         return null;
     }
 
+    /**
+     * @param string $name Имя свойства
+     * @param mixed $value Значение свойства
+     *
+     * @return void
+     */
     public function __set($name, $value)
     {
         $this->_data[$name] = $value;
     }
 
+    /**
+     * @param string $name Имя свойства
+     *
+     * @return bool
+     */
     public function __isset($name)
     {
         return isset($this->_data[$name]);
     }
 
+    /**
+     * @param string $name Имя свойства
+     *
+     * @return void
+     */
     public function __unset($name)
     {
         unset($this->_data[$name]);
     }
 
     /**
-     * Упрощенная загрузка моделей
+     * Загрузка моделей
      *
      * @param string $model Имя модели
      * @param string $name  Альтернативное имя
@@ -79,15 +103,15 @@ class Ac
     {
         $name = $name ?? $model;
 
-        $this->CI->load->model("ac/{$model}_model", $name);
+        self::$_CI->load->model("ac/{$model}_model", $name);
 
-        $this->$name = $this->CI->$name;
+        $this->$name = self::$_CI->$name;
     }
 
     /**
-     * Упрощенная загрузка классов
+     * Загрузка классов
      *
-     * @param string $class Имя модели
+     * @param string $class Имя класса
      */
     public function load($class)
     {

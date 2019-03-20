@@ -19,9 +19,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
  * Class Notificator
- * @property Person_model $person
- * @property Photo_model $photo
- * @property Token_model $token
  */
 class Notificator extends Ac
 {
@@ -46,12 +43,15 @@ class Notificator extends Ac
      */
     private $_notification;
 
+    /**
+     * @return void
+     */
     public function __construct()
     {
         parent::__construct();
 
-        $this->_fcm_url = $this->CI->config->item('fcm_url', 'ac');
-        $this->_server_key = $this->CI->config->item('server_key', 'ac');
+        $this->_fcm_url = self::$_CI->config->item('fcm_url', 'ac');
+        $this->_server_key = self::$_CI->config->item('server_key', 'ac');
     }
 
     /**
@@ -64,9 +64,9 @@ class Notificator extends Ac
      */
     public function generate(int $person_id, int $event_id): array
     {
-        $this->CI->lang->load('ac');
+        self::$_CI->lang->load('ac');
 
-        $this->CI->load->helper('language');
+        self::$_CI->load->helper('language');
 
         switch ($event_id) {
             case 4: //вход
@@ -81,7 +81,7 @@ class Notificator extends Ac
                 return [];
         }
 
-        $this->CI->load->helper('url');
+        self::$_CI->load->helper('url');
 
         $this->model('person');
 

@@ -37,6 +37,9 @@ class Task extends Ac
      */
     private $_to_send = [];
 
+    /**
+     * @return void
+     */
     public function __construct()
     {
         parent::__construct();
@@ -75,7 +78,7 @@ class Task extends Ac
 
         $this->model('Tasks');
 
-        $task = new Tasks();
+        $task = new \Orm\Tasks();
 
         $task->id = $this->_request->id;
         $task->controller_id = $ctrl_id;

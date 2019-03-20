@@ -2,7 +2,6 @@
 
 /**
  * Class Divisions
- *
  */
 class Divisions extends CI_Controller
 {

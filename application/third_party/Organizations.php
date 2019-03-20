@@ -32,6 +32,10 @@ class Organizations extends MicroORM
         'class' => 'divisions',
         'foreign_key' => 'org_id'
       ],
+      'controllers' => [
+        'class' => 'controllers',
+        'foreign_key' => 'org_id'
+      ],
       'users' => [
         'class' => 'users',
         'foreign_key' => [
@@ -63,6 +67,11 @@ class Organizations extends MicroORM
      */
     public $type = 1;
 
+    /**
+     * @param string $param
+     *
+     * @return void
+     */
     public function __construct($param = null)
     {
         parent::__construct();

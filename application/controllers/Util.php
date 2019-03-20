@@ -4,13 +4,7 @@
  * Class Util
  *
  * @property Messenger $messenger
- * @property Card_model $card
- * @property Ctrl_model $ctrl
- * @property Div_model $div
- * @property Org_model $org
- * @property Person_model $person
- * @property Task_model $task
- * @property Users_events_model $users_events
+ * @property Logger $logger
  */
 class Util extends CI_Controller
 {
@@ -24,20 +18,29 @@ class Util extends CI_Controller
             header("HTTP/1.1 401 Unauthorized");
             exit;
         }
+
+        $this->ac->load('Users');
+
+        $user_id = $this->ion_auth->user()->row()->id;
+        $this->_user = new \Orm\Users($user_id);
     }
 
     /**
      * Получает время сервера
+     *
+     * @return void
      */
-    public function get_time()
+    public function get_time(): void
     {
         echo time();
     }
 
     /**
      * Получает события и реализует long polling
+     *
+     * @return void
      */
-    public function get_events()
+    public function get_events(): void
     {
         $this->load->library('messenger');
 
@@ -56,88 +59,99 @@ class Util extends CI_Controller
      * Сохраняет ошибки от клиентов
      *
      * @param string|null $err Текст ошибки или NULL - получить POST-запрос
+     *
+     * @return void
      */
-    public function save_js_errors(string $err = null)
+    public function save_js_errors(string $err = null): void
     {
         $this->load->library('logger');
 
-        $err = $err ?? $this->input->post('error');
+        $err = $err ?? $this->input->post('error') ?? 'Неизвестная ошибка или ошибка не указана';
 
         $this->logger->save_errors($err);
     }
 
     /**
      * Обрабатывает проблемы с картами
+     *
+     * @return void
      */
-    public function card_problem()
+    public function card_problem(): void
     {
-        $this->ac->model('person');
+        $this->ac->load('Persons');
         $this->ac->model('users_events');
 
         $this->load->helper('language');
 
-        $user_id = $this->ion_auth->user()->row()->id; //TODO
-
-        $type = $this->input->post('type');
+        $problem_type = $this->input->post('type');
         $person_id = $this->input->post('person_id');
 
-        if (! isset($type) || ! isset($person_id)) {
-            return null;
+        if (! isset($problem_type) || ! isset($person_id)) {
+            exit;
         }
 
         $response = lang('registred');
 
-        $this->person->get($person_id);
+        $person = new \Orm\Persons($person_id);
 
-        if ($type == 1) {
-            $this->users_events->user_id = $user_id;
-            $this->users_events->type = $type;
-            $this->users_events->description = "{$this->person->id} {$this->person->f} {$this->person->i} forgot card";
-            $this->users_events->time = now('Asia/Yekaterinburg');
+        $description = "{$person->id} {$person->f} {$person->i} ";
 
-            if ($this->users_events->save() > 0) {
-                echo $response;
-            }
-        } elseif ($type == 2 || $type == 3) {
-            $this->ac->model('card');
-            $this->ac->model('ctrl');
-            $this->ac->model('div');
-            $this->ac->model('org');
-            $this->ac->model('task');
+        if ($problem_type === 1) {
+            $description .= 'forgot card';
+        } elseif ($problem_type === 2 || $problem_type === 3) {
+            $this->ac->load('Cards');
+            $this->ac->load('Controllers');
+            $this->ac->load('Divisions');
+            $this->ac->load('Organizations');
 
-            $this->card->get_list($this->person->id);
+            $this->load->library('task');
 
-            if (count($this->card->get_list()) === 0) {
-                return null;
+            $cards = $person->cards;
+
+            if (! $cards) {
+                exit;
             }
 
-            $this->div->get($this->person->div);
-            $this->org->get($this->div->org_id);
-            $ctrls = $this->ctrl->get_list($this->org->id);
+            $ctrls = [];
+            $cards_to_delete = [];
 
-            foreach ($this->card->get_list() as &$card) {
+            foreach ($cards as &$card) {
+                $cards_to_delete[] = $card->wiegand;
+
                 $card->person_id = 0;
-
-                foreach ($ctrls as $ctrl) {
-                    $this->task->controller_id = $ctrl->id;
-                    $this->task->del_cards([$card->wiegand]);
-                    $this->task->save();
-                }
+                $card->save();
             }
             unset($card);
 
-            $this->card->save_list();
+            $this->task->del_cards($cards_to_delete);
 
-            $this->users_events->user_id = $user_id;
-            $this->users_events->type = $type;
-            $this->users_events->description = "{$this->person->id} {$this->person->f} {$this->person->i} lost/broke card";
-            $this->users_events->time = now('Asia/Yekaterinburg');
+            $divs = $person->divisions;
+
+            foreach ($divs as $div) {
+                $org = $div->organization;
+                $ctrls = array_merge($ctrls, $org->controllers);
+            }
+
+            foreach ($ctrls as $ctrl) {
+                $this->task->add($ctrl->id);
+            }
+
+            $this->task->send();
 
             $response .= ' ' . lang('and') . ' ' . lang('card_deleted');
 
-            if ($this->users_events->save() > 0) {
-                echo $response;
-            }
+            $description .= 'lost/broke card';
+        } else {
+            exit;
+        }
+
+        $this->users_events->user_id = $this->_user->id;
+        $this->users_events->type = $problem_type;
+        $this->users_events->description = $description;
+        $this->users_events->time = now('Asia/Yekaterinburg');
+
+        if ($this->users_events->save() > 0) {
+            echo $response;
         }
     }
 }

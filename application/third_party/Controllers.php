@@ -114,6 +114,11 @@ class Controllers extends MicroORM
      */
     public $org_id = 0;
 
+    /**
+     * @param string $param
+     *
+     * @return void
+     */
     public function __construct($param = null)
     {
         parent::__construct();
