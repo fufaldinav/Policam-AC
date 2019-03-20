@@ -108,7 +108,7 @@ class Events extends MicroORM
             ->get('events')
             ->result();
 
-        $classname = static::class;
+        $classname = self::class;
 
         foreach ($query as &$row) {
             $row = new $classname($row->id);

@@ -87,7 +87,6 @@ class Util extends CI_Controller
         $person_id = $this->input->post('person_id');
 
         if (! isset($problem_type) || ! isset($person_id)) {
-            echo 1;
             exit;
         }
 
@@ -98,7 +97,6 @@ class Util extends CI_Controller
         $cards = $person->cards;
 
         if (! $cards) {
-            echo 2;
             exit;
         }
 

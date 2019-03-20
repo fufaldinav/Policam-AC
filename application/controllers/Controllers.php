@@ -56,7 +56,9 @@ class Controllers extends CI_Controller
         $this->task->set_door_params($open_time);
         $this->task->add($ctrl_id);
 
-        if ($this->task->send() > 0) {
+        $count = $this->task->send();
+
+        if ($count > 0) {
             echo "Заданий успешно отправлено: $count"; //TODO перевод
         } else {
             echo "Нет отправленных заданий"; //TODO перевод
@@ -82,7 +84,9 @@ class Controllers extends CI_Controller
         $this->task->clear_cards();
         $this->task->add($ctrl_id);
 
-        if ($this->task->send() > 0) {
+        $count = $this->task->send();
+
+        if ($count > 0) {
             echo "Заданий успешно отправлено: $count"; //TODO перевод
         } else {
             echo "Нет отправленных заданий"; //TODO перевод
@@ -103,18 +107,18 @@ class Controllers extends CI_Controller
             exit;
         }
 
-        $this->ac->load('Organizations');
-
-        $org = $this->_user->first('organizations');
-
-        if (! isset($org)) {
-            echo 'Нет организаций'; //TODO перевод
-            exit;
-        }
-
-        $this->ac->load(['Cards', 'Divisions', 'Persons']);
+        $this->ac->load([
+          'Cards',
+          'Controllers',
+          'Divisions',
+          'Organizations',
+          'Persons']);
 
         $this->load->library('task');
+
+        $ctrl = new \Orm\Controllers($ctrl_id);
+
+        $org = $ctrl->organization;
 
         $cards = [];
 

@@ -68,7 +68,7 @@ class Photos extends MicroORM
             ->get('photos')
             ->result();
 
-        $classname = static::class;
+        $classname = self::class;
 
         foreach ($query as &$row) {
             $row = new $classname($row->id);
