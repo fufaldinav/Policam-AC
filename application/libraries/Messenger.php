@@ -149,7 +149,10 @@ class Messenger extends Ac
                     $out_m->granted = 1;
                 }
 
-                $this->card->wiegand = $inc_m->card;
+                if (! isset($this->card->wiegand)) {
+                    $this->card->wiegand = $inc_m->card;
+                }
+
                 $this->card->last_conn = $time;
                 $this->card->controller_id = $this->ctrl->id;
 
@@ -175,7 +178,10 @@ class Messenger extends Ac
 
                     $this->card->get_by('wiegand', $event->card);
 
-                    $this->card->wiegand = $event->card;
+                    if (! isset($this->card->wiegand)) {
+                        $this->card->wiegand = $event->card;
+                    }
+
                     $this->card->last_conn = $time;
                     $this->card->controller_id = $this->ctrl->id;
 
