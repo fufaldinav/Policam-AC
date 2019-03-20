@@ -34,6 +34,34 @@ class User_events extends MicroORM
       ]
     ];
 
+    /**
+     * Пользователь, который вызвал событие
+     *
+     * @var int
+     */
+    public $user_id;
+
+    /**
+     * Тип события
+     *
+     * @var int
+     */
+    public $type;
+
+    /**
+     * Описание события
+     *
+     * @var string
+     */
+    public $description;
+
+    /**
+     * Время события
+     *
+     * @var int
+     */
+    public $time;
+
     public function __construct($param = null)
     {
         parent::__construct();
