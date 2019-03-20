@@ -3,10 +3,7 @@
 /**
  * Class Cards
  *
- * @property Card_model $card
- * @property Ctrl_model $ctrl
- * @property Org_model $org
- * @property Task_model $org
+ * @property Task $task
  */
 class Cards extends CI_Controller
 {
@@ -69,9 +66,9 @@ class Cards extends CI_Controller
         $ctrls = $org->controllers;
 
         if ($card->person_id == 0) {
-            $this->task->del_cards([$this->card->wiegand]);
+            $this->task->del_cards([$card->wiegand]);
         } else {
-            $this->task->add_cards([$this->card->wiegand]);
+            $this->task->add_cards([$card->wiegand]);
         }
 
         foreach ($ctrls as $ctrl) {

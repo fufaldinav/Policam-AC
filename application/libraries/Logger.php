@@ -30,40 +30,69 @@ class Logger extends Ac
     private $_log_path;
 
     /**
-     * Таймаут одного long poll
+     * Записи
      *
-     * @var int
+     * @var array
      */
-    private $_timeout;
+    private $_to_write = [];
 
+    /**
+     * @return void
+     */
     public function __construct()
     {
         parent::__construct();
 
-        $this->_log_path = $this->CI->config->item('log_path', 'ac');
+        $this->_log_path = $this->_CI->config->item('log_path', 'ac');
 
         if (! is_dir($this->_log_path)) {
             mkdir($this->_log_path, 0755, true);
         }
 
-        $this->_timeout = $this->CI->config->item('long_poll_timeout', 'ac');
+        $this->_timeout = $this->_CI->config->item('long_poll_timeout', 'ac');
     }
 
     /**
-     * Сохраняет ошибки
+     * Записывает в лог
      *
-     * @param string $err Текст ошибки
+     * @return bool TRUE - успешно, FALSE - ошибка или нет данных для записи
      */
-    public function save_errors(string $err): void
+    public function write(): bool
     {
-        $this->CI->load->helper('file');
+        if (! $this->_to_write) {
+            return false;
+        }
+
+        foreach ($this->_to_write as $entry) {
+            write_file("$this->_log_path/{$entry['category']}-{$entry['date']}.txt", "[{$entry['time']}] {$entry['message']}\n", 'a');
+        }
+
+        $this->_to_write = [];
+
+        return true;
+    }
+
+    /**
+     * Добавляет сообщение на запись
+     *
+     * @param string $category Категория ошибки
+     * @param string $message Текст ошибки
+     *
+     * @return void
+     */
+    public function add(string $category, string $message): void
+    {
+        $this->_CI->load->helper(['date', 'file']);
 
         $time = now('Asia/Yekaterinburg');
-        $datestring = '%Y-%m-%d';
-        $date = mdate($datestring, $time);
-        $timestring = '%H:%i:%s';
-        $time = mdate($timestring, $time);
+        $date = mdate('%Y-%m-%d', $time);
+        $time = mdate('%H:%i:%s', $time);
 
-        write_file("$this->_log_path/err-$date.txt", "$time $err\n", 'a');
+        $this->_to_write[] = [
+            'category' => $category,
+            'date' => $date,
+            'time' => $time,
+            'message' => $message
+        ];
     }
 }

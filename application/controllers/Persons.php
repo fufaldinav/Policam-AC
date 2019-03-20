@@ -3,13 +3,7 @@
 /**
  * Class Persons
  *
- * @property Card_model $card
- * @property Ctrl_model $ctrl
- * @property Div_model $div
- * @property Org_model $org
- * @property Person_model $person
- * @property Photo_model $photo
- * @property Task_model $task
+ * @property Task $task
  */
 class Persons extends CI_Controller
 {
@@ -58,15 +52,15 @@ class Persons extends CI_Controller
         $org = $this->_user->first('organizations');
 
         /*
-         | Подразделения
-         */
+        | Подразделения
+        */
         $data = [
             'divs' => $org->divisions
         ];
 
         /*
-         | Карты
-         */
+        | Карты
+        */
         $data['cards'] = [];
         $data['cards_attr'] = 'id="cards"';
 
@@ -120,24 +114,15 @@ class Persons extends CI_Controller
         $org = $this->_user->first('organizations');
 
         /*
-         | Подразделения
-         */
+        | Подразделения
+        */
         $data = [
             'divs' => $org->divisions
         ];
 
-        // foreach ($data['divs'] as $div) {
-        //     $div->persons = $this->person->get_list($div->id);
-        //
-        //     foreach ($div->persons as &$person) {
-        //         $person->cards = $this->card->get_list($person->id);
-        //     }
-        //     unset($person);
-        // }
-
         /*
-         | Карты
-         */
+        | Карты
+        */
         $data['cards'] = [];
         $data['cards_attr'] = 'id="cards" disabled';
 
@@ -245,7 +230,7 @@ class Persons extends CI_Controller
             $card->save();
 
             foreach ($ctrls as $ctrl) {
-                $this->task->add_cards([$this->card->wiegand]);
+                $this->task->add_cards([$card->wiegand]);
                 $this->task->add($ctrl->id);
                 $this->task->send();
             }
@@ -323,6 +308,15 @@ class Persons extends CI_Controller
             }
         }
 
+        /*
+        | Подписки
+        */
+        $subs = $person->users;
+
+        foreach ($subs as $sub) {
+            $person->unbind($sub);
+        }
+
         echo $person->remove();
     }
 
@@ -340,6 +334,7 @@ class Persons extends CI_Controller
             exit;
         }
 
+        $this->ac->load('Divisions');
         $this->ac->load('Persons');
         $this->ac->load('Photos');
 
@@ -349,7 +344,8 @@ class Persons extends CI_Controller
 
         echo json_encode([
           'person' => $person,
-          'photos' => $person->photos
+          'photos' => $person->photos,
+          'divs' => $person->divisions
         ]);
     }
 

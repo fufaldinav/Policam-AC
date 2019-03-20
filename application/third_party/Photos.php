@@ -55,6 +55,11 @@ class Photos extends MicroORM
      */
     public $time;
 
+    /**
+     * @param string $param
+     *
+     * @return void
+     */
     public function __construct($param = null)
     {
         parent::__construct();
@@ -66,5 +71,28 @@ class Photos extends MicroORM
         } elseif (is_array($param)) {
             $this->get_by($param);
         }
+    }
+
+    /**
+     * Получим старые фотографии (на удаление)
+     *
+     * @return array
+     */
+    public static function get_old(): array
+    {
+        $query = parent::$_db
+            ->where('person_id', null)
+            ->where('time <', now('Asia/Yekaterinburg') - 86400)
+            ->get('photos')
+            ->result();
+
+        $classname = static::class;
+
+        foreach ($query as &$row) {
+            $row = new $classname($row->id);
+        }
+        unset($row);
+
+        return $query;
     }
 }

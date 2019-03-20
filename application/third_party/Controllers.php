@@ -35,6 +35,16 @@ class Controllers extends MicroORM
     ];
 
     /**
+     * @var array
+     */
+    protected $_has_many = [
+      'tasks' => [
+        'class' => 'tasks',
+        'foreign_key' => 'controller_id'
+      ]
+    ];
+
+    /**
      * Имя контроллера
      *
      * @var string
@@ -114,6 +124,11 @@ class Controllers extends MicroORM
      */
     public $org_id = 0;
 
+    /**
+     * @param string $param
+     *
+     * @return void
+     */
     public function __construct($param = null)
     {
         parent::__construct();

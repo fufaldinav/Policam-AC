@@ -19,9 +19,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
  * Class Notificator
- * @property Person_model $person
- * @property Photo_model $photo
- * @property Token_model $token
+ *
+ * @property Logger $logger
  */
 class Notificator extends Ac
 {
@@ -46,12 +45,15 @@ class Notificator extends Ac
      */
     private $_notification;
 
+    /**
+     * @return void
+     */
     public function __construct()
     {
         parent::__construct();
 
-        $this->_fcm_url = $this->CI->config->item('fcm_url', 'ac');
-        $this->_server_key = $this->CI->config->item('server_key', 'ac');
+        $this->_fcm_url = $this->_CI->config->item('fcm_url', 'ac');
+        $this->_server_key = $this->_CI->config->item('server_key', 'ac');
     }
 
     /**
@@ -60,13 +62,13 @@ class Notificator extends Ac
      * @param int $person_id ID человека
      * @param int $event_id  ID события
      *
-     * @return mixed[] Параметры уведомления
+     * @return mixed[]|null Параметры уведомления или NULL - неподходящее событие
      */
-    public function generate(int $person_id, int $event_id): array
+    public function generate(int $person_id, int $event_id): ?array
     {
-        $this->CI->lang->load('ac');
+        $this->_CI->lang->load('ac');
 
-        $this->CI->load->helper('language');
+        $this->_CI->load->helper('language');
 
         switch ($event_id) {
             case 4: //вход
@@ -78,23 +80,24 @@ class Notificator extends Ac
                 break;
 
             default:
-                return [];
+                return null;
         }
 
-        $this->CI->load->helper('url');
+        $this->load('Persons');
+        $this->load('Photos');
 
-        $this->model('person');
+        $this->_CI->load->helper('url');
 
-        $this->person->get($person_id);
+        $person = new \Orm\Persons($person_id);
 
-        $this->model('photos');
+        $photo_id = $person->first('photos')->id ?? 0;
 
-        $photo = $this->photos->get_by('person_id', $this->person->id);
+        $photo_url = "https://{$_SERVER['HTTP_HOST']}/img/ac/s/$photo_id.jpg";
 
         return $this->_notification = [
             'title' => $event,
-            'body' => "{$this->person->f} {$this->person->i}",
-            'icon' => ($photo) ? ("https://" . $_SERVER['HTTP_HOST'] . "/img/ac/s/{$this->photos->id}.jpg") : "",
+            'body' => "{$person->f} {$person->i}",
+            'icon' => $photo_url,
             'click_action' => base_url('/')
         ];
     }
@@ -106,26 +109,31 @@ class Notificator extends Ac
      * @param int|null   $user_id      ID пользователя, по-умолчанию не указан,
      *                                 тогда будет отправлено всем пользователям
      *
-     * @return string Ответ на запрос
+     * @return void
      */
-    public function send(array $notification = null, int $user_id = null): string
+    public function send(array $notification = null, int $user_id = null): void
     {
+        $this->load('Tokens');
+
+        $this->_CI->load->library('logger');
+
         $notification = $notification ?? $this->_notification;
 
         $registration_ids = [];
 
-        $this->model('token');
+        $user = new \Orm\Users($user_id);
 
-        $tokens = $this->token->get_list($user_id);
+        $tokens = $user->tokens;
 
         foreach ($tokens as $token) {
             $registration_ids[] = $token->token;
         }
 
         $request_body = [
-            'notification' => $this->_notification,
+            'notification' => $notification,
             'registration_ids' => $registration_ids
         ];
+
         $fields = json_encode($request_body);
 
         $request_headers = [
@@ -143,6 +151,7 @@ class Notificator extends Ac
         $response = curl_exec($ch);
         curl_close($ch);
 
-        return $response;
+        $this->_CI->logger->add('push', "USER: $user->id || $response");
+        $this->_CI->logger->write();
     }
 }

@@ -92,4 +92,42 @@ class Events extends MicroORM
             $this->get_by($param);
         }
     }
+
+    /**
+     * Получает список последних событий из БД, пришедших после установленного
+     * времени, фильтруя список по типу событий и контроллерам
+     *
+     * @param int        $time        Время в секундах
+     * @param array|null $event_types Типы событий
+     * @param array|null $controllers ID контроллеров
+     *
+     * @return object[] Ноый список объектов
+     */
+    public static function get_latest(
+        int $time,
+        array $event_types = null,
+        array $controllers = null
+    ): array {
+        if (isset($event_types)) {
+            parent::$_db->where_in('event', $event_types);
+        }
+        if (isset($controllers)) {
+            parent::$_db->where_in('controller_id', $controllers);
+        }
+
+        $query = parent::$_db
+            ->where('server_time >', $time)
+            ->order_by('time', 'DESC')
+            ->get('events')
+            ->result();
+
+        $classname = static::class;
+
+        foreach ($query as &$row) {
+            $row = new $classname($row->id);
+        }
+        unset($row);
+
+        return $query;
+    }
 }

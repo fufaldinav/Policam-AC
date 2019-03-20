@@ -75,21 +75,21 @@ class Tasks extends MicroORM
      */
     public function save(): int
     {
-        $query = $this->db
+        $query = parent::$_db
             ->where('id', $this->id)
             ->get($this->_table);
 
         if ($query->num_rows > 0) {
-            $this->db
+            parent::$_db
                 ->where('id', $this->id)
                 ->update($this->_table, $this);
         } else {
-            $this->db->insert($this->_table, $this);
+            parent::$_db->insert($this->_table, $this);
 
-            $this->id = $this->db->insert_id();
+            $this->id = parent::$_db->insert_id();
         }
 
 
-        return $this->db->affected_rows();
+        return parent::$_db->affected_rows();
     }
 }

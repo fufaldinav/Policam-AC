@@ -2,9 +2,6 @@
 
 /**
  * Class Observ
- *
- * @property Div_model $div
- * @property Org_model $org
  */
 class Observ extends CI_Controller
 {

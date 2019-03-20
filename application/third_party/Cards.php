@@ -35,6 +35,16 @@ class Cards extends MicroORM
     ];
 
     /**
+     * @var array
+     */
+    protected $_has_many = [
+      'events' => [
+        'class' => 'events',
+        'foreign_key' => 'card_id'
+      ]
+    ];
+
+    /**
      * Код карты
      *
      * @var string

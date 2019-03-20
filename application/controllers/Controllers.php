@@ -3,11 +3,7 @@
 /**
  * Class Controllers
  *
- * @property Card_model $card
- * @property Div_model $div
- * @property Org_model $org
- * @property Person_model $person
- * @property Task_mode $tasks
+ * @property Task $task
  */
 class Controllers extends CI_Controller
 {

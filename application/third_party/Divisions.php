@@ -69,6 +69,11 @@ class Divisions extends MicroORM
      */
     public $type = 1;
 
+    /**
+     * @param string $param
+     *
+     * @return void
+     */
     public function __construct($param = null)
     {
         parent::__construct();

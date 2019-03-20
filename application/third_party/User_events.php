@@ -1,10 +1,12 @@
 <?php
+namespace Orm;
+
 /**
  * Name:   Policam AC
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *
- * Created: 17.03.2019
+ * Created: 20.03.2019
  *
  * Description: Приложение для систем контроля и управления доступом.
  *
@@ -18,43 +20,58 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
- * Class Users_events Model
+ * Class User_events
  */
-class Users_events_model extends MY_Model
+class User_events extends MicroORM
 {
     /**
-     * Пользователь, от которого пришло сообщение
+     * @var array
+     */
+    protected $_belongs_to = [
+      'user' => [
+        'class' => 'users',
+        'foreign_key' => 'user_id'
+      ]
+    ];
+
+    /**
+     * Пользователь, который вызвал событие
      *
      * @var int
      */
     public $user_id;
 
     /**
-     * Тип сообщения
+     * Тип события
      *
      * @var int
      */
     public $type;
 
     /**
-     * Описание сообщения
+     * Описание события
      *
      * @var string
      */
     public $description;
 
     /**
-     * Время сообщения
+     * Время события
      *
      * @var int
      */
     public $time;
 
-    public function __construct()
+    public function __construct($param = null)
     {
         parent::__construct();
 
-        $this->_table = 'users_events';
-        $this->_foreing_key = 'user_id';
+        $this->_table = strtolower((new \ReflectionClass($this))->getShortName());
+
+        if (is_numeric($param)) {
+            $this->get($param);
+        } elseif (is_array($param)) {
+            $this->get_by($param);
+        }
     }
 }

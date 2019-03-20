@@ -19,22 +19,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
  * Class Messenger
+ *
+ * @property Logger $logger
  * @property Notificator $notificator
- * @property Card_model $card
- * @property Ctrl_model $ctrl
- * @property Event_model $event
- * @property Person_model $person
- * @property Task_model $task
  */
 class Messenger extends Ac
 {
-    /**
-     * Каталог с логами
-     *
-     * @var string
-     */
-    private $_log_path;
-
     /**
      * Таймаут одного long poll
      *
@@ -42,17 +32,14 @@ class Messenger extends Ac
      */
     private $_timeout;
 
+    /**
+     * @return void
+     */
     public function __construct()
     {
         parent::__construct();
 
-        $this->_log_path = $this->CI->config->item('log_path', 'ac');
-
-        if (! is_dir($this->_log_path)) {
-            mkdir($this->_log_path, 0755, true);
-        }
-
-        $this->_timeout = $this->CI->config->item('long_poll_timeout', 'ac');
+        $this->_timeout = $this->_CI->config->item('long_poll_timeout', 'ac');
     }
 
     /**
@@ -65,13 +52,11 @@ class Messenger extends Ac
      */
     public function handle(string $inc_json_msg): ?string
     {
-        $this->CI->load->helper(['date', 'file']);
+        $this->_CI->load->helper('date');
 
         $out_msg = new stdClass;
 
         $time = now('Asia/Yekaterinburg');
-
-        $log_date = mdate('%Y-%m-%d', $time);
 
         $out_msg->date = mdate('%Y-%m-%d %H:%i:%s', $time);
         $out_msg->interval = 10;
@@ -83,149 +68,160 @@ class Messenger extends Ac
             exit;
         }
 
+        $this->load('Controllers');
+
+        $this->_CI->load->library('logger');
+        $logger = $this->_CI->logger;
+
         $type = $decoded_msg->type;
         $sn = $decoded_msg->sn;
         $inc_msgs = $decoded_msg->messages;
 
-        $path = "$this->log_path/inc-$log_date.txt";
+        $ctrl = new \Orm\Controllers(['sn' => $sn]);
 
-        $this->model('ctrl');
+        if (! isset($ctrl->id)) {
+            $logger->add('inc', "TYPE: $type || SN: $sn || $inc_json_msg");
+            $logger->write();
 
-        if ($this->ctrl->get_by('sn', $sn)) {
-            $this->ctrl->last_conn = $time;
-
-            $this->ctrl->save();
-
-            write_file($path, "TYPE: $type || SN: $sn || $inc_json_msg\n", 'a');
-        } else {
-            write_file($path, "TYPE: $type || SN: $sn || Неизвестный контроллер\n", 'a');
-
-            return null;
+            exit;
         }
 
-        $this->model('task');
+        $this->load('Tasks');
 
-        //чтение json сообщения
+        $ctrl->last_conn = $time;
+        $ctrl->save();
+
+        $logger->add('inc', "TYPE: $type || SN: $sn || $inc_json_msg");
+
         foreach ($inc_msgs as $inc_m) {
-            //
-            //простой ответ
-            //
+            /*
+             | Ответ на задание
+             */
             if (! isset($inc_m->operation) && isset($inc_m->success)) {
                 if ($inc_m->success === 1) {
-                    $this->task->delete($inc_m->id);
+                    $task = new \Orm\Tasks($inc_m->id);
+                    $task->remove();
                 }
             }
-            //
-            //запуск контроллера
-            //
+            /*
+             | Запуск контроллера
+             */
             elseif ($inc_m->operation === 'power_on') {
-                $out_m = new stdClass();
+                $out_m = new stdClass;
                 $out_m->id = 0;
                 $out_m->operation = 'set_active';
-                $out_m->active = $this->ctrl->active;
-                $out_m->online = $this->ctrl->online;
+                $out_m->active = $ctrl->active;
+                $out_m->online = $ctrl->online;
                 $out_msg->messages[] = $out_m;
 
-                $this->ctrl->fw = $inc_m->fw;
-                $this->ctrl->conn_fw = $inc_m->conn_fw;
-                $this->ctrl->ip = $inc_m->controller_ip;
+                $ctrl->fw = $inc_m->fw;
+                $ctrl->conn_fw = $inc_m->conn_fw;
+                $ctrl->ip = $inc_m->controller_ip;
 
-                $this->ctrl->save();
+                $ctrl->save();
             }
-            //
-            //проверка доступа
-            //
+            /*
+             | Проверка доступа
+             */
             elseif ($inc_m->operation === 'check_access') {
-                $out_m = new stdClass();
+                $out_m = new stdClass;
                 $out_m->id = $inc_m->id; //запись верна, т.к. ответ должен быть с тем же id
                 $out_m->operation = 'check_access';
                 $out_m->granted = 0;
 
-                $this->model('card');
+                $this->load('Cards');
 
-                $this->card->get_by('wiegand', $inc_m->card);
+                $card = new \Orm\Cards(['wiegand' => $inc_m->card]);
 
-                if (isset($this->card->person_id) && $this->card->person_id > 0) {
+                if (isset($card->person_id) && $card->person_id > 0) {
                     $out_m->granted = 1;
                 }
 
-                $this->card->wiegand = $inc_m->card;
-                $this->card->last_conn = $time;
-                $this->card->controller_id = $this->ctrl->id;
+                if (! isset($card->wiegand)) {
+                    $card->wiegand = $inc_m->card;
+                }
 
-                $this->card->save();
+                $card->last_conn = $time;
+                $card->controller_id = $ctrl->id;
+
+                $card->save();
 
                 $out_msg->messages[] = $out_m;
             }
-            //
-            //пинг от контроллера
-            //
+            /*
+             | Пинг от контроллера
+             */
             elseif ($inc_m->operation === 'ping') {
                 //do nothing
             }
-            //
-            //события на контроллере
-            //
+            /*
+             | Cобытия на контроллере
+             */
             elseif ($inc_m->operation === 'events') {
-                $this->model('event');
+                $this->load('Cards');
+                $this->load('Events');
+                $this->load('Persons');
+                $this->load('Users');
+
+                $this->_CI->load->library('notificator');
+
+                $events_count = 0;
 
                 //чтение событий
-                foreach ($inc_m->events as $event) {
-                    $this->model('card');
+                foreach ($inc_m->events as $inc_event) {
+                    $card = new \Orm\Cards(['wiegand' => $inc_event->card]);
 
-                    $this->card->get_by('wiegand', $event->card);
+                    if (! isset($card->wiegand)) {
+                          $card->wiegand = $inc_event->card;
+                    }
 
-                    $this->card->wiegand = $event->card;
-                    $this->card->last_conn = $time;
-                    $this->card->controller_id = $this->ctrl->id;
+                    $card->last_conn = $time;
+                    $card->controller_id = $ctrl->id;
 
-                    $this->card->save();
+                    $card->save();
 
-                    $this->event->controller_id = $this->ctrl->id;
-                    $this->event->event = $event->event;
-                    $this->event->flag = $event->flag;
-                    $this->event->time = human_to_unix($event->time);
-                    $this->event->server_time = $time;
-                    $this->event->card_id = $this->card->id;
+                    $event = new \Orm\Events();
 
-                    $this->event->add_to_list();
+                    $event->controller_id = $ctrl->id;
+                    $event->event = $inc_event->event;
+                    $event->flag = $inc_event->flag;
+                    $event->time = human_to_unix($inc_event->time);
+                    $event->server_time = $time;
+                    $event->card_id = $card->id;
 
-                    $this->model('person');
+                    $events_count += $event->save();
 
-                    $subscribers = $this->person->get_users($this->card->person_id);
+                    $person = $card->person;
 
-                    $this->CI->load->library('notificator');
+                    $subscribers = $person->users;
+
+                    $notification = $this->_CI->notificator->generate($person->id, $event->event);
 
                     foreach ($subscribers as $sub) {
-                        $notification = $this->CI->notificator->generate($this->card->person_id, $event->event);
-
-                        if (count($notification) > 0) {
-                            $response = $this->CI->notificator->send($notification, $sub->user_id);
-
-                            $path = "$this->log_path/push-$log_date.txt";
-                            write_file($path, "USER: $sub->user_id || PERSON: {$this->card->person_id} || $response\n", 'a');
+                        if (isset($notification)) {
+                            $this->_CI->notificator->send($notification, $sub->id);
                         }
                     }
                 }
 
-                $this->event->save_list();
-
-                $out_m = new stdClass();
-                $out_m->id = $inc_m->id;
+                $out_m = new stdClass;
+                $out_m->id = $inc_m->id; //запись верна, т.к. ответ должен быть с тем же id
                 $out_m->operation = 'events';
-                $out_m->events_success = count($this->event->get_list());
+                $out_m->events_success = $events_count;
                 $out_msg->messages[] = $out_m;
             }
         }
 
-        if ($this->task->get_last($this->ctrl->id)) {
-            $out_msg->messages[] = json_decode($this->task->json);
+        $task = $ctrl->first('tasks');
+
+        if ($task) {
+            $out_msg->messages[] = json_decode($task->json);
         }
 
         $out_json_msg = json_encode($out_msg);
 
-        $path = "$this->log_path/out-$log_date.txt";
-        write_file($path, "TYPE: $type || SN: $sn || $out_json_msg\n", 'a');
+        $logger->add('out', "TYPE: $type || SN: $sn || $out_json_msg");
+        $logger->write();
 
         return $out_json_msg;
     }
@@ -242,23 +238,24 @@ class Messenger extends Ac
     {
         $time = $time ?? now('Asia/Yekaterinburg');
 
-        $user_id = $this->CI->ion_auth->user()->row()->id; //TODO
+        $this->load('Controllers');
+        $this->load('Organizations');
+        $this->load('Users');
 
-        $this->model('org');
-        $this->model('ctrl');
+        $user = new \Orm\Users($this->_CI->ion_auth->user()->row()->id);
 
-        $org_list = $this->org->get_list($user_id); //TODO
+        $orgs = $user->organizations; //TODO
 
         $ctrl_list = [];
 
-        foreach ($org_list as $org) {
-            $ctrl_list = array_merge($ctrl_list, $this->ctrl->get_list($org->id));
+        foreach ($orgs as $org) {
+            $ctrl_list = array_merge($ctrl_list, $org->controllers);
         }
 
         if ($ctrl_list) {
             session_write_close();
 
-            $this->model('event');
+            $this->load('Events');
 
             while ($this->_timeout > 0) {
                 $controllers = [];
@@ -267,7 +264,7 @@ class Messenger extends Ac
                     $controllers[] = $ctrl->id;
                 }
 
-                $events = $this->event->list_get_last($time, $event_types, $controllers);
+                $events = \Orm\Events::get_latest($time, $event_types, $controllers);
 
                 if ($events) {
                     return $events;
