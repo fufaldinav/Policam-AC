@@ -41,4 +41,5 @@
 					<input id="id" name="id" size="15" type="text" readonly />
 				</div>
 			</div>
+      <input id="type" name="type" type="text" hidden readonly />
 		</div>

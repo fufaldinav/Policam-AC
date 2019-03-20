@@ -107,10 +107,10 @@ class Person_model extends MY_Model
         }
 
         return $this->_list = $this->CI->db->where($this->_foreing_key, $div_id)
-                                          ->join($this->_table, "$this->_table.$this->_primary_key = persons_divisions.person_id", 'left')
-                                          ->order_by('f ASC, i ASC, o ASC')
-                                          ->get('persons_divisions')
-                                          ->result();
+                                           ->join($this->_table, "$this->_table.$this->_primary_key = persons_divisions.person_id", 'left')
+                                           ->order_by('f ASC, i ASC, o ASC')
+                                           ->get('persons_divisions')
+                                           ->result();
     }
 
     /**
@@ -146,10 +146,10 @@ class Person_model extends MY_Model
             return $this->users;
         }
 
-        return $this->users = $this->db->select('user_id')
-                                       ->where('person_id', $id)
-                                       ->get('persons_users')
-                                       ->result();
+        return $this->users = $this->CI->db->select('user_id')
+                                           ->where('person_id', $id)
+                                           ->get('persons_users')
+                                           ->result();
     }
 
     /**
