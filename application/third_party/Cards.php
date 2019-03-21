@@ -22,7 +22,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 /**
  * Class Cards
  */
-class Cards extends MicroORM
+class Cards extends Objects
 {
     /**
      * @var array

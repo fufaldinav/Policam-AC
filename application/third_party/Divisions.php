@@ -22,7 +22,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 /**
  * Class Divisions
  */
-class Divisions extends MicroORM
+class Divisions extends Objects
 {
     /**
      * @var array

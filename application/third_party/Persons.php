@@ -22,7 +22,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 /**
  * Class Persons
  */
-class Persons extends MicroORM
+class Persons extends Objects
 {
     /**
      * @var array
@@ -102,17 +102,4 @@ class Persons extends MicroORM
      * @var string
      */
     public $phone = null;
-
-    public function __construct($param = null)
-    {
-        parent::__construct();
-
-        $this->_table = strtolower((new \ReflectionClass($this))->getShortName());
-
-        if (is_numeric($param)) {
-            $this->get($param);
-        } elseif (is_array($param)) {
-            $this->get_by($param);
-        }
-    }
 }

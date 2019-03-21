@@ -22,7 +22,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 /**
  * Class Organizations
  */
-class Organizations extends MicroORM
+class Organizations extends Objects
 {
     /**
      * @var array

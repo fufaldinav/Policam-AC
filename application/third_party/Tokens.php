@@ -22,7 +22,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 /**
  * Class Tokens
  */
-class Tokens extends MicroORM
+class Tokens extends Objects
 {
     /**
      * @var array

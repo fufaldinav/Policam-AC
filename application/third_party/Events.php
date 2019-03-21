@@ -22,7 +22,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 /**
  * Class Events
  */
-class Events extends MicroORM
+class Events extends Objects
 {
     /**
      * @var array

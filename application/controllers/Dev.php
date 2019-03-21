@@ -53,5 +53,13 @@ class Dev extends CI_Controller
     public function index(): void
     {
         header('Content-Type: text/plain');
+
+        $this->ac->load('Lists');
+
+        $person = new \Orm\Persons(1982);
+
+        $divs = $person->divisions->where('name', 'o')->get();
+
+        print_r($divs);
     }
 }
