@@ -1,5 +1,5 @@
 <?php
-namespace Orm;
+namespace ORM;
 
 /**
  * Name:   Policam AC
@@ -22,7 +22,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 /**
  * Class Controllers
  */
-class Controllers extends Objects
+class Controllers extends Entries
 {
     /**
      * @var array

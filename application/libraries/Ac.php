@@ -46,7 +46,7 @@ class Ac
         $this->_CI->config->load('ac', true);
 
         $this->load('MicroORM');
-        $this->load('Objects');
+        $this->load('Entries');
         $this->load('Lists');
     }
 

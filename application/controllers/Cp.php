@@ -25,7 +25,7 @@ class Cp extends CI_Controller
         $this->ac->load('Users');
 
         $user_id = $this->ion_auth->user()->row()->id;
-        $this->_user = new \Orm\Users($user_id);
+        $this->_user = new \ORM\Users($user_id);
     }
 
     /**

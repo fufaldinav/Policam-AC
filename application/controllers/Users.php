@@ -26,7 +26,7 @@ class Users extends CI_Controller
         $this->ac->load('Users');
 
         $user_id = $this->ion_auth->user()->row()->id;
-        $this->_user = new \Orm\Users($user_id);
+        $this->_user = new \ORM\Users($user_id);
     }
 
     /**
@@ -44,7 +44,7 @@ class Users extends CI_Controller
             // $this->token->get_by('token', $token_key);
             // $this->token->delete(); //TODO удалять просроченный ключ
         } else {
-            $token = new \Orm\Tokens(['token' => $token_key]);
+            $token = new \ORM\Tokens(['token' => $token_key]);
 
             $token->user_id = $this->_user->id;
             $token->token = $token_key;

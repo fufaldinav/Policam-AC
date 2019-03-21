@@ -1,5 +1,5 @@
 <?php
-namespace Orm;
+namespace ORM;
 
 /**
  * Name:   Policam AC
@@ -22,7 +22,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 /**
  * Class Users
  */
-class Users extends Objects
+class Users extends Entries
 {
     /**
      * @var array
@@ -31,21 +31,23 @@ class Users extends Objects
       'tokens' => [
         'class' => 'tokens',
         'foreign_key' => 'user_id'
-      ],
+      ]
+    ];
+
+    /**
+     * @var array
+     */
+    protected $_with_many = [
       'organizations' => [
         'class' => 'organizations',
-        'foreign_key' => [
-          'user_id',
-          'org_id'
-        ],
+        'own_key' => 'user_id',
+        'their_key' => 'org_id',
         'through' => 'organizations_users'
       ],
       'persons' => [
         'class' => 'persons',
-        'foreign_key' => [
-          'user_id',
-          'person_id'
-        ],
+        'own_key' => 'user_id',
+        'their_key' => 'person_id',
         'through' => 'persons_users'
       ]
     ];

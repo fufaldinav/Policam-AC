@@ -24,7 +24,7 @@ class Persons extends CI_Controller
         $this->ac->load('Users');
 
         $user_id = $this->ion_auth->user()->row()->id;
-        $this->_user = new \Orm\Users($user_id);
+        $this->_user = new \ORM\Users($user_id);
     }
 
     /**
@@ -67,7 +67,7 @@ class Persons extends CI_Controller
         $data['cards'] = [];
         $data['cards_attr'] = 'id="cards"';
 
-        $person = new \Orm\Persons(0);
+        $person = new \ORM\Persons(0);
 
         $cards = $person->cards;
 
@@ -131,7 +131,7 @@ class Persons extends CI_Controller
         $data['cards'] = [];
         $data['cards_attr'] = 'id="cards" disabled';
 
-        $person = new \Orm\Persons(0);
+        $person = new \ORM\Persons(0);
 
         $cards = $person->cards;
 
@@ -192,7 +192,7 @@ class Persons extends CI_Controller
         $div_list = json_decode($this->input->post('divs'));
         $photo_list = json_decode($this->input->post('photos'));
 
-        $person = new \Orm\Persons($person_id);
+        $person = new \ORM\Persons($person_id);
 
         $person->set($person_data);
         $person->save();
@@ -204,7 +204,7 @@ class Persons extends CI_Controller
         $ctrls = $ctrls ?? [];
 
         foreach ($card_list as $card_id) {
-            $card = new \Orm\Cards($card_id);
+            $card = new \ORM\Cards($card_id);
 
             $card->person_id = $person->id;
             $card->save();
@@ -223,12 +223,12 @@ class Persons extends CI_Controller
         */
         if ($div_list) {
             foreach ($div_list as $div_id) {
-                $div = new \Orm\Divisions($div_id);
+                $div = new \ORM\Divisions($div_id);
 
                 $person->bind($div);
             }
         } else {
-            $div = new \Orm\Divisions([
+            $div = new \ORM\Divisions([
               'org_id' => $org->id ?? 0,
               'type' => 0
             ]);
@@ -240,7 +240,7 @@ class Persons extends CI_Controller
         | Фотографии
         */
         foreach ($photo_list as $photo_id) {
-            $photo = new \Orm\Photos($photo_id);
+            $photo = new \ORM\Photos($photo_id);
 
             $photo->person_id = $person->id;
             $photo->save();
@@ -286,7 +286,7 @@ class Persons extends CI_Controller
 
         $org = $this->_user->first('organizations');
 
-        $person = new \Orm\Persons($person_id);
+        $person = new \ORM\Persons($person_id);
 
         /*
         | Подразделения
@@ -353,7 +353,7 @@ class Persons extends CI_Controller
 
         $this->ac->load(['Divisions', 'Persons', 'Photos']);
 
-        $person = new \Orm\Persons($person_id);
+        $person = new \ORM\Persons($person_id);
 
         header('Content-Type: application/json');
 
@@ -389,7 +389,7 @@ class Persons extends CI_Controller
           'Photos'
         ]);
 
-        $card = new \Orm\Cards($card_id);
+        $card = new \ORM\Cards($card_id);
 
         $person = $card->person;
 
@@ -421,7 +421,7 @@ class Persons extends CI_Controller
 
         $this->ac->load(['Divisions', 'Persons']);
 
-        $div = new \Orm\Divisions($div_id);
+        $div = new \ORM\Divisions($div_id);
 
         header('Content-Type: application/json');
 

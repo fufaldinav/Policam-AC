@@ -1,5 +1,5 @@
 <?php
-namespace Orm;
+namespace ORM;
 
 /**
  * Name:   Policam AC
@@ -20,9 +20,9 @@ namespace Orm;
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
- * Class Objects
+ * Class Entries
  */
-abstract class Objects extends MicroORM
+abstract class Entries extends MicroORM
 {
     /**
      * ID объекта
@@ -46,7 +46,8 @@ abstract class Objects extends MicroORM
     private $_relationship_types = [
       '_belongs_to',
       '_has_one',
-      '_has_many'
+      '_has_many',
+      '_with_many'
     ];
 
     /**
@@ -386,21 +387,37 @@ abstract class Objects extends MicroORM
     {
         $classname = $this->_has_many[$name]['class'];
         $foreign_key = $this->_has_many[$name]['foreign_key'];
-        $through = $this->_has_many[$name]['through'] ?? null;
 
         $list = new Lists($classname, $this);
 
-        if (isset($through)) {
-            $list
-                ->select("{$foreign_key[1]} AS id")
-                ->from($through)
-                ->where($foreign_key[0], $this->id);
-        } else {
-            $list
-                ->select('id')
-                ->from($classname)
-                ->where($foreign_key, $this->id);
-        }
+        $list
+            ->select('id')
+            ->from($classname)
+            ->where($foreign_key, $this->id);
+
+        return $list;
+    }
+
+    /**
+     * Получает "имущество" объекта //TODO нормальное описание
+     *
+     * @param string $name
+     *
+     * @return Lists
+     */
+    private function _with_many(string $name): Lists
+    {
+        $classname = $this->_has_many[$name]['class'];
+        $own_key = $this->_has_many[$name]['own_key'];
+        $their_key = $this->_has_many[$name]['their_key'];
+        $through = $this->_has_many[$name]['through'];
+
+        $list = new Lists($classname, $this);
+
+        $list
+            ->select("$their_key AS id")
+            ->from($through)
+            ->where($own_key, $this->id);
 
         return $list;
     }

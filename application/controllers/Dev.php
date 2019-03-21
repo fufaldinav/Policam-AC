@@ -42,7 +42,7 @@ class Dev extends CI_Controller
         $this->ac->load('User_events');
 
         $user_id = $this->ion_auth->user()->row()->id;
-        $this->_user = new \Orm\Users($user_id);
+        $this->_user = new \ORM\Users($user_id);
     }
 
     /**
@@ -56,10 +56,10 @@ class Dev extends CI_Controller
 
         $this->ac->load('Lists');
 
-        $person = new \Orm\Persons(1982);
+        $person = new \ORM\Persons(0);
 
-        $divs = $person->divisions->where('name', 'o')->get();
+        $cards = $person->cards->where('wiegand', '000000252FBB')->get();
 
-        print_r($divs);
+        print_r($cards);
     }
 }

@@ -77,7 +77,7 @@ class Messenger extends Ac
         $sn = $decoded_msg->sn;
         $inc_msgs = $decoded_msg->messages;
 
-        $ctrl = new \Orm\Controllers(['sn' => $sn]);
+        $ctrl = new \ORM\Controllers(['sn' => $sn]);
 
         if (! isset($ctrl->id)) {
             $logger->add('inc', "TYPE: $type || SN: $sn || $inc_json_msg");
@@ -99,7 +99,7 @@ class Messenger extends Ac
              */
             if (! isset($inc_m->operation) && isset($inc_m->success)) {
                 if ($inc_m->success === 1) {
-                    $task = new \Orm\Tasks(['task_id' => $inc_m->id]);
+                    $task = new \ORM\Tasks(['task_id' => $inc_m->id]);
                     $task->remove();
                 }
             }
@@ -131,7 +131,7 @@ class Messenger extends Ac
 
                 $this->load('Cards');
 
-                $card = new \Orm\Cards(['wiegand' => $inc_m->card]);
+                $card = new \ORM\Cards(['wiegand' => $inc_m->card]);
 
                 if (isset($card->person_id) && $card->person_id > 0) {
                     $out_m->granted = 1;
@@ -166,7 +166,7 @@ class Messenger extends Ac
 
                 //чтение событий
                 foreach ($inc_m->events as $inc_event) {
-                    $card = new \Orm\Cards(['wiegand' => $inc_event->card]);
+                    $card = new \ORM\Cards(['wiegand' => $inc_event->card]);
 
                     if (! isset($card->wiegand)) {
                           $card->wiegand = $inc_event->card;
@@ -177,7 +177,7 @@ class Messenger extends Ac
 
                     $card->save();
 
-                    $event = new \Orm\Events();
+                    $event = new \ORM\Events();
 
                     $event->controller_id = $ctrl->id;
                     $event->event = $inc_event->event;
@@ -237,7 +237,7 @@ class Messenger extends Ac
 
         $this->load(['Controllers', 'Organizations', 'Users']);
 
-        $user = new \Orm\Users($this->_CI->ion_auth->user()->row()->id);
+        $user = new \ORM\Users($this->_CI->ion_auth->user()->row()->id);
 
         $orgs = $user->organizations; //TODO
 
@@ -259,7 +259,7 @@ class Messenger extends Ac
                     $controllers[] = $ctrl->id;
                 }
 
-                $events = \Orm\Events::get_latest($time, $event_types, $controllers);
+                $events = \ORM\Events::get_latest($time, $event_types, $controllers);
 
                 if ($events) {
                     return $events;

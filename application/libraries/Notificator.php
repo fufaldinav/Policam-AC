@@ -87,7 +87,7 @@ class Notificator extends Ac
 
         $this->_CI->load->helper('url');
 
-        $person = new \Orm\Persons($person_id);
+        $person = new \ORM\Persons($person_id);
 
         $photo = $person->first('photos');
 
@@ -120,7 +120,7 @@ class Notificator extends Ac
 
         $registration_ids = [];
 
-        $user = new \Orm\Users($user_id);
+        $user = new \ORM\Users($user_id);
 
         $tokens = $user->tokens;
 

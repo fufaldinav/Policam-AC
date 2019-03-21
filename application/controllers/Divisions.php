@@ -21,7 +21,7 @@ class Divisions extends CI_Controller
         $this->ac->load('Users');
 
         $user_id = $this->ion_auth->user()->row()->id;
-        $this->_user = new \Orm\Users($user_id);
+        $this->_user = new \ORM\Users($user_id);
     }
 
     /**
@@ -117,7 +117,7 @@ class Divisions extends CI_Controller
 
         $div_data = json_decode($this->input->post('div'));
 
-        $div = new \Orm\Divisions();
+        $div = new \ORM\Divisions();
 
         $div->set($div_data);
         $div->save();
@@ -155,10 +155,10 @@ class Divisions extends CI_Controller
 
         $org = $this->_user->first('organizations');
 
-        $cur_div = new \Orm\Divisions($div_id);
+        $cur_div = new \ORM\Divisions($div_id);
 
         //"Пустое" подразделение
-        $empty_div = new \Orm\Divisions([
+        $empty_div = new \ORM\Divisions([
           'org_id' => $org->id ?? 0,
           'type' => 0
         ]);

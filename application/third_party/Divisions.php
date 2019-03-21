@@ -1,5 +1,5 @@
 <?php
-namespace Orm;
+namespace ORM;
 
 /**
  * Name:   Policam AC
@@ -22,7 +22,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 /**
  * Class Divisions
  */
-class Divisions extends Objects
+class Divisions extends Entries
 {
     /**
      * @var array
@@ -37,13 +37,11 @@ class Divisions extends Objects
     /**
      * @var array
      */
-    protected $_has_many = [
+    protected $_with_many = [
       'persons' => [
         'class' => 'persons',
-        'foreign_key' => [
-          'div_id',
-          'person_id'
-        ],
+        'own_key' => 'div_id',
+        'their_key' => 'person_id',
         'through' => 'persons_divisions'
       ]
     ];

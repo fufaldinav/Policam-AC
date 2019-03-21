@@ -88,7 +88,7 @@ class Photo extends Ac
         if ($response['error'] === '') {
             $this->load('Photos');
 
-            $photo = new \Orm\Photos(['hash' => $file_hash]);
+            $photo = new \ORM\Photos(['hash' => $file_hash]);
 
             if (! isset($photo->hash)) {
                 $photo->hash = $file_hash;
@@ -146,7 +146,7 @@ class Photo extends Ac
     {
         $this->load('Photos');
 
-        $photo = new \Orm\Photos($id);
+        $photo = new \ORM\Photos($id);
 
         try {
             $file_path = "$this->_img_path/$id.jpg";
@@ -179,7 +179,7 @@ class Photo extends Ac
     {
         $this->load('Photos');
 
-        $photos = \Orm\Photos::get_old();
+        $photos = \ORM\Photos::get_old();
 
         $counter = 0;
 

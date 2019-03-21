@@ -33,7 +33,7 @@ class Cards extends CI_Controller
         $this->ac->load('Users');
 
         $user_id = $this->ion_auth->user()->row()->id;
-        $this->_user = new \Orm\Users($user_id);
+        $this->_user = new \ORM\Users($user_id);
     }
 
     /**
@@ -55,7 +55,7 @@ class Cards extends CI_Controller
 
         $this->load->library('task');
 
-        $card = new \Orm\Cards($card_id);
+        $card = new \ORM\Cards($card_id);
 
         $card->person_id = $person_id;
 
@@ -95,7 +95,7 @@ class Cards extends CI_Controller
 
         $this->ac->load('Cards');
 
-        $card = new \Orm\Cards($card_id);
+        $card = new \ORM\Cards($card_id);
 
         echo $card->remove();
     }
@@ -113,7 +113,7 @@ class Cards extends CI_Controller
 
         $this->ac->load(['Cards', 'Persons']);
 
-        $person = new \Orm\Persons($person_id);
+        $person = new \ORM\Persons($person_id);
 
         header('Content-Type: application/json');
 

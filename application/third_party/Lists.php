@@ -1,5 +1,5 @@
 <?php
-namespace Orm;
+namespace ORM;
 
 /**
  * Name:   Policam AC
@@ -47,11 +47,11 @@ class Lists extends MicroORM
 
     /**
      * @param string $classname
-     * @param Objects $object
+     * @param Entries $object
      *
      * @return void
      */
-    public function __construct(string $classname, Objects $object)
+    public function __construct(string $classname, Entries $object)
     {
         parent::__construct();
 
@@ -101,7 +101,7 @@ class Lists extends MicroORM
         return $this->_list = $query;
     }
 
-    public function first(): ?Objects
+    public function first(): ?Entries
     {
         return $this->_object;
     }

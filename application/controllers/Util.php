@@ -22,7 +22,7 @@ class Util extends CI_Controller
         $this->ac->load('Users');
 
         $user_id = $this->ion_auth->user()->row()->id;
-        $this->_user = new \Orm\Users($user_id);
+        $this->_user = new \ORM\Users($user_id);
     }
 
     /**
@@ -92,7 +92,7 @@ class Util extends CI_Controller
 
         $response = lang('registred');
 
-        $person = new \Orm\Persons($person_id);
+        $person = new \ORM\Persons($person_id);
 
         $cards = $person->cards;
 
@@ -148,7 +148,7 @@ class Util extends CI_Controller
             exit;
         }
 
-        $event = new \Orm\User_events();
+        $event = new \ORM\User_events();
 
         $event->user_id = $this->_user->id;
         $event->type = $problem_type;

@@ -33,7 +33,7 @@ class Controllers extends CI_Controller
         $this->ac->load('Users');
 
         $user_id = $this->ion_auth->user()->row()->id;
-        $this->_user = new \Orm\Users($user_id);
+        $this->_user = new \ORM\Users($user_id);
     }
 
     /**
@@ -116,7 +116,7 @@ class Controllers extends CI_Controller
 
         $this->load->library('task');
 
-        $ctrl = new \Orm\Controllers($ctrl_id);
+        $ctrl = new \ORM\Controllers($ctrl_id);
 
         $org = $ctrl->organization;
 
