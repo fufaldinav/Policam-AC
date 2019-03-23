@@ -110,7 +110,7 @@ class Task extends Ac
     ): void {
         $this->requestClear();
 
-        $this->request->operation = __FUNCTION__;
+        $this->request->operation = 'set_door_params';
         $this->request->open = $open_time;
         $this->request->open_control = $open_control;
         $this->request->close_control = $close_control;
@@ -129,7 +129,7 @@ class Task extends Ac
     {
         $this->requestClear();
 
-        $this->request->operation = __FUNCTION__;
+        $this->request->operation = 'add_cards';
         $this->request->cards = [];
 
         foreach ($codes as $code) {
@@ -153,7 +153,7 @@ class Task extends Ac
     {
         $this->requestClear();
 
-        $this->request->operation = __FUNCTION__;
+        $this->request->operation = 'del_cards';
         $this->request->cards = [];
 
         foreach ($codes as $code) {
@@ -174,7 +174,7 @@ class Task extends Ac
     {
         $this->requestClear();
 
-        $this->request->operation = __FUNCTION__;
+        $this->request->operation = 'clear_cards';
     }
 
     /**
