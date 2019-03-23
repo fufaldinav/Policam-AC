@@ -70,11 +70,12 @@ class Events extends Entries
         array $controllers = null
     ): array {
         $CI =& get_instance();
-        $CI->load->database;
+        $CI->load->database();
 
         if (isset($event_types)) {
             $CI->db->where_in('event', $event_types);
         }
+
         if (isset($controllers)) {
             $CI->db->where_in('controller_id', $controllers);
         }
