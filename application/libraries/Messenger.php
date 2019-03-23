@@ -86,8 +86,6 @@ class Messenger extends Ac
             exit;
         }
 
-        $this->load('Tasks');
-
         $ctrl->last_conn = $time;
         $ctrl->save();
 
@@ -177,7 +175,7 @@ class Messenger extends Ac
 
                     $card->save();
 
-                    $event = new \ORM\Events();
+                    $event = new \ORM\Events;
 
                     $event->controller_id = $ctrl->id;
                     $event->event = $inc_event->event;
@@ -190,7 +188,7 @@ class Messenger extends Ac
 
                     $person = $card->person;
 
-                    $subscribers = $person->users;
+                    $subscribers = $person->users->get();
 
                     $notification = $this->_CI->notificator->generate($person->id, $event->event);
 
@@ -209,7 +207,10 @@ class Messenger extends Ac
             }
         }
 
-        $task = $ctrl->first('tasks');
+        $this->load('Tasks');
+
+        $tasks = $ctrl->tasks->get();
+        $task = $ctrl->tasks->first();
 
         if (isset($task)) {
             $out_msg->messages[] = json_decode($task->json);
@@ -239,12 +240,12 @@ class Messenger extends Ac
 
         $user = new \ORM\Users($this->_CI->ion_auth->user()->row()->id);
 
-        $orgs = $user->organizations; //TODO
+        $orgs = $user->organizations->get(); //TODO
 
         $ctrl_list = [];
 
         foreach ($orgs as $org) {
-            $ctrl_list = array_merge($ctrl_list, $org->controllers);
+            $ctrl_list = array_merge($ctrl_list, $org->controllers->get());
         }
 
         if ($ctrl_list) {

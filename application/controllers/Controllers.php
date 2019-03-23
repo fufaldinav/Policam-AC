@@ -122,11 +122,11 @@ class Controllers extends CI_Controller
 
         $cards = [];
 
-        $divs = $org->divisions;
+        $divs = $org->divisions->get();
 
         foreach ($divs as $div) {
-            foreach ($div->persons as $person) {
-                $cards = array_merge($cards, $person->cards);
+            foreach ($div->persons->get() as $person) {
+                $cards = array_merge($cards, $person->cards->get());
             }
         }
 

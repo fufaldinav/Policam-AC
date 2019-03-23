@@ -54,12 +54,10 @@ class Dev extends CI_Controller
     {
         header('Content-Type: text/plain');
 
-        $this->ac->load('Lists');
-
         $person = new \ORM\Persons(0);
 
-        $cards = $person->cards->where('wiegand', '000000252FBB')->get();
+        $divs = $person->cards->where('wiegand', '000000252FBB')->get();
 
-        print_r($cards);
+        print_r($divs);
     }
 }

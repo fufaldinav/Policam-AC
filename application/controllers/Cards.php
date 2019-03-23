@@ -59,9 +59,10 @@ class Cards extends CI_Controller
 
         $card->person_id = $person_id;
 
-        $org = $this->_user->first('organizations');
+        $orgs = $this->_user->organizations->get();
+        $org = $this->_user->organizations->first();
 
-        $ctrls = @$org->controllers;
+        $ctrls = @$org->controllers->get();
         if (isset($ctrls)) {
             if ($card->person_id == 0) {
                 $this->task->del_cards([$card->wiegand]);
@@ -117,6 +118,6 @@ class Cards extends CI_Controller
 
         header('Content-Type: application/json');
 
-        echo json_encode($person->cards);
+        echo json_encode($person->cards->get());
     }
 }

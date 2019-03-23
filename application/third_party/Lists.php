@@ -25,18 +25,25 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Lists extends MicroORM
 {
     /**
-     * Владелец списка
+     * Объект-владелец
      *
      * @var string
      */
     private $_object;
 
     /**
-     * Название класса
+     * Модель связи с владелецем
      *
      * @var string
      */
-    private $_classname;
+    private $_relation_model;
+
+    /**
+     * Тип модели
+     *
+     * @var string
+     */
+    private $_relation_type;
 
     /**
      * Список объектов
@@ -46,33 +53,66 @@ class Lists extends MicroORM
     private $_list = [];
 
     /**
-     * @param string $classname
-     * @param Entries $object
+     * @param Entries     $object         Объект-владелец
+     * @param array|null  $relation_model Модель связи с владелецем
+     * @param string|null $relation_type  Тип модели
      *
      * @return void
      */
-    public function __construct(string $classname, Entries $object)
-    {
+    public function __construct(
+        Entries $object,
+        array $relation_model = null,
+        string $relation_type = null
+    ) {
         parent::__construct();
 
-        $this->_classname = $classname;
         $this->_object = $object;
+        $this->_relation_model = $relation_model;
+        $this->_relation_type = $relation_type;
     }
 
-    public function select(string $params): Lists
+    /**
+     * Возвращает список объектов
+     *
+     * @return array Список объектов
+     */
+    public function get(): array
     {
-        parent::$_db->select($params);
+        if ($this->_list) {
+            return $this->_list;
+        }
 
-        return $this;
+        $relation_type = $this->_relation_type;
+
+        if (isset($relation_type)) {
+            return $this->_list = $this->$relation_type();
+        }
+
+        return $this->_list;
     }
 
-    public function from(string $params): Lists
+    /**
+     * Возвращает первый объект списка
+     *
+     * @return Entries|null Объект списка или NULL - список пуст
+     */
+    public function first(): ?Entries
     {
-        parent::$_db->from($params);
+        if ($this->_list) {
+            return $this->_list[0];
+        }
 
-        return $this;
+        return null;
     }
 
+    /**
+     * TODO
+     *
+     * @param string $params
+     * @param mixed|null $value
+     *
+     * @return Lists
+     */
     public function where(string $params, $value = null): Lists
     {
         parent::$_db->where($params, $value);
@@ -80,29 +120,47 @@ class Lists extends MicroORM
         return $this;
     }
 
-    public function get(): array
+    /**
+     * Получает список объектов, связанных моделью one-to-many
+     *
+     * @return array Список объектов
+     */
+    private function _has_many(): array
     {
-        if ($this->_list) {
-            return $this->_list;
-        }
+        $classname = $this->_relation_model['class'];
+        $foreign_key = $this->_relation_model['foreign_key'];
 
-        $query = parent::$_db
-            ->get()
-            ->result();
+        $query = self::$_db
+            ->where($foreign_key, $this->_object->id)
+            ->get($classname);
 
-        $namespace = (new \ReflectionClass($this))->getNamespaceName();
-        $classname =  "$namespace\\$this->_classname";
+        $namespace = (new \ReflectionClass($this->_object))->getNamespaceName();
+        $classname =  "$namespace\\$classname";
 
-        foreach ($query as &$row) {
-            $row = new $classname($row->id);
-        }
-        unset($row);
-
-        return $this->_list = $query;
+        return $query->result($classname);
     }
 
-    public function first(): ?Entries
+    /**
+     * Получает список объектов, связанных моделью many-to-many
+     *
+     * @return array Список объектов
+     */
+    private function _with_many(): array
     {
-        return $this->_object;
+        $classname = $this->_relation_model['class'];
+        $own_key = $this->_relation_model['own_key'];
+        $their_key = $this->_relation_model['their_key'];
+        $through = $this->_relation_model['through'];
+
+        $query = self::$_db
+            ->select("$classname.*")
+            ->join($classname, "$classname.id = $through.$their_key")
+            ->where($own_key, $this->_object->id)
+            ->get($through);
+
+        $namespace = (new \ReflectionClass($this->_object))->getNamespaceName();
+        $classname =  "$namespace\\$classname";
+
+        return $query->result($classname);
     }
 }

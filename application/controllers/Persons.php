@@ -51,12 +51,13 @@ class Persons extends CI_Controller
 
         $this->load->helper(['form', 'language']);
 
-        $org = $this->_user->first('organizations');
+        $orgs = $this->_user->organizations->get();
+        $org = $this->_user->organizations->first();
 
         /*
         | Подразделения
         */
-        $divs = @$org->divisions;
+        $divs = @$org->divisions->get();
         $data = [
             'divs' => $divs ?? []
         ];
@@ -69,7 +70,7 @@ class Persons extends CI_Controller
 
         $person = new \ORM\Persons(0);
 
-        $cards = $person->cards;
+        $cards = $person->cards->get();
 
         if (! $cards) {
             $data['cards'][] = lang('missing');
@@ -115,12 +116,13 @@ class Persons extends CI_Controller
 
         $this->load->helper(['form', 'language']);
 
-        $org = $this->_user->first('organizations');
+        $orgs = $this->_user->organizations->get();
+        $org = $this->_user->organizations->first();
 
         /*
         | Подразделения
         */
-        $divs = @$org->divisions;
+        $divs = @$org->divisions->get();
         $data = [
             'divs' => $divs ?? []
         ];
@@ -133,7 +135,7 @@ class Persons extends CI_Controller
 
         $person = new \ORM\Persons(0);
 
-        $cards = $person->cards;
+        $cards = $person->cards->get();
 
         if (! $cards) {
             $data['cards'][] = lang('missing');
@@ -185,7 +187,8 @@ class Persons extends CI_Controller
 
         $this->load->library('task');
 
-        $org = $this->_user->first('organizations');
+        $orgs = $this->_user->organizations->get();
+        $org = $this->_user->organizations->first();
 
         $person_data = json_decode($this->input->post('person'));
         $card_list = json_decode($this->input->post('cards'));
@@ -200,7 +203,7 @@ class Persons extends CI_Controller
         /*
         | Карты
         */
-        $ctrls = @$org->controllers;
+        $ctrls = @$org->controllers->get();
         $ctrls = $ctrls ?? [];
 
         foreach ($card_list as $card_id) {
@@ -229,8 +232,8 @@ class Persons extends CI_Controller
             }
         } else {
             $div = new \ORM\Divisions([
-              'org_id' => $org->id ?? 0,
-              'type' => 0
+                'org_id' => $org->id ?? 0,
+                'type' => 0
             ]);
 
             $person->bind($div);
@@ -284,14 +287,15 @@ class Persons extends CI_Controller
 
         $this->load->library(['task', 'photo']);
 
-        $org = $this->_user->first('organizations');
+        $orgs = $this->_user->organizations->get();
+        $org = $this->_user->organizations->first();
 
         $person = new \ORM\Persons($person_id);
 
         /*
         | Подразделения
         */
-        foreach ($person->divisions as $div) {
+        foreach ($person->divisions->get() as $div) {
             $person->unbind($div);
         }
 
@@ -305,10 +309,10 @@ class Persons extends CI_Controller
         /*
         | Карты
         */
-        $ctrls = @$org->controllers;
+        $ctrls = @$org->controllers->get();
         $ctrls = $ctrls ?? [];
 
-        foreach ($person->cards as $card) {
+        foreach ($person->cards->get() as $card) {
             $card->person_id = 0;
             $card->save();
 
@@ -324,7 +328,7 @@ class Persons extends CI_Controller
         /*
         | Подписки
         */
-        $subs = $person->users;
+        $subs = $person->users->get();
 
         foreach ($subs as $sub) {
             $person->unbind($sub);
@@ -359,8 +363,8 @@ class Persons extends CI_Controller
 
         echo json_encode([
           'person' => $person,
-          'photos' => $person->photos,
-          'divs' => $person->divisions
+          'photos' => $person->photos->get(),
+          'divs' => $person->divisions->get()
         ]);
     }
 
@@ -425,6 +429,6 @@ class Persons extends CI_Controller
 
         header('Content-Type: application/json');
 
-        echo json_encode($div->persons);
+        echo json_encode($div->persons->get());
     }
 }

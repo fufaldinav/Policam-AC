@@ -39,12 +39,13 @@ class Observ extends CI_Controller
 
         $this->load->helper('language');
 
-        $org = $this->_user->first('organizations');
+        $orgs = $this->_user->organizations->get();
+        $org = $this->_user->organizations->first();
 
         /*
          | Подразделения
          */
-        $divs = @$org->divisions;
+        $divs = @$org->divisions->get();
         $data = [
             'divs' => $divs ?? []
         ];

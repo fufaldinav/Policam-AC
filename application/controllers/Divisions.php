@@ -45,9 +45,10 @@ class Divisions extends CI_Controller
 
         $this->load->helper('language');
 
-        $org = $this->_user->first('organizations');
+        $orgs = $this->_user->organizations->get();
+        $org = $this->_user->organizations->first();
 
-        $divs = @$org->divisions;
+        $divs = @$org->divisions->get();
         $data = [
             'org_id' => $org->id ?? 0,
             'divs' => $divs ?? []
@@ -83,12 +84,12 @@ class Divisions extends CI_Controller
 
         $this->ac->load(['Divisions', 'Organizations']);
 
-        $orgs = $this->_user->organizations;
+        $orgs = $this->_user->organizations->get();
 
         $divs = [];
 
         foreach ($orgs as $org) {
-            $divs = array_merge($divs, $org->divisions);
+            $divs = array_merge($divs, $org->divisions->get());
         }
 
         header('Content-Type: application/json');
@@ -117,7 +118,7 @@ class Divisions extends CI_Controller
 
         $div_data = json_decode($this->input->post('div'));
 
-        $div = new \ORM\Divisions();
+        $div = new \ORM\Divisions;
 
         $div->set($div_data);
         $div->save();
@@ -153,21 +154,22 @@ class Divisions extends CI_Controller
 
         $this->ac->load(['Divisions', 'Organizations', 'Persons']);
 
-        $org = $this->_user->first('organizations');
+        $orgs = $this->_user->organizations->get();
+        $org = $this->_user->organizations->first();
 
         $cur_div = new \ORM\Divisions($div_id);
 
         //"Пустое" подразделение
         $empty_div = new \ORM\Divisions([
-          'org_id' => $org->id ?? 0,
-          'type' => 0
+            'org_id' => $org->id ?? 0,
+            'type' => 0
         ]);
 
         //Переносим полученных людей в "пустое" подразделение
-        foreach ($cur_div->persons as $person) {
+        foreach ($cur_div->persons->get() as $person) {
             $person->unbind($cur_div);
 
-            if (! $person->divisions) {
+            if (! $person->divisions->get()) {
                 $empty_div->bind($person);
             }
         }

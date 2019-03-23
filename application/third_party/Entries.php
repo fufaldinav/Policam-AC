@@ -44,10 +44,10 @@ abstract class Entries extends MicroORM
      * @var array
      */
     private $_relationship_types = [
-      '_belongs_to',
-      '_has_one',
-      '_has_many',
-      '_with_many'
+      '_belongs_to', //many-to-one
+      '_has_one',    //one-to-one
+      '_has_many',   //one-to-many
+      '_with_many'   //many-to-many
     ];
 
     /**
@@ -137,7 +137,7 @@ abstract class Entries extends MicroORM
             ->limit(1)
             ->get($this->_table);
 
-        if ($query->num_rows() == 0) {
+        if ($query->num_rows() === 0) {
             return false;
         }
 
@@ -160,7 +160,7 @@ abstract class Entries extends MicroORM
             ->limit(1)
             ->get($this->_table);
 
-        if ($query->num_rows() == 0) {
+        if ($query->num_rows() === 0) {
             return false;
         }
 
@@ -223,31 +223,6 @@ abstract class Entries extends MicroORM
     }
 
     /**
-     * Возвращает первый элемент или единственный объект владельца
-     *
-     * @param string $name
-     *
-     * @return self|null Объект или NULL - имя задано неверно или объект
-     *                     отсутствует
-     */
-    public function first(string $name): ?self
-    {
-        if (is_array($this->$name)) {
-            $array = $this->$name;
-            reset($array);
-            $first_element = current($array);
-
-            if ($first_element !== false) {
-                return $first_element;
-            }
-
-            return null;
-        } else {
-            return $this->$name;
-        }
-    }
-
-    /**
      * Связать объекты
      *
      * @param self $bindable Связываемый объект
@@ -264,8 +239,8 @@ abstract class Entries extends MicroORM
 
         if (isset($model)) {
             parent::$_db->insert($model['through'], [
-                $model['foreign_key'][0] => $this->id,
-                $model['foreign_key'][1] => $bindable->id
+                $model['own_key'] => $this->id,
+                $model['their_key'] => $bindable->id
             ]);
             return true;
         }
@@ -290,8 +265,8 @@ abstract class Entries extends MicroORM
 
         if (isset($model)) {
             parent::$_db->where([
-                $model['foreign_key'][0] => $this->id,
-                $model['foreign_key'][1] => $binded->id
+                $model['own_key'] => $this->id,
+                $model['their_key'] => $binded->id
             ]);
 
             parent::$_db->delete($model['through']);
@@ -319,11 +294,12 @@ abstract class Entries extends MicroORM
     }
 
     /**
-     * Получает владельца //TODO нормальное описание
+     * Получает объект, связанный моделью many-to-one
      *
-     * @param string $name
+     * @param string $name Имя свойства текущего объекта, которое будет
+     *                     хранить связанный объект
      *
-     * @return self|null
+     * @return self|null Связанный объект
      */
     private function _belongs_to(string $name): ?self
     {
@@ -335,7 +311,7 @@ abstract class Entries extends MicroORM
             ->limit(1)
             ->get($classname);
 
-        if ($query->num_rows() == 0) {
+        if ($query->num_rows() === 0) {
             return null;
         }
 
@@ -348,11 +324,12 @@ abstract class Entries extends MicroORM
     }
 
     /**
-     * Получает "имущество" объекта //TODO нормальное описание
+     * Получает объект, связанный моделью one-to-one
      *
-     * @param string $name
+     * @param string $name Имя свойства текущего объекта, которое будет
+     *                     хранить связанный объект
      *
-     * @return self|null
+     * @return self|null Связанный объект
      */
     private function _has_one(string $name): ?self
     {
@@ -364,7 +341,7 @@ abstract class Entries extends MicroORM
             ->limit(1)
             ->get($classname);
 
-        if ($query->num_rows() == 0) {
+        if ($query->num_rows() === 0) {
             return null;
         }
 
@@ -377,47 +354,31 @@ abstract class Entries extends MicroORM
     }
 
     /**
-     * Получает "имущество" объекта //TODO нормальное описание
+     * Получает список объектов, связанных моделью one-to-many
      *
-     * @param string $name
+     * @param string $name Имя свойства текущего объекта, которое будет
+     *                     хранить список связанных объектов
      *
-     * @return Lists
+     * @return Lists Список объектов
      */
     private function _has_many(string $name): Lists
     {
-        $classname = $this->_has_many[$name]['class'];
-        $foreign_key = $this->_has_many[$name]['foreign_key'];
-
-        $list = new Lists($classname, $this);
-
-        $list
-            ->select('id')
-            ->from($classname)
-            ->where($foreign_key, $this->id);
+        $list = new Lists($this, $this->_has_many[$name], '_has_many');
 
         return $list;
     }
 
     /**
-     * Получает "имущество" объекта //TODO нормальное описание
+     * Получает список объектов, связанных моделью many-to-many
      *
-     * @param string $name
+     * @param string $name Имя свойства текущего объекта, которое будет
+     *                     хранить список связанных объектов
      *
-     * @return Lists
+     * @return Lists Список объектов
      */
     private function _with_many(string $name): Lists
     {
-        $classname = $this->_has_many[$name]['class'];
-        $own_key = $this->_has_many[$name]['own_key'];
-        $their_key = $this->_has_many[$name]['their_key'];
-        $through = $this->_has_many[$name]['through'];
-
-        $list = new Lists($classname, $this);
-
-        $list
-            ->select("$their_key AS id")
-            ->from($through)
-            ->where($own_key, $this->id);
+        $list = new Lists($this, $this->_with_many[$name], '_with_many');
 
         return $list;
     }
@@ -427,24 +388,24 @@ abstract class Entries extends MicroORM
      *
      * @param self $object Связываемый объект
      *
-     * @return array|null Параметры связи или NULL - параметры не установлены
+     * @return array Параметры связи объектов
      */
-    private function _get_relation_model(self $object): ?array
+    private function _get_relation_model(self $object): array
     {
         $props = get_object_vars($this);
 
         $classname = (new \ReflectionClass($object))->getShortName();
         $classname = strtolower($classname);
 
-        if (array_key_exists('_has_many', $props)) { //если связь есть у объекта
-            foreach ($props['_has_many'] as $rel) {
-                if ($rel['class'] == $classname && array_key_exists('through', $rel)) { //если класс О1 связан с классом О2
+        if (array_key_exists('_with_many', $props)) { //если есть связь у объекта
+            foreach ($props['_with_many'] as $rel) {
+                if ($rel['class'] === $classname) { //если класс О1 связан с классом О2
                     return $rel;
                 }
             }
         }
 
-        return null;
+        throw new \Exception('Relations model no exists');
     }
 
     /**
@@ -457,17 +418,15 @@ abstract class Entries extends MicroORM
      */
     private function _check_relation(self $object, array $model): bool
     {
-        if (isset($model)) {
-            parent::$_db->where([
-              $model['foreign_key'][0] => $this->id,
-              $model['foreign_key'][1] => $object->id
-            ]);
+        $query = parent::$_db
+            ->where([
+              $model['own_key'] => $this->id,
+              $model['their_key'] => $object->id
+            ])
+            ->get($model['through']);
 
-            $query = parent::$_db->get($model['through']);
-
-            if ($query->num_rows() > 0) {
-                return true;
-            }
+        if ($query->num_rows() > 0) {
+            return true;
         }
 
         return false;

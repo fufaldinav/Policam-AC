@@ -94,7 +94,7 @@ class Util extends CI_Controller
 
         $person = new \ORM\Persons($person_id);
 
-        $cards = $person->cards;
+        $cards = $person->cards->get();
 
         if (! $cards) {
             exit;
@@ -128,11 +128,11 @@ class Util extends CI_Controller
 
             $this->task->del_cards($cards_to_delete);
 
-            $divs = $person->divisions;
+            $divs = $person->divisions->get();
 
             foreach ($divs as $div) {
                 $org = $div->organization;
-                $ctrls = array_merge($ctrls, $org->controllers);
+                $ctrls = array_merge($ctrls, $org->controllers->get());
             }
 
             foreach ($ctrls as $ctrl) {
@@ -148,7 +148,7 @@ class Util extends CI_Controller
             exit;
         }
 
-        $event = new \ORM\User_events();
+        $event = new \ORM\User_events;
 
         $event->user_id = $this->_user->id;
         $event->type = $problem_type;

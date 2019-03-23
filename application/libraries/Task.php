@@ -80,7 +80,7 @@ class Task extends Ac
 
         $this->load('Tasks');
 
-        $task = new \ORM\Tasks();
+        $task = new \ORM\Tasks;
 
         $task->task_id = $this->_request->id = mt_rand(500000, 999999999);
         $task->controller_id = $ctrl_id;

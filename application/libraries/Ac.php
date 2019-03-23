@@ -45,9 +45,7 @@ class Ac
 
         $this->_CI->config->load('ac', true);
 
-        $this->load('MicroORM');
-        $this->load('Entries');
-        $this->load('Lists');
+        $this->load(['MicroORM', 'Entries', 'Lists']);
     }
 
     /**
@@ -104,10 +102,10 @@ class Ac
     {
         if (is_array($class)) {
             foreach ($class as $value) {
-                include_once APPPATH . "third_party/$value.php";
+                require_once APPPATH . "third_party/$value.php";
             }
         } elseif (is_string($class)) {
-            include_once APPPATH . "third_party/$class.php";
+            require_once APPPATH . "third_party/$class.php";
         }
     }
 }

@@ -89,7 +89,8 @@ class Notificator extends Ac
 
         $person = new \ORM\Persons($person_id);
 
-        $photo = $person->first('photos');
+        $photos = $person->photos->get();
+        $photo = $person->photos->first();
 
         $photo_url = "https://{$_SERVER['HTTP_HOST']}/img/ac/s/" . ($photo->id ?? 0) . ".jpg";
 
@@ -122,7 +123,7 @@ class Notificator extends Ac
 
         $user = new \ORM\Users($user_id);
 
-        $tokens = $user->tokens;
+        $tokens = $user->tokens->get();
 
         foreach ($tokens as $token) {
             $registration_ids[] = $token->token;
