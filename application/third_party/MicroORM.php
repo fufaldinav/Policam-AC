@@ -24,11 +24,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 abstract class MicroORM
 {
-    /** @var object Суперобъект Codeigniter */
-    protected static $CI;
-
     /** @var object Объект БД */
-    protected static $db;
+    protected $db;
 
     /** @var array Хранилище неизвестных свойств */
     protected $storage = [];
@@ -36,9 +33,7 @@ abstract class MicroORM
     /** @return void */
     public function __construct()
     {
-        self::$CI =& get_instance();
-        self::$CI->load->database();
-        self::$db = self::$CI->db;
+        $this->db =& get_instance()->db;
     }
 
     /**

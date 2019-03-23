@@ -99,7 +99,7 @@ class Lists extends MicroORM
      */
     public function where(string $params, $value = null): Lists
     {
-        parent::$db->where($params, $value);
+        $this->db->where($params, $value);
 
         return $this;
     }
@@ -113,7 +113,7 @@ class Lists extends MicroORM
      */
     public function order_by(string $params): Lists
     {
-        parent::$db->order_by($params);
+        $this->db->order_by($params);
 
         return $this;
     }
@@ -128,7 +128,7 @@ class Lists extends MicroORM
         $classname = $this->relation_model['class'];
         $foreign_key = $this->relation_model['foreign_key'];
 
-        $query = self::$db
+        $query = $this->db
             ->where($foreign_key, $this->object->id)
             ->get($classname);
 
@@ -150,7 +150,7 @@ class Lists extends MicroORM
         $their_key = $this->relation_model['their_key'];
         $mapped_by = $this->relation_model['mapped_by'];
 
-        $query = self::$db
+        $query = $this->db
             ->select("$classname.*")
             ->join($classname, "$classname.id = $mapped_by.$their_key")
             ->where($own_key, $this->object->id)

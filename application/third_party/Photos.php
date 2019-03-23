@@ -48,7 +48,9 @@ class Photos extends Entries
      */
     public static function get_old(): array
     {
-        $query = parent::$db
+        $db =& get_instance()->db;
+
+        $query = $db
             ->where('person_id', null)
             ->where('time <', now() - 86400)
             ->get('photos')

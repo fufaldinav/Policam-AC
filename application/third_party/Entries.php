@@ -120,7 +120,7 @@ abstract class Entries extends MicroORM
      */
     public function get(int $id): bool
     {
-        $query = parent::$db
+        $query = $this->db
             ->where('id', $id)
             ->limit(1)
             ->get($this->table);
@@ -145,7 +145,7 @@ abstract class Entries extends MicroORM
      */
     public function getBy(array $attr): bool
     {
-        $query = parent::$db
+        $query = $this->db
             ->where($attr)
             ->limit(1)
             ->get($this->table);
@@ -190,16 +190,16 @@ abstract class Entries extends MicroORM
     public function save(): int
     {
         if (isset($this->id)) {
-            parent::$db
+            $this->db
                 ->where('id', $this->id)
                 ->update($this->table, $this);
         } else {
-            parent::$db->insert($this->table, $this);
+            $this->db->insert($this->table, $this);
 
-            $this->id = parent::$db->insert_id();
+            $this->id = $this->db->insert_id();
         }
 
-        return parent::$db->affected_rows();
+        return $this->db->affected_rows();
     }
 
     /**
@@ -209,9 +209,9 @@ abstract class Entries extends MicroORM
      */
     public function remove(): int
     {
-        parent::$db->delete($this->table, ['id' => $this->id]);
+        $this->db->delete($this->table, ['id' => $this->id]);
 
-        return parent::$db->affected_rows();
+        return $this->db->affected_rows();
     }
 
     /**
@@ -230,7 +230,7 @@ abstract class Entries extends MicroORM
         }
 
         if (isset($model)) {
-            parent::$db->insert($model['mapped_by'], [
+            $this->db->insert($model['mapped_by'], [
                 $model['own_key'] => $this->id,
                 $model['their_key'] => $bindable->id
             ]);
@@ -256,14 +256,14 @@ abstract class Entries extends MicroORM
         }
 
         if (isset($model)) {
-            parent::$db->where([
+            $this->db->where([
                 $model['own_key'] => $this->id,
                 $model['their_key'] => $binded->id
             ]);
 
-            parent::$db->delete($model['mapped_by']);
+            $this->db->delete($model['mapped_by']);
 
-            if (parent::$db->affected_rows() > 0) {
+            if ($this->db->affected_rows() > 0) {
                 return true;
             }
         }
@@ -284,7 +284,7 @@ abstract class Entries extends MicroORM
         $classname = $this->belongs_to[$name]['class'];
         $foreign_key = $this->belongs_to[$name]['foreign_key'];
 
-        $query = parent::$db
+        $query = $this->db
             ->where('id', $this->$foreign_key)
             ->limit(1)
             ->get($classname);
@@ -314,7 +314,7 @@ abstract class Entries extends MicroORM
         $classname = $this->has_one[$name]['model'];
         $foreign_key = $this->has_one[$name]['foreign_key'];
 
-        $query = parent::$db
+        $query = $this->db
             ->where($foreign_key, $this->id)
             ->limit(1)
             ->get($classname);
@@ -396,7 +396,7 @@ abstract class Entries extends MicroORM
      */
     private function checkRelation(self $object, array $model): bool
     {
-        $query = parent::$db
+        $query = $this->db
             ->where([
               $model['own_key'] => $this->id,
               $model['their_key'] => $object->id
