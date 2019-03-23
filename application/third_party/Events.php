@@ -1,10 +1,12 @@
 <?php
+namespace ORM;
+
 /**
  * Name:   Policam AC
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *
- * Created: 15.03.2019
+ * Created: 19.03.2019
  *
  * Description: Приложение для систем контроля и управления доступом.
  *
@@ -18,59 +20,39 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
- * Class Event Model
+ * Class Events
  */
-class Event_model extends MY_Model
+class Events extends Entries
 {
-    /**
-     * Контроллер, от которого пришло событие
-     *
-     * @var int
-     */
+    /** @var array Связи many_to_one */
+    protected $belongs_to = [
+      'controller' => [
+        'class' => 'controllers',
+        'foreign_key' => 'controller_id'
+      ],
+      'card' => [
+        'class' => 'cards',
+        'foreign_key' => 'card_id'
+      ]
+    ];
+
+    /** @var int Контроллер, от которого пришло событие */
     public $controller_id;
 
-    /**
-     * Тип события
-     *
-     * @var int
-     */
+    /** @var int Тип события */
     public $event;
 
-    /**
-     * Флаг события
-     *
-     * @var int
-     */
+    /** @var int Флаг события */
     public $flag;
 
-    /**
-     * Время события на контроллере
-     *
-     * @var int
-     */
+    /** @var int Время события на контроллере */
     public $time;
 
-    /**
-     * Время получения события сервером
-     *
-     * @var int
-     */
+    /** @var int Время получения события сервером */
     public $server_time;
 
-    /**
-     * Карта, вызвавшая событие
-     *
-     * @var int
-     */
+    /** @var int Карта, вызвавшая событие */
     public $card_id;
-
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->_table = 'events';
-        $this->_foreing_key = 'controller_id';
-    }
 
     /**
      * Получает список последних событий из БД, пришедших после установленного
@@ -82,21 +64,33 @@ class Event_model extends MY_Model
      *
      * @return object[] Ноый список объектов
      */
-    public function list_get_last(
+    public static function get_latest(
         int $time,
         array $event_types = null,
         array $controllers = null
     ): array {
+        $db =& get_instance()->db;
+
         if (isset($event_types)) {
-            $this->CI->db->where_in('event', $event_types);
+            $db->where_in('event', $event_types);
         }
         if (isset($controllers)) {
-            $this->CI->db->where_in($this->_foreing_key, $controllers);
+            $db->where_in('controller_id', $controllers);
         }
 
-        return $this->_list = $this->CI->db->where('server_time >', $time)
-                                           ->order_by('time', 'DESC')
-                                           ->get('events')
-                                           ->result();
+        $query = $db
+            ->where('server_time >', $time)
+            ->order_by('time', 'DESC')
+            ->get('events')
+            ->result();
+
+        $classname = self::class;
+
+        foreach ($query as &$row) {
+            $row = new $classname($row->id);
+        }
+        unset($row);
+
+        return $query;
     }
 }

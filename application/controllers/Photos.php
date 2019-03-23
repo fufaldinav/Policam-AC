@@ -3,7 +3,7 @@
 /**
  * Class Photos
  *
- * @property Photo_model $photo
+ * @property Photo $photo
  */
 class Photos extends CI_Controller
 {
@@ -22,6 +22,11 @@ class Photos extends CI_Controller
             header('HTTP/1.1 403 Forbidden');
             exit;
         }
+
+        $this->ac->load('Users');
+
+        $user_id = $this->ion_auth->user()->row()->id;
+        $this->user = new \ORM\Users($user_id);
     }
 
     /**
@@ -32,12 +37,12 @@ class Photos extends CI_Controller
     public function save(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
-            $this->ac->load('photo');
+            $this->load->library('photo');
 
             header('Content-Type: application/json');
 
             echo json_encode(
-                $this->photo->save_file($_FILES['file'])
+                $this->photo->save($_FILES['file'])
             );
         }
     }
@@ -51,8 +56,8 @@ class Photos extends CI_Controller
      */
     public function delete(int $id): void
     {
-        $this->ac->load('photo');
+        $this->load->library('photo');
 
-        echo $this->photo->delete_file($id);
+        echo $this->photo->remove($id);
     }
 }

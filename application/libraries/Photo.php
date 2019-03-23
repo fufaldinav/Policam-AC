@@ -4,7 +4,7 @@
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *
- * Created: 01.03.2019
+ * Created: 20.03.2019
  *
  * Description: Приложение для систем контроля и управления доступом.
  *
@@ -18,54 +18,31 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
- * Class Photo Model
+ * Class Photo
  */
-class Photo_model extends MY_Model
+class Photo extends Ac
 {
-    /**
-     * MD5 хэш фотографии
-     *
-     * @var string
-     */
-    public $hash;
-
-    /**
-     * Человек, которому принадлежит фотография
-     *
-     * @var int
-     */
-    public $person_id;
-
-    /**
-     * Время сохранения фотографии
-     *
-     * @var int
-     */
-    public $time;
-
     /**
      * Каталог с фото
      *
-     * @var string $_img_path
+     * @var string $img_path
      */
-    private $_img_path;
+    private $img_path;
 
+    /**
+     * @return void
+     */
     public function __construct()
     {
         parent::__construct();
 
-        $this->_table = 'photo';
-        $this->_foreing_key = 'person_id';
+        $this->img_path = $this->CI->config->item('img_path', 'ac');
 
-        $this->CI->config->load('ac', true);
-
-        $this->_img_path = $this->CI->config->item('img_path', 'ac');
-
-        if (! is_dir($this->_img_path)) {
-            mkdir($this->_img_path, 0755, true);
+        if (! is_dir($this->img_path)) {
+            mkdir($this->img_path, 0755, true);
         }
-        if (! is_dir("$this->_img_path/s")) {
-            mkdir("$this->_img_path/s", 0755, true);
+        if (! is_dir("$this->img_path/s")) {
+            mkdir("$this->img_path/s", 0755, true);
         }
     }
 
@@ -76,7 +53,7 @@ class Photo_model extends MY_Model
      *
      * @return mixed[] Отчет о сохранении
      */
-    public function save_file(array $file): array //TODO проверка уже имеющейся фото за человеком
+    public function save(array $file): array //TODO проверка уже имеющейся фото за человеком
     {
         $response = [
             'id' => 0,
@@ -109,21 +86,24 @@ class Photo_model extends MY_Model
         }
 
         if ($response['error'] === '') {
-            $time = now('Asia/Yekaterinburg');
+            $this->load('Photos');
 
-            $this->get_by('hash', $file_hash);
+            $photo = new \ORM\Photos(['hash' => $file_hash]);
 
-            $this->hash = $file_hash;
-            $this->time = $time;
+            if (! isset($photo->hash)) {
+                $photo->hash = $file_hash;
+            }
 
-            $this->save();
+            $time = now();
+            $photo->time = $time;
+            $photo->save();
 
-            $response['id'] = $this->id;
+            $response['id'] = $photo->id;
 
-            $this->delete_old();
+            $this->clear();
 
             try {
-                $file_path = "$this->_img_path/$this->id.jpg";
+                $file_path = "$this->img_path/$photo->id.jpg";
 
                 move_uploaded_file($file_tmp, $file_path);
                 //сохранение уменьшенной копии
@@ -131,23 +111,25 @@ class Photo_model extends MY_Model
                     'src_path' => $file_path,
                     'width' => 240,
                     'height' => 320,
-                    'dst_path' => "$this->_img_path/s/$this->id.jpg"
+                    'dst_path' => "$this->img_path/s/$photo->id.jpg"
                 ];
 
-                $this->_create_thumbnail($params);
+                $this->createThumbnail($params);
 
                 return $response;
             } catch (Exception $e) {
-                $response['error'] = $e;
+                $response['error'] = $e->getMessage();
 
                 $this->CI->load->library('logger');
-                $this->CI->logger->save_errors($response['error']);
+                $this->CI->logger->add('err', $response['error']);
+                $this->CI->logger->write();
 
                 return $response;
             }
         } else {
             $this->CI->load->library('logger');
-            $this->CI->logger->save_errors($response['error']);
+            $this->CI->logger->add('err', $response['error']);
+            $this->CI->logger->write();
 
             return $response;
         }
@@ -156,29 +138,33 @@ class Photo_model extends MY_Model
     /**
      * Удаляет фото из БД и диска
      *
-     * @param int|null $id ID фотографии
+     * @param int $id ID фотографии
      *
      * @return int Количество успешных удалений
      */
-    public function delete_file($id = null): int
+    public function remove(int $id): int
     {
-        $id = $id ?? $this->id;
+        $this->load('Photos');
+
+        $photo = new \ORM\Photos($id);
 
         try {
-            $file_path = "$this->_img_path/$id.jpg";
+            $file_path = "$this->img_path/$id.jpg";
             if (file_exists($file_path)) {
                 unlink($file_path);
             }
 
-            $file_path = "$this->_img_path/s/$id.jpg";
+            $file_path = "$this->img_path/s/$id.jpg";
             if (file_exists($file_path)) {
                 unlink($file_path);
             }
 
-            return $this->delete($id);
+            return $photo->remove();
         } catch (Exception $e) {
             $this->CI->load->library('logger');
-            $this->CI->logger->save_errors($e);
+
+            $this->CI->logger->add('err', $e->getMessage());
+            $this->CI->logger->write();
 
             return 0;
         }
@@ -189,17 +175,16 @@ class Photo_model extends MY_Model
      *
      * @return int Количество удаленных фотографий
      */
-    private function delete_old(): int
+    public function clear(): int
     {
-        $query = $this->CI->db->where('person_id', null)
-                              ->where('time <', now('Asia/Yekaterinburg') - 86400)
-                              ->get('photo')
-                              ->result();
+        $this->load('Photos');
+
+        $photos = \ORM\Photos::get_old();
 
         $counter = 0;
 
-        foreach ($query as $photo) {
-            $counter += $this->delete($photo->id);
+        foreach ($photos as $photo) {
+            $counter += $photo->remove();
         }
 
         return $counter;
@@ -217,7 +202,7 @@ class Photo_model extends MY_Model
      *
      * @return bool TRUE - успешно, FALSE - ошибка
      */
-    private function _create_thumbnail(array $params): bool
+    private function createThumbnail(array $params): bool
     {
         $src_img = imagecreatefromjpeg($params['src_path']);
 

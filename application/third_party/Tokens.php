@@ -1,10 +1,12 @@
 <?php
+namespace ORM;
+
 /**
  * Name:   Policam AC
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *
- * Created: 14.03.2019
+ * Created: 19.03.2019
  *
  * Description: Приложение для систем контроля и управления доступом.
  *
@@ -18,29 +20,21 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
- * Class Token Model
+ * Class Tokens
  */
-class Token_model extends MY_Model
+class Tokens extends Entries
 {
-    /**
-     * Пользователь, которому принадлежит токен
-     *
-     * @var int
-     */
+    /** @var array Связи many_to_one */
+    protected $belongs_to = [
+      'user' => [
+        'class' => 'users',
+        'foreign_key' => 'user_id'
+      ]
+    ];
+
+    /** @var int Пользователь, которому принадлежит токен */
     public $user_id;
 
-    /**
-     * Токен, полученный от сервера FCM
-     *
-     * @var string
-     */
+    /** @var string Токен, полученный от сервера FCM */
     public $token;
-
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->_table = 'tokens';
-        $this->_foreing_key = 'user_id';
-    }
 }

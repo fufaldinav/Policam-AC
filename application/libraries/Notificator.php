@@ -19,9 +19,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
  * Class Notificator
- * @property Person_model $person
- * @property Photo_model $photo
- * @property Token_model $token
+ *
+ * @property Logger $logger
  */
 class Notificator extends Ac
 {
@@ -30,28 +29,31 @@ class Notificator extends Ac
      *
      * @var string
      */
-    private $_fcm_url;
+    private $fcm_url;
 
     /**
      * Ключ сервера
      *
      * @var string
      */
-    private $_server_key;
+    private $server_key;
 
     /**
      * Параметры уведомления
      *
      * @var string
      */
-    private $_notification;
+    private $notification;
 
+    /**
+     * @return void
+     */
     public function __construct()
     {
         parent::__construct();
 
-        $this->_fcm_url = $this->CI->config->item('fcm_url', 'ac');
-        $this->_server_key = $this->CI->config->item('server_key', 'ac');
+        $this->fcm_url = $this->CI->config->item('fcm_url', 'ac');
+        $this->server_key = $this->CI->config->item('server_key', 'ac');
     }
 
     /**
@@ -60,9 +62,9 @@ class Notificator extends Ac
      * @param int $person_id ID человека
      * @param int $event_id  ID события
      *
-     * @return mixed[] Параметры уведомления
+     * @return mixed[]|null Параметры уведомления или NULL - неподходящее событие
      */
-    public function generate(int $person_id, int $event_id): array
+    public function generate(int $person_id, int $event_id): ?array
     {
         $this->CI->lang->load('ac');
 
@@ -78,23 +80,24 @@ class Notificator extends Ac
                 break;
 
             default:
-                return [];
+                return null;
         }
+
+        $this->load('Persons', 'Photos');
 
         $this->CI->load->helper('url');
 
-        $this->load('person');
+        $person = new \ORM\Persons($person_id);
 
-        $this->person->get($person_id);
+        $photos = $person->photos->get();
+        $photo = $person->photos->first();
 
-        $this->load('photo');
+        $photo_url = "https://{$_SERVER['HTTP_HOST']}/img/ac/s/" . ($photo->id ?? 0) . ".jpg";
 
-        $photo = $this->photo->get_by('person_id', $this->person->id);
-
-        return $this->_notification = [
+        return $this->notification = [
             'title' => $event,
-            'body' => "{$this->person->f} {$this->person->i}",
-            'icon' => ($photo) ? ("https://" . $_SERVER['HTTP_HOST'] . "/img/ac/s/{$this->photo->id}.jpg") : "",
+            'body' => "{$person->f} {$person->i}",
+            'icon' => $photo_url,
             'click_action' => base_url('/')
         ];
     }
@@ -106,35 +109,40 @@ class Notificator extends Ac
      * @param int|null   $user_id      ID пользователя, по-умолчанию не указан,
      *                                 тогда будет отправлено всем пользователям
      *
-     * @return string Ответ на запрос
+     * @return void
      */
-    public function send(array $notification = null, int $user_id = null): string
+    public function send(array $notification = null, int $user_id = null): void
     {
-        $notification = $notification ?? $this->_notification;
+        $this->load('Tokens');
+
+        $this->CI->load->library('logger');
+
+        $notification = $notification ?? $this->notification;
 
         $registration_ids = [];
 
-        $this->load('token');
+        $user = new \ORM\Users($user_id);
 
-        $tokens = $this->token->get_list($user_id);
+        $tokens = $user->tokens->get();
 
         foreach ($tokens as $token) {
             $registration_ids[] = $token->token;
         }
 
         $request_body = [
-            'notification' => $this->_notification,
+            'notification' => $notification,
             'registration_ids' => $registration_ids
         ];
+
         $fields = json_encode($request_body);
 
         $request_headers = [
             "Content-Type: application/json",
-            "Authorization: key=$this->_server_key",
+            "Authorization: key=$this->server_key",
         ];
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->_fcm_url);
+        curl_setopt($ch, CURLOPT_URL, $this->fcm_url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
@@ -143,6 +151,7 @@ class Notificator extends Ac
         $response = curl_exec($ch);
         curl_close($ch);
 
-        return $response;
+        $this->CI->logger->add('push', "USER: $user->id || $response");
+        $this->CI->logger->write();
     }
 }

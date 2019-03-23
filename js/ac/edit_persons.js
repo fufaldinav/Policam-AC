@@ -9,6 +9,7 @@ let person = {
 };
 
 let cards = [],
+	divs = [],
 	photos = [];
 
 //обновление информации пользователя в БД
@@ -37,10 +38,11 @@ function updatePersonInfo() {
 		alert(`Введены не все данные`); //TODO перевод
 	} else {
 		$.ajax({
-			url: `[ci_site_url]persons/update`,
+			url: `[ci_site_url]persons/save/${person.id}`,
 			type: `POST`,
 			data: {
 				cards: JSON.stringify(cards),
+				divs: JSON.stringify(divs),
 				person: JSON.stringify(person),
 				photos: JSON.stringify(photos)
 			},
@@ -101,6 +103,8 @@ function deletePerson() {
 				document.getElementById(`unknown_cards`).hidden = false; //отобразим меню с неизвестными картами
 				document.getElementById(`cards`).disabled = true; //но запретим редактирование
 
+				divs = [];
+
 				document.getElementById(`save`).onclick = function() {
 					return false;
 				};
@@ -152,6 +156,11 @@ function getPersonInfo(person_id) {
 					handleFiles(this.files);
 				};
 
+        divs = [];
+				for (let k in data.divs) {
+					divs.push(data.divs[k].id);
+				}
+
 				document.getElementById(`save`).onclick = updatePersonInfo;
 				document.getElementById(`delete`).onclick = deletePerson;
 
@@ -169,7 +178,7 @@ function getPersonInfo(person_id) {
 //получение списка карт (брелоков) от сервера
 function getCardsByPerson(person_id) {
 	$.ajax({
-		url: `[ci_site_url]cards/get_by_person/${person_id}`,
+		url: `[ci_site_url]cards/get_list/${person_id}`,
 		type: `GET`,
 		success: function(data) {
 			cards = [];

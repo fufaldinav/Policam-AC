@@ -2,15 +2,11 @@
 
 /**
  * Class Users
- *
- * @property Token_model $token
  */
 class Users extends CI_Controller
 {
-    /**
-     * @var int
-     */
-    private $_user_id;
+    /** @var object Текущий пользователь */
+    private $user;
 
     public function __construct()
     {
@@ -23,25 +19,32 @@ class Users extends CI_Controller
             exit;
         }
 
-        $this->_user_id = $this->ion_auth->user()->row()->id;
+        $this->ac->load('Users');
+
+        $user_id = $this->ion_auth->user()->row()->id;
+        $this->user = new \ORM\Users($user_id);
     }
 
     /**
      * Получает токен от пользователя
+     *
+     * @return void
      */
-    public function token()
+    public function token(): void
     {
-        $this->ac->load('token');
+        $this->ac->load('Tokens');
 
-        $token = $this->input->post('token');
+        $token_key = $this->input->post('token');
 
         if ($token_key === 'false') {
-            // $this->token->get_by('token', $token_key);
+            // $this->token->getBy('token', $token_key);
             // $this->token->delete(); //TODO удалять просроченный ключ
-        } elseif (! ($this->token->get_by('token', $token_key))) {
-            $this->token->user_id = $this->_user_id;
-            $this->token->token = $token_key;
-            $this->token->save();
+        } else {
+            $token = new \ORM\Tokens(['token' => $token_key]);
+
+            $token->user_id = $this->user->id;
+            $token->token = $token_key;
+            $token->save();
         }
     }
 }

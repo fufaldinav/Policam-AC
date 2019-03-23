@@ -23,19 +23,19 @@ class Jsloader extends CI_Controller
     {
         $this->load->library('jsparser');
 
-        if (! isset($file)) {
+        if (is_null($file)) {
             header('HTTP/1.1 404 Not Found');
             exit;
         }
 
         $contents = $this->jsparser->parse($file);
 
-        if (! isset($contents)) {
+        if (is_null($contents)) {
             header('HTTP/1.1 404 Not Found');
             exit;
-        } else {
-            header('Content-Type: text/javascript');
-            echo $contents;
         }
+
+        header('Content-Type: text/javascript');
+        echo $contents;
     }
 }

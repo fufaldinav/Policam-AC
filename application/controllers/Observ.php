@@ -2,16 +2,11 @@
 
 /**
  * Class Observ
- *
- * @property Div_model $div
- * @property Org_model $org
  */
 class Observ extends CI_Controller
 {
-    /**
-     * @var int
-     */
-    private $_user_id;
+    /** @var object Текущий пользователь */
+    private $user;
 
     public function __construct()
     {
@@ -23,7 +18,10 @@ class Observ extends CI_Controller
             redirect('auth/login');
         }
 
-        $this->_user_id = $this->ion_auth->user()->row()->id;
+        $this->ac->load('Users');
+
+        $user_id = $this->ion_auth->user()->row()->id;
+        $this->user = new \ORM\Users($user_id);
     }
 
     /**
@@ -33,21 +31,25 @@ class Observ extends CI_Controller
      */
     public function index(): void
     {
-        $this->ac->load('div');
-        $this->ac->load('org');
+        $this->ac->load(['Divisions', 'Organizations']);
 
         $this->load->helper('language');
 
-        $this->org->get_list($this->_user_id); //TODO
+        $orgs = $this->user->organizations->get();
+        $org = $this->user->organizations->first();
+
         /*
-         | Подразделения
-         */
+        | Подразделения
+        */
+        $divs = $org->divisions
+            ->order_by('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
+            ->get();
         $data = [
-            'divs' => $this->div->get_list($this->org->first('id'))
+            'divs' => $divs
         ];
 
         $header = [
-            'org_name' => $this->org->first('name') ?? lang('missing'),
+            'org_name' => $org->name ?? lang('missing'),
             'css_list' => ['ac'],
             'js_list' => ['main', 'observ']
         ];

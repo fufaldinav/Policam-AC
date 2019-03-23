@@ -1,10 +1,12 @@
 <?php
+namespace ORM;
+
 /**
  * Name:   Policam AC
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *
- * Created: 17.03.2019
+ * Created: 18.03.2019
  *
  * Description: Приложение для систем контроля и управления доступом.
  *
@@ -18,34 +20,20 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
- * Class Ac
+ * Class MicroORM
  */
-class Ac
+abstract class MicroORM
 {
-    /**
-     * Суперобъект Codeigniter
-     *
-     * @var object
-     */
-    protected $CI;
+    /** @var object Объект БД */
+    protected $db;
 
-    /**
-     * Хранилище неизвестных свойств
-     *
-     * @var array
-     */
+    /** @var array Хранилище неизвестных свойств */
     protected $storage = [];
 
-    /**
-     * @return void
-     */
+    /** @return void */
     public function __construct()
     {
-        $this->CI =& get_instance();
-
-        $this->CI->config->load('ac', true);
-
-        $this->load(['MicroORM', 'Entries', 'Lists']);
+        $this->db =& get_instance()->db;
     }
 
     /**
@@ -53,7 +41,7 @@ class Ac
      *
      * @return mixed|null
      */
-    public function __get(string $name)
+    public function __get($name)
     {
         if (array_key_exists($name, $this->storage)) {
             return $this->storage[$name];
@@ -68,7 +56,7 @@ class Ac
      *
      * @return void
      */
-    public function __set(string $name, $value): void
+    public function __set($name, $value)
     {
         $this->storage[$name] = $value;
     }
@@ -78,7 +66,7 @@ class Ac
      *
      * @return bool
      */
-    public function __isset(string $name): bool
+    public function __isset($name)
     {
         return isset($this->storage[$name]);
     }
@@ -88,24 +76,8 @@ class Ac
      *
      * @return void
      */
-    public function __unset(string $name): void
+    public function __unset($name)
     {
         unset($this->storage[$name]);
-    }
-
-    /**
-     * Загрузка классов
-     *
-     * @param string $class Имя класса
-     */
-    public function load($class): void
-    {
-        if (is_array($class)) {
-            foreach ($class as $value) {
-                require_once APPPATH . "third_party/$value.php";
-            }
-        } elseif (is_string($class)) {
-            require_once APPPATH . "third_party/$class.php";
-        }
     }
 }

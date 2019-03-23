@@ -10,12 +10,13 @@
 							<?php echo $div->name;?>
 						</div>
 						<ul class="tree-container">
-							<?php $last_person = count($div->persons) - 1;?>
-							<?php foreach ($div->persons as $n => $person):?>
+              <?php $persons = $div->persons->order_by('f ASC, i ASC, o ASC')->get();?>
+							<?php $last_person = count($persons) - 1;?>
+							<?php foreach ($persons as $n => $person):?>
 							<li id="person<?php echo $person->id?>" class="tree-node tree-expand-leaf <?php echo $n === $last_person ? 'tree-is-last' : '';?>">
 								<div class="tree-expand"></div>
 								<div class="tree-content">
-									<a class="person<?php echo (count($person->cards) === 0) ? ' no-card' : ''?>" href="#<?php echo $person->id?>" onClick="getPersonInfo(<?php echo $person->id;?>);"><?php echo "$person->f $person->i";?></a>
+									<a class="person<?php echo (! $person->cards->get()) ? ' no-card' : ''?>" href="#<?php echo $person->id?>" onClick="getPersonInfo(<?php echo $person->id;?>);"><?php echo "$person->f $person->i";?></a>
 								</div>
 							</li>
 							<?php endforeach;?>

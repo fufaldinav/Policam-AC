@@ -5,10 +5,8 @@
  */
 class Cp extends CI_Controller
 {
-    /**
-     * @var int
-     */
-    private $_user_id;
+    /** @var object Текущий пользователь */
+    private $user;
 
     public function __construct()
     {
@@ -20,7 +18,10 @@ class Cp extends CI_Controller
             redirect('auth/login');
         }
 
-        $this->_user_id = $this->ion_auth->user()->row()->id;
+        $this->ac->load('Users');
+
+        $user_id = $this->ion_auth->user()->row()->id;
+        $this->user = new \ORM\Users($user_id);
     }
 
     /**

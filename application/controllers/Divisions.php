@@ -2,17 +2,11 @@
 
 /**
  * Class Divisions
- *
- * @property Div_model $div
- * @property Org_model $org
- * @property Person_model $person
  */
 class Divisions extends CI_Controller
 {
-    /**
-     * @var int
-     */
-    private $_user_id;
+    /** @var object Текущий пользователь */
+    private $user;
 
     public function __construct()
     {
@@ -20,7 +14,10 @@ class Divisions extends CI_Controller
 
         $this->load->library('ion_auth');
 
-        $this->_user_id = $this->ion_auth->user()->row()->id;
+        $this->ac->load('Users');
+
+        $user_id = $this->ion_auth->user()->row()->id;
+        $this->user = new \ORM\Users($user_id);
     }
 
     /**
@@ -38,22 +35,25 @@ class Divisions extends CI_Controller
             redirect('/');
         }
 
-        $this->ac->load('div');
-        $this->ac->load('org');
+        $this->ac->load(['Divisions', 'Organizations']);
 
         $this->load->library('table');
 
         $this->load->helper('language');
 
-        $this->org->get_list($this->_user_id); //TODO
+        $orgs = $this->user->organizations->get();
+        $org = $this->user->organizations->first();
 
+        $divs = $org->divisions
+            ->order_by('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
+            ->get();
         $data = [
-            'org_id' => $this->org->first('id'),
-            'divs' => $this->div->get_list($this->org->first('id'))
+            'org_id' => $org->id ?? 0,
+            'divs' => $divs
         ];
 
         $header = [
-            'org_name' => $this->org->first('name') ?? lang('missing'),
+            'org_name' => $org->name ?? lang('missing'),
             'css_list' => ['ac', 'tables'],
             'js_list' => ['classes']
         ];
@@ -64,7 +64,7 @@ class Divisions extends CI_Controller
     }
 
     /**
-     * Получает подразделения текущей организации
+     * Получает подразделения организаций пользователя
      *
      * @return void
      */
@@ -80,15 +80,19 @@ class Divisions extends CI_Controller
             exit;
         }
 
-        $this->ac->load('div');
-        $this->ac->load('org');
+        $this->ac->load(['Divisions', 'Organizations']);
 
-        $orgs = $this->org->get_list();
+        $orgs = $this->user->organizations->get();
 
         $divs = [];
 
         foreach ($orgs as $org) {
-            $divs = array_merge($divs, $this->div->get_list($org->id));
+            $divs = array_merge(
+              $divs,
+              $org->divisions
+                  ->order_by('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
+                  ->get()
+            );
         }
 
         header('Content-Type: application/json');
@@ -113,28 +117,28 @@ class Divisions extends CI_Controller
             exit;
         }
 
-        $this->ac->load('div');
+        $this->ac->load('Divisions');
 
-        $div = json_decode($this->input->post('div'));
+        $div_data = json_decode($this->input->post('div'));
 
-        $this->div->name = $div->name;
-        $this->div->org_id = $div->org_id;
+        $div = new \ORM\Divisions;
 
-        $this->div->save();
+        $div->set($div_data);
+        $div->save();
 
         header('Content-Type: application/json');
 
-        echo json_encode($this->div);
+        echo json_encode($div);
     }
 
     /**
      * Удаляет подразделение
      *
-     * @param int $div_id ID подразделения
+     * @param int|null $div_id ID подразделения
      *
      * @return void
      */
-    public function delete(int $div_id): void
+    public function delete(int $div_id = null): void
     {
         if (! $this->ion_auth->logged_in()) {
             header("HTTP/1.1 401 Unauthorized");
@@ -146,24 +150,33 @@ class Divisions extends CI_Controller
             exit;
         }
 
-        $this->ac->load('div');
-        $this->ac->load('org');
-        $this->ac->load('person');
-
-        //Получаем всех людей в удаляемом подразделении
-        $persons = $this->person->get_list($div_id);
-
-        $this->org->get_list($this->_user_id); //TODO
-
-        //"Пустое" подразделение
-        $new_div = $this->div->get_list_by_type($this->org->first('id'));
-
-        //Переносим полученных людей в "пустое" подразделение
-        //TODO проверят наличие людей в других подразделениях и тогда не добавлять в пустое
-        foreach ($persons as $person) {
-            $this->person->add_to_div($person->id, current($new_div)->id);
+        if (is_null($div_id)) {
+            echo 0;
+            exit;
         }
 
-        echo $this->div->delete($div_id);
+        $this->ac->load(['Divisions', 'Organizations', 'Persons']);
+
+        $orgs = $this->user->organizations->get();
+        $org = $this->user->organizations->first();
+
+        $cur_div = new \ORM\Divisions($div_id);
+
+        //"Пустое" подразделение
+        $empty_div = new \ORM\Divisions([
+            'org_id' => $org->id ?? 0,
+            'type' => 0
+        ]);
+
+        //Переносим полученных людей в "пустое" подразделение
+        foreach ($cur_div->persons->get() as $person) {
+            $person->unbind($cur_div);
+
+            if (! $person->divisions->get()) {
+                $empty_div->bind($person);
+            }
+        }
+
+        echo $cur_div->remove();
     }
 }

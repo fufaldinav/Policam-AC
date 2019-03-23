@@ -27,43 +27,70 @@ class Logger extends Ac
      *
      * @var string
      */
-    private $_log_path;
+    private $log_path;
 
     /**
-     * Таймаут одного long poll
+     * Записи
      *
-     * @var int
+     * @var array
      */
-    private $_timeout;
+    private $to_write = [];
 
+    /**
+     * @return void
+     */
     public function __construct()
     {
         parent::__construct();
 
-        $this->_log_path = $this->CI->config->item('log_path', 'ac');
+        $this->log_path = $this->CI->config->item('log_path', 'ac');
 
-        if (! is_dir($this->_log_path)) {
-            mkdir($this->_log_path, 0755, true);
+        if (! is_dir($this->log_path)) {
+            mkdir($this->log_path, 0755, true);
         }
-
-        $this->_timeout = $this->CI->config->item('long_poll_timeout', 'ac');
     }
 
     /**
-     * Сохраняет ошибки
+     * Записывает в лог
      *
-     * @param string $err Текст ошибки
+     * @return bool TRUE - успешно, FALSE - ошибка или нет данных для записи
      */
-    public function save_errors(string $err): void
+    public function write(): bool
     {
-        $this->CI->load->helper('file');
+        if (! $this->to_write) {
+            return false;
+        }
 
-        $time = now('Asia/Yekaterinburg');
-        $datestring = '%Y-%m-%d';
-        $date = mdate($datestring, $time);
-        $timestring = '%H:%i:%s';
-        $time = mdate($timestring, $time);
+        foreach ($this->to_write as $entry) {
+            write_file("$this->log_path/{$entry['category']}-{$entry['date']}.txt", "[{$entry['time']}] {$entry['message']}\n", 'a');
+        }
 
-        write_file("$this->_log_path/err-$date.txt", "$time $err\n", 'a');
+        $this->to_write = [];
+
+        return true;
+    }
+
+    /**
+     * Добавляет сообщение на запись
+     *
+     * @param string $category Категория ошибки
+     * @param string $message Текст ошибки
+     *
+     * @return void
+     */
+    public function add(string $category, string $message): void
+    {
+        $this->CI->load->helper(['date', 'file']);
+
+        $time = now();
+        $date = mdate('%Y-%m-%d', $time);
+        $time = mdate('%H:%i:%s', $time);
+
+        $this->to_write[] = [
+            'category' => $category,
+            'date' => $date,
+            'time' => $time,
+            'message' => $message
+        ];
     }
 }

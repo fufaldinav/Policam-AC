@@ -33,7 +33,7 @@ class Jsparser extends Ac
      *
      * @param string $file Файл JS
      *
-     * @return string|null Готовый к выводу в браузер JS
+     * @return string|null Готовый к выводу в браузер JS или NULL - ошибка чтения файла
      */
     public function parse(string $file): ?string
     {
@@ -51,7 +51,7 @@ class Jsparser extends Ac
         foreach ($matches[0] as $match) {
             $var = trim($match, '[]');
 
-            $value = $this->_parse_variable($var);
+            $value = $this->parseVariable($var);
 
             if ($value) {
                 $contents = str_replace($match, $value, $contents);
@@ -68,7 +68,7 @@ class Jsparser extends Ac
      *
      * @return string Строка с подставленным значением
      */
-    private function _parse_variable(string $var): string
+    private function parseVariable(string $var): string
     {
         $prefix = strstr($var, '_', true);
 
