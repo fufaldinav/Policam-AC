@@ -28,14 +28,14 @@ class Task extends Ac
      *
      * @var object
      */
-    private $_request;
+    private $request;
 
     /**
      * Задания на отправку
      *
      * @var object
      */
-    private $_to_send = [];
+    private $to_send = [];
 
     /**
      * @return void
@@ -44,7 +44,7 @@ class Task extends Ac
     {
         parent::__construct();
 
-        $this->_request = new stdClass;
+        $this->request = new stdClass;
     }
 
     /**
@@ -56,11 +56,11 @@ class Task extends Ac
     {
         $counter = 0;
 
-        foreach ($this->_to_send as $task) {
+        foreach ($this->to_send as $task) {
             $counter += $task->save();
         }
 
-        $this->_to_send = [];
+        $this->to_send = [];
 
         return $counter;
     }
@@ -74,7 +74,7 @@ class Task extends Ac
      */
     public function add(int $ctrl_id): bool
     {
-        if (! $this->_request) {
+        if (! $this->request) {
             return false;
         }
 
@@ -82,12 +82,12 @@ class Task extends Ac
 
         $task = new \ORM\Tasks;
 
-        $task->task_id = $this->_request->id = mt_rand(500000, 999999999);
+        $task->task_id = $this->request->id = mt_rand(500000, 999999999);
         $task->controller_id = $ctrl_id;
-        $task->json = json_encode($this->_request);
+        $task->json = json_encode($this->request);
         $task->time = now();
 
-        $this->_to_send[] = $task;
+        $this->to_send[] = $task;
 
         return true;
     }
@@ -103,17 +103,17 @@ class Task extends Ac
      *
      * @return void
      */
-    public function set_door_params(
+    public function setDoorParams(
         int $open_time,
         int $open_control = 0,
         int $close_control = 0
     ): void {
-        $this->_request_clear();
+        $this->requestClear();
 
-        $this->_request->operation = __FUNCTION__;
-        $this->_request->open = $open_time;
-        $this->_request->open_control = $open_control;
-        $this->_request->close_control = $close_control;
+        $this->request->operation = __FUNCTION__;
+        $this->request->open = $open_time;
+        $this->request->open_control = $open_control;
+        $this->request->close_control = $close_control;
     }
 
     /**
@@ -125,12 +125,12 @@ class Task extends Ac
      *
      * @return void
      */
-    public function add_cards(array $codes): void
+    public function addCards(array $codes): void
     {
-        $this->_request_clear();
+        $this->requestClear();
 
-        $this->_request->operation = __FUNCTION__;
-        $this->_request->cards = [];
+        $this->request->operation = __FUNCTION__;
+        $this->request->cards = [];
 
         foreach ($codes as $code) {
             $card = new stdClass;
@@ -138,7 +138,7 @@ class Task extends Ac
             $card->flags = 32;
             $card->tz = 255;
 
-            $this->_request->cards[] = $card;
+            $this->request->cards[] = $card;
         }
     }
 
@@ -149,18 +149,18 @@ class Task extends Ac
      *
      * @return void
      */
-    public function del_cards(array $codes): void
+    public function delCards(array $codes): void
     {
-        $this->_request_clear();
+        $this->requestClear();
 
-        $this->_request->operation = __FUNCTION__;
-        $this->_request->cards = [];
+        $this->request->operation = __FUNCTION__;
+        $this->request->cards = [];
 
         foreach ($codes as $code) {
             $card = new stdClass;
             $card->card = $code;
 
-            $this->_request->cards[] = $card;
+            $this->request->cards[] = $card;
         }
     }
 
@@ -170,11 +170,11 @@ class Task extends Ac
      *
      * @return void
      */
-    public function clear_cards(): void
+    public function clearCards(): void
     {
-        $this->_request_clear();
+        $this->requestClear();
 
-        $this->_request->operation = __FUNCTION__;
+        $this->request->operation = __FUNCTION__;
     }
 
     /**
@@ -182,10 +182,10 @@ class Task extends Ac
      *
      * @return void
      */
-    private function _request_clear(): void
+    private function requestClear(): void
     {
-        foreach ($this->_request as $key => $value) {
-            unset($this->_request->$key);
+        foreach ($this->request as $key => $value) {
+            unset($this->request->$key);
         }
     }
 }

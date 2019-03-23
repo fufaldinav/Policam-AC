@@ -20,45 +20,27 @@ namespace ORM;
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
- * Class User_events
+ * Class UserEvents
  */
-class User_events extends Entries
+class UserEvents extends Entries
 {
-    /**
-     * @var array
-     */
-    protected $_belongs_to = [
+    /** @var array Связи many_to_one */
+    protected $belongs_to = [
       'user' => [
         'class' => 'users',
         'foreign_key' => 'user_id'
       ]
     ];
 
-    /**
-     * Пользователь, который вызвал событие
-     *
-     * @var int
-     */
+    /** @var int Пользователь, который вызвал событие */
     public $user_id;
 
-    /**
-     * Тип события
-     *
-     * @var int
-     */
+    /** @var int Тип события */
     public $type;
 
-    /**
-     * Описание события
-     *
-     * @var string
-     */
+    /** @var string Описание события */
     public $description;
 
-    /**
-     * Время события
-     *
-     * @var int
-     */
+    /** @var int Время события */
     public $time;
 }

@@ -24,35 +24,21 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 abstract class MicroORM
 {
-    /**
-     * Суперобъект Codeigniter
-     *
-     * @var object
-     */
-    protected static $_CI;
+    /** @var object Суперобъект Codeigniter */
+    protected static $CI;
 
-    /**
-     * Объект БД
-     *
-     * @var object
-     */
-    protected static $_db;
+    /** @var object Объект БД */
+    protected static $db;
 
-    /**
-     * Хранилище неизвестных свойств
-     *
-     * @var array
-     */
-    protected $_storage = [];
+    /** @var array Хранилище неизвестных свойств */
+    protected $storage = [];
 
-    /**
-     * @return void
-     */
+    /** @return void */
     public function __construct()
     {
-        self::$_CI =& get_instance();
-        self::$_CI->load->database();
-        self::$_db = self::$_CI->db;
+        self::$CI =& get_instance();
+        self::$CI->load->database();
+        self::$db = self::$CI->db;
     }
 
     /**
@@ -62,8 +48,8 @@ abstract class MicroORM
      */
     public function __get($name)
     {
-        if (array_key_exists($name, $this->_storage)) {
-            return $this->_storage[$name];
+        if (array_key_exists($name, $this->storage)) {
+            return $this->storage[$name];
         }
 
         return null;
@@ -77,7 +63,7 @@ abstract class MicroORM
      */
     public function __set($name, $value)
     {
-        $this->_storage[$name] = $value;
+        $this->storage[$name] = $value;
     }
 
     /**
@@ -87,7 +73,7 @@ abstract class MicroORM
      */
     public function __isset($name)
     {
-        return isset($this->_storage[$name]);
+        return isset($this->storage[$name]);
     }
 
     /**
@@ -97,6 +83,6 @@ abstract class MicroORM
      */
     public function __unset($name)
     {
-        unset($this->_storage[$name]);
+        unset($this->storage[$name]);
     }
 }

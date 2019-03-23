@@ -30,7 +30,7 @@ class Messenger extends Ac
      *
      * @var int
      */
-    private $_timeout;
+    private $timeout;
 
     /**
      * @return void
@@ -39,20 +39,24 @@ class Messenger extends Ac
     {
         parent::__construct();
 
-        $this->_timeout = $this->_CI->config->item('long_poll_timeout', 'ac');
+        $this->timeout = $this->CI->config->item('long_poll_timeout', 'ac');
     }
 
     /**
      * Обрабатывает входящее сообщение
      *
-     * @param string $inc_json_msg Входящее JSON сообщение
+     * @param string|null $inc_json_msg Входящее JSON сообщение
      *
      * @return string|null Сообщение в формате JSON или NULL,
      *                     если сообщение от неизвестного контроллера
      */
-    public function handle(string $inc_json_msg): ?string
+    public function handle(string $inc_json_msg = null): ?string
     {
-        $this->_CI->load->helper('date');
+        if (is_null($inc_json_msg)) {
+            return null;
+        }
+
+        $this->CI->load->helper('date');
 
         $out_msg = new stdClass;
 
@@ -64,14 +68,14 @@ class Messenger extends Ac
 
         $decoded_msg = json_decode($inc_json_msg);
 
-        if (! isset($decoded_msg)) {
-            exit;
+        if (is_null($decoded_msg)) {
+            return null;
         }
 
         $this->load('Controllers');
 
-        $this->_CI->load->library('logger');
-        $logger = $this->_CI->logger;
+        $this->CI->load->library('logger');
+        $logger = $this->CI->logger;
 
         $type = $decoded_msg->type;
         $sn = $decoded_msg->sn;
@@ -83,8 +87,10 @@ class Messenger extends Ac
             $logger->add('inc', "TYPE: $type || SN: $sn || $inc_json_msg");
             $logger->write();
 
-            exit;
+            return null;
         }
+
+        $this->load('Tasks');
 
         $ctrl->last_conn = $time;
         $ctrl->save();
@@ -158,7 +164,7 @@ class Messenger extends Ac
             elseif ($inc_m->operation === 'events') {
                 $this->load(['Cards', 'Events', 'Persons', 'Users']);
 
-                $this->_CI->load->library('notificator');
+                $this->CI->load->library('notificator');
 
                 $events_count = 0;
 
@@ -190,11 +196,11 @@ class Messenger extends Ac
 
                     $subscribers = $person->users->get();
 
-                    $notification = $this->_CI->notificator->generate($person->id, $event->event);
+                    $notification = $this->CI->notificator->generate($person->id, $event->event);
 
                     foreach ($subscribers as $sub) {
                         if (isset($notification)) {
-                            $this->_CI->notificator->send($notification, $sub->id);
+                            $this->CI->notificator->send($notification, $sub->id);
                         }
                     }
                 }
@@ -206,8 +212,6 @@ class Messenger extends Ac
                 $out_msg->messages[] = $out_m;
             }
         }
-
-        $this->load('Tasks');
 
         $tasks = $ctrl->tasks->get();
         $task = $ctrl->tasks->first();
@@ -238,7 +242,7 @@ class Messenger extends Ac
 
         $this->load(['Controllers', 'Organizations', 'Users']);
 
-        $user = new \ORM\Users($this->_CI->ion_auth->user()->row()->id);
+        $user = new \ORM\Users($this->CI->ion_auth->user()->row()->id);
 
         $orgs = $user->organizations->get(); //TODO
 
@@ -253,7 +257,7 @@ class Messenger extends Ac
 
             $this->load('Events');
 
-            while ($this->_timeout > 0) {
+            while ($this->timeout > 0) {
                 $controllers = [];
 
                 foreach ($ctrl_list as $ctrl) {
@@ -266,7 +270,7 @@ class Messenger extends Ac
                     return $events;
                 }
 
-                $this->_timeout--;
+                $this->timeout--;
                 sleep(1);
             }
         } else {

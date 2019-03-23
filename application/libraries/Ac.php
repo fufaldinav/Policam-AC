@@ -27,23 +27,23 @@ class Ac
      *
      * @var object
      */
-    protected $_CI;
+    protected $CI;
 
     /**
      * Хранилище неизвестных свойств
      *
      * @var array
      */
-    protected $_data = [];
+    protected $storage = [];
 
     /**
      * @return void
      */
     public function __construct()
     {
-        $this->_CI =& get_instance();
+        $this->CI =& get_instance();
 
-        $this->_CI->config->load('ac', true);
+        $this->CI->config->load('ac', true);
 
         $this->load(['MicroORM', 'Entries', 'Lists']);
     }
@@ -55,8 +55,8 @@ class Ac
      */
     public function __get(string $name)
     {
-        if (array_key_exists($name, $this->_data)) {
-            return $this->_data[$name];
+        if (array_key_exists($name, $this->storage)) {
+            return $this->storage[$name];
         }
 
         return null;
@@ -70,7 +70,7 @@ class Ac
      */
     public function __set(string $name, $value): void
     {
-        $this->_data[$name] = $value;
+        $this->storage[$name] = $value;
     }
 
     /**
@@ -80,7 +80,7 @@ class Ac
      */
     public function __isset(string $name): bool
     {
-        return isset($this->_data[$name]);
+        return isset($this->storage[$name]);
     }
 
     /**
@@ -90,7 +90,7 @@ class Ac
      */
     public function __unset(string $name): void
     {
-        unset($this->_data[$name]);
+        unset($this->storage[$name]);
     }
 
     /**

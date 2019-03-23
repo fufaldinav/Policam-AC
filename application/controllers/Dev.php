@@ -7,12 +7,8 @@
  */
 class Dev extends CI_Controller
 {
-    /**
-     * Текущий пользователь
-     *
-     * @var int
-     */
-    private $_user;
+    /** @var object Текущий пользователь */
+    private $user;
 
     public function __construct()
     {
@@ -39,10 +35,10 @@ class Dev extends CI_Controller
         $this->ac->load('Tasks');
         $this->ac->load('Tokens');
         $this->ac->load('Users');
-        $this->ac->load('User_events');
+        $this->ac->load('UserEvents');
 
         $user_id = $this->ion_auth->user()->row()->id;
-        $this->_user = new \ORM\Users($user_id);
+        $this->user = new \ORM\Users($user_id);
     }
 
     /**
@@ -53,11 +49,5 @@ class Dev extends CI_Controller
     public function index(): void
     {
         header('Content-Type: text/plain');
-
-        $person = new \ORM\Persons(0);
-
-        $divs = $person->cards->where('wiegand', '000000252FBB')->get();
-
-        print_r($divs);
     }
 }

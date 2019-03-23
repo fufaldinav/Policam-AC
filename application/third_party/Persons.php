@@ -24,10 +24,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 class Persons extends Entries
 {
-    /**
-     * @var array
-     */
-    protected $_has_many = [
+    /** @var array Связи one_to_many */
+    protected $has_many = [
       'cards' => [
         'class' => 'cards',
         'foreign_key' => 'person_id'
@@ -38,70 +36,40 @@ class Persons extends Entries
       ]
     ];
 
-    /**
-     * @var array
-     */
-    protected $_with_many = [
+    /** @var array Связи many_to_many */
+    protected $with_many = [
       'divisions' => [
         'class' => 'divisions',
         'own_key' => 'person_id',
         'their_key' =>   'div_id',
-        'through' => 'persons_divisions'
+        'mapped_by' => 'persons_divisions'
       ],
       'users' => [
         'class' => 'users',
         'own_key' => 'person_id',
         'their_key' =>   'user_id',
-        'through' => 'persons_users'
+        'mapped_by' => 'persons_users'
       ]
     ];
 
-    /**
-     * Фамилия
-     *
-     * @var string
-     */
+    /** @var string Фамилия */
     public $f;
 
-    /**
-     * Имя
-     *
-     * @var string
-     */
+    /** @var string Имя */
     public $i;
 
-    /**
-     * Отвество
-     *
-     * @var string
-     */
+    /** @var string Отчество */
     public $o = null;
 
-    /**
-     * Тип/должность человека
-     *
-     * @var int
-     */
+    /** @var int Тип/должность человека */
     public $type = 1;
 
-    /**
-     * Дата рождения
-     *
-     * @var string
-     */
+    /** @var string Дата рождения */
     public $birthday;
 
-    /**
-     * Адрес
-     *
-     * @var string
-     */
+    /** @var string Адрес */
     public $address = null;
 
-    /**
-     * Номер телефона
-     *
-     * @var string
-     */
+    /** @var string Номер телефона */
     public $phone = null;
 }

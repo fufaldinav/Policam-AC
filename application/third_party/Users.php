@@ -24,31 +24,27 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 class Users extends Entries
 {
-    /**
-     * @var array
-     */
-    protected $_has_many = [
+    /** @var array Связи one_to_many */
+    protected $has_many = [
       'tokens' => [
         'class' => 'tokens',
         'foreign_key' => 'user_id'
       ]
     ];
 
-    /**
-     * @var array
-     */
-    protected $_with_many = [
+    /** @var array Связи many_to_many */
+    protected $with_many = [
       'organizations' => [
         'class' => 'organizations',
         'own_key' => 'user_id',
         'their_key' => 'org_id',
-        'through' => 'organizations_users'
+        'mapped_by' => 'organizations_users'
       ],
       'persons' => [
         'class' => 'persons',
         'own_key' => 'user_id',
         'their_key' => 'person_id',
-        'through' => 'persons_users'
+        'mapped_by' => 'persons_users'
       ]
     ];
 }

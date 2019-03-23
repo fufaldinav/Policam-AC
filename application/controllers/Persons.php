@@ -8,12 +8,8 @@
  */
 class Persons extends CI_Controller
 {
-    /**
-     * Текущий пользователь
-     *
-     * @var int
-     */
-    private $_user;
+    /** @var object Текущий пользователь */
+    private $user;
 
     public function __construct()
     {
@@ -24,7 +20,7 @@ class Persons extends CI_Controller
         $this->ac->load('Users');
 
         $user_id = $this->ion_auth->user()->row()->id;
-        $this->_user = new \ORM\Users($user_id);
+        $this->user = new \ORM\Users($user_id);
     }
 
     /**
@@ -51,15 +47,17 @@ class Persons extends CI_Controller
 
         $this->load->helper(['form', 'language']);
 
-        $orgs = $this->_user->organizations->get();
-        $org = $this->_user->organizations->first();
+        $orgs = $this->user->organizations->get();
+        $org = $this->user->organizations->first();
 
         /*
         | Подразделения
         */
-        $divs = @$org->divisions->get();
+        $divs = $org->divisions
+            ->order_by('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
+            ->get();
         $data = [
-            'divs' => $divs ?? []
+            'divs' => $divs
         ];
 
         /*
@@ -116,15 +114,17 @@ class Persons extends CI_Controller
 
         $this->load->helper(['form', 'language']);
 
-        $orgs = $this->_user->organizations->get();
-        $org = $this->_user->organizations->first();
+        $orgs = $this->user->organizations->get();
+        $org = $this->user->organizations->first();
 
         /*
         | Подразделения
         */
-        $divs = @$org->divisions->get();
+        $divs = $org->divisions
+            ->order_by('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
+            ->get();
         $data = [
-            'divs' => $divs ?? []
+            'divs' => $divs
         ];
 
         /*
@@ -187,8 +187,8 @@ class Persons extends CI_Controller
 
         $this->load->library('task');
 
-        $orgs = $this->_user->organizations->get();
-        $org = $this->_user->organizations->first();
+        $orgs = $this->user->organizations->get();
+        $org = $this->user->organizations->first();
 
         $person_data = json_decode($this->input->post('person'));
         $card_list = json_decode($this->input->post('cards'));
@@ -203,8 +203,7 @@ class Persons extends CI_Controller
         /*
         | Карты
         */
-        $ctrls = @$org->controllers->get();
-        $ctrls = $ctrls ?? [];
+        $ctrls = $org->controllers->get();
 
         foreach ($card_list as $card_id) {
             $card = new \ORM\Cards($card_id);
@@ -212,7 +211,7 @@ class Persons extends CI_Controller
             $card->person_id = $person->id;
             $card->save();
 
-            $this->task->add_cards([$card->wiegand]);
+            $this->task->addCards([$card->wiegand]);
 
             foreach ($ctrls as $ctrl) {
                 $this->task->add($ctrl->id);
@@ -271,7 +270,7 @@ class Persons extends CI_Controller
             exit;
         }
 
-        if (! isset($person_id)) {
+        if (is_null($person_id)) {
             echo 0;
             exit;
         }
@@ -287,8 +286,8 @@ class Persons extends CI_Controller
 
         $this->load->library(['task', 'photo']);
 
-        $orgs = $this->_user->organizations->get();
-        $org = $this->_user->organizations->first();
+        $orgs = $this->user->organizations->get();
+        $org = $this->user->organizations->first();
 
         $person = new \ORM\Persons($person_id);
 
@@ -309,14 +308,13 @@ class Persons extends CI_Controller
         /*
         | Карты
         */
-        $ctrls = @$org->controllers->get();
-        $ctrls = $ctrls ?? [];
+        $ctrls = $org->controllers->get();
 
         foreach ($person->cards->get() as $card) {
             $card->person_id = 0;
             $card->save();
 
-            $this->task->del_cards([$card->wiegand]);
+            $this->task->delCards([$card->wiegand]);
 
             foreach ($ctrls as $ctrl) {
                 $this->task->add($ctrl->id);
@@ -351,7 +349,7 @@ class Persons extends CI_Controller
             exit;
         }
 
-        if (! isset($person_id)) {
+        if (is_null($person_id)) {
             exit;
         }
 
@@ -382,7 +380,7 @@ class Persons extends CI_Controller
             exit;
         }
 
-        if (! isset($person_id)) {
+        if (is_null($card_id)) {
             exit;
         }
 
@@ -419,7 +417,7 @@ class Persons extends CI_Controller
             exit;
         }
 
-        if (! isset($div_id)) {
+        if (is_null($div_id)) {
             exit;
         }
 
@@ -429,6 +427,8 @@ class Persons extends CI_Controller
 
         header('Content-Type: application/json');
 
-        echo json_encode($div->persons->get());
+        echo json_encode(
+            $div->persons->order_by('f ASC, i ASC, o ASC')->get()
+        );
     }
 }

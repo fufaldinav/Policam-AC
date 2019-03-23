@@ -24,46 +24,30 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 class Divisions extends Entries
 {
-    /**
-     * @var array
-     */
-    protected $_belongs_to = [
+    /** @var array Связи many_to_one */
+    protected $belongs_to = [
       'organization' => [
         'class' => 'organizations',
         'foreign_key' => 'org_id'
       ]
     ];
 
-    /**
-     * @var array
-     */
-    protected $_with_many = [
+    /** @var array Связи many_to_many */
+    protected $with_many = [
       'persons' => [
         'class' => 'persons',
         'own_key' => 'div_id',
         'their_key' => 'person_id',
-        'through' => 'persons_divisions'
+        'mapped_by' => 'persons_divisions'
       ]
     ];
 
-    /**
-     * Название подразделения
-     *
-     * @var string
-     */
+    /** @var string Название подразделения */
     public $name;
 
-    /**
-     * Организация, которой принадлежит подразделение
-     *
-     * @var int
-     */
+    /** @var int Организация, которой принадлежит подразделение */
     public $org_id;
 
-    /**
-     * Тип подразделения
-     *
-     * @var int
-     */
+    /** @var int Тип подразделения */
     public $type = 1;
 }

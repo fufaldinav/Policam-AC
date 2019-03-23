@@ -37,7 +37,7 @@ class Jsparser extends Ac
      */
     public function parse(string $file): ?string
     {
-        $this->_CI->load->helper('file');
+        $this->CI->load->helper('file');
 
         $contents = read_file("./js/ac/$file");
 
@@ -51,7 +51,7 @@ class Jsparser extends Ac
         foreach ($matches[0] as $match) {
             $var = trim($match, '[]');
 
-            $value = $this->_parse_variable($var);
+            $value = $this->parseVariable($var);
 
             if ($value) {
                 $contents = str_replace($match, $value, $contents);
@@ -68,7 +68,7 @@ class Jsparser extends Ac
      *
      * @return string Строка с подставленным значением
      */
-    private function _parse_variable(string $var): string
+    private function parseVariable(string $var): string
     {
         $prefix = strstr($var, '_', true);
 
@@ -77,14 +77,14 @@ class Jsparser extends Ac
         if ($prefix === 'ci') {
             switch ($var) {
                 case 'base_url':
-                    $this->_CI->load->helper('url');
+                    $this->CI->load->helper('url');
 
                     $value = base_url();
 
                     break;
 
                 case 'site_url':
-                    $this->_CI->load->helper('url');
+                    $this->CI->load->helper('url');
 
                     $value = site_url();
 
@@ -95,11 +95,11 @@ class Jsparser extends Ac
                     break;
             }
         } elseif ($prefix === 'config') {
-            $value = $this->_CI->config->item($var, 'ac');
+            $value = $this->CI->config->item($var, 'ac');
         } elseif ($prefix === 'lang') {
-            $this->_CI->lang->load('ac');
+            $this->CI->lang->load('ac');
 
-            $this->_CI->load->helper('language');
+            $this->CI->load->helper('language');
 
             $value = lang($var);
         }

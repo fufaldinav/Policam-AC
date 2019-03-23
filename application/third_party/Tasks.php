@@ -24,40 +24,23 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 class Tasks extends Entries
 {
-    /**
-     * @var array
-     */
-    protected $_belongs_to = [
+    /** @var array Связи many_to_one */
+    protected $belongs_to = [
       'controller' => [
         'class' => 'controllers',
         'foreign_key' => 'controller_id'
       ]
     ];
 
-    /**
-     * ID задания
-     *
-     * @var int
-     */
+    /** @var int ID задания */
     public $task_id;
-    /**
-     * Контроллер, которому предназначено задание
-     *
-     * @var int
-     */
+
+    /** @var int Контроллер, которому предназначено задание */
     public $controller_id;
 
-    /**
-     * Сообщение в формате JSON
-     *
-     * @var string
-     */
+    /** @var string Сообщение в формате JSON */
     public $json;
 
-    /**
-     * Время формирования сообщения
-     *
-     * @var int
-     */
+    /** @var int Время формирования сообщения */
     public $time;
 }

@@ -22,7 +22,7 @@ class Util extends CI_Controller
         $this->ac->load('Users');
 
         $user_id = $this->ion_auth->user()->row()->id;
-        $this->_user = new \ORM\Users($user_id);
+        $this->user = new \ORM\Users($user_id);
     }
 
     /**
@@ -79,14 +79,14 @@ class Util extends CI_Controller
      */
     public function card_problem(): void
     {
-        $this->ac->load(['Cards', 'Persons', 'User_events']);
+        $this->ac->load(['Cards', 'Persons', 'UserEvents']);
 
         $this->load->helper('language');
 
         $problem_type = $this->input->post('type');
         $person_id = $this->input->post('person_id');
 
-        if (! isset($problem_type) || ! isset($person_id)) {
+        if (is_null($problem_type) || is_null($person_id)) {
             exit;
         }
 
@@ -110,7 +110,7 @@ class Util extends CI_Controller
               'Controllers',
               'Divisions',
               'Organizations',
-              'User_events'
+              'UserEvents'
             ]);
 
             $this->load->library('task');
@@ -126,7 +126,7 @@ class Util extends CI_Controller
             }
             unset($card);
 
-            $this->task->del_cards($cards_to_delete);
+            $this->task->delCards($cards_to_delete);
 
             $divs = $person->divisions->get();
 
@@ -148,9 +148,9 @@ class Util extends CI_Controller
             exit;
         }
 
-        $event = new \ORM\User_events;
+        $event = new \ORM\UserEvents;
 
-        $event->user_id = $this->_user->id;
+        $event->user_id = $this->user->id;
         $event->type = $problem_type;
         $event->description = $description;
         $event->time = now();

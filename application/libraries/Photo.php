@@ -25,9 +25,9 @@ class Photo extends Ac
     /**
      * Каталог с фото
      *
-     * @var string $_img_path
+     * @var string $img_path
      */
-    private $_img_path;
+    private $img_path;
 
     /**
      * @return void
@@ -36,13 +36,13 @@ class Photo extends Ac
     {
         parent::__construct();
 
-        $this->_img_path = $this->_CI->config->item('img_path', 'ac');
+        $this->img_path = $this->CI->config->item('img_path', 'ac');
 
-        if (! is_dir($this->_img_path)) {
-            mkdir($this->_img_path, 0755, true);
+        if (! is_dir($this->img_path)) {
+            mkdir($this->img_path, 0755, true);
         }
-        if (! is_dir("$this->_img_path/s")) {
-            mkdir("$this->_img_path/s", 0755, true);
+        if (! is_dir("$this->img_path/s")) {
+            mkdir("$this->img_path/s", 0755, true);
         }
     }
 
@@ -103,7 +103,7 @@ class Photo extends Ac
             $this->clear();
 
             try {
-                $file_path = "$this->_img_path/$photo->id.jpg";
+                $file_path = "$this->img_path/$photo->id.jpg";
 
                 move_uploaded_file($file_tmp, $file_path);
                 //сохранение уменьшенной копии
@@ -111,25 +111,25 @@ class Photo extends Ac
                     'src_path' => $file_path,
                     'width' => 240,
                     'height' => 320,
-                    'dst_path' => "$this->_img_path/s/$photo->id.jpg"
+                    'dst_path' => "$this->img_path/s/$photo->id.jpg"
                 ];
 
-                $this->_create_thumbnail($params);
+                $this->createThumbnail($params);
 
                 return $response;
             } catch (Exception $e) {
                 $response['error'] = $e->getMessage();
 
-                $this->_CI->load->library('logger');
-                $this->_CI->logger->add('err', $response['error']);
-                $this->_CI->logger->write();
+                $this->CI->load->library('logger');
+                $this->CI->logger->add('err', $response['error']);
+                $this->CI->logger->write();
 
                 return $response;
             }
         } else {
-            $this->_CI->load->library('logger');
-            $this->_CI->logger->add('err', $response['error']);
-            $this->_CI->logger->write();
+            $this->CI->load->library('logger');
+            $this->CI->logger->add('err', $response['error']);
+            $this->CI->logger->write();
 
             return $response;
         }
@@ -149,22 +149,22 @@ class Photo extends Ac
         $photo = new \ORM\Photos($id);
 
         try {
-            $file_path = "$this->_img_path/$id.jpg";
+            $file_path = "$this->img_path/$id.jpg";
             if (file_exists($file_path)) {
                 unlink($file_path);
             }
 
-            $file_path = "$this->_img_path/s/$id.jpg";
+            $file_path = "$this->img_path/s/$id.jpg";
             if (file_exists($file_path)) {
                 unlink($file_path);
             }
 
             return $photo->remove();
         } catch (Exception $e) {
-            $this->_CI->load->library('logger');
+            $this->CI->load->library('logger');
 
-            $this->_CI->logger->add('err', $e->getMessage());
-            $this->_CI->logger->write();
+            $this->CI->logger->add('err', $e->getMessage());
+            $this->CI->logger->write();
 
             return 0;
         }
@@ -202,7 +202,7 @@ class Photo extends Ac
      *
      * @return bool TRUE - успешно, FALSE - ошибка
      */
-    private function _create_thumbnail(array $params): bool
+    private function createThumbnail(array $params): bool
     {
         $src_img = imagecreatefromjpeg($params['src_path']);
 

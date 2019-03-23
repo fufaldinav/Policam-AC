@@ -7,12 +7,8 @@
  */
 class Cards extends CI_Controller
 {
-    /**
-     * Текущий пользователь
-     *
-     * @var int
-     */
-    private $_user;
+    /** @var object Текущий пользователь */
+    private $user;
 
     public function __construct()
     {
@@ -33,7 +29,7 @@ class Cards extends CI_Controller
         $this->ac->load('Users');
 
         $user_id = $this->ion_auth->user()->row()->id;
-        $this->_user = new \ORM\Users($user_id);
+        $this->user = new \ORM\Users($user_id);
     }
 
     /**
@@ -46,7 +42,7 @@ class Cards extends CI_Controller
      */
     public function holder(int $card_id = null, int $person_id = 0): void
     {
-        if (! isset($card_id)) {
+        if (is_null($card_id)) {
             echo 0;
             exit;
         }
@@ -59,15 +55,15 @@ class Cards extends CI_Controller
 
         $card->person_id = $person_id;
 
-        $orgs = $this->_user->organizations->get();
-        $org = $this->_user->organizations->first();
+        $orgs = $this->user->organizations->get();
+        $org = $this->user->organizations->first();
 
-        $ctrls = @$org->controllers->get();
-        if (isset($ctrls)) {
+        $ctrls = $org->controllers->get();
+        if ($ctrls) {
             if ($card->person_id == 0) {
-                $this->task->del_cards([$card->wiegand]);
+                $this->task->delCards([$card->wiegand]);
             } else {
-                $this->task->add_cards([$card->wiegand]);
+                $this->task->addCards([$card->wiegand]);
             }
 
             foreach ($ctrls as $ctrl) {
@@ -89,7 +85,7 @@ class Cards extends CI_Controller
      */
     public function delete(int $card_id = null): void
     {
-        if (! isset($card_id)) {
+        if (is_null($card_id)) {
             echo 0;
             exit;
         }

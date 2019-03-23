@@ -24,45 +24,31 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 class Photos extends Entries
 {
-    /**
-     * @var array
-     */
-    protected $_belongs_to = [
+    /** @var array Связи many_to_one */
+    protected $belongs_to = [
       'person' => [
         'class' => 'persons',
         'foreign_key' => 'person_id'
       ]
     ];
 
-    /**
-     * MD5 хэш фотографии
-     *
-     * @var string
-     */
+    /** @var string MD5 хэш фотографии */
     public $hash;
 
-    /**
-     * Человек, которому принадлежит фотография
-     *
-     * @var int
-     */
+    /** @var int Человек, которому принадлежит фотография */
     public $person_id = null;
 
-    /**
-     * Время сохранения фотографии
-     *
-     * @var int
-     */
+    /** @var int Время сохранения фотографии */
     public $time;
 
     /**
      * Получим старые фотографии (на удаление)
      *
-     * @return array
+     * @return array Список фотографий на удаление
      */
     public static function get_old(): array
     {
-        $query = parent::$_db
+        $query = parent::$db
             ->where('person_id', null)
             ->where('time <', now() - 86400)
             ->get('photos')

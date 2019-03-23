@@ -7,12 +7,8 @@
  */
 class Controllers extends CI_Controller
 {
-    /**
-     * Текущий пользователь
-     *
-     * @var int
-     */
-    private $_user;
+    /** @var object Текущий пользователь */
+    private $user;
 
     public function __construct()
     {
@@ -33,7 +29,7 @@ class Controllers extends CI_Controller
         $this->ac->load('Users');
 
         $user_id = $this->ion_auth->user()->row()->id;
-        $this->_user = new \ORM\Users($user_id);
+        $this->user = new \ORM\Users($user_id);
     }
 
     /**
@@ -46,14 +42,14 @@ class Controllers extends CI_Controller
      */
     public function set_door_params(int $ctrl_id = null, int $open_time = null): void
     {
-        if (! isset($ctrl_id) || ! isset($open_time)) {
+        if (is_null($ctrl_id) || is_null($open_time)) {
             echo 'Не выбран контроллер или не задано время открытия'; //TODO перевод
             exit;
         }
 
         $this->load->library('task');
 
-        $this->task->set_door_params($open_time);
+        $this->task->setDoorParams($open_time);
         $this->task->add($ctrl_id);
 
         $count = $this->task->send();
@@ -74,14 +70,14 @@ class Controllers extends CI_Controller
      */
     public function clear(int $ctrl_id = null): void
     {
-        if (! isset($ctrl_id)) {
+        if (is_null($ctrl_id)) {
             echo 'Не выбран контроллер'; //TODO перевод
             exit;
         }
 
         $this->load->library('task');
 
-        $this->task->clear_cards();
+        $this->task->clearCards();
         $this->task->add($ctrl_id);
 
         $count = $this->task->send();
@@ -102,7 +98,7 @@ class Controllers extends CI_Controller
      */
     public function reload_cards(int $ctrl_id = null): void
     {
-        if (! isset($ctrl_id)) {
+        if (is_null($ctrl_id)) {
             echo 'Не выбран контроллер'; //TODO перевод
             exit;
         }
@@ -144,7 +140,7 @@ class Controllers extends CI_Controller
             | Таким образом сформируем задания на отправку по 10 за раз
             */
             if (($i > 0 && ($i % 10 === 0)) || ($i === ($card_count - 1))) {
-                $this->task->add_cards($codes);
+                $this->task->addCards($codes);
                 $this->task->add($ctrl_id);
 
                 $codes = [];

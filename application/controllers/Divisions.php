@@ -5,12 +5,8 @@
  */
 class Divisions extends CI_Controller
 {
-    /**
-     * Текущий пользователь
-     *
-     * @var int
-     */
-    private $_user;
+    /** @var object Текущий пользователь */
+    private $user;
 
     public function __construct()
     {
@@ -21,7 +17,7 @@ class Divisions extends CI_Controller
         $this->ac->load('Users');
 
         $user_id = $this->ion_auth->user()->row()->id;
-        $this->_user = new \ORM\Users($user_id);
+        $this->user = new \ORM\Users($user_id);
     }
 
     /**
@@ -45,13 +41,15 @@ class Divisions extends CI_Controller
 
         $this->load->helper('language');
 
-        $orgs = $this->_user->organizations->get();
-        $org = $this->_user->organizations->first();
+        $orgs = $this->user->organizations->get();
+        $org = $this->user->organizations->first();
 
-        $divs = @$org->divisions->get();
+        $divs = $org->divisions
+            ->order_by('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
+            ->get();
         $data = [
             'org_id' => $org->id ?? 0,
-            'divs' => $divs ?? []
+            'divs' => $divs
         ];
 
         $header = [
@@ -84,12 +82,17 @@ class Divisions extends CI_Controller
 
         $this->ac->load(['Divisions', 'Organizations']);
 
-        $orgs = $this->_user->organizations->get();
+        $orgs = $this->user->organizations->get();
 
         $divs = [];
 
         foreach ($orgs as $org) {
-            $divs = array_merge($divs, $org->divisions->get());
+            $divs = array_merge(
+              $divs,
+              $org->divisions
+                  ->order_by('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
+                  ->get()
+            );
         }
 
         header('Content-Type: application/json');
@@ -147,15 +150,15 @@ class Divisions extends CI_Controller
             exit;
         }
 
-        if (! isset($div_id)) {
+        if (is_null($div_id)) {
             echo 0;
             exit;
         }
 
         $this->ac->load(['Divisions', 'Organizations', 'Persons']);
 
-        $orgs = $this->_user->organizations->get();
-        $org = $this->_user->organizations->first();
+        $orgs = $this->user->organizations->get();
+        $org = $this->user->organizations->first();
 
         $cur_div = new \ORM\Divisions($div_id);
 

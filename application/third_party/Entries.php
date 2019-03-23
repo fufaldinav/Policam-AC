@@ -24,34 +24,22 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 abstract class Entries extends MicroORM
 {
-    /**
-     * ID объекта
-     *
-     * @var int
-     */
+    /** @var int ID объекта */
     public $id;
 
-    /**
-     * Таблица в БД
-     *
-     * @var string
-     */
-    protected $_table;
+    /** @var string Таблица в БД */
+    protected $table;
 
-    /**
-     * Типы связей
-     *
-     * @var array
-     */
-    private $_relationship_types = [
-      '_belongs_to', //many-to-one
-      '_has_one',    //one-to-one
-      '_has_many',   //one-to-many
-      '_with_many'   //many-to-many
+    /** @var array Типы связей */
+    private $relationship_types = [
+      'belongs_to' => 'getOwner',   //many-to-one
+      'has_one' => 'getOne',        //one-to-one
+      'has_many' => 'getMany',      //one-to-many
+      'with_many' => 'getManyByMap' //many-to-many
     ];
 
     /**
-     * @param mixed $param
+     * @param mixed $param Параметры создаваемого объекта
      *
      * @return void
      */
@@ -59,12 +47,12 @@ abstract class Entries extends MicroORM
     {
         parent::__construct();
 
-        $this->_table = strtolower((new \ReflectionClass($this))->getShortName());
+        $this->table = strtolower((new \ReflectionClass($this))->getShortName());
 
         if (is_numeric($param)) {
             $this->get($param);
         } elseif (is_array($param)) {
-            $this->get_by($param);
+            $this->getBy($param);
         }
     }
 
@@ -75,16 +63,16 @@ abstract class Entries extends MicroORM
      */
     public function __get($name)
     {
-        if (array_key_exists($name, $this->_storage)) {
-            return $this->_storage[$name];
+        if (array_key_exists($name, $this->storage)) {
+            return $this->storage[$name];
         }
 
         $props = get_object_vars($this);
 
-        foreach ($this->_relationship_types as $type) {
+        foreach ($this->relationship_types as $type => $method) {
             if (array_key_exists($type, $props)) {
                 if (array_key_exists($name, $props[$type])) {
-                    return $this->_storage[$name] = $this->$type($name);
+                    return $this->storage[$name] = $this->$method($name);
                 }
             }
         }
@@ -100,7 +88,7 @@ abstract class Entries extends MicroORM
      */
     public function __set($name, $value)
     {
-        $this->_storage[$name] = $value;
+        $this->storage[$name] = $value;
     }
 
     /**
@@ -110,7 +98,7 @@ abstract class Entries extends MicroORM
      */
     public function __isset($name)
     {
-        return isset($this->_storage[$name]);
+        return isset($this->storage[$name]);
     }
 
     /**
@@ -120,7 +108,7 @@ abstract class Entries extends MicroORM
      */
     public function __unset($name)
     {
-        unset($this->_storage[$name]);
+        unset($this->storage[$name]);
     }
 
     /**
@@ -132,16 +120,18 @@ abstract class Entries extends MicroORM
      */
     public function get(int $id): bool
     {
-        $query = parent::$_db
+        $query = parent::$db
             ->where('id', $id)
             ->limit(1)
-            ->get($this->_table);
+            ->get($this->table);
 
         if ($query->num_rows() === 0) {
             return false;
         }
 
-        $this->_set($query->row());
+        foreach ($query->row() as $key => $value) {
+            $this->$key = $value;
+        }
 
         return true;
     }
@@ -153,18 +143,20 @@ abstract class Entries extends MicroORM
      *
      * @return bool TRUE - успешно, FALSE - ошибка
      */
-    public function get_by(array $attr): bool
+    public function getBy(array $attr): bool
     {
-        $query = parent::$_db
+        $query = parent::$db
             ->where($attr)
             ->limit(1)
-            ->get($this->_table);
+            ->get($this->table);
 
         if ($query->num_rows() === 0) {
             return false;
         }
 
-        $this->_set($query->row());
+        foreach ($query->row() as $key => $value) {
+            $this->$key = $value;
+        }
 
         return true;
     }
@@ -198,16 +190,16 @@ abstract class Entries extends MicroORM
     public function save(): int
     {
         if (isset($this->id)) {
-            parent::$_db
+            parent::$db
                 ->where('id', $this->id)
-                ->update($this->_table, $this);
+                ->update($this->table, $this);
         } else {
-            parent::$_db->insert($this->_table, $this);
+            parent::$db->insert($this->table, $this);
 
-            $this->id = parent::$_db->insert_id();
+            $this->id = parent::$db->insert_id();
         }
 
-        return parent::$_db->affected_rows();
+        return parent::$db->affected_rows();
     }
 
     /**
@@ -217,9 +209,9 @@ abstract class Entries extends MicroORM
      */
     public function remove(): int
     {
-        parent::$_db->delete($this->_table, ['id' => $this->id]);
+        parent::$db->delete($this->table, ['id' => $this->id]);
 
-        return parent::$_db->affected_rows();
+        return parent::$db->affected_rows();
     }
 
     /**
@@ -231,14 +223,14 @@ abstract class Entries extends MicroORM
      */
     public function bind(self $bindable): bool
     {
-        $model = $this->_get_relation_model($bindable);
+        $model = $this->getRelationModel($bindable);
 
-        if ($this->_check_relation($bindable, $model)) {
+        if ($this->checkRelation($bindable, $model)) {
             return false;
         }
 
         if (isset($model)) {
-            parent::$_db->insert($model['through'], [
+            parent::$db->insert($model['mapped_by'], [
                 $model['own_key'] => $this->id,
                 $model['their_key'] => $bindable->id
             ]);
@@ -257,40 +249,26 @@ abstract class Entries extends MicroORM
      */
     public function unbind(self $binded): bool
     {
-        $model = $this->_get_relation_model($binded);
+        $model = $this->getRelationModel($binded);
 
-        if (! $this->_check_relation($binded, $model)) {
+        if (! $this->checkRelation($binded, $model)) {
             return false;
         }
 
         if (isset($model)) {
-            parent::$_db->where([
+            parent::$db->where([
                 $model['own_key'] => $this->id,
                 $model['their_key'] => $binded->id
             ]);
 
-            parent::$_db->delete($model['through']);
+            parent::$db->delete($model['mapped_by']);
 
-            if (parent::$_db->affected_rows() > 0) {
+            if (parent::$db->affected_rows() > 0) {
                 return true;
             }
         }
 
         return false;
-    }
-
-    /**
-     * Устанавливает свойства текущему объекту
-     *
-     * @param object $object Объект с набором свойств
-     *
-     * @return void
-     */
-    private function _set(object $object): void
-    {
-        foreach ($object as $key => $value) {
-            $this->$key = $value;
-        }
     }
 
     /**
@@ -301,12 +279,12 @@ abstract class Entries extends MicroORM
      *
      * @return self|null Связанный объект
      */
-    private function _belongs_to(string $name): ?self
+    private function getOwner(string $name): ?self
     {
-        $classname = $this->_belongs_to[$name]['class'];
-        $foreign_key = $this->_belongs_to[$name]['foreign_key'];
+        $classname = $this->belongs_to[$name]['class'];
+        $foreign_key = $this->belongs_to[$name]['foreign_key'];
 
-        $query = parent::$_db
+        $query = parent::$db
             ->where('id', $this->$foreign_key)
             ->limit(1)
             ->get($classname);
@@ -331,12 +309,12 @@ abstract class Entries extends MicroORM
      *
      * @return self|null Связанный объект
      */
-    private function _has_one(string $name): ?self
+    private function getOne(string $name): ?self
     {
-        $classname = $this->_has_one[$name]['model'];
-        $foreign_key = $this->_has_one[$name]['foreign_key'];
+        $classname = $this->has_one[$name]['model'];
+        $foreign_key = $this->has_one[$name]['foreign_key'];
 
-        $query = parent::$_db
+        $query = parent::$db
             ->where($foreign_key, $this->id)
             ->limit(1)
             ->get($classname);
@@ -361,9 +339,9 @@ abstract class Entries extends MicroORM
      *
      * @return Lists Список объектов
      */
-    private function _has_many(string $name): Lists
+    private function getMany(string $name): Lists
     {
-        $list = new Lists($this, $this->_has_many[$name], '_has_many');
+        $list = new Lists($this, $this->has_many[$name], __FUNCTION__);
 
         return $list;
     }
@@ -376,9 +354,9 @@ abstract class Entries extends MicroORM
      *
      * @return Lists Список объектов
      */
-    private function _with_many(string $name): Lists
+    private function getManyByMap(string $name): Lists
     {
-        $list = new Lists($this, $this->_with_many[$name], '_with_many');
+        $list = new Lists($this, $this->with_many[$name], __FUNCTION__);
 
         return $list;
     }
@@ -390,15 +368,15 @@ abstract class Entries extends MicroORM
      *
      * @return array Параметры связи объектов
      */
-    private function _get_relation_model(self $object): array
+    private function getRelationModel(self $object): array
     {
         $props = get_object_vars($this);
 
         $classname = (new \ReflectionClass($object))->getShortName();
         $classname = strtolower($classname);
 
-        if (array_key_exists('_with_many', $props)) { //если есть связь у объекта
-            foreach ($props['_with_many'] as $rel) {
+        if (array_key_exists('with_many', $props)) { //если есть связь у объекта
+            foreach ($props['with_many'] as $rel) {
                 if ($rel['class'] === $classname) { //если класс О1 связан с классом О2
                     return $rel;
                 }
@@ -416,14 +394,14 @@ abstract class Entries extends MicroORM
      *
      * @return bool TRUE - объекты связаны, FALSE - связь отсутствует
      */
-    private function _check_relation(self $object, array $model): bool
+    private function checkRelation(self $object, array $model): bool
     {
-        $query = parent::$_db
+        $query = parent::$db
             ->where([
               $model['own_key'] => $this->id,
               $model['their_key'] => $object->id
             ])
-            ->get($model['through']);
+            ->get($model['mapped_by']);
 
         if ($query->num_rows() > 0) {
             return true;

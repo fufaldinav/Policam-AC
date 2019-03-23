@@ -5,12 +5,8 @@
  */
 class Observ extends CI_Controller
 {
-    /**
-     * Текущий пользователь
-     *
-     * @var int
-     */
-    private $_user;
+    /** @var object Текущий пользователь */
+    private $user;
 
     public function __construct()
     {
@@ -25,7 +21,7 @@ class Observ extends CI_Controller
         $this->ac->load('Users');
 
         $user_id = $this->ion_auth->user()->row()->id;
-        $this->_user = new \ORM\Users($user_id);
+        $this->user = new \ORM\Users($user_id);
     }
 
     /**
@@ -39,15 +35,17 @@ class Observ extends CI_Controller
 
         $this->load->helper('language');
 
-        $orgs = $this->_user->organizations->get();
-        $org = $this->_user->organizations->first();
+        $orgs = $this->user->organizations->get();
+        $org = $this->user->organizations->first();
 
         /*
-         | Подразделения
-         */
-        $divs = @$org->divisions->get();
+        | Подразделения
+        */
+        $divs = $org->divisions
+            ->order_by('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
+            ->get();
         $data = [
-            'divs' => $divs ?? []
+            'divs' => $divs
         ];
 
         $header = [

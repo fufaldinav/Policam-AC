@@ -24,59 +24,35 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 class Controllers extends Entries
 {
-    /**
-     * @var array
-     */
-    protected $_belongs_to = [
+    /** @var array Связи many_to_one */
+    protected $belongs_to = [
       'organization' => [
         'class' => 'organizations',
         'foreign_key' => 'org_id'
       ]
     ];
 
-    /**
-     * @var array
-     */
-    protected $_has_many = [
+    /** @var array Связи one_to_many */
+    protected $has_many = [
       'tasks' => [
         'class' => 'tasks',
         'foreign_key' => 'controller_id'
       ]
     ];
 
-    /**
-     * Имя контроллера
-     *
-     * @var string
-     */
+    /** @var string Имя контроллера */
     public $name = 'Без имени';
 
-    /**
-     * Серийный номер
-     *
-     * @var int
-     */
+    /** @var int Серийный номер */
     public $sn;
 
-    /**
-     * Модель контроллера
-     *
-     * @var string
-     */
+    /** @var string Модель контроллера */
     public $type = 'Z5RWEB';
 
-    /**
-     * Версия прошивки контроллера
-     *
-     * @var string
-     */
+    /** @var string Версия прошивки контроллера */
     public $fw = null;
 
-    /**
-     * Версия прошивки модуля связи
-     *
-     * @var string
-     */
+    /** @var string Версия прошивки модуля связи */
     public $conn_fw = null;
 
     /**
@@ -89,38 +65,18 @@ class Controllers extends Entries
      */
     public $mode = 0;
 
-    /**
-     * IP адрес контроллера в локальной сети
-     *
-     * @var string
-     */
+    /** @var string IP адрес контроллера в локальной сети */
     public $ip = null;
 
-    /**
-     * Признак активированности контроллера
-     *
-     * @var int
-     */
+    /** @var int Признак активированности контроллера */
     public $active = 1;
 
-    /**
-     * ONLINE проверка доступа
-     *
-     * @var int
-     */
+    /** @var int ONLINE проверка доступа */
     public $online = 0;
 
-    /**
-     * Последнее соединение контроллера с сервером
-     *
-     * @var int
-     */
+    /** @var int Последнее соединение контроллера с сервером */
     public $last_conn = 0;
 
-    /**
-     * Организация, в которой установлен контроллер
-     *
-     * @var int
-     */
+    /** @var int Организация, в которой установлен контроллер */
     public $org_id = 0;
 }

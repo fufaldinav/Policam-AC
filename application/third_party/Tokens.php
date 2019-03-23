@@ -24,27 +24,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 class Tokens extends Entries
 {
-    /**
-     * @var array
-     */
-    protected $_belongs_to = [
+    /** @var array Связи many_to_one */
+    protected $belongs_to = [
       'user' => [
         'class' => 'users',
         'foreign_key' => 'user_id'
       ]
     ];
 
-    /**
-     * Пользователь, которому принадлежит токен
-     *
-     * @var int
-     */
+    /** @var int Пользователь, которому принадлежит токен */
     public $user_id;
 
-    /**
-     * Токен, полученный от сервера FCM
-     *
-     * @var string
-     */
+    /** @var string Токен, полученный от сервера FCM */
     public $token;
 }

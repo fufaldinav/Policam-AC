@@ -24,58 +24,34 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 class Cards extends Entries
 {
-    /**
-     * @var array
-     */
-    protected $_belongs_to = [
+    /** @var array Связи many_to_one */
+    protected $belongs_to = [
       'person' => [
         'class' => 'persons',
         'foreign_key' => 'person_id'
       ]
     ];
 
-    /**
-     * @var array
-     */
-    protected $_has_many = [
+    /** @var array Связи one_to_many */
+    protected $has_many = [
       'events' => [
         'class' => 'events',
         'foreign_key' => 'card_id'
       ]
     ];
 
-    /**
-     * Код карты
-     *
-     * @var string
-     */
+    /** @var string Код карты */
     public $wiegand;
 
-    /**
-     * Время последней попытки доступа
-     *
-     * @var int
-     */
+    /** @var int Время последней попытки доступа */
     public $last_conn;
 
-    /**
-     * Контроллер, на котором была совершена попытка доступа
-     *
-     * @var int
-     */
+    /** @var int Контроллер, на котором была совершена попытка доступа */
     public $controller_id;
 
-    /**
-     * Владелец карты
-     *
-     * @var int
-     */
+    /** @var int Владелец карты */
     public $person_id = 0;
 
-    /**
-     * Признак активированности карты
-     *
-     * @var int
-     */
+    /** @var int Признак активированности карты */
     public $active = 1;
 }

@@ -24,10 +24,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 class Organizations extends Entries
 {
-    /**
-     * @var array
-     */
-    protected $_has_many = [
+    /** @var array Связи one_to_many */
+    protected $has_many = [
       'divisions' => [
         'class' => 'divisions',
         'foreign_key' => 'org_id'
@@ -38,36 +36,22 @@ class Organizations extends Entries
       ]
     ];
 
-    /**
-     * @var array
-     */
-    protected $_with_many = [
+    /** @var array Связи many_to_many */
+    protected $with_many = [
       'users' => [
         'class' => 'users',
         'own_key' => 'org_id',
         'their_key' => 'user_id',
-        'through' => 'organizations_users'
+        'mapped_by' => 'organizations_users'
       ]
     ];
 
-    /**
-     * Название организации
-     *
-     * @var string
-     */
+    /** @var string Название организации */
     public $name;
 
-    /**
-     * Адрес организации
-     *
-     * @var string
-     */
+    /** @var string Адрес организации */
     public $address = null;
 
-    /**
-     * Тип организации
-     *
-     * @var int
-     */
+    /** @var int Тип организации */
     public $type = 1;
 }

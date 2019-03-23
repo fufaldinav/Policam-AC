@@ -27,14 +27,14 @@ class Logger extends Ac
      *
      * @var string
      */
-    private $_log_path;
+    private $log_path;
 
     /**
      * Записи
      *
      * @var array
      */
-    private $_to_write = [];
+    private $to_write = [];
 
     /**
      * @return void
@@ -43,13 +43,11 @@ class Logger extends Ac
     {
         parent::__construct();
 
-        $this->_log_path = $this->_CI->config->item('log_path', 'ac');
+        $this->log_path = $this->CI->config->item('log_path', 'ac');
 
-        if (! is_dir($this->_log_path)) {
-            mkdir($this->_log_path, 0755, true);
+        if (! is_dir($this->log_path)) {
+            mkdir($this->log_path, 0755, true);
         }
-
-        $this->_timeout = $this->_CI->config->item('long_poll_timeout', 'ac');
     }
 
     /**
@@ -59,15 +57,15 @@ class Logger extends Ac
      */
     public function write(): bool
     {
-        if (! $this->_to_write) {
+        if (! $this->to_write) {
             return false;
         }
 
-        foreach ($this->_to_write as $entry) {
-            write_file("$this->_log_path/{$entry['category']}-{$entry['date']}.txt", "[{$entry['time']}] {$entry['message']}\n", 'a');
+        foreach ($this->to_write as $entry) {
+            write_file("$this->log_path/{$entry['category']}-{$entry['date']}.txt", "[{$entry['time']}] {$entry['message']}\n", 'a');
         }
 
-        $this->_to_write = [];
+        $this->to_write = [];
 
         return true;
     }
@@ -82,13 +80,13 @@ class Logger extends Ac
      */
     public function add(string $category, string $message): void
     {
-        $this->_CI->load->helper(['date', 'file']);
+        $this->CI->load->helper(['date', 'file']);
 
         $time = now();
         $date = mdate('%Y-%m-%d', $time);
         $time = mdate('%H:%i:%s', $time);
 
-        $this->_to_write[] = [
+        $this->to_write[] = [
             'category' => $category,
             'date' => $date,
             'time' => $time,

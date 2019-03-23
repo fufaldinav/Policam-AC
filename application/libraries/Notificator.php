@@ -29,21 +29,21 @@ class Notificator extends Ac
      *
      * @var string
      */
-    private $_fcm_url;
+    private $fcm_url;
 
     /**
      * Ключ сервера
      *
      * @var string
      */
-    private $_server_key;
+    private $server_key;
 
     /**
      * Параметры уведомления
      *
      * @var string
      */
-    private $_notification;
+    private $notification;
 
     /**
      * @return void
@@ -52,8 +52,8 @@ class Notificator extends Ac
     {
         parent::__construct();
 
-        $this->_fcm_url = $this->_CI->config->item('fcm_url', 'ac');
-        $this->_server_key = $this->_CI->config->item('server_key', 'ac');
+        $this->fcm_url = $this->CI->config->item('fcm_url', 'ac');
+        $this->server_key = $this->CI->config->item('server_key', 'ac');
     }
 
     /**
@@ -66,9 +66,9 @@ class Notificator extends Ac
      */
     public function generate(int $person_id, int $event_id): ?array
     {
-        $this->_CI->lang->load('ac');
+        $this->CI->lang->load('ac');
 
-        $this->_CI->load->helper('language');
+        $this->CI->load->helper('language');
 
         switch ($event_id) {
             case 4: //вход
@@ -85,7 +85,7 @@ class Notificator extends Ac
 
         $this->load('Persons', 'Photos');
 
-        $this->_CI->load->helper('url');
+        $this->CI->load->helper('url');
 
         $person = new \ORM\Persons($person_id);
 
@@ -94,7 +94,7 @@ class Notificator extends Ac
 
         $photo_url = "https://{$_SERVER['HTTP_HOST']}/img/ac/s/" . ($photo->id ?? 0) . ".jpg";
 
-        return $this->_notification = [
+        return $this->notification = [
             'title' => $event,
             'body' => "{$person->f} {$person->i}",
             'icon' => $photo_url,
@@ -115,9 +115,9 @@ class Notificator extends Ac
     {
         $this->load('Tokens');
 
-        $this->_CI->load->library('logger');
+        $this->CI->load->library('logger');
 
-        $notification = $notification ?? $this->_notification;
+        $notification = $notification ?? $this->notification;
 
         $registration_ids = [];
 
@@ -138,11 +138,11 @@ class Notificator extends Ac
 
         $request_headers = [
             "Content-Type: application/json",
-            "Authorization: key=$this->_server_key",
+            "Authorization: key=$this->server_key",
         ];
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->_fcm_url);
+        curl_setopt($ch, CURLOPT_URL, $this->fcm_url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
@@ -151,7 +151,7 @@ class Notificator extends Ac
         $response = curl_exec($ch);
         curl_close($ch);
 
-        $this->_CI->logger->add('push', "USER: $user->id || $response");
-        $this->_CI->logger->write();
+        $this->CI->logger->add('push', "USER: $user->id || $response");
+        $this->CI->logger->write();
     }
 }
