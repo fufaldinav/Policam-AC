@@ -24,35 +24,33 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 class Lists extends MicroORM
 {
-    /** @var string Объект-владелец */
-    private $object;
+    /** @var string Имя списка*/
+    private $name;
 
-    /** @var string Модель связи с владелецем */
+    /** @var Entries Владелец списка */
+    private $owner;
+
+    /** @var string Модель связи */
     private $relation_model;
-
-    /** @var string Вызываемый метод */
-    private $relation_method;
 
     /** @var array Коллекция объектов */
     private $collection = [];
 
     /**
-     * @param Entries     $object          Объект-владелец
-     * @param array|null  $relation_model  Модель связи с владелецем
-     * @param string|null $relation_method Вызываемый метод
+     * @param string       $name  Имя списка, соответствующее таблице в БД
+     * @param Entries|null $owner Объект-владелец
      *
      * @return void
      */
-    public function __construct(
-        Entries $object,
-        array $relation_model = null,
-        string $relation_method = null
-    ) {
+    public function __construct(string $name, Entries $owner = null)
+    {
         parent::__construct();
 
-        $this->object = $object;
-        $this->relation_model = $relation_model;
-        $this->relation_method = $relation_method;
+        $this->name = $name;
+
+        if (isset($owner)) {
+            $this->setOwner($owner);
+        }
     }
 
     /**
@@ -66,13 +64,14 @@ class Lists extends MicroORM
             return $this->collection;
         }
 
-        $relation_method = $this->relation_method;
-
-        if (isset($relation_method)) {
-            return $this->collection = $this->$relation_method();
+        if (isset($this->owner) && isset($this->relation_model)) {
+            $method = $this->relation_model['method'];
+            return $this->collection = $this->$method();
         }
 
-        return $this->collection;
+        return $this->collection = $this->db
+            ->get($this->name)
+            ->result();
     }
 
     /**
@@ -92,14 +91,29 @@ class Lists extends MicroORM
     /**
      * Поиск по конкретным данным
      *
-     * @param string $params
-     * @param mixed|null $value
+     * @param string|array $params
+     * @param mixed|null   $value
      *
      * @return Lists
      */
-    public function where(string $params, $value = null): Lists
+    public function where($params, $value = null): Lists
     {
         $this->db->where($params, $value);
+
+        return $this;
+    }
+
+    /**
+     * Поиск по конкретным данным
+     *
+     * @param string $column
+     * @param array  $values
+     *
+     * @return Lists
+     */
+    public function whereIn(string $column, array $values): Lists
+    {
+        $this->db->where_in($column, $values);
 
         return $this;
     }
@@ -111,11 +125,24 @@ class Lists extends MicroORM
      *
      * @return Lists
      */
-    public function order_by(string $params): Lists
+    public function orderBy(string $params): Lists
     {
         $this->db->order_by($params);
 
         return $this;
+    }
+
+    /**
+     * TODO
+     *
+     * @param Entries $owner Объект, владелец списка
+     *
+     * @return void
+     */
+    private function setOwner(Entries $owner): void
+    {
+        $this->owner = $owner;
+        $this->relation_model = parent::getRelationModel($this->owner, $this->name);
     }
 
     /**
@@ -129,10 +156,10 @@ class Lists extends MicroORM
         $foreign_key = $this->relation_model['foreign_key'];
 
         $query = $this->db
-            ->where($foreign_key, $this->object->id)
+            ->where($foreign_key, $this->owner->id)
             ->get($classname);
 
-        $namespace = (new \ReflectionClass($this->object))->getNamespaceName();
+        $namespace = (new \ReflectionClass($this->owner))->getNamespaceName();
         $classname =  "$namespace\\$classname";
 
         return $query->result($classname);
@@ -143,20 +170,20 @@ class Lists extends MicroORM
      *
      * @return array Список объектов
      */
-    private function getManyByMap(): array
+    private function getManyByPivot(): array
     {
         $classname = $this->relation_model['class'];
         $own_key = $this->relation_model['own_key'];
         $their_key = $this->relation_model['their_key'];
-        $mapped_by = $this->relation_model['mapped_by'];
+        $pivot = $this->relation_model['pivot'];
 
         $query = $this->db
             ->select("$classname.*")
-            ->join($classname, "$classname.id = $mapped_by.$their_key")
-            ->where($own_key, $this->object->id)
-            ->get($mapped_by);
+            ->join($classname, "$classname.id = $pivot.$their_key")
+            ->where($own_key, $this->owner->id)
+            ->get($pivot);
 
-        $namespace = (new \ReflectionClass($this->object))->getNamespaceName();
+        $namespace = (new \ReflectionClass($this->owner))->getNamespaceName();
         $classname =  "$namespace\\$classname";
 
         return $query->result($classname);

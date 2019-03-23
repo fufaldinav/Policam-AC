@@ -45,7 +45,7 @@ class Divisions extends CI_Controller
         $org = $this->user->organizations->first();
 
         $divs = $org->divisions
-            ->order_by('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
+            ->orderBy('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
             ->get();
         $data = [
             'org_id' => $org->id ?? 0,
@@ -90,7 +90,7 @@ class Divisions extends CI_Controller
             $divs = array_merge(
               $divs,
               $org->divisions
-                  ->order_by('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
+                  ->orderBy('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
                   ->get()
             );
         }

@@ -30,14 +30,6 @@ abstract class Entries extends MicroORM
     /** @var string Таблица в БД */
     protected $table;
 
-    /** @var array Типы связей */
-    private $relationship_types = [
-      'belongs_to' => 'getOwner',   //many-to-one
-      'has_one' => 'getOne',        //one-to-one
-      'has_many' => 'getMany',      //one-to-many
-      'with_many' => 'getManyByMap' //many-to-many
-    ];
-
     /**
      * @param mixed $param Параметры создаваемого объекта
      *
@@ -67,14 +59,10 @@ abstract class Entries extends MicroORM
             return $this->storage[$name];
         }
 
-        $props = get_object_vars($this);
-
-        foreach ($this->relationship_types as $type => $method) {
-            if (array_key_exists($type, $props)) {
-                if (array_key_exists($name, $props[$type])) {
-                    return $this->storage[$name] = $this->$method($name);
-                }
-            }
+        $model = parent::getRelationModel($this, $name);
+        if (isset($model)) {
+            $method = $model['method'];
+            return $this->storage[$name] = $this->$method($name);
         }
 
         return null;
@@ -223,14 +211,14 @@ abstract class Entries extends MicroORM
      */
     public function bind(self $bindable): bool
     {
-        $model = $this->getRelationModel($bindable);
+        $model = parent::getRelationModel($this, $bindable);
 
         if ($this->checkRelation($bindable, $model)) {
             return false;
         }
 
         if (isset($model)) {
-            $this->db->insert($model['mapped_by'], [
+            $this->db->insert($model['pivot'], [
                 $model['own_key'] => $this->id,
                 $model['their_key'] => $bindable->id
             ]);
@@ -249,7 +237,7 @@ abstract class Entries extends MicroORM
      */
     public function unbind(self $binded): bool
     {
-        $model = $this->getRelationModel($binded);
+        $model = parent::getRelationModel($this, $binded);
 
         if (! $this->checkRelation($binded, $model)) {
             return false;
@@ -261,7 +249,7 @@ abstract class Entries extends MicroORM
                 $model['their_key'] => $binded->id
             ]);
 
-            $this->db->delete($model['mapped_by']);
+            $this->db->delete($model['pivot']);
 
             if ($this->db->affected_rows() > 0) {
                 return true;
@@ -341,7 +329,7 @@ abstract class Entries extends MicroORM
      */
     private function getMany(string $name): Lists
     {
-        $list = new Lists($this, $this->has_many[$name], __FUNCTION__);
+        $list = new Lists($name, $this);
 
         return $list;
     }
@@ -354,36 +342,11 @@ abstract class Entries extends MicroORM
      *
      * @return Lists Список объектов
      */
-    private function getManyByMap(string $name): Lists
+    private function getManyByPivot(string $name): Lists
     {
-        $list = new Lists($this, $this->with_many[$name], __FUNCTION__);
+        $list = new Lists($name, $this);
 
         return $list;
-    }
-
-    /**
-     * Возвращает парамеры связи с классом объекта
-     *
-     * @param self $object Связываемый объект
-     *
-     * @return array Параметры связи объектов
-     */
-    private function getRelationModel(self $object): array
-    {
-        $props = get_object_vars($this);
-
-        $classname = (new \ReflectionClass($object))->getShortName();
-        $classname = strtolower($classname);
-
-        if (array_key_exists('with_many', $props)) { //если есть связь у объекта
-            foreach ($props['with_many'] as $rel) {
-                if ($rel['class'] === $classname) { //если класс О1 связан с классом О2
-                    return $rel;
-                }
-            }
-        }
-
-        throw new \Exception('Relations model no exists');
     }
 
     /**
@@ -401,7 +364,7 @@ abstract class Entries extends MicroORM
               $model['own_key'] => $this->id,
               $model['their_key'] => $object->id
             ])
-            ->get($model['mapped_by']);
+            ->get($model['pivot']);
 
         if ($query->num_rows() > 0) {
             return true;

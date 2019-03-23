@@ -42,7 +42,7 @@ class Observ extends CI_Controller
         | Подразделения
         */
         $divs = $org->divisions
-            ->order_by('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
+            ->orderBy('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
             ->get();
         $data = [
             'divs' => $divs

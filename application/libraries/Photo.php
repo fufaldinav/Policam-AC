@@ -179,7 +179,12 @@ class Photo extends Ac
     {
         $this->load('Photos');
 
-        $photos = \ORM\Photos::get_old();
+        $photos = new \ORM\Lists('photos');
+
+        $photos = $photos
+            ->where('person_id', null)
+            ->where('time <', now() - 86400)
+            ->get();
 
         $counter = 0;
 

@@ -54,7 +54,7 @@ class Persons extends CI_Controller
         | Подразделения
         */
         $divs = $org->divisions
-            ->order_by('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
+            ->orderBy('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
             ->get();
         $data = [
             'divs' => $divs
@@ -121,7 +121,7 @@ class Persons extends CI_Controller
         | Подразделения
         */
         $divs = $org->divisions
-            ->order_by('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
+            ->orderBy('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
             ->get();
         $data = [
             'divs' => $divs
@@ -428,7 +428,7 @@ class Persons extends CI_Controller
         header('Content-Type: application/json');
 
         echo json_encode(
-            $div->persons->order_by('f ASC, i ASC, o ASC')->get()
+            $div->persons->orderBy('f ASC, i ASC, o ASC')->get()
         );
     }
 }

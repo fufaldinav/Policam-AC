@@ -37,12 +37,12 @@ class Organizations extends Entries
     ];
 
     /** @var array Связи many_to_many */
-    protected $with_many = [
+    protected $belongs_to_many = [
       'users' => [
         'class' => 'users',
         'own_key' => 'org_id',
         'their_key' => 'user_id',
-        'mapped_by' => 'organizations_users'
+        'pivot' => 'organizations_users'
       ]
     ];
 

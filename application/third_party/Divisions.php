@@ -33,12 +33,12 @@ class Divisions extends Entries
     ];
 
     /** @var array Связи many_to_many */
-    protected $with_many = [
+    protected $belongs_to_many = [
       'persons' => [
         'class' => 'persons',
         'own_key' => 'div_id',
         'their_key' => 'person_id',
-        'mapped_by' => 'persons_divisions'
+        'pivot' => 'persons_divisions'
       ]
     ];
 

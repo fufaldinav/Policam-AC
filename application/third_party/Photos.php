@@ -40,30 +40,4 @@ class Photos extends Entries
 
     /** @var int Время сохранения фотографии */
     public $time;
-
-    /**
-     * Получим старые фотографии (на удаление)
-     *
-     * @return array Список фотографий на удаление
-     */
-    public static function get_old(): array
-    {
-        $CI =& get_instance();
-        $CI->load->database();
-
-        $query = $CI->db
-            ->where('person_id', null)
-            ->where('time <', now() - 86400)
-            ->get('photos')
-            ->result();
-
-        $classname = self::class;
-
-        foreach ($query as &$row) {
-            $row = new $classname($row->id);
-        }
-        unset($row);
-
-        return $query;
-    }
 }

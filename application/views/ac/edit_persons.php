@@ -10,7 +10,7 @@
 							<?php echo $div->name;?>
 						</div>
 						<ul class="tree-container">
-              <?php $persons = $div->persons->order_by('f ASC, i ASC, o ASC')->get();?>
+              <?php $persons = $div->persons->orderBy('f ASC, i ASC, o ASC')->get();?>
 							<?php $last_person = count($persons) - 1;?>
 							<?php foreach ($persons as $n => $person):?>
 							<li id="person<?php echo $person->id?>" class="tree-node tree-expand-leaf <?php echo $n === $last_person ? 'tree-is-last' : '';?>">

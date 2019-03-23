@@ -264,7 +264,14 @@ class Messenger extends Ac
                     $controllers[] = $ctrl->id;
                 }
 
-                $events = \ORM\Events::get_latest($time, $event_types, $controllers);
+                $events = new \ORM\Lists('events');
+
+                $events = $events
+                    ->whereIn('event', $event_types)
+                    ->whereIn('controller_id', $controllers)
+                    ->where('server_time >', $time)
+                    ->orderBy('time DESC')
+                    ->get();
 
                 if ($events) {
                     return $events;
