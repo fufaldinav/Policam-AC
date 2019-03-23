@@ -33,7 +33,9 @@ abstract class MicroORM
     /** @return void */
     public function __construct()
     {
-        $this->db =& get_instance()->db;
+        $CI =& get_instance();
+        $CI->load->database();
+        $this->db = $CI->db;
     }
 
     /**

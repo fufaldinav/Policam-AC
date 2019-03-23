@@ -69,16 +69,17 @@ class Events extends Entries
         array $event_types = null,
         array $controllers = null
     ): array {
-        $db =& get_instance()->db;
+        $CI =& get_instance();
+        $CI->load->database;
 
         if (isset($event_types)) {
-            $db->where_in('event', $event_types);
+            $CI->db->where_in('event', $event_types);
         }
         if (isset($controllers)) {
-            $db->where_in('controller_id', $controllers);
+            $CI->db->where_in('controller_id', $controllers);
         }
 
-        $query = $db
+        $query = $CI->db
             ->where('server_time >', $time)
             ->order_by('time', 'DESC')
             ->get('events')
