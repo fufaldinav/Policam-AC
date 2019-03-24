@@ -83,7 +83,7 @@ class Notificator extends Ac
                 return null;
         }
 
-        $this->load('Persons', 'Photos');
+        $this->load(['Persons', 'Photos']);
 
         $this->CI->load->helper('url');
 
