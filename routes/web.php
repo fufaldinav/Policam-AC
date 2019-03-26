@@ -11,12 +11,10 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 Route::get('/', 'ObserverController@index');
 
 Route::get('persons/add', 'PersonsController@add')->name('persons/add');
+Route::get('persons/edit', 'PersonsController@edit')->name('persons/edit');
 
 Route::get('divisions/classes', 'DivisionsController@classes')->name('divisions/classes');
 
