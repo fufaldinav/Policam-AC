@@ -32,7 +32,7 @@ class ObserverController extends Controller
 
         $data = [
             'divs' => $divs,
-            'org_name' => $org->name ?? 'Missing',
+            'org_name' => $org->name ?? __('ac/common.missing'),
             'css_list' => ['ac'],
             'js_list' => ['main', 'observer']
         ];
