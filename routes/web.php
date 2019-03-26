@@ -16,6 +16,8 @@ Route::get('/', function () {
 });
 Route::get('/', 'ObserverController@index');
 
+Route::get('persons/add', 'PersonsController@add')->name('persons/add');
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
