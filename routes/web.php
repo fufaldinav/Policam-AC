@@ -18,6 +18,8 @@ Route::get('/', 'ObserverController@index');
 
 Route::get('persons/add', 'PersonsController@add')->name('persons/add');
 
+Route::get('divisions/classes', 'DivisionsController@classes')->name('divisions/classes');
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
