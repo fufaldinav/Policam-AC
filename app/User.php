@@ -3,14 +3,25 @@
 namespace App;
 
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-
+//Авторизация
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Foundation\Auth\Access\Authorizable;
+use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+//use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
+//Модель
 use Illuminate\Database\Eloquent\Model;
 
-class User extends Model
+class User extends Model implements
+    AuthenticatableContract,
+    AuthorizableContract,
+    CanResetPasswordContract
 {
     use Notifiable;
+
+    use Authenticatable, Authorizable, CanResetPassword;
 
     /**
      * The attributes that are mass assignable.
