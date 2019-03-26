@@ -18,7 +18,7 @@ class CreateCardsTable extends Migration
             $table->string('wiegand', 12)->unique();
             $table->dateTime('last_conn');
             $table->unsignedInteger('controller_id')->index();
-            $table->unsignedInteger('person_id')->index();
+            $table->unsignedInteger('person_id')->default(0)->index();
             $table->timestamps();
             $table->softDeletes();
         });

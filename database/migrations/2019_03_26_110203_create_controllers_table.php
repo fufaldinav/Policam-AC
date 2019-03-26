@@ -15,17 +15,17 @@ class CreateControllersTable extends Migration
     {
         Schema::create('controllers', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name', 20);
+            $table->string('name', 20)->default('Без имени');
             $table->string('sn', 20)->unique();
-            $table->string('type', 20);
-            $table->string('fw', 10);
-            $table->string('conn_fw', 10);
-            $table->unsignedTinyInteger('mode');
-            $table->string('ip', 15);
-            $table->unsignedTinyInteger('active');
-            $table->unsignedTinyInteger('online');
-            $table->dateTime('last_conn');
-            $table->unsignedInteger('organization_id')->index();
+            $table->string('type', 20)->default('Z5RWEB');
+            $table->string('fw', 10)->nullable();
+            $table->string('conn_fw', 10)->nullable();
+            $table->unsignedTinyInteger('mode')->default(0);
+            $table->string('ip', 15)->nullable();
+            $table->unsignedTinyInteger('active')->default(1);
+            $table->unsignedTinyInteger('online')->default(0);
+            $table->dateTime('last_conn')->nullable();
+            $table->unsignedInteger('organization_id')->default(0)->index();
             $table->timestamps();
         });
     }

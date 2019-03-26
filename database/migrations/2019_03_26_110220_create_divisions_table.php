@@ -17,7 +17,7 @@ class CreateDivisionsTable extends Migration
             $table->increments('id');
             $table->string('name', 20);
             $table->unsignedInteger('organization_id')->index();
-            $table->unsignedTinyInteger('type');
+            $table->unsignedTinyInteger('type')->default(1);
             $table->timestamps();
         });
     }

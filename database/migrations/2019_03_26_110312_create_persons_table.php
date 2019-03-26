@@ -17,11 +17,11 @@ class CreatePersonsTable extends Migration
             $table->increments('id');
             $table->string('f', 20);
             $table->string('i', 20);
-            $table->string('o', 20);
-            $table->unsignedTinyInteger('type');
+            $table->string('o', 20)->nullable();
+            $table->unsignedTinyInteger('type')->default(1);
             $table->date('birthday');
-            $table->string('address', 50);
-            $table->string('phone', 10);
+            $table->string('address', 50)->nullable();
+            $table->string('phone', 10)->nullable();
             $table->timestamps();
         });
     }
