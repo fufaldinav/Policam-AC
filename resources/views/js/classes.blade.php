@@ -1,4 +1,6 @@
 <script>
+    `use strict`;
+
     let div = {
         'name': null,
         'org_id': null

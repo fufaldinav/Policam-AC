@@ -1,4 +1,6 @@
 <script>
+    `use strict`;
+
     let events = [2, 3]; //где 2,3 - события запрещенного входа/выхода
     let person = {
         'f': null,

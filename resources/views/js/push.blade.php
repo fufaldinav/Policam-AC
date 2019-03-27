@@ -1,4 +1,6 @@
 <script>
+    `use strict`;
+
     // Initialize Firebase
     let config = {
         apiKey: `[config_api_key]`,

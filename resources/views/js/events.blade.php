@@ -51,7 +51,7 @@
                 }
                 setTimeout(function() {
                     getNewMsgs(events, time);
-                }, 100);
+                }, 10000);
             },
             error: function() {
                 alert(`Неизвестная ошибка`); //TODO перевод

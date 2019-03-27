@@ -1,4 +1,6 @@
 <script>
+    `use strict`;
+
     function tree_toggle(event) {
         event = event || window.event
         let clickedElem = event.target || event.srcElement

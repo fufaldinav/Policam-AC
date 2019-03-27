@@ -1,5 +1,6 @@
 <script>
-    //сохранить ошибку на сервере
+    `use strict`;
+
     //сохранить ошибку на сервере
     function sendError(message) {
         $.ajax({

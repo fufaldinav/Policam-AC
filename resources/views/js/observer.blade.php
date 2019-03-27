@@ -1,4 +1,6 @@
 <script>
+    `use strict`;
+
     let time, events = [4, 5]; //где 4,5 - события разрешенного входа/выхода
 
     document.addEventListener("DOMContentLoaded", function() {
@@ -37,7 +39,7 @@
                     }
                     setTimeout(function() {
                         getNewMsgs(events, time);
-                    }, 10);
+                    }, 10000);
                 } else {
                     alert(`Пустой ответ от сервера`); //TODO перевод
                 }
