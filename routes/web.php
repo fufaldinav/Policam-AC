@@ -26,6 +26,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::group(['prefix' =>'cards', 'as' => 'cards.', 'middleware' => 'auth'], function() {
     Route::get('get_list', 'CardsController@getList')->name('get_list.unknowns');
     Route::get('get_list/{person_id}', 'CardsController@getList')->name('get_list');
+    Route::get('holder/{card_id}', 'CardsController@holder')->name('holder.noholder');
     Route::get('holder/{card_id}/{person_id}', 'CardsController@holder')->name('holder');
     Route::get('delete/{card_id}', 'CardsController@delete')->name('delete');
 });
