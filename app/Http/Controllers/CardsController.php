@@ -8,6 +8,14 @@ use App, Auth;
 
 class CardsController extends Controller
 {
+    /**
+     * Устанавливает владельца карты
+     *
+     * @param int|null $card_id
+     * @param int $person_id
+     *
+     * @return int
+     */
     public function holder(int $card_id = null, int $person_id = 0)
     {
         if (is_null($card_id)) {
@@ -28,7 +36,7 @@ class CardsController extends Controller
         $card->person_id = $person_id;
 
         $ctrls = $org->controllers;
-        if ($ctrls) {
+        if ($ctrls->count() > 0) {
             if ($card->person_id == 0) {
 //                $this->task->delCards([$card->wiegand]);
             } else {
@@ -45,6 +53,14 @@ class CardsController extends Controller
         return $card->save();
     }
 
+    /**
+     * Удаляет карту
+     *
+     * @param int|null $card_id
+     *
+     * @return int
+     * @throws \Exception
+     */
     public function delete(int $card_id = null)
     {
         $user = Auth::user();
@@ -62,18 +78,23 @@ class CardsController extends Controller
         return $card->delete();
     }
 
+    /**
+     * Получает список карт
+     *
+     * @param int $person_id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getList(int $person_id = 0)
     {
         $user = Auth::user();
 
         if (! isset($user)) {
-            return 0;
+            return null;
         }
 
         $person = App\Person::find($person_id);
 
-//        header('Content-Type: application/json');
-
-        return json_encode($person->cards);
+        return response()->json($person->cards);
     }
 }

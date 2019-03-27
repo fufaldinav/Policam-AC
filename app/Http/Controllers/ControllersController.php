@@ -8,6 +8,14 @@ use App, Auth;
 
 class ControllersController extends Controller
 {
+    /**
+     * Устанавливает параметры открытия двери
+     *
+     * @param int|null $ctrl_id
+     * @param int|null $open_time
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|string
+     */
     public function setDoorParams(int $ctrl_id = null, int $open_time = null)
     {
         $user = Auth::user();
@@ -34,6 +42,13 @@ class ControllersController extends Controller
 //        }
     }
 
+    /**
+     * Очищает память контроллера
+     *
+     * @param int|null $ctrl_id
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|string
+     */
     public function clear(int $ctrl_id = null)
     {
         $user = Auth::user();
@@ -60,7 +75,14 @@ class ControllersController extends Controller
 //        }
     }
 
-    public function reload_cards(int $ctrl_id = null): void
+    /**
+     * Загружает в контроллер все карты
+     *
+     * @param int|null $ctrl_id
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|string
+     */
+    public function reload_cards(int $ctrl_id = null)
     {
         $user = Auth::user();
 

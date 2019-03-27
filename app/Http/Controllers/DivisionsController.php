@@ -8,6 +8,9 @@ use App, Auth;
 
 class DivisionsController extends Controller
 {
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     */
     public function classes()
     {
         $user = Auth::user();
@@ -27,21 +30,29 @@ class DivisionsController extends Controller
             ->get();
 
         $org_id = $org->id;
-        $divs = $divs;
 
         $org_name = $org->name ?? __('ac/common.missing');
         $css_list = ['ac', 'tables'];
         $js_list = ['classes'];
 
-        return view('ac.classes', compact('org_id', 'divs', 'org_name', 'css_list', 'js_list'));
+        return view('ac.classes', compact(
+            'org_id',
+            'divs',
+            'org_name',
+            'css_list',
+            'js_list'
+        ));
     }
 
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getList()
     {
         $user = Auth::user();
 
         if (! isset($user)) {
-            return;
+            return null;
         }
 
         $user = App\User::find($user->id);
@@ -49,38 +60,45 @@ class DivisionsController extends Controller
         $divs = [];
 
         foreach ($user->organizations as $org) {
-            $divs = array_merge(
-                $divs,
-                $org->divisions()
-                    ->orderBy('type')
-                    ->orderByRaw('CAST(name AS UNSIGNED) ASC')
-                    ->orderBy('name')
-                    ->get()
-            );
+            $cur_div = $org->divisions()
+                ->orderBy('type')
+                ->orderByRaw('CAST(name AS UNSIGNED) ASC')
+                ->orderBy('name')
+                ->get()
+                ->toArray();
+
+            $divs = array_merge($divs, $cur_div);
         }
 
-//        header('Content-Type: application/json');
-
-        return json_encode($divs);
+        return response()->json($divs);
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function add(Request $request)
     {
         $user = Auth::user();
 
         if (! isset($user)) {
-            return;
+            return null;
         }
 
-        $div_data = json_decode($request->input('div'));
+        $div_data = $request->input('div');
 
         $div = App\Division::create($div_data);
 
-//        header('Content-Type: application/json');
-
-        return json_encode($div);
+        return response()->json($div);
     }
 
+    /**
+     * @param int|null $div_id
+     *
+     * @return bool|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|null
+     * @throws \Exception
+     */
     public function delete(int $div_id = null)
     {
         $user = Auth::user();
@@ -90,8 +108,7 @@ class DivisionsController extends Controller
         }
 
         if (is_null($div_id)) {
-            echo 0;
-            exit;
+            return 0;
         }
 
         $user = App\User::find($user->id);
