@@ -23,8 +23,6 @@ class PersonsController extends Controller
 
         $org = $user->organizations()->first();
 
-        $data = [];
-
         /*
         | Подразделения
         */
@@ -35,32 +33,37 @@ class PersonsController extends Controller
             ->orderBy('name')
             ->get();
 
-        $data['divs'] = $divs;
-
         /*
         | Карты
         */
-        $data['cards'] = [];
-        $data['cards_attr'] = 'id="cards"';
+        $card_list = [];
+        $cards_attr = 'id="cards"';
 
         $person = App\Person::find(0);
 
         $cards = $person->cards;
 
         if (! $cards) {
-            $data['cards'][] = __('ac/common.missing');
+            $card_list[] = __('ac/common.missing');
         } else {
-            $data['cards'][] = __('ac/common.not_selected');
+            $card_list[] = __('ac/common.not_selected');
             foreach ($cards as $card) {
-                $data['cards'][$card->id] = $card->wiegand;
+                $card_list[$card->id] = $card->wiegand;
             }
         }
 
-        $data['org_name'] = $org->name ?? __('ac/common.missing');
-        $data['css_list'] = ['ac'];
-        $data['js_list'] = ['add_person', 'events', 'main'];
+        $org_name = $org->name ?? __('ac/common.missing');
+        $css_list = ['ac'];
+        $js_list = ['add_person', 'events', 'main'];
 
-        return view('ac.person_add', $data);
+        return view('ac.person_add', compact(
+            'divs',
+            'card_list',
+            'cards_attr',
+            'org_name',
+            'css_list',
+            'js_list'
+        ));
     }
 
     /*
@@ -78,8 +81,6 @@ class PersonsController extends Controller
 
         $org = $user->organizations()->first();
 
-        $data = [];
-
         /*
         | Подразделения
         */
@@ -90,32 +91,37 @@ class PersonsController extends Controller
             ->orderBy('name')
             ->get();
 
-        $data['divs'] = $divs;
-
         /*
         | Карты
         */
-        $data['cards'] = [];
-        $data['cards_attr'] = 'id="cards" disabled';
+        $card_list = [];
+        $cards_attr = 'id="cards" disabled';
 
         $person = App\Person::find(0);
 
         $cards = $person->cards;
 
         if (! $cards) {
-            $data['cards'][] = __('ac/common.missing');
+            $card_list[] = __('ac/common.missing');
         } else {
-            $data['cards'][] = __('ac/common.not_selected');
+            $card_list[] = __('ac/common.not_selected');
             foreach ($cards as $card) {
-                $data['cards'][$card->id] = $card->wiegand;
+                $card_list[$card->id] = $card->wiegand;
             }
         }
 
-        $data['org_name'] = $org->name ?? __('ac/common.missing');
-        $data['css_list'] = ['ac', 'edit_persons'];
-        $data['js_list'] = ['main', 'events', 'edit_persons', 'tree'];
+        $org_name = $org->name ?? __('ac/common.missing');
+        $css_list = ['ac', 'edit_persons'];
+        $js_list = ['main', 'events', 'edit_persons', 'tree'];
 
-        return view('ac.persons_edit', $data);
+        return view('ac.persons_edit', compact(
+            'divs',
+            'card_list',
+            'cards_attr',
+            'org_name',
+            'css_list',
+            'js_list'
+        ));
     }
 
     /*
