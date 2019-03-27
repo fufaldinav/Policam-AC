@@ -76,5 +76,5 @@ Route::get('users/notification/{hash}', 'UsersController@notification')->name('u
  */
 Route::get('util/get_time', 'UtilsController@getTime')->name('util/get_time');
 Route::post('util/get_events', 'UtilsController@getEvents')->name('util/get_events');
-Route::get('util/save_errors', 'UtilsController@saveErrors')->name('util/save_errors');
-Route::get('util/card_problem', 'UtilsController@cardProblem')->name('util/card_problem');
+Route::post('util/save_errors', 'UtilsController@saveErrors')->name('util/save_errors');
+Route::post('util/card_problem', 'UtilsController@cardProblem')->name('util/card_problem');
