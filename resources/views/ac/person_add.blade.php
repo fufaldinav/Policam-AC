@@ -47,7 +47,11 @@
         </div>
         <div id="info-card" class="info-item">
             @lang('ac/common.card')<br />
-            echo form_dropdown('cards', $cards, '0', $cards_attr);
+            <select id="cards" name="cards">
+                @foreach($card_list as $id => $wiegand)
+                    <option value="{{ $id }}">{{ $wiegand }}</option>
+                @endforeach
+            </select>
         </div>
         <div id="info-button1" class="info-item">
             <button type="button" onclick="savePersonInfo();">

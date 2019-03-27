@@ -27,7 +27,6 @@ class PersonsController extends Controller
 
         /* Карты */
         $card_list = [];
-        $cards_attr = 'id="cards"';
 
         $person = App\Person::find(0);
 
@@ -49,7 +48,6 @@ class PersonsController extends Controller
         return view('ac.person_add', compact(
             'divs',
             'card_list',
-            'cards_attr',
             'org_name',
             'css_list',
             'js_list'
@@ -75,7 +73,6 @@ class PersonsController extends Controller
 
         /* Карты */
         $card_list = [];
-        $cards_attr = 'id="cards" disabled';
 
         $person = App\Person::find(0);
 
@@ -97,7 +94,6 @@ class PersonsController extends Controller
         return view('ac.persons_edit', compact(
             'divs',
             'card_list',
-            'cards_attr',
             'org_name',
             'css_list',
             'js_list'

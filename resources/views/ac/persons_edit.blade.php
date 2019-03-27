@@ -68,7 +68,11 @@
             @lang('ac/common.card')<br />
             <div id="person_cards"></div>
             <div id="unknown_cards">
-                echo form_dropdown('cards', $cards, '0', $cards_attr);
+                <select id="cards" name="cards">
+                    @foreach($card_list as $id => $wiegand)
+                        <option value="{{ $id }}">{{ $wiegand }}</option>
+                    @endforeach
+                </select>
             </div>
         </div>
         <div id="info-button1" class="info-item">
