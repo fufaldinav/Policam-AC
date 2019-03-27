@@ -11,6 +11,15 @@ class Person extends Model
 {
     protected $table = 'persons';
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'f', 'i', 'o', 'type', 'birthday', 'address', 'phone'
+    ];
+
     public function cards()
     {
         return $this->hasMany('App\Card');
