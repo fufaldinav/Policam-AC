@@ -14,7 +14,7 @@
 /*
  * Home Page
  */
-Route::get('/', 'ObserverController@index');
+Route::get('/', 'ObserverController@index')->name('/')->middleware('auth');
 /*
  * Auth
  */
@@ -23,45 +23,55 @@ Route::get('/home', 'HomeController@index')->name('home');
 /*
  * Cards
  */
-Route::get('cards/get_list/{person_id}', 'CardsController@getList')->name('cards/get_list');
-Route::get('cards/holder/{card_id}/{person_id}', 'CardsController@holder')->name('cards/holder');
-Route::get('cards/delete/{card_id}', 'CardsController@delete')->name('cards/delete');
+Route::group(['prefix' =>'cards', 'as' => 'cards.', 'middleware' => 'auth'], function() {
+    Route::get('get_list/{person_id}', 'CardsController@getList')->name('get_list');
+    Route::get('holder/{card_id}/{person_id}', 'CardsController@holder')->name('holder');
+    Route::get('delete/{card_id}', 'CardsController@delete')->name('delete');
+});
 /*
  * Controllers
  */
-Route::get('controllers/set_door_params/{controller_id}/{open_time}', 'ControllersController@setDoorParams')->name('controllers/set_door_params');
-Route::get('controllers/clear/{controller_id}', 'ControllersController@clear')->name('controllers/clear');
-Route::get('controllers/reload_cards/{controller_id}', 'ControllersController@reloadCards')->name('controllers/reload_cards');
+Route::group(['prefix' =>'controllers', 'as' => 'controllers.', 'middleware' => 'auth'], function() {
+    Route::get('set_door_params/{controller_id}/{open_time}', 'ControllersController@setDoorParams')->name('set_door_params');
+    Route::get('clear/{controller_id}', 'ControllersController@clear')->name('clear');
+    Route::get('reload_cards/{controller_id}', 'ControllersController@reloadCards')->name('reload_cards');
+});
 /*
  * Control Panel
  */
-Route::get('cp', 'CpController@index')->name('cp');
+Route::get('cp', 'CpController@index')->name('cp')->middleware('auth');
 /*
  * Development
  */
-Route::get('dev', 'DevController@index')->name('dev');
+Route::get('dev', 'DevController@index')->name('dev')->middleware('auth');
 /*
  * Divisions
  */
-Route::get('divisions/classes', 'DivisionsController@classes')->name('divisions/classes');
-Route::get('divisions/get_list', 'DivisionsController@getList')->name('divisions/get_list');
-Route::post('divisions/add', 'DivisionsController@add')->name('divisions/add');
-Route::get('divisions/delete/{division_id}', 'DivisionsController@delete')->name('divisions/delete');
+Route::group(['prefix' =>'divisions', 'as' => 'divisions.', 'middleware' => 'auth'], function() {
+    Route::get('classes', 'DivisionsController@classes')->name('classes');
+    Route::get('get_list', 'DivisionsController@getList')->name('get_list');
+    Route::post('add', 'DivisionsController@add')->name('add');
+    Route::get('delete/{division_id}', 'DivisionsController@delete')->name('delete');
+});
 /*
  * Persons
  */
-Route::get('persons/add', 'PersonsController@add')->name('persons/add');
-Route::get('persons/edit', 'PersonsController@edit')->name('persons/edit');
-Route::get('persons/get/{person_id}', 'PersonsController@get')->name('persons/get');
-Route::get('persons/get_by_card/{card_id}', 'PersonsController@getByCard')->name('persons/get_by_card');
-Route::get('persons/get_list/{division_id}', 'PersonsController@getList')->name('persons/get_list');
-Route::post('persons/save/{person_id}', 'PersonsController@save')->name('persons/save');
-Route::get('persons/delete/{person_id}', 'PersonsController@delete')->name('persons/delete');
+Route::group(['prefix' =>'persons', 'as' => 'persons.', 'middleware' => 'auth'], function() {
+    Route::get('add', 'PersonsController@add')->name('add');
+    Route::get('edit', 'PersonsController@edit')->name('edit');
+    Route::get('get/{person_id}', 'PersonsController@get')->name('get');
+    Route::get('get_by_card/{card_id}', 'PersonsController@getByCard')->name('get_by_card');
+    Route::get('get_list/{division_id}', 'PersonsController@getList')->name('get_list');
+    Route::post('save/{person_id}', 'PersonsController@save')->name('save');
+    Route::get('delete/{person_id}', 'PersonsController@delete')->name('delete');
+});
 /*
  * Photos
  */
-Route::post('photos/save', 'PhotosController@save')->name('photos/save');
-Route::get('photos/delete/{photo_id}', 'PhotosController@delete')->name('photos/delete');
+Route::group(['prefix' =>'photos', 'as' => 'photos.', 'middleware' => 'auth'], function() {
+    Route::post('save', 'PhotosController@save')->name('save');
+    Route::get('delete/{photo_id}', 'PhotosController@delete')->name('delete');
+});
 /*
  * Server
  */
@@ -69,12 +79,16 @@ Route::post('server', 'ServerController@index')->name('server');
 /*
  * Users
  */
-Route::get('users/token', 'UsersController@token')->name('users/token');
-Route::get('users/notification/{hash}', 'UsersController@notification')->name('users/notification');
+Route::group(['prefix' =>'users', 'as' => 'users.', 'middleware' => 'auth'], function() {
+    Route::get('token', 'UsersController@token')->name('token');
+    Route::get('notification/{hash}', 'UsersController@notification')->name('notification');
+});
 /*
  * Util
  */
-Route::get('util/get_time', 'UtilsController@getTime')->name('util/get_time');
-Route::post('util/get_events', 'UtilsController@getEvents')->name('util/get_events');
-Route::post('util/save_errors', 'UtilsController@saveErrors')->name('util/save_errors');
-Route::post('util/card_problem', 'UtilsController@cardProblem')->name('util/card_problem');
+Route::group(['prefix' =>'util', 'as' => 'util.', 'middleware' => 'auth'], function() {
+    Route::get('get_time', 'UtilsController@getTime')->name('get_time');
+    Route::post('get_events', 'UtilsController@getEvents')->name('get_events');
+    Route::post('save_errors', 'UtilsController@saveErrors')->name('save_errors');
+    Route::post('card_problem', 'UtilsController@cardProblem')->name('card_problem');
+});

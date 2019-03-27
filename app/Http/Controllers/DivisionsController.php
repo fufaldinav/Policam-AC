@@ -9,24 +9,16 @@ use App, Auth;
 class DivisionsController extends Controller
 {
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function classes()
     {
-        $user = Auth::user();
-
-        if (! isset($user)) {
-            return redirect('login');
-        }
-
-        $user = App\User::find($user->id);
+        $user = App\User::find(Auth::id());
 
         $org = $user->organizations()->first();
 
         $divs = $org->divisions()
-            ->orderBy('type')
-            ->orderByRaw('CAST(name AS UNSIGNED) ASC')
-            ->orderBy('name')
+            ->orderByRaw('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
             ->get();
 
         $org_id = $org->id;
@@ -49,21 +41,13 @@ class DivisionsController extends Controller
      */
     public function getList()
     {
-        $user = Auth::user();
-
-        if (! isset($user)) {
-            return null;
-        }
-
-        $user = App\User::find($user->id);
+        $user = App\User::find(Auth::id());
 
         $divs = [];
 
         foreach ($user->organizations as $org) {
             $cur_div = $org->divisions()
-                ->orderBy('type')
-                ->orderByRaw('CAST(name AS UNSIGNED) ASC')
-                ->orderBy('name')
+                ->orderByRaw('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
                 ->get()
                 ->toArray();
 
@@ -80,12 +64,6 @@ class DivisionsController extends Controller
      */
     public function add(Request $request)
     {
-        $user = Auth::user();
-
-        if (! isset($user)) {
-            return null;
-        }
-
         $div_data = json_decode($request->input('div'), true);
 
         $div = App\Division::create($div_data);
@@ -96,22 +74,16 @@ class DivisionsController extends Controller
     /**
      * @param int|null $div_id
      *
-     * @return bool|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|null
+     * @return int
      * @throws \Exception
      */
     public function delete(int $div_id = null)
     {
-        $user = Auth::user();
-
-        if (! isset($user)) {
-            return redirect('login');
-        }
-
         if (is_null($div_id)) {
             return 0;
         }
 
-        $user = App\User::find($user->id);
+        $user = App\User::find(Auth::id());
 
         $org = $user->organizations()->first();
 
@@ -131,6 +103,6 @@ class DivisionsController extends Controller
             }
         }
 
-        return (string)$cur_div->delete();
+        return (int)$cur_div->delete();
     }
 }

@@ -16,19 +16,13 @@ class CardsController extends Controller
      *
      * @return int
      */
-    public function holder(int $card_id = null, int $person_id = 0)
+    public function holder(int $card_id = null, int $person_id = 0): int
     {
         if (is_null($card_id)) {
             return 0;
         }
 
-        $user = Auth::user();
-
-        if (! isset($user)) {
-            return 0;
-        }
-
-        $user = App\User::find($user->id);
+        $user = App\User::find(Auth::id());
 
         $org = $user->organizations()->first();
 
@@ -50,7 +44,7 @@ class CardsController extends Controller
         }
 
 
-        return $card->save();
+        return (int)$card->save();
     }
 
     /**
@@ -61,21 +55,15 @@ class CardsController extends Controller
      * @return int
      * @throws \Exception
      */
-    public function delete(int $card_id = null)
+    public function delete(int $card_id = null): int
     {
-        $user = Auth::user();
-
-        if (! isset($user)) {
-            return 0;
-        }
-
         if (is_null($card_id)) {
             return 0;
         }
 
         $card = App\Card::find($card_id);
 
-        return $card->delete();
+        return (int)$card->delete();
     }
 
     /**
@@ -87,12 +75,6 @@ class CardsController extends Controller
      */
     public function getList(int $person_id = 0)
     {
-        $user = Auth::user();
-
-        if (! isset($user)) {
-            return null;
-        }
-
         $person = App\Person::find($person_id);
 
         return response()->json($person->cards);

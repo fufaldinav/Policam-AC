@@ -13,14 +13,8 @@ class UtilsController extends Controller
      *
      * @return int
      */
-    public function getTime()
+    public function getTime(): int
     {
-        $user = Auth::user();
-
-        if (! isset($user)) {
-            return null;
-        }
-
         return time();
     }
 
@@ -33,12 +27,6 @@ class UtilsController extends Controller
      */
     public function getEvents(Request $request)
     {
-        $user = Auth::user();
-
-        if (! isset($user)) {
-            return null;
-        }
-
         $events = $request->input('events');
         $time = $request->input('time');
 
@@ -57,14 +45,8 @@ class UtilsController extends Controller
      *
      * @return string
      */
-    public function saveErrors(Request $request, string $err = null)
+    public function saveErrors(Request $request, string $err = null): string
     {
-        $user = Auth::user();
-
-        if (! isset($user)) {
-            return null;
-        }
-
         $err = $err ?? $request->input('error') ?? 'Неизвестная ошибка или ошибка не указана';
 
 //        $this->logger->add('err', $err);
@@ -80,14 +62,8 @@ class UtilsController extends Controller
      *
      * @return string
      */
-    public function cardProblem(Request $request)
+    public function cardProblem(Request $request): string
     {
-        $user = Auth::user();
-
-        if (! isset($user)) {
-            return null;
-        }
-
         $problem_type = $request->input('type');
         $person_id = $request->input('person_id');
 
@@ -140,7 +116,7 @@ class UtilsController extends Controller
         }
 
         $event = App\Userevent::create([
-            'user_id' => $user->id,
+            'user_id' => Auth::id(),
             'type' => $problem_type,
             'description' => $description,
             'time' => time()

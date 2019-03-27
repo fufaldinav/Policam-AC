@@ -14,22 +14,14 @@ class ControllersController extends Controller
      * @param int|null $ctrl_id
      * @param int|null $open_time
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|string
+     * @return string
      */
-    public function setDoorParams(int $ctrl_id = null, int $open_time = null)
+    public function setDoorParams(int $ctrl_id = null, int $open_time = null): string
     {
-        $user = Auth::user();
-
-        if (! isset($user)) {
-            return redirect('login');
-        }
-
         if (is_null($ctrl_id) || is_null($open_time)) {
             return 'Не выбран контроллер или не задано время открытия'; //TODO перевод
         }
 
-//        $this->load->library('task');
-//
 //        $this->task->setDoorParams($open_time);
 //        $this->task->add($ctrl_id);
 //
@@ -47,22 +39,14 @@ class ControllersController extends Controller
      *
      * @param int|null $ctrl_id
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|string
+     * @return string
      */
-    public function clear(int $ctrl_id = null)
+    public function clear(int $ctrl_id = null): string
     {
-        $user = Auth::user();
-
-        if (! isset($user)) {
-            return redirect('login');
-        }
-
         if (is_null($ctrl_id)) {
             return 'Не выбран контроллер'; //TODO перевод
         }
 
-//        $this->load->library('task');
-//
 //        $this->task->clearCards();
 //        $this->task->add($ctrl_id);
 //
@@ -80,22 +64,13 @@ class ControllersController extends Controller
      *
      * @param int|null $ctrl_id
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|string
+     * @return string
      */
-    public function reload_cards(int $ctrl_id = null)
+    public function reload_cards(int $ctrl_id = null): string
     {
-        $user = Auth::user();
-
-        if (! isset($user)) {
-            return redirect('login');
-        }
-
         if (is_null($ctrl_id)) {
             return 'Не выбран контроллер'; //TODO перевод
         }
-
-
-//        $this->load->library('task');
 
         $ctrl = App\Controller::find($ctrl_id);
 

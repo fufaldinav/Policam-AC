@@ -8,26 +8,19 @@ use App, Auth;
 
 class ObserverController extends Controller
 {
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index()
     {
-        $user = Auth::user();
-
-        if (! isset($user)) {
-            return redirect('login');
-        }
-
-        $user = App\User::find($user->id);
+        $user = App\User::find(Auth::id());
 
         $org = $user->organizations()->first();
 
-        /*
-        | Подразделения
-        */
+        /* Подразделения */
         $divs = $org
             ->divisions()
-            ->orderBy('type')
-            ->orderByRaw('CAST(name AS UNSIGNED) ASC')
-            ->orderBy('name')
+            ->orderByRaw('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
             ->get();
 
         $data = [

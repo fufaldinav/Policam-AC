@@ -15,22 +15,14 @@ class PersonsController extends Controller
      */
     public function add()
     {
-        $user = Auth::user();
-
-        if (! isset($user)) {
-            return redirect('login');
-        }
-
-        $user = App\User::find($user->id);
+        $user = App\User::find(Auth::id());
 
         $org = $user->organizations()->first();
 
         /* Подразделения */
         $divs = $org
             ->divisions()
-            ->orderBy('type')
-            ->orderByRaw('CAST(name AS UNSIGNED) ASC')
-            ->orderBy('name')
+            ->orderByRaw('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
             ->get();
 
         /* Карты */
@@ -71,22 +63,14 @@ class PersonsController extends Controller
      */
     public function edit()
     {
-        $user = Auth::user();
-
-        if (! isset($user)) {
-            return redirect('login');
-        }
-
-        $user = App\User::find($user->id);
+        $user = App\User::find(Auth::id());
 
         $org = $user->organizations()->first();
 
         /* Подразделения */
         $divs = $org
             ->divisions()
-            ->orderBy('type')
-            ->orderByRaw('CAST(name AS UNSIGNED) ASC')
-            ->orderBy('name')
+            ->orderByRaw('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
             ->get();
 
         /* Карты */
@@ -126,17 +110,11 @@ class PersonsController extends Controller
      * @param Request $request
      * @param int|null $person_id
      *
-     * @return int|null
+     * @return int
      */
     public function save(Request $request, int $person_id = null)
     {
-        $user = Auth::user();
-
-        if (! isset($user)) {
-            return null;
-        }
-
-        $user = App\User::find($user->id);
+        $user = App\User::find(Auth::id());
 
         $org = $user->organizations()->first();
 
@@ -200,13 +178,7 @@ class PersonsController extends Controller
      */
     public function delete(int $person_id = null)
     {
-        $user = Auth::user();
-
-        if (! isset($user)) {
-            return null;
-        }
-
-        $user = App\User::find($user->id);
+        $user = App\User::find(Auth::id());
 
         $org = $user->organizations()->first();
 
@@ -253,12 +225,6 @@ class PersonsController extends Controller
      */
     public function get(int $person_id = null)
     {
-        $user = Auth::user();
-
-        if (! isset($user)) {
-            return null;
-        }
-
         if (is_null($person_id)) {
             return null;
         }
@@ -281,12 +247,6 @@ class PersonsController extends Controller
      */
     public function getByCard(int $card_id = null)
     {
-        $user = Auth::user();
-
-        if (! isset($user)) {
-            return null;
-        }
-
         if (is_null($card_id)) {
             return null;
         }
@@ -311,12 +271,6 @@ class PersonsController extends Controller
      */
     public function getList(int $div_id = null)
     {
-        $user = Auth::user();
-
-        if (! isset($user)) {
-            return null;
-        }
-
         if (is_null($div_id)) {
             return null;
         }
