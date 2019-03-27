@@ -8,8 +8,10 @@ use App, Auth, Lang;
 
 class PersonsController extends Controller
 {
-    /*
+    /**
      * Страница добавления человека
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      */
     public function add()
     {
@@ -23,9 +25,7 @@ class PersonsController extends Controller
 
         $org = $user->organizations()->first();
 
-        /*
-        | Подразделения
-        */
+        /* Подразделения */
         $divs = $org
             ->divisions()
             ->orderBy('type')
@@ -33,9 +33,7 @@ class PersonsController extends Controller
             ->orderBy('name')
             ->get();
 
-        /*
-        | Карты
-        */
+        /* Карты */
         $card_list = [];
         $cards_attr = 'id="cards"';
 
@@ -66,8 +64,10 @@ class PersonsController extends Controller
         ));
     }
 
-    /*
+    /**
      * Страница редактирования людей
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      */
     public function edit()
     {
@@ -81,9 +81,7 @@ class PersonsController extends Controller
 
         $org = $user->organizations()->first();
 
-        /*
-        | Подразделения
-        */
+        /* Подразделения */
         $divs = $org
             ->divisions()
             ->orderBy('type')
@@ -91,9 +89,7 @@ class PersonsController extends Controller
             ->orderBy('name')
             ->get();
 
-        /*
-        | Карты
-        */
+        /* Карты */
         $card_list = [];
         $cards_attr = 'id="cards" disabled';
 
@@ -124,34 +120,37 @@ class PersonsController extends Controller
         ));
     }
 
-    /*
-     * Сохранение человека
+    /**
+     * Сохраняет человека
+     *
+     * @param Request $request
+     * @param int|null $person_id
+     *
+     * @return int|null
      */
     public function save(Request $request, int $person_id = null)
     {
         $user = Auth::user();
 
         if (! isset($user)) {
-            return redirect('login');
+            return null;
         }
 
         $user = App\User::find($user->id);
 
         $org = $user->organizations()->first();
 
-        $person_data = json_decode($request->input('person'));
-        $card_list = json_decode($request->input('cards'));
-        $div_list = json_decode($request->input('divs'));
-        $photo_list = json_decode($request->input('photos'));
+        $person_data = $request->input('person');
+        $card_list = $request->input('cards');
+        $div_list = $request->input('divs');
+        $photo_list = $request->input('photos');
 
         $person = App\Person::updateOrCreate(
             ['id' => $person_id],
             $person_data
         );
 
-        /*
-        | Карты
-        */
+        /* Карты */
         foreach ($card_list as $card_id) {
             $card = App\Card::find($card_id);
 
@@ -166,9 +165,7 @@ class PersonsController extends Controller
 
 //        $this->task->send();
 
-        /*
-        | Подразделения
-        */
+        /* Подразделения */
         if ($div_list) {
             foreach ($div_list as $div_id) {
                 $div = App\Division::find($div_id);
@@ -183,9 +180,7 @@ class PersonsController extends Controller
             $person->divisions()->attach($div->id);
         }
 
-        /*
-        | Фотографии
-        */
+        /* Фотографии */
         foreach ($photo_list as $photo_id) {
             $photo = App\Photo::find($photo_id);
 
@@ -195,12 +190,20 @@ class PersonsController extends Controller
         return $person->id;
     }
 
+    /**
+     * Удаляет человека
+     *
+     * @param int|null $person_id
+     *
+     * @return int
+     * @throws \Exception
+     */
     public function delete(int $person_id = null)
     {
         $user = Auth::user();
 
         if (! isset($user)) {
-            return redirect('login');
+            return null;
         }
 
         $user = App\User::find($user->id);
@@ -209,23 +212,17 @@ class PersonsController extends Controller
 
         $person = App\Person::find($person_id);
 
-        /*
-        | Подразделения
-        */
+        /* Подразделения */
         foreach ($person->divisions as $div) {
             $person->divisions()->detach($div->id);
         }
 
-        /*
-        | Фотографии
-        */
+        /* Фотографии */
         foreach ($person->photos as $photo) {
             $photo->delete();
         }
 
-        /*
-        | Карты
-        */
+        /* Карты */
         foreach ($person->cards as $card) {
             $card->person_id = 0;
             $card->save();
@@ -239,13 +236,95 @@ class PersonsController extends Controller
 
 //        $this->task->send();
 
-        /*
-        | Подписки
-        */
+        /* Подписки */
         foreach ($person->users as $sub) {
             $person->users()->detach($sub->id);
         }
 
         return $person->delete();
+    }
+
+    /**
+     * Возвращает человека
+     *
+     * @param int|null $person_id ID человека
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function get(int $person_id = null)
+    {
+        $user = Auth::user();
+
+        if (! isset($user)) {
+            return null;
+        }
+
+        if (is_null($person_id)) {
+            return null;
+        }
+
+        $person = App\Person::find($person_id);
+
+        return response()->json([
+            'person' => $person,
+            'photos' => $person->photos,
+            'divs' => $person->divisions
+        ]);
+    }
+
+    /**
+     * Получает человека по карте
+     *
+     * @param int|null $card_id ID карты
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getByCard(int $card_id = null)
+    {
+        $user = Auth::user();
+
+        if (! isset($user)) {
+            return null;
+        }
+
+        if (is_null($card_id)) {
+            return null;
+        }
+
+        $card = App\Card::find($card_id);
+
+        $person = $card->person;
+
+        return response()->json([
+            'person' => $person,
+            'photos' => $person->photos,
+            'divs' => $person->divisions
+        ]);
+    }
+
+    /**
+     * Получает людей по подразделению
+     *
+     * @param int|null $div_id ID подразделения
+     *
+     * @return \Illuminate\Http\JsonResponse|null
+     */
+    public function getList(int $div_id = null)
+    {
+        $user = Auth::user();
+
+        if (! isset($user)) {
+            return null;
+        }
+
+        if (is_null($div_id)) {
+            return null;
+        }
+
+        $div = App\Division::find($div_id);
+
+        $persons = $div->persons()->orderByRaw('f ASC, i ASC, o ASC')->get();
+
+        return response()->json($persons);
     }
 }
