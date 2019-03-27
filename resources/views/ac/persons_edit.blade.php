@@ -12,7 +12,7 @@
                     {{ $div->name }}
                 </div>
                 <ul class="tree-container">
-                    @php($persons = $div->persons()->get())
+                    @php($persons = $div->persons()->orderByRaw('f ASC, i ASC, o ASC')->get())
                     @php($last_person = count($persons) - 1)
                     @foreach ($persons as $n => $person)
                     <li id="person{{ $person->id }}" class="tree-node tree-expand-leaf {{ ($n === $last_person) ? 'tree-is-last' : '' }}">
