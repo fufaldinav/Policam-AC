@@ -6,8 +6,10 @@
         $.ajax({
             url: `{{ url('/') }}/util/save_js_errors`,
             type: `POST`,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
+            },
             data: {
-                '_token': $('meta[name=csrf-token]').attr('content'),
                 error: message
             }
         });
@@ -63,8 +65,10 @@
             method: `POST`,
             contentType: false,
             processData: false,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
+            },
             data: {
-                '_token': $('meta[name=csrf-token]').attr('content'),
                 formData
             },
             success: function(data) {

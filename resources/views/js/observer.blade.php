@@ -24,8 +24,10 @@
         $.ajax({
             url: `{{ url('/') }}/util/get_events`,
             type: `POST`,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
+            },
             data: {
-                '_token': $('meta[name=csrf-token]').attr('content'),
                 events: events,
                 time: time
             },
@@ -157,8 +159,10 @@
         $.ajax({
             url: `{{ url('/') }}/util/card_problem`,
             type: `POST`,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
+            },
             data: {
-                '_token': $('meta[name=csrf-token]').attr('content'),
                 type: type,
                 person_id: person_id
             },

@@ -47,8 +47,10 @@
             $.ajax({
                 url: `{{ url('/') }}/users/token`,
                 type: `POST`,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
+                },
                 data: {
-                    '_token': $('meta[name=csrf-token]').attr('content'),
                     token: currentToken
                 },
                 success: function(res) {
