@@ -137,7 +137,6 @@
                 if (data) {
                     for (let k in data.person) {
                         person[k] = data.person[k];
-                        console.log(k);
                         document.getElementById(k).value = data.person[k];
                         document.getElementById(k).readOnly = false;
                     }
