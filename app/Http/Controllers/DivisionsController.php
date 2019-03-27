@@ -96,10 +96,10 @@ class DivisionsController extends Controller
 
         //Переносим полученных людей в "пустое" подразделение
         foreach ($cur_div->persons as $person) {
-            $person->division()->detach($cur_div->id);
+            $person->divisions()->detach($cur_div->id);
 
-            if (! $person->divisions) {
-                $person->division()->attach($empty_div->id);
+            if ($person->divisions->count() == 0) {
+                $person->divisions()->attach($empty_div->id);
             }
         }
 
