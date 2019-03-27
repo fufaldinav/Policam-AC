@@ -53,8 +53,10 @@
             $.ajax({
                 url: `{{ url('/') }}/persons/save`,
                 type: `POST`,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
+                },
                 data: {
-                    '_token': $('meta[name=csrf-token]').attr('content'),
                     cards: JSON.stringify(cards),
                     divs: JSON.stringify(divs),
                     person: JSON.stringify(person),

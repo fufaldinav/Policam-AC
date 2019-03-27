@@ -4,7 +4,7 @@
 <div id="main"  class="main-grid-container">
     <div id="menu">
         @foreach ($divs as $div)
-        <div id="div{{ $div->id }}" class="menu-item" onclick="setDiv{{ $div->id }}">
+        <div id="div{{ $div->id }}" class="menu-item" onclick="setDiv({{ $div->id }})">
             {{ $div->name }}
         </div>
         @endforeach
