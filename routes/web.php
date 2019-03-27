@@ -62,7 +62,8 @@ Route::group(['prefix' =>'persons', 'as' => 'persons.', 'middleware' => 'auth'],
     Route::get('get/{person_id}', 'PersonsController@get')->name('get');
     Route::get('get_by_card/{card_id}', 'PersonsController@getByCard')->name('get_by_card');
     Route::get('get_list/{division_id}', 'PersonsController@getList')->name('get_list');
-    Route::post('save/{person_id}', 'PersonsController@save')->name('save');
+    Route::post('save', 'PersonsController@save')->name('save.add');
+    Route::post('save/{person_id}', 'PersonsController@save')->name('save.update');
     Route::get('delete/{person_id}', 'PersonsController@delete')->name('delete');
 });
 /*

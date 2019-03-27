@@ -108,16 +108,16 @@ class PersonsController extends Controller
      *
      * @return int
      */
-    public function save(Request $request, int $person_id = null)
+    public function save(Request $request, int $person_id = null): int
     {
         $user = App\User::find(Auth::id());
 
         $org = $user->organizations()->first();
 
-        $person_data = $request->input('person');
-        $card_list = $request->input('cards');
-        $div_list = $request->input('divs');
-        $photo_list = $request->input('photos');
+        $person_data = json_decode($request->input('person'), true);
+        $card_list = json_decode($request->input('cards'), true);
+        $div_list = json_decode($request->input('divs'), true);
+        $photo_list = json_decode($request->input('photos'), true);
 
         $person = App\Person::updateOrCreate(
             ['id' => $person_id],
@@ -147,7 +147,7 @@ class PersonsController extends Controller
                 $person->divisions()->attach($div->id);
             }
         } else {
-            $div = App\Division::where('org_id', $org->id)
+            $div = App\Division::where('organization_id', $org->id)
                 ->where('type', 0)
                 ->first();
 
@@ -161,7 +161,7 @@ class PersonsController extends Controller
             $person->photos()->save($photo);
         }
 
-        return $person->id;
+        return (int)$person->id;
     }
 
     /**
@@ -172,7 +172,7 @@ class PersonsController extends Controller
      * @return int
      * @throws \Exception
      */
-    public function delete(int $person_id = null)
+    public function delete(int $person_id = null): int
     {
         $user = App\User::find(Auth::id());
 
@@ -209,7 +209,7 @@ class PersonsController extends Controller
             $person->users()->detach($sub->id);
         }
 
-        return $person->delete();
+        return (int)$person->delete();
     }
 
     /**
@@ -225,12 +225,14 @@ class PersonsController extends Controller
             return null;
         }
 
-        $person = App\Person::find($person_id);
+        $person = App\Person::where('id', $person_id)->first([
+            'id', 'f', 'i', 'o', 'type', 'birthday', 'address', 'phone'
+        ]);
 
         return response()->json([
             'person' => $person,
-            'photos' => $person->photos,
-            'divs' => $person->divisions
+            'photos' => $person->photos()->get(),
+            'divs' => $person->divisions()->get()
         ]);
     }
 
@@ -249,12 +251,14 @@ class PersonsController extends Controller
 
         $card = App\Card::find($card_id);
 
-        $person = $card->person;
+        $person = $card->person()->first([
+            'id', 'f', 'i', 'o', 'type', 'birthday', 'address', 'phone'
+        ]);
 
         return response()->json([
             'person' => $person,
-            'photos' => $person->photos,
-            'divs' => $person->divisions
+            'photos' => $person->photos()->get(),
+            'divs' => $person->divisions()->get()
         ]);
     }
 
@@ -273,7 +277,9 @@ class PersonsController extends Controller
 
         $div = App\Division::find($div_id);
 
-        $persons = $div->persons()->orderByRaw('f ASC, i ASC, o ASC')->get();
+        $persons = $div->persons()->orderByRaw('f ASC, i ASC, o ASC')->get([
+            'person_id as id', 'f', 'i', 'o', 'type', 'birthday', 'address', 'phone'
+        ]);
 
         return response()->json($persons);
     }
