@@ -12,7 +12,7 @@
         $.ajax({
             url: `{{ url('/') }}/divisions/delete/${div_id}`,
             type: `GET`,
-            success: function(res) {
+            success: function (res) {
                 if (res > 0) {
                     alert(`Успешное удаление`); //TODO перевод
                     location.reload();
@@ -20,7 +20,7 @@
                     alert(`Неизвестная ошибка`); //TODO перевод
                 }
             },
-            error: function() {
+            error: function () {
                 alert(`Неизвестная ошибка`); //TODO перевод
             }
         });
@@ -35,19 +35,21 @@
             return;
         }
         div.name = `${number} "${letter}"`;
-        div.org_id = org_id;
+        div.organization_id = org_id;
         $.ajax({
             url: `{{ url('/') }}/divisions/add`,
             type: `POST`,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
+            },
             data: {
-                '_token': $('meta[name=csrf-token]').attr('content'),
                 div: JSON.stringify(div)
             },
-            success: function(div) {
+            success: function (div) {
                 alert(`Класс ${div.name} успешно сохранен`); //TODO перевод
                 location.reload();
             },
-            error: function() {
+            error: function () {
                 alert(`Неизвестная ошибка`); //TODO перевод
             }
         });

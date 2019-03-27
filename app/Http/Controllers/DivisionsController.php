@@ -86,7 +86,7 @@ class DivisionsController extends Controller
             return null;
         }
 
-        $div_data = $request->input('div');
+        $div_data = json_decode($request->input('div'), true);
 
         $div = App\Division::create($div_data);
 
@@ -118,7 +118,7 @@ class DivisionsController extends Controller
         $cur_div = App\Division::find($div_id);
 
         //"Пустое" подразделение
-        $empty_div = App\Division::where('org_id', $org->id)
+        $empty_div = App\Division::where('organization_id', $org->id)
             ->where('type', 0)
             ->first();
 
@@ -131,6 +131,6 @@ class DivisionsController extends Controller
             }
         }
 
-        return $cur_div->delete();
+        return (string)$cur_div->delete();
     }
 }

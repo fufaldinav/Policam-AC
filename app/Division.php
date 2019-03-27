@@ -9,6 +9,12 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Division extends Model
 {
+    protected $fillable = [
+        'name',
+        'organization_id',
+        'type'
+    ];
+
     public function organization()
     {
         return $this->belongsTo('App\Organization');
