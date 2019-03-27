@@ -45,7 +45,7 @@ Route::get('dev', 'DevController@index')->name('dev');
  */
 Route::get('divisions/classes', 'DivisionsController@classes')->name('divisions/classes');
 Route::get('divisions/get_list', 'DivisionsController@getList')->name('divisions/get_list');
-Route::get('divisions/add', 'DivisionsController@add')->name('divisions/add');
+Route::post('divisions/add', 'DivisionsController@add')->name('divisions/add');
 Route::get('divisions/delete/{division_id}', 'DivisionsController@delete')->name('divisions/delete');
 /*
  * Persons
