@@ -18,8 +18,8 @@
                     <li id="person{{ $person->id }}" class="tree-node tree-expand-leaf {{ ($n === $last_person) ? 'tree-is-last' : '' }}">
                         <div class="tree-expand"></div>
                         <div class="tree-content">
-                            @php($card = $person->cards)
-                            <a class="person{{ (! $card) ? ' no-card' : '' }}" href="#{{ $person->id }}" onClick="getPersonInfo({{ $person->id }});">{{ $person->f }} {{ $person->i }}</a>
+                            @php($card_count = $person->cards->count())
+                            <a class="person{{ ($card_count == 0) ? ' no-card' : '' }}" href="#{{ $person->id }}" onClick="getPersonInfo({{ $person->id }});">{{ $person->f }} {{ $person->i }}</a>
                         </div>
                     </li>
                     @endforeach
