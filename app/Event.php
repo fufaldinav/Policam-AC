@@ -38,9 +38,23 @@ class Event extends Model
      * @var array
      */
     protected $fillable = [
-        'controller_id', 'event', 'flag', 'time', 'card_id'
+        'controller_id', 'event', 'flag', 'time', 'card_id',
     ];
 
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'card', 'controller',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
     protected $casts = [
         'controller_id' => 'integer',
         'event' => 'integer',
@@ -49,13 +63,13 @@ class Event extends Model
         'card_id' => 'integer',
     ];
 
-    public function controller()
-    {
-        return $this->belongsTo('App\Controller');
-    }
-
     public function card()
     {
         return $this->belongsTo('App\Card');
+    }
+
+    public function controller()
+    {
+        return $this->belongsTo('App\Controller');
     }
 }

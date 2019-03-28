@@ -38,22 +38,36 @@ class Card extends Model
      * @var array
      */
     protected $fillable = [
-        'wiegand', 'last_conn', 'controller_id', 'person_id'
+        'wiegand', 'last_conn', 'controller_id', 'person_id',
     ];
 
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'events', 'person',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
     protected $casts = [
         'last_conn' => 'datetime',
         'controller_id' => 'integer',
         'person_id' => 'integer',
     ];
 
-    public function person()
-    {
-        return $this->belongsTo('App\Person');
-    }
-
     public function events()
     {
         return $this->hasMany('App\Event');
+    }
+
+    public function person()
+    {
+        return $this->belongsTo('App\Person');
     }
 }

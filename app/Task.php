@@ -33,9 +33,23 @@ class Task extends Model
      * @var array
      */
     protected $fillable = [
-        'task_id', 'controller_id', 'json'
+        'task_id', 'controller_id', 'json',
     ];
 
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'controller',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
     protected $casts = [
         'task_id' => 'integer',
         'controller_id' => 'integer',

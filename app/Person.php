@@ -46,9 +46,23 @@ class Person extends Model
      * @var array
      */
     protected $fillable = [
-        'f', 'i', 'o', 'type', 'birthday', 'address', 'phone'
+        'f', 'i', 'o', 'type', 'birthday', 'address', 'phone',
     ];
 
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'cards', 'divisions', 'photos', 'users',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
     protected $casts = [
         'type' => 'integer',
         'birthday' => 'date',
@@ -59,14 +73,14 @@ class Person extends Model
         return $this->hasMany('App\Card');
     }
 
-    public function photos()
-    {
-        return $this->hasMany('App\Photo');
-    }
-
     public function divisions()
     {
         return $this->belongsToMany('App\Division');
+    }
+
+    public function photos()
+    {
+        return $this->hasMany('App\Photo');
     }
 
     public function users()

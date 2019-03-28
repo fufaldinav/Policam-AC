@@ -66,7 +66,7 @@ class User extends Model implements
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'notifications', 'organizations', 'persons', 'tokens',
     ];
 
     /**
@@ -77,11 +77,6 @@ class User extends Model implements
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-
-    public function tokens()
-    {
-        return $this->hasMany('App\Token');
-    }
 
     public function notifications()
     {
@@ -96,5 +91,10 @@ class User extends Model implements
     public function persons()
     {
         return $this->belongsToMany('App\Person');
+    }
+
+    public function tokens()
+    {
+        return $this->hasMany('App\Token');
     }
 }

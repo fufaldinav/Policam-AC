@@ -50,9 +50,23 @@ class Controller extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'sn', 'type', 'fw', 'conn_fw', 'mode', 'ip', 'active', 'online', 'last_conn', 'organization_id'
+        'name', 'sn', 'type', 'fw', 'conn_fw', 'mode', 'ip', 'active', 'online', 'last_conn', 'organization_id',
     ];
 
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'organization', 'tasks',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
     protected $casts = [
         'mode' => 'integer',
         'active' => 'integer',

@@ -31,8 +31,23 @@ class Photo extends Model
      * @var array
      */
     protected $fillable = [
-        'hash', 'person_id'
+        'hash', 'person_id',
     ];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'person',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
     protected $casts = [
         'person_id' => 'integer',
     ];

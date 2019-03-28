@@ -33,9 +33,23 @@ class Notification extends Model
      * @var array
      */
     protected $fillable = [
-        'hash', 'user_id'
+        'hash', 'user_id',
     ];
 
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'user',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
     protected $casts = [
         'user_id' => 'integer',
     ];

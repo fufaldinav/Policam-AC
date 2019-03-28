@@ -35,21 +35,35 @@ class Organization extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'address', 'type'
+        'name', 'address', 'type',
     ];
 
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'controllers', 'divisions', 'users',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
     protected $casts = [
         'type' => 'integer',
     ];
 
-    public function divisions()
-    {
-        return $this->hasMany('App\Division');
-    }
-
     public function controllers()
     {
         return $this->hasMany('App\Controller');
+    }
+
+    public function divisions()
+    {
+        return $this->hasMany('App\Division');
     }
 
     public function users()

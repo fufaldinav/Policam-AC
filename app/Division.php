@@ -34,9 +34,23 @@ class Division extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'organization_id', 'type'
+        'name', 'organization_id', 'type',
     ];
 
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'organization', 'persons',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
     protected $casts = [
         'organization_id' => 'integer',
         'type' => 'integer',
