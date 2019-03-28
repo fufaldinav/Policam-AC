@@ -46,6 +46,7 @@ Route::get('cp', 'CpController@index')->name('cp')->middleware('auth');
  * Development
  */
 Route::get('dev', 'DevController@index')->name('dev')->middleware('auth');
+Route::get('dev/test', 'DevController@test')->name('dev.test')->middleware('auth');
 /*
  * Divisions
  */
