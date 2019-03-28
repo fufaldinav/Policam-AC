@@ -237,8 +237,8 @@ class PersonsController extends Controller
 
         return response()->json([
             'person' => $person,
-            'photos' => $person->photos()->get(),
-            'divs' => $person->divisions()->get()
+            'photos' => $person->photos,
+            'divs' => $person->divisions
         ]);
     }
 
@@ -263,8 +263,8 @@ class PersonsController extends Controller
 
         return response()->json([
             'person' => $person,
-            'photos' => $person->photos()->get(),
-            'divs' => $person->divisions()->get()
+            'photos' => $person->photos,
+            'divs' => $person->divisions
         ]);
     }
 
