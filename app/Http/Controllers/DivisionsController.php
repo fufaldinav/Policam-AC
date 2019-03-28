@@ -62,23 +62,25 @@ class DivisionsController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function add(Request $request)
+    public function save(Request $request)
     {
         $div_data = json_decode($request->input('div'), true);
 
-        $div = App\Division::create($div_data);
+        $div = App\Division::create($div_data); //TODO обновление информации
 
         return response()->json($div);
     }
 
     /**
-     * @param int|null $div_id
+     * Удаляет подразделение
      *
      * @return int
      * @throws \Exception
      */
-    public function delete(int $div_id = null)
+    public function delete(Request $request)
     {
+        $div_id = $request->input('div_id');
+
         if (is_null($div_id)) {
             return 0;
         }

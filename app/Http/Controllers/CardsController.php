@@ -11,13 +11,15 @@ class CardsController extends Controller
     /**
      * Устанавливает владельца карты
      *
-     * @param int|null $card_id
-     * @param int $person_id
+     * @param Request $request
      *
      * @return int
      */
-    public function holder(int $card_id = null, int $person_id = 0): int
+    public function holder(Request $request): int
     {
+        $card_id = $request->input('card_id');
+        $person_id = $request->input('person_id') ?? 0;
+
         if (is_null($card_id)) {
             return 0;
         }

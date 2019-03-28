@@ -132,7 +132,7 @@ class PersonsController extends Controller
 
 //            $this->task->addCards([$card->wiegand]);
 //
-//            foreach ($org->controllers as $ctrl) {
+//            foreach ($org->controllers as $ctrl) { //TODO
 //                $this->task->add($ctrl->id);
 //            }
         }
@@ -167,13 +167,19 @@ class PersonsController extends Controller
     /**
      * Удаляет человека
      *
-     * @param int|null $person_id
+     * @param Request $request
      *
      * @return int
      * @throws \Exception
      */
-    public function delete(int $person_id = null): int
+    public function delete(Request $request): int
     {
+        $person_id = $request->input('person_id');
+
+        if (is_null($person_id)) {
+            return 0;
+        }
+
         $user = App\User::find(Auth::id());
 
         $org = $user->organizations()->first();
@@ -197,7 +203,7 @@ class PersonsController extends Controller
 
 //            $this->task->delCards([$card->wiegand]);
 //
-//            foreach ($org->controllers as $ctrl) {
+//            foreach ($org->controllers as $ctrl) { //TODO
 //                $this->task->add($ctrl->id);
 //            }
         }

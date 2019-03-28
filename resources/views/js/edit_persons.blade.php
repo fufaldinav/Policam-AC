@@ -73,8 +73,14 @@
             return;
         }
         $.ajax({
-            url: `{{ url('/') }}/persons/delete/${person.id}`,
-            type: `GET`,
+            url: `{{ url('/') }}/persons/delete`,
+            type: `POST`,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
+            },
+            data: {
+                person_id: person.id
+            },
             success: function(res) {
                 if (res > 0) {
                     let currentElement = document.getElementById(`person${person.id}`);
@@ -214,8 +220,15 @@
     //добавление карты в БД
     function saveCard(card_id) {
         $.ajax({
-            url: `{{ url('/') }}/cards/holder/${card_id}/${person.id}`,
-            type: `GET`,
+            url: `{{ url('/') }}/cards/holder`,
+            type: `POST`,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
+            },
+            data: {
+                card_id: card_id,
+                person_id: person.id
+            },
             success: function(res) {
                 if (res > 0) {
                     getCardsByPerson(person.id);
@@ -236,8 +249,15 @@
             return;
         }
         $.ajax({
-            url: `{{ url('/') }}/cards/holder/${card_id}`,
-            type: `GET`,
+            url: `{{ url('/') }}/cards/holder`,
+            type: `POST`,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
+            },
+            data: {
+                card_id: card_id,
+                person_id: 0
+            },
             success: function(res) {
                 if (res > 0) {
                     let card = document.getElementById(`card${card_id}`);

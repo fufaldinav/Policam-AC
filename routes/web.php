@@ -26,9 +26,8 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::group(['prefix' =>'cards', 'as' => 'cards.', 'middleware' => 'auth'], function() {
     Route::get('get_list', 'CardsController@getList')->name('get_list.unknowns');
     Route::get('get_list/{person_id}', 'CardsController@getList')->name('get_list');
-    Route::get('holder/{card_id}', 'CardsController@holder')->name('holder.noholder');
-    Route::get('holder/{card_id}/{person_id}', 'CardsController@holder')->name('holder');
-    Route::get('delete/{card_id}', 'CardsController@delete')->name('delete');
+    Route::post('holder', 'CardsController@holder')->name('holder');
+    Route::post('delete', 'CardsController@delete')->name('delete');
 });
 /*
  * Controllers
@@ -53,8 +52,8 @@ Route::get('dev/test', 'DevController@test')->name('dev.test')->middleware('auth
 Route::group(['prefix' =>'divisions', 'as' => 'divisions.', 'middleware' => 'auth'], function() {
     Route::get('classes', 'DivisionsController@classes')->name('classes');
     Route::get('get_list', 'DivisionsController@getList')->name('get_list');
-    Route::post('add', 'DivisionsController@add')->name('add');
-    Route::get('delete/{division_id}', 'DivisionsController@delete')->name('delete');
+    Route::post('save', 'DivisionsController@save')->name('save');
+    Route::post('delete', 'DivisionsController@delete')->name('delete');
 });
 /*
  * Persons
@@ -67,14 +66,14 @@ Route::group(['prefix' =>'persons', 'as' => 'persons.', 'middleware' => 'auth'],
     Route::get('get_list/{division_id}', 'PersonsController@getList')->name('get_list');
     Route::post('save', 'PersonsController@save')->name('save.add');
     Route::post('save/{person_id}', 'PersonsController@save')->name('save.update');
-    Route::get('delete/{person_id}', 'PersonsController@delete')->name('delete');
+    Route::post('delete', 'PersonsController@delete')->name('delete');
 });
 /*
  * Photos
  */
 Route::group(['prefix' =>'photos', 'as' => 'photos.', 'middleware' => 'auth'], function() {
     Route::post('save', 'PhotosController@save')->name('save');
-    Route::get('delete/{photo_id}', 'PhotosController@delete')->name('delete');
+    Route::post('delete', 'PhotosController@delete')->name('delete');
 });
 /*
  * Server
@@ -84,7 +83,7 @@ Route::post('server', 'ServersController@index')->name('server');
  * Users
  */
 Route::group(['prefix' =>'users', 'as' => 'users.', 'middleware' => 'auth'], function() {
-    Route::get('token', 'UsersController@token')->name('token');
+    Route::post('token', 'UsersController@token')->name('token');
     Route::get('notification/{hash}', 'UsersController@notification')->name('notification');
 });
 /*

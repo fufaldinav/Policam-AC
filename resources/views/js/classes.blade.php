@@ -12,8 +12,14 @@
             return;
         }
         $.ajax({
-            url: `{{ url('/') }}/divisions/delete/${div_id}`,
-            type: `GET`,
+            url: `{{ url('/') }}/divisions/delete`,
+            type: `POST`,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
+            },
+            data: {
+              'div_id': div_id
+            },
             success: function (res) {
                 if (res > 0) {
                     alert(`Успешное удаление`); //TODO перевод
@@ -39,7 +45,7 @@
         div.name = `${number} "${letter}"`;
         div.organization_id = org_id;
         $.ajax({
-            url: `{{ url('/') }}/divisions/add`,
+            url: `{{ url('/') }}/divisions/save`,
             type: `POST`,
             headers: {
                 'X-CSRF-TOKEN': $('meta[name=csrf-token]').attr('content')

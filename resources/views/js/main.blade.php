@@ -99,8 +99,14 @@
             return;
         }
         $.ajax({
-            url: `{{ url('/') }}/photos/delete/${photos.shift()}`,
-            type: `GET`,
+            url: `{{ url('/') }}/photos/delete`,
+            type: `POST`,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
+            },
+            data: {
+              'photo_id': photos.shift()
+            },
             success: function(res) {
                 if (res) {
                     document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/0.jpg)';
