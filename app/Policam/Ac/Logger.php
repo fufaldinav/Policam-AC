@@ -15,6 +15,7 @@
  * @link    http://github.com/m2jest1c/Policam-AC
  * @filesource
  */
+
 namespace App\Policam\Ac;
 
 
@@ -61,7 +62,7 @@ class Logger
      * Добавляет сообщение на запись
      *
      * @param string $category Категория ошибки
-     * @param string $message Текст ошибки
+     * @param string $message  Текст ошибки
      *
      * @return void
      */
