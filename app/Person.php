@@ -49,6 +49,11 @@ class Person extends Model
         'f', 'i', 'o', 'type', 'birthday', 'address', 'phone'
     ];
 
+    protected $casts = [
+        'type' => 'integer',
+        'birthday' => 'date',
+    ];
+
     public function cards()
     {
         return $this->hasMany('App\Card');

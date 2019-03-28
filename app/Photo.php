@@ -33,6 +33,10 @@ class Photo extends Model
     protected $fillable = [
         'hash', 'person_id'
     ];
+    protected $casts = [
+        'person_id' => 'integer',
+    ];
+
 
     public function person()
     {

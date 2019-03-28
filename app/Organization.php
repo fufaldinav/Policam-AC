@@ -38,6 +38,10 @@ class Organization extends Model
         'name', 'address', 'type'
     ];
 
+    protected $casts = [
+        'type' => 'integer',
+    ];
+
     public function divisions()
     {
         return $this->hasMany('App\Division');

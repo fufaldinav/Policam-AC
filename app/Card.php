@@ -41,6 +41,12 @@ class Card extends Model
         'wiegand', 'last_conn', 'controller_id', 'person_id'
     ];
 
+    protected $casts = [
+        'last_conn' => 'datetime',
+        'controller_id' => 'integer',
+        'person_id' => 'integer',
+    ];
+
     public function person()
     {
         return $this->belongsTo('App\Person');

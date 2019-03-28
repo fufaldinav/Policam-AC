@@ -36,6 +36,11 @@ class Userevent extends Model
         'user_id', 'type', 'description',
     ];
 
+    protected $casts = [
+        'user_id' => 'integer',
+        'type' => 'integer',
+    ];
+
     public function user()
     {
         return $this->belongsTo('App\User');

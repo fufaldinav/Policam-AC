@@ -34,6 +34,10 @@ class Token extends Model
         'user_id', 'token'
     ];
 
+    protected $casts = [
+        'user_id' => 'integer',
+    ];
+
     public function user()
     {
         return $this->belongsTo('App\User');

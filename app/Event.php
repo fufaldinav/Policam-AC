@@ -41,6 +41,14 @@ class Event extends Model
         'controller_id', 'event', 'flag', 'time', 'card_id'
     ];
 
+    protected $casts = [
+        'controller_id' => 'integer',
+        'event' => 'integer',
+        'flag' => 'integer',
+        'time' => 'datetime',
+        'card_id' => 'integer',
+    ];
+
     public function controller()
     {
         return $this->belongsTo('App\Controller');

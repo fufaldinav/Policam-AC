@@ -37,6 +37,11 @@ class Division extends Model
         'name', 'organization_id', 'type'
     ];
 
+    protected $casts = [
+        'organization_id' => 'integer',
+        'type' => 'integer',
+    ];
+
     public function organization()
     {
         return $this->belongsTo('App\Organization');

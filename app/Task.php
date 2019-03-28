@@ -36,6 +36,11 @@ class Task extends Model
         'task_id', 'controller_id', 'json'
     ];
 
+    protected $casts = [
+        'task_id' => 'integer',
+        'controller_id' => 'integer',
+    ];
+
     public function controller()
     {
         return $this->belongsTo('App\Controller');

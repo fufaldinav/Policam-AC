@@ -53,6 +53,14 @@ class Controller extends Model
         'name', 'sn', 'type', 'fw', 'conn_fw', 'mode', 'ip', 'active', 'online', 'last_conn', 'organization_id'
     ];
 
+    protected $casts = [
+        'mode' => 'integer',
+        'active' => 'integer',
+        'online' => 'integer',
+        'last_conn' => 'datetime',
+        'organization_id' => 'integer',
+    ];
+
     public function organization()
     {
         return $this->belongsTo('App\Organization');

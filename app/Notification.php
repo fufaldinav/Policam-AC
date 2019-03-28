@@ -36,6 +36,10 @@ class Notification extends Model
         'hash', 'user_id'
     ];
 
+    protected $casts = [
+        'user_id' => 'integer',
+    ];
+
     public function user()
     {
         return $this->belongsTo('App\User');
