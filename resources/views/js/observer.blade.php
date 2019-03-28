@@ -41,7 +41,7 @@
                     }
                     setTimeout(function() {
                         getNewMsgs(events, time);
-                    }, 10000);
+                    }, 10);
                 } else {
                     alert(`Пустой ответ от сервера`); //TODO перевод
                 }

@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 use App, Auth;
+use App\Policam\Ac\Polling;
+use App\Policam\Ac\Tasker;
+use App\Policam\Ac\Logger;
 
 class UtilsController extends Controller
 {
@@ -23,17 +27,20 @@ class UtilsController extends Controller
      *
      * @param Request $request
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function getEvents(Request $request)
+    public function getEvents(Request $request): JsonResponse
     {
         $events = $request->input('events');
         $time = $request->input('time');
 
+        $request->session()->save();
+
+        $msgs = Polling::polling($events, $time);
+
         return response()->json([
-            //'msgs' => $this->messenger->polling($events, $time),
-            'msgs' => [],
-            'time' => time()
+            'time' => time(),
+            'msgs' => $msgs,
         ]);
     }
 
@@ -49,8 +56,9 @@ class UtilsController extends Controller
     {
         $err = $err ?? $request->input('error') ?? 'Неизвестная ошибка или ошибка не указана';
 
-//        $this->logger->add('err', $err);
-//        $this->logger->write();
+        $logger = new Logger();
+        $logger->add('err', $err);
+        $logger->write();
 
         return $err;
     }
@@ -86,6 +94,8 @@ class UtilsController extends Controller
         if ($problem_type == 1) {
             $description .= 'forgot card';
         } elseif ($problem_type == 2 || $problem_type == 3) {
+            $tasker = new Tasker();
+
             $ctrls = [];
             $cards_to_delete = [];
 
@@ -97,16 +107,18 @@ class UtilsController extends Controller
             }
             unset($card);
 
+            $tasker->delCards($cards_to_delete);
+
             foreach ($person->divisions as $div) {
                 $org = $div->organization;
                 $ctrls = array_merge($ctrls, $org->controllers()->get()->toArray());
             }
 
             foreach ($ctrls as $ctrl) {
-//                $this->task->add($ctrl->id);
+                $tasker->add($ctrl->id);
             }
 
-//            $this->task->send();
+            $tasker->send();
 
             $response .= ' ' . __('ac/common.and') . ' ' . __('ac/common.card_deleted');
 
@@ -115,7 +127,7 @@ class UtilsController extends Controller
             return null;
         }
 
-        $event = App\Userevent::create([
+        App\Userevent::create([
             'user_id' => Auth::id(),
             'type' => $problem_type,
             'description' => $description,
