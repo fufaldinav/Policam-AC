@@ -18,8 +18,9 @@
 
 namespace App\Policam\Ac\Z5RWEB;
 
+use JsonSerializable;
 
-final class Response implements \JsonSerializable
+final class Response implements JsonSerializable
 {
     public $date;
     protected $interval = 10;

@@ -18,8 +18,9 @@
 
 namespace App\Policam\Ac\Z5RWEB;
 
+use JsonSerializable;
 
-final class OutgoingMessage implements \JsonSerializable
+final class OutgoingMessage implements JsonSerializable
 {
     protected $id;
     protected $operation;
@@ -27,30 +28,22 @@ final class OutgoingMessage implements \JsonSerializable
     protected $online = 0;
     protected $granted = 0;
     protected $events_success = 0;
+    protected $open = 15;
+    protected $open_control = 0;
+    protected $close_control = 0;
+    protected $cards = [];
     protected $operation_types = [
-        'set_active' => [
-            'id',
-            'operation',
-            'active',
-            'online',
-        ],
-        'check_access' => [
-            'id',
-            'operation',
-            'granted',
-        ],
-        'ping' => [
-            'id',
-            'operation',
-        ],
-        'events' => [
-            'id',
-            'operation',
-            'events_success',
-        ],
+        'set_active' => ['active', 'online'],
+        'check_access' => ['granted'],
+        'ping' => [],
+        'events' => ['events_success'],
+        'set_door_params' => ['open', 'open_control', 'close_control'],
+        'add_cards' => ['cards'],
+        'del_cards' => ['cards'],
+        'clear_cards' => [],
     ];
 
-    public function __construct(int $id)
+    public function __construct(int $id = 0)
     {
         $this->id = $id;
     }
@@ -62,11 +55,18 @@ final class OutgoingMessage implements \JsonSerializable
         $operation = $this->operation;
         $operation_types = $this->operation_types;
 
+        $response['id'] = $this->id;
+        $response['operation'] = $this->operation;
         foreach ($operation_types[$operation] as $param) {
             $response[$param] = $this->$param;
         }
 
         return $response;
+    }
+
+    public function generateId(): int
+    {
+        return $this->id = mt_rand(500000, 999999999);
     }
 
     public function setOperation(string $operation): bool
@@ -97,5 +97,15 @@ final class OutgoingMessage implements \JsonSerializable
     public function eventCounter(bool $count = true): void
     {
         $this->events_success += $count;
+    }
+
+    public function setOpenTime(int $open): void
+    {
+        $this->open = $open;
+    }
+
+    public function addCard(object $card): void
+    {
+        $this->cards[] = $card;
     }
 }

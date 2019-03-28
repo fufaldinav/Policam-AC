@@ -18,13 +18,11 @@
 
 namespace App\Policam\Ac\Z5RWEB;
 
-use App\Policam\Ac\Logger;
-
 use App;
+use App\Policam\Ac\Logger;
 
 final class Request
 {
-    /** @var \stdClass Запрос */
     private $request;
 
     public function __construct($request = null)
@@ -37,7 +35,6 @@ final class Request
      *
      * @return string|null Сообщение в формате JSON или NULL,
      *                     если сообщение от неизвестного контроллера
-     * @throws \Exception
      */
     public function handle(): ?string
     {
@@ -82,7 +79,7 @@ final class Request
              | Запуск контроллера
              */
             elseif ($message->operation === 'power_on') {
-                $out_message = new OutgoingMessage(0);
+                $out_message = new OutgoingMessage();
                 $out_message->setOperation('set_active');
                 $out_message->setActive($ctrl->active);
                 $out_message->setOnline($ctrl->online);
