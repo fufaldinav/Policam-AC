@@ -5,7 +5,36 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 /**
+ * App\Person
+ *
  * @mixin \Eloquent
+ * @property int $id
+ * @property string $f
+ * @property string $i
+ * @property string|null $o
+ * @property int $type
+ * @property string $birthday
+ * @property string|null $address
+ * @property string|null $phone
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Card[] $cards
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Division[] $divisions
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Photo[] $photos
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\User[] $users
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Person newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Person newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Person query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Person whereAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Person whereBirthday($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Person whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Person whereF($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Person whereI($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Person whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Person whereO($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Person wherePhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Person whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Person whereUpdatedAt($value)
  */
 class Person extends Model
 {

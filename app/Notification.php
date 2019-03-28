@@ -5,7 +5,25 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 /**
+ * App\Notification
+ *
  * @mixin \Eloquent
+ * @property int $id
+ * @property string $hash
+ * @property int $user_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $deleted_at
+ * @property-read \App\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Notification newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Notification newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Notification query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Notification whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Notification whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Notification whereHash($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Notification whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Notification whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Notification whereUserId($value)
  */
 class Notification extends Model
 {
