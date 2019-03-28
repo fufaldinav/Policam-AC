@@ -78,7 +78,7 @@ Route::group(['prefix' =>'photos', 'as' => 'photos.', 'middleware' => 'auth'], f
 /*
  * Server
  */
-Route::post('server', 'ServerController@index')->name('server');
+Route::post('server', 'ServersController@index')->name('server');
 /*
  * Users
  */
