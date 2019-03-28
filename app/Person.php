@@ -65,7 +65,6 @@ class Person extends Model
      */
     protected $casts = [
         'type' => 'integer',
-        'birthday' => 'date',
     ];
 
     public function cards()
