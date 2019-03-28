@@ -27,7 +27,7 @@ return [
     'missing' => 'Отсутствует',
     'not_selected' => 'Не выбрана',
     'entrance_wo_card' => 'Вход без карты',
-    'registred' => 'Событие зарегистрировано',
+    'registered' => 'Событие зарегистрировано',
     'and' => 'и',
     'card_deleted' => 'карта удалена',
 ];

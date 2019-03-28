@@ -71,7 +71,7 @@ class UtilsController extends Controller
             return null;
         }
 
-        $response = __('ac/common.registred');
+        $response = __('ac/common.registered');
 
         $person = App\Person::find($person_id);
 

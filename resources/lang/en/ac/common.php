@@ -27,7 +27,7 @@ return [
     'missing' => 'Missing',
     'not_selected' => 'Not selected',
     'entrance_wo_card' => 'Entrance w/o card',
-    'registred' => 'Registred',
+    'registered' => 'Registred',
     'and' => 'and',
     'card_deleted' => 'card deleted',
 ];
