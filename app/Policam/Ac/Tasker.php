@@ -25,8 +25,7 @@ use App\Policam\Ac\Z5RWEB\Card;
 class Tasker
 {
     /**
-     * Тело запроса, отправляемого на контроллер, после указания всех
-     * параметров, перед записью в БД, необходимо конвертировать в JSON формат
+     * Тело запроса, отправляемого на контроллер
      *
      * @var object
      */
@@ -74,7 +73,7 @@ class Tasker
 
         $task->task_id = $this->message->generateId();
         $task->controller_id = $ctrl_id;
-        $task->json = json_encode($this->message);
+        $task->json = $this->message;
 
         $this->to_send[] = $task;
 

@@ -162,8 +162,8 @@ final class Request
 
         $task = $ctrl->tasks()->first();
 
-        if (isset($task)) {
-            $response->addMessage(json_decode($task->json));
+        if ($task) {
+            $response->addMessage($task->json);
         }
 
         $logger->add('out', "TYPE: $type || SN: $sn || {$response->getMessages()}");

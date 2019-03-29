@@ -53,6 +53,7 @@ class Task extends Model
     protected $casts = [
         'task_id' => 'integer',
         'controller_id' => 'integer',
+        'json' => 'object',
     ];
 
     public function controller()
