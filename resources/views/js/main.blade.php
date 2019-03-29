@@ -61,16 +61,14 @@
         formData.append(`file`, files[0]);
         $.ajax({
             url: `{{ url('/') }}/photos/save`,
-            type: `POST`,
             method: `POST`,
             contentType: false,
             processData: false,
             headers: {
                 'X-CSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
             },
-            data: {
-                formData
-            },
+            cache: false,
+            data: formData,
             success: function(data) {
                 if (data) {
                     if (data.error === ``) {
