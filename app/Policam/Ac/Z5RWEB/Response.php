@@ -29,7 +29,7 @@ final class Response implements JsonSerializable
 
     public function __construct(string $datetime = null)
     {
-        $this->datetime = $datetime ?? Carbon::now();
+        $this->datetime = $datetime ?? Carbon::now()->toDateTimeString();
     }
 
     public function jsonSerialize(): array

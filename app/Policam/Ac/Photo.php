@@ -162,7 +162,7 @@ class Photo
     private function clear()
     {
         App\Photo::where('person_id', null)
-            ->whereTime('created_at', '<', Carbon::now()->subDay())
+            ->whereTime('created_at', '<', Carbon::now()->subDay()->toDateTimeString())
             ->delete();
     }
 

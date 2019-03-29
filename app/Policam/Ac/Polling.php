@@ -40,7 +40,7 @@ class Polling
      */
     public static function polling(array $event_types, string $datetime = null): array
     {
-        $datetime = $datetime ?? Carbon::now();
+        $datetime = $datetime ?? Carbon::now()->toDateTimeString();
 
         $user = App\User::find(Auth::id());
 
@@ -62,7 +62,7 @@ class Polling
 
                 $events = App\Event::whereIn('event', $event_types)
                     ->whereIn('controller_id', $controllers)
-                    ->whereTime('created_at', '>', $datetime)
+                    ->where('created_at', '>', $datetime)
                     ->orderBy('time', 'DESC')
                     ->get()->toArray();
 

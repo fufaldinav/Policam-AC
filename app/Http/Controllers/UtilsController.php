@@ -32,7 +32,7 @@ class UtilsController extends Controller
      */
     public function getTime()
     {
-        return Carbon::now();
+        return Carbon::now()->toDateTimeString();
     }
 
     /**
@@ -52,7 +52,7 @@ class UtilsController extends Controller
         $msgs = Polling::polling($events, $time);
 
         return response()->json([
-            'time' => Carbon::now(),
+            'time' => Carbon::now()->toDateTimeString(),
             'msgs' => $msgs,
         ]);
     }
@@ -144,7 +144,7 @@ class UtilsController extends Controller
             'user_id' => Auth::id(),
             'type' => $problem_type,
             'description' => $description,
-            'time' => Carbon::now()
+            'time' => Carbon::now()->toDateTimeString()
         ]);
 
         return $response;

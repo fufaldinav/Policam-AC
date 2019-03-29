@@ -45,7 +45,7 @@ final class Request
             return null;
         }
 
-        $datetime = Carbon::now();
+        $datetime = Carbon::now()->toDateTimeString();
 
         $response = new Response($datetime);
 

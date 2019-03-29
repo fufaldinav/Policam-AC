@@ -73,8 +73,8 @@ class Logger
 
         $this->to_write[] = [
             'category' => $category,
-            'date' => $datetime->isoFormat('YYYY-MM-DD'),
-            'time' => $datetime->isoFormat('HH:mm:ss'),
+            'date' => $datetime->toDateString(),
+            'time' => $datetime->toTimeString(),
             'message' => $message
         ];
     }
