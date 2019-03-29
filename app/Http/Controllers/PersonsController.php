@@ -162,14 +162,14 @@ class PersonsController extends Controller
             foreach ($div_list as $div_id) {
                 $div = App\Division::find($div_id);
 
-                $person->divisions()->attach($div->id);
+                $person->divisions()->syncWithoutDetaching([$div->id]);
             }
         } else {
             $div = App\Division::where('organization_id', $org->id)
                 ->where('type', 0)
                 ->first();
 
-            $person->divisions()->attach($div->id);
+            $person->divisions()->syncWithoutDetaching([$div->id]);
         }
 
         /* Фотографии */
