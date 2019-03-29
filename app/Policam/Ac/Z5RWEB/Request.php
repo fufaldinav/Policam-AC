@@ -20,6 +20,7 @@ namespace App\Policam\Ac\Z5RWEB;
 
 use App;
 use App\Policam\Ac\Logger;
+use App\Policam\Ac\Notificator;
 use Carbon\Carbon;
 
 final class Request
@@ -36,6 +37,7 @@ final class Request
      *
      * @return string|null Сообщение в формате JSON или NULL,
      *                     если сообщение от неизвестного контроллера
+     * @throws \Exception
      */
     public function handle(): ?string
     {
@@ -142,18 +144,19 @@ final class Request
                     $event->save();
 
                     $out_message->eventCounter();
-//
-//                    $person = $card->person;
-//
-//                    $subscribers = $person->users;
-//
-//                    $notification = $this->CI->notificator->generate($person->id, $event->event); // TODO уведомления
-//
-//                    foreach ($subscribers as $sub) {
-//                        if (isset($notification)) {
-//                            $this->CI->notificator->send($notification, $sub->id);
-//                        }
-//                    }
+
+                    $person = $card->person;
+
+                    $subscribers = $person->users;
+
+                    $notificator = new Notificator();
+                    $notification = $notificator->generate($person->id, $event->event); // TODO уведомления
+
+                    foreach ($subscribers as $sub) {
+                        if (isset($notification)) {
+                            $notificator->send($notification, $sub->id);
+                        }
+                    }
                 }
 
                 $response->addMessage($out_message);

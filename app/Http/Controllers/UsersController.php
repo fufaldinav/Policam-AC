@@ -18,9 +18,72 @@
 
 namespace App\Http\Controllers;
 
+use App, Auth;
 use Illuminate\Http\Request;
 
 class UsersController extends Controller
 {
-    //
+    /**
+     * Панель управления
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function index()
+    {
+        $org_name = __('ac/common.missing');
+        $css_list = ['ac'];
+        $js_list = ['push'];
+
+        return view('ac/cp', compact(
+            'org_name', 'css_list', 'js_list'
+        ));
+    }
+
+    /**
+     * Получает токен от пользователя
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function token(Request $request): void
+    {
+        $user = App\User::find(Auth::id());
+
+        $token_key = $request->input('token');
+
+        if ($token_key === 'false') {
+            // $this->token->getBy('token', $token_key);
+            // $this->token->delete(); //TODO удалять просроченный ключ
+        } else {
+            App\Token::firstOrCreate([
+                'token' => $token_key,
+                'user_id' => $user->id,
+            ]);
+        }
+    }
+
+    /**
+     * Возвращает уведомление для пользователя
+     *
+     * @param string|null $hash Хэш уведомления
+     *
+     * @return string|null
+     */
+    public function notification(string $hash = null): ?string
+    {
+        if (!isset($hash)) {
+            return null;
+        }
+
+        $notification = App\Notification::where(['hash' => $hash, 'active' => 1])->first();
+
+        if (!isset($notification->id)) {
+            return 'Уведомление устарело или не существует'; //TODO перевод
+        }
+
+        $notification->active = 0;
+        $notification->save();
+
+        return $notification->created_at;
+    }
 }

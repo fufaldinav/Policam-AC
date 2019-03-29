@@ -40,7 +40,7 @@ Route::group(['prefix' =>'controllers', 'as' => 'controllers.', 'middleware' => 
 /*
  * Control Panel
  */
-Route::get('cp', 'CpController@index')->name('cp')->middleware('auth');
+Route::get('cp', 'UsersController@index')->name('cp')->middleware('auth');
 /*
  * Development
  */
@@ -83,6 +83,7 @@ Route::post('server', 'ServersController@index')->name('server');
  * Users
  */
 Route::group(['prefix' =>'users', 'as' => 'users.', 'middleware' => 'auth'], function() {
+    Route::redirect('cp', '/cp')->name('users.cp');
     Route::post('token', 'UsersController@token')->name('token');
     Route::get('notification/{hash}', 'UsersController@notification')->name('notification');
 });
