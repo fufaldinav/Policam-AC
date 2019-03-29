@@ -1,14 +1,31 @@
 <?php
+/**
+ * Name:   Policam AC
+ * Author: Artem Fufaldin
+ *         artem.fufaldin@gmail.com
+ *
+ * Created: 28.03.2019
+ *
+ * Description: Приложение для систем контроля и управления доступом.
+ *
+ * Requirements: PHP7.3 or above
+ *
+ * @package Policam-AC
+ * @author  Artem Fufaldin
+ * @link    http://github.com/m2jest1c/Policam-AC
+ * @filesource
+ */
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 use App, Auth;
+use Illuminate\Http\Request;
 
 class DivisionsController extends Controller
 {
     /**
+     * Страница управления классами
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function classes()
@@ -37,6 +54,8 @@ class DivisionsController extends Controller
     }
 
     /**
+     * Получает коллекцию подразделений
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function getList()
@@ -58,6 +77,8 @@ class DivisionsController extends Controller
     }
 
     /**
+     * Сохраняет подразделение
+     *
      * @param Request $request
      *
      * @return \Illuminate\Http\JsonResponse
@@ -66,13 +87,15 @@ class DivisionsController extends Controller
     {
         $div_data = json_decode($request->input('div'), true);
 
-        $div = App\Division::create($div_data); //TODO обновление информации
+        $div = App\Division::create($div_data);
 
         return response()->json($div);
     }
 
     /**
      * Удаляет подразделение
+     *
+     * @param Request $request
      *
      * @return int
      * @throws \Exception

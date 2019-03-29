@@ -1,17 +1,33 @@
 <?php
+/**
+ * Name:   Policam AC
+ * Author: Artem Fufaldin
+ *         artem.fufaldin@gmail.com
+ *
+ * Created: 28.03.2019
+ *
+ * Description: Приложение для систем контроля и управления доступом.
+ *
+ * Requirements: PHP7.3 or above
+ *
+ * @package Policam-AC
+ * @author  Artem Fufaldin
+ * @link    http://github.com/m2jest1c/Policam-AC
+ * @filesource
+ */
 
 namespace App\Http\Controllers;
 
+use App, Auth;
+use App\Policam\Ac\Tasker;
 use Illuminate\Http\Request;
-
-use App, Auth, Lang;
 
 class PersonsController extends Controller
 {
     /**
      * Страница добавления человека
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function add()
     {
@@ -57,7 +73,7 @@ class PersonsController extends Controller
     /**
      * Страница редактирования людей
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function edit()
     {
@@ -125,19 +141,21 @@ class PersonsController extends Controller
         );
 
         /* Карты */
+        $tasker = new Tasker();
+
         foreach ($card_list as $card_id) {
             $card = App\Card::find($card_id);
 
             $person->cards()->save($card);
 
-//            $this->task->addCards([$card->wiegand]);
-//
-//            foreach ($org->controllers as $ctrl) { //TODO
-//                $this->task->add($ctrl->id);
-//            }
+            $tasker->addCards([$card->wiegand]);
+
+            foreach ($org->controllers as $ctrl) {
+                $tasker->add($ctrl->id);
+            }
         }
 
-//        $this->task->send();
+        $tasker->send();
 
         /* Подразделения */
         if ($div_list) {
@@ -197,18 +215,20 @@ class PersonsController extends Controller
         }
 
         /* Карты */
+        $tasker = new Tasker();
+
         foreach ($person->cards as $card) {
             $card->person_id = 0;
             $card->save();
 
-//            $this->task->delCards([$card->wiegand]);
-//
-//            foreach ($org->controllers as $ctrl) { //TODO
-//                $this->task->add($ctrl->id);
-//            }
+            $tasker->delCards([$card->wiegand]);
+
+            foreach ($org->controllers as $ctrl) {
+                $tasker->add($ctrl->id);
+            }
         }
 
-//        $this->task->send();
+        $tasker->send();
 
         /* Подписки */
         foreach ($person->users as $sub) {

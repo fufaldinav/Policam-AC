@@ -1,15 +1,29 @@
 <?php
+/**
+ * Name:   Policam AC
+ * Author: Artem Fufaldin
+ *         artem.fufaldin@gmail.com
+ *
+ * Created: 28.03.2019
+ *
+ * Description: Приложение для систем контроля и управления доступом.
+ *
+ * Requirements: PHP7.3 or above
+ *
+ * @package Policam-AC
+ * @author  Artem Fufaldin
+ * @link    http://github.com/m2jest1c/Policam-AC
+ * @filesource
+ */
 
 namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
 
 use App, Auth;
 use App\Policam\Ac\Polling;
 use App\Policam\Ac\Tasker;
 use App\Policam\Ac\Logger;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class UtilsController extends Controller
 {
@@ -26,9 +40,9 @@ class UtilsController extends Controller
      *
      * @param Request $request
      *
-     * @return JsonResponse
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function getEvents(Request $request): JsonResponse
+    public function getEvents(Request $request)
     {
         $events = $request->input('events');
         $time = $request->input('time');

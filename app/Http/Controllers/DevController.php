@@ -15,11 +15,10 @@
  * @link    http://github.com/m2jest1c/Policam-AC
  * @filesource
  */
+
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-use App, Auth;
+use App;
 
 class DevController extends Controller
 {

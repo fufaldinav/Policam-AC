@@ -1,10 +1,25 @@
 <?php
+/**
+ * Name:   Policam AC
+ * Author: Artem Fufaldin
+ *         artem.fufaldin@gmail.com
+ *
+ * Created: 28.03.2019
+ *
+ * Description: Приложение для систем контроля и управления доступом.
+ *
+ * Requirements: PHP7.3 or above
+ *
+ * @package Policam-AC
+ * @author  Artem Fufaldin
+ * @link    http://github.com/m2jest1c/Policam-AC
+ * @filesource
+ */
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-use App, Auth;
+use App;
+use App\Policam\Ac\Tasker;
 
 class ControllersController extends Controller
 {
@@ -22,16 +37,18 @@ class ControllersController extends Controller
             return 'Не выбран контроллер или не задано время открытия'; //TODO перевод
         }
 
-//        $this->task->setDoorParams($open_time);
-//        $this->task->add($ctrl_id);
-//
-//        $count = $this->task->send();
+        $tasker = new Tasker();
 
-//        if ($count > 0) {
-//            return "Заданий успешно отправлено: $count"; //TODO перевод
-//        } else {
-//            return "Нет отправленных заданий"; //TODO перевод
-//        }
+        $tasker->setDoorParams($open_time);
+        $tasker->add($ctrl_id);
+
+        $count = $tasker->send();
+
+        if ($count > 0) {
+            return "Заданий успешно отправлено: $count"; //TODO перевод
+        } else {
+            return "Нет отправленных заданий"; //TODO перевод
+        }
     }
 
     /**
@@ -47,16 +64,18 @@ class ControllersController extends Controller
             return 'Не выбран контроллер'; //TODO перевод
         }
 
-//        $this->task->clearCards();
-//        $this->task->add($ctrl_id);
-//
-//        $count = $this->task->send();
+        $tasker = new Tasker();
 
-//        if ($count > 0) {
-//            echo "Заданий успешно отправлено: $count"; //TODO перевод
-//        } else {
-//            echo "Нет отправленных заданий"; //TODO перевод
-//        }
+        $tasker->clearCards();
+        $tasker->add($ctrl_id);
+
+        $count = $tasker->send();
+
+        if ($count > 0) {
+            return "Заданий успешно отправлено: $count"; //TODO перевод
+        } else {
+            return "Нет отправленных заданий"; //TODO перевод
+        }
     }
 
     /**
@@ -84,6 +103,8 @@ class ControllersController extends Controller
             }
         }
 
+        $tasker = new Tasker();
+
         for ($i = 0, $codes = [], $card_count = count($cards); $i < $card_count; $i++) {
             $codes[] = $cards[$i]->wiegand;
 
@@ -98,13 +119,13 @@ class ControllersController extends Controller
             | Таким образом сформируем задания на отправку по 10 за раз
             */
             if (($i > 0 && ($i % 10 === 0)) || ($i === ($card_count - 1))) {
-//                $this->task->addCards($codes);
-//                $this->task->add($ctrl_id);
+                $tasker->addCards($codes);
+                $tasker->add($ctrl_id);
 
                 $codes = [];
             }
         }
 
-//        return "Отправлено заданий: {$this->task->send()}"; //TODO перевод
+        return "Отправлено заданий: {$tasker->send()}"; //TODO перевод
     }
 }

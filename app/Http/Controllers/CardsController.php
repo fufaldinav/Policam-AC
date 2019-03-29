@@ -1,10 +1,26 @@
 <?php
+/**
+ * Name:   Policam AC
+ * Author: Artem Fufaldin
+ *         artem.fufaldin@gmail.com
+ *
+ * Created: 28.03.2019
+ *
+ * Description: Приложение для систем контроля и управления доступом.
+ *
+ * Requirements: PHP7.3 or above
+ *
+ * @package Policam-AC
+ * @author  Artem Fufaldin
+ * @link    http://github.com/m2jest1c/Policam-AC
+ * @filesource
+ */
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 use App, Auth;
+use App\Policam\Ac\Tasker;
+use Illuminate\Http\Request;
 
 class CardsController extends Controller
 {
@@ -31,18 +47,19 @@ class CardsController extends Controller
         $card = App\Card::find($card_id);
         $card->person_id = $person_id;
 
-        $ctrls = $org->controllers;
-        if ($ctrls->count() > 0) {
-            if ($card->person_id == 0) {
-//                $this->task->delCards([$card->wiegand]);
-            } else {
-//                $this->task->addCards([$card->wiegand]);
-            }
+        $tasker = new Tasker();
 
-            foreach ($ctrls as $ctrl) {
-//                $this->task->add($ctrl->id);
-//                $this->task->send();
-            }
+        if ($card->person_id == 0) {
+            $tasker->delCards([$card->wiegand]);
+        } else {
+            $tasker->addCards([$card->wiegand]);
+        }
+
+        $ctrls = $org->controllers;
+
+        foreach ($ctrls as $ctrl) {
+            $tasker->add($ctrl->id);
+            $tasker->send();
         }
 
 
