@@ -18,6 +18,7 @@
 
 namespace App\Policam\Ac;
 
+use Carbon\Carbon;
 
 class Logger
 {
@@ -68,13 +69,12 @@ class Logger
      */
     public function add(string $category, string $message): void
     {
-        $date = date('Y-m-d');
-        $time = date('H:i:s');
+        $datetime = Carbon::now();
 
         $this->to_write[] = [
             'category' => $category,
-            'date' => $date,
-            'time' => $time,
+            'date' => $datetime->isoFormat('YYYY-MM-DD'),
+            'time' => $datetime->isoFormat('HH:mm:ss'),
             'message' => $message
         ];
     }

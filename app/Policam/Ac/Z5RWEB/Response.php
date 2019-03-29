@@ -18,23 +18,24 @@
 
 namespace App\Policam\Ac\Z5RWEB;
 
+use Carbon\Carbon;
 use JsonSerializable;
 
 final class Response implements JsonSerializable
 {
-    public $date;
+    public $datetime;
     protected $interval = 10;
     protected $messages = [];
 
-    public function __construct(int $time = null)
+    public function __construct(string $datetime = null)
     {
-        $this->date = date('Y-m-d H:i:s', $time ?? time());
+        $this->datetime = $datetime ?? Carbon::now();
     }
 
     public function jsonSerialize(): array
     {
         return [
-            'date' => $this->date,
+            'date' => $this->datetime,
             'interval' => $this->interval,
             'messages' => $this->messages,
         ];

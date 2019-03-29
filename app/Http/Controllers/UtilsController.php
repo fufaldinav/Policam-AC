@@ -9,17 +9,16 @@ use App, Auth;
 use App\Policam\Ac\Polling;
 use App\Policam\Ac\Tasker;
 use App\Policam\Ac\Logger;
+use Carbon\Carbon;
 
 class UtilsController extends Controller
 {
     /**
      * Возвращает текущее время
-     *
-     * @return int
      */
-    public function getTime(): int
+    public function getTime()
     {
-        return time();
+        return Carbon::now();
     }
 
     /**
@@ -39,7 +38,7 @@ class UtilsController extends Controller
         $msgs = Polling::polling($events, $time);
 
         return response()->json([
-            'time' => time(),
+            'time' => Carbon::now(),
             'msgs' => $msgs,
         ]);
     }
@@ -131,7 +130,7 @@ class UtilsController extends Controller
             'user_id' => Auth::id(),
             'type' => $problem_type,
             'description' => $description,
-            'time' => time()
+            'time' => Carbon::now()
         ]);
 
         return $response;

@@ -19,6 +19,7 @@
 namespace App\Policam\Ac;
 
 use App, Auth;
+use Carbon\Carbon;
 
 class Polling
 {
@@ -32,14 +33,14 @@ class Polling
     /**
      * Реализует long polling
      *
-     * @param int[]    $event_types Типы событий
-     * @param int|null $time        Время последнего запроса
+     * @param int[]       $event_types Типы событий
+     * @param string|null $datetime    Время последнего запроса
      *
      * @return mixed[] События от контроллера
      */
-    public static function polling(array $event_types, int $time = null): array
+    public static function polling(array $event_types, string $datetime = null): array
     {
-        $time = $time ?? time();
+        $datetime = $datetime ?? Carbon::now();
 
         $user = App\User::find(Auth::id());
 
@@ -61,7 +62,7 @@ class Polling
 
                 $events = App\Event::whereIn('event', $event_types)
                     ->whereIn('controller_id', $controllers)
-                    ->whereDate('created_at', '>', date('Y-m-d H:i:s', $time))
+                    ->whereTime('created_at', '>', $datetime)
                     ->orderBy('time', 'DESC')
                     ->get()->toArray();
 

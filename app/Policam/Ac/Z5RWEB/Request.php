@@ -20,6 +20,7 @@ namespace App\Policam\Ac\Z5RWEB;
 
 use App;
 use App\Policam\Ac\Logger;
+use Carbon\Carbon;
 
 final class Request
 {
@@ -42,9 +43,9 @@ final class Request
             return null;
         }
 
-        $time = time();
+        $datetime = Carbon::now();
 
-        $response = new Response($time);
+        $response = new Response($datetime);
 
         $logger = new Logger;
 
@@ -61,7 +62,7 @@ final class Request
             return null;
         }
 
-        $ctrl->last_conn = $time;
+        $ctrl->last_conn = $datetime;
         $ctrl->save();
 
         $logger->add('inc', "TYPE: $type || SN: $sn || " . json_encode($messages));
@@ -105,7 +106,7 @@ final class Request
                     $out_message->setGranted(1);
                 }
 
-                $card->last_conn = $time;
+                $card->last_conn = $datetime;
                 $card->controller_id = $ctrl->id;
 
                 $card->save();
@@ -128,7 +129,7 @@ final class Request
                 //чтение событий
                 foreach ($message->events as $inc_event) {
                     $card = App\Card::firstOrNew(['wiegand' => $inc_event->card]);
-                    $card->last_conn = $time;
+                    $card->last_conn = $datetime;
                     $card->controller_id = $ctrl->id;
                     $card->save();
 
