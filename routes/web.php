@@ -19,7 +19,7 @@ Route::get('/', 'ObserverController@index')->name('/')->middleware('auth', 'veri
  * Auth
  */
 Auth::routes(['verify' => true]);
-Route::get('/home', 'HomeController@index')->name('home');
+Route::redirect('/home', '/')->name('home');
 /*
  * Cards
  */
