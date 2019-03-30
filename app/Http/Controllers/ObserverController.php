@@ -34,7 +34,7 @@ class ObserverController extends Controller
         $org = $user->organizations()->first();
 
         if (! $org) {
-            return 'Огранизации отсутствуют';
+            return view('ac.error', ['error' => 'Огранизации отсутствуют']);
         }
 
         /* Подразделения */
