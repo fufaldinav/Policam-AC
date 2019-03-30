@@ -45,7 +45,7 @@ class DivisionsController extends Controller
         $org_id = $org->id;
 
         $org_name = $org->name ?? __('ac/common.missing');
-        $css_list = ['ac', 'tables'];
+        $css_list = ['tables'];
         $js_list = ['classes'];
 
         return view('ac.classes', compact(
@@ -53,7 +53,7 @@ class DivisionsController extends Controller
             'divs',
             'org_name',
             'css_list',
-            'js_list'
+            'js_list',
         ));
     }
 
