@@ -24,8 +24,7 @@ Route::get('/home', 'HomeController@index')->name('home');
  * Cards
  */
 Route::group(['prefix' =>'cards', 'as' => 'cards.', 'middleware' => 'auth'], function() {
-    Route::get('get_list', 'CardsController@getList')->name('get_list.unknowns');
-    Route::get('get_list/{person_id}', 'CardsController@getList')->name('get_list');
+    Route::get('get_list/{person_id?}', 'CardsController@getList')->name('get_list');
     Route::post('holder', 'CardsController@holder')->name('holder');
     Route::post('delete', 'CardsController@delete')->name('delete');
 });
@@ -64,8 +63,7 @@ Route::group(['prefix' =>'persons', 'as' => 'persons.', 'middleware' => 'auth'],
     Route::get('get/{person_id}', 'PersonsController@get')->name('get');
     Route::get('get_by_card/{card_id}', 'PersonsController@getByCard')->name('get_by_card');
     Route::get('get_list/{division_id}', 'PersonsController@getList')->name('get_list');
-    Route::post('save', 'PersonsController@save')->name('save.add');
-    Route::post('save/{person_id}', 'PersonsController@save')->name('save.update');
+    Route::post('save/{person_id?}', 'PersonsController@save')->name('save');
     Route::post('delete', 'PersonsController@delete')->name('delete');
 });
 /*
@@ -84,8 +82,8 @@ Route::post('server', 'ServersController@index')->name('server');
  */
 Route::group(['prefix' =>'users', 'as' => 'users.', 'middleware' => 'auth'], function() {
     Route::redirect('cp', '/cp')->name('users.cp');
-    Route::post('token', 'UsersController@token')->name('token');
     Route::get('notification/{hash}', 'UsersController@notification')->name('notification');
+    Route::post('token', 'UsersController@token')->name('token');
 });
 /*
  * Util
