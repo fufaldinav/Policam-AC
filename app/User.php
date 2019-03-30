@@ -29,6 +29,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Notification[] $notifications
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Organization[] $organizations
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Person[] $persons
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Role[] $roles
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Token[] $tokens
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User newQuery()
@@ -66,7 +67,7 @@ class User extends Model implements
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token', 'notifications', 'organizations', 'persons', 'tokens',
+        'password', 'remember_token', 'notifications', 'organizations', 'persons', 'tokens', 'roles',
     ];
 
     /**
@@ -91,6 +92,11 @@ class User extends Model implements
     public function persons()
     {
         return $this->belongsToMany('App\Person');
+    }
+
+    public function roles()
+    {
+        return $this->belongsToMany('App\Role');
     }
 
     public function tokens()
