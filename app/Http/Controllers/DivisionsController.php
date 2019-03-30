@@ -34,6 +34,10 @@ class DivisionsController extends Controller
 
         $org = $user->organizations()->first();
 
+        if (! $org) {
+            return 'Огранизации отсутствуют';
+        }
+
         $divs = $org->divisions()
             ->orderByRaw('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
             ->get();

@@ -35,6 +35,10 @@ class PersonsController extends Controller
 
         $org = $user->organizations()->first();
 
+        if (! $org) {
+            return 'Огранизации отсутствуют';
+        }
+
         /* Подразделения */
         $divs = $org
             ->divisions()
@@ -80,6 +84,10 @@ class PersonsController extends Controller
         $user = App\User::find(Auth::id());
 
         $org = $user->organizations()->first();
+
+        if (! $org) {
+            return 'Огранизации отсутствуют';
+        }
 
         /* Подразделения */
         $divs = $org

@@ -33,6 +33,10 @@ class ObserverController extends Controller
 
         $org = $user->organizations()->first();
 
+        if (! $org) {
+            return 'Огранизации отсутствуют';
+        }
+
         /* Подразделения */
         $divs = $org
             ->divisions()
