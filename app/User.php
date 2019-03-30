@@ -79,6 +79,16 @@ class User extends Model implements
         'email_verified_at' => 'datetime',
     ];
 
+    public function hasRole($role)
+    {
+        return $this->belongsToMany('App\Role')->get()->contains($role);
+    }
+
+    public function isAdmin()
+    {
+        return $this->hasRole(1);
+    }
+
     public function notifications()
     {
         return $this->hasMany('App\Notification');

@@ -49,7 +49,7 @@ Route::get('dev/test', 'DevController@test')->name('dev.test')->middleware('auth
  * Divisions
  */
 Route::group(['prefix' =>'divisions', 'as' => 'divisions.', 'middleware' => 'auth'], function() {
-    Route::get('classes', 'DivisionsController@classes')->name('classes');
+    Route::get('classes', 'DivisionsController@classes')->name('classes')->middleware('role:3');
     Route::get('get_list', 'DivisionsController@getList')->name('get_list');
     Route::post('save', 'DivisionsController@save')->name('save');
     Route::post('delete', 'DivisionsController@delete')->name('delete');
@@ -58,13 +58,15 @@ Route::group(['prefix' =>'divisions', 'as' => 'divisions.', 'middleware' => 'aut
  * Persons
  */
 Route::group(['prefix' =>'persons', 'as' => 'persons.', 'middleware' => 'auth'], function() {
-    Route::get('add', 'PersonsController@add')->name('add');
-    Route::get('edit', 'PersonsController@edit')->name('edit');
+    Route::group(['middleware' => 'role:3'], function () {
+        Route::get('add', 'PersonsController@add')->name('add');
+        Route::get('edit', 'PersonsController@edit')->name('edit');
+        Route::post('save/{person_id?}', 'PersonsController@save')->name('save');
+        Route::post('delete', 'PersonsController@delete')->name('delete');
+    });
     Route::get('get/{person_id}', 'PersonsController@get')->name('get');
     Route::get('get_by_card/{card_id}', 'PersonsController@getByCard')->name('get_by_card');
     Route::get('get_list/{division_id}', 'PersonsController@getList')->name('get_list');
-    Route::post('save/{person_id?}', 'PersonsController@save')->name('save');
-    Route::post('delete', 'PersonsController@delete')->name('delete');
 });
 /*
  * Photos
