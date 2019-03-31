@@ -145,18 +145,8 @@ final class Request
 
                     $out_message->eventCounter();
 
-                    $person = $card->person;
-
-                    $subscribers = $person->users;
-
                     $notificator = new Notificator();
-                    $notification = $notificator->generate($person->id, $event->event); // TODO уведомления
-
-                    foreach ($subscribers as $sub) {
-                        if (isset($notification)) {
-                            $notificator->send($notification, $sub->id);
-                        }
-                    }
+                    $notificator->handleEvent($event); // TODO уведомления
                 }
 
                 $response->addMessage($out_message);

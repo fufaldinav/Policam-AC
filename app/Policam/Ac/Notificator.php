@@ -19,6 +19,7 @@
 namespace app\Policam\Ac;
 
 use App;
+use Carbon\Carbon;
 
 class Notificator
 {
@@ -28,8 +29,8 @@ class Notificator
     /** @var string Ключ сервера */
     private $server_key;
 
-    /** @var string Параметры уведомления */
-    private $notification_body;
+    /** @var array Параметры уведомления */
+    private $notification = [];
 
     public function __construct()
     {
@@ -38,14 +39,64 @@ class Notificator
     }
 
     /**
+     * Обрабатывает событие с контроллера
+     *
+     * @param App\Event $event
+     *
+     * @return void
+     * @throws \Exception
+     */
+    public function handleEvent(App\Event $event)
+    {
+        if ($event->event != 39 || $event->flag != 775) {
+            return null;
+        }
+
+        $pass_time = Carbon::createFromTimeString($event->time);
+
+        $event = App\Event::where('event', 4)
+            ->orWhere('event', 5)
+            ->where('time', '<=', $pass_time->toDateTimeString())
+            ->orderBy('time', 'DESC')
+            ->first();
+
+        if (! $event) {
+            return null;
+        }
+
+        $open_time = Carbon::createFromTimeString($event->time);
+
+        if ($open_time->diffInSeconds($pass_time) > 5) {
+            return null;
+        }
+
+        $card = App\Card::find($event->card_id);
+
+        $person = $card->person;
+
+        $this->generate($person->id, $event->event);
+
+        if (! $this->notification) {
+            return null;
+        }
+
+        $subs = $person->users;
+
+        foreach ($subs as $sub) {
+            $this->send($sub->id);
+        }
+
+    }
+
+    /**
      * Генерирует уведомление
      *
      * @param int $person_id ID человека
-     * @param int $event_id  ID события
+     * @param int $event_id ID события
      *
      * @return mixed[]|null Параметры уведомления или NULL - неподходящее событие
      */
-    public function generate(int $person_id, int $event_id): ?array
+    private function generate(int $person_id, int $event_id): ?array
     {
         switch ($event_id) {
             case 4: //вход
@@ -66,7 +117,7 @@ class Notificator
 
         $photo_url = "https://{$_SERVER['HTTP_HOST']}/img/ac/s/" . ($photo->id ?? 0) . ".jpg";
 
-        return $this->notification_body = [
+        return $this->notification = [
             'title' => $event,
             'body' => "{$person->f} {$person->i}",
             'icon' => $photo_url,
@@ -77,17 +128,14 @@ class Notificator
     /**
      * Отправляет уведомление
      *
-     * @param array|null $notification_body Параметры уведомления
      * @param int|null $user_id ID пользователя, по-умолчанию не указан,
      *                            тогда будет отправлено всем пользователям
      *
      * @return void
      * @throws \Exception
      */
-    public function send(array $notification_body = null, int $user_id = null): void
+    private function send(int $user_id = null): void
     {
-        $notification_body = $notification_body ?? $this->notification_body;
-
         $registration_ids = [];
 
         $user = App\User::find($user_id);
@@ -96,7 +144,7 @@ class Notificator
         $notification->hash = bin2hex(random_bytes(16));
         $notification->user_id = $user->id;
 
-        $notification_body['click_action'] = url("users/notification/$notification->hash");
+        $this->notification['click_action'] = url("users/notification/$notification->hash");
 
         $tokens = $user->tokens;
 
@@ -105,7 +153,7 @@ class Notificator
         }
 
         $request_body = [
-            'notification' => $notification_body,
+            'notification' => $this->notification,
             'registration_ids' => $registration_ids
         ];
 
