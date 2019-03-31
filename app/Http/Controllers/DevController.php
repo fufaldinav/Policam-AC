@@ -26,15 +26,6 @@ class DevController extends Controller
 {
     public function index()
     {
-        $notification = App\Notification::find(19);
-
-        $photos = Notificator::getPhotos($notification);
-
-        foreach ($photos as $photo) {
-            //echo "$photo<br>";
-        }
-
-        $path = '/home/';
 
     }
 

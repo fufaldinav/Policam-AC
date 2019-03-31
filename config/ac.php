@@ -23,7 +23,7 @@ return [
     /*
     | Каталог с фотографиями камер
     */
-    'camera_path' => '/home/policam/test',
+    'camera_path' => '/var/www/img_snapshots',
     
     /*
     | Каталог с логами
