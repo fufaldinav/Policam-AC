@@ -2,19 +2,18 @@
 
 namespace App;
 
-use Illuminate\Auth\MustVerifyEmail;
-use Illuminate\Notifications\Notifiable;
-//Авторизация
-use Illuminate\Auth\Authenticatable;
-use App\Notifications\ResetPassword as ResetPasswordNotification;
+use App\Notifications\ResetPassword;
 use App\Notifications\VerifyEmail;
-use Illuminate\Foundation\Auth\Access\Authorizable;
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Auth\Passwords\CanResetPassword;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\Access\Authorizable;
+use Illuminate\Notifications\Notifiable;
 
 /**
  * App\User
@@ -125,7 +124,7 @@ class User extends Model implements
      */
     public function sendPasswordResetNotification($token)
     {
-        $this->notify(new ResetPasswordNotification($token));
+        $this->notify(new ResetPassword($token));
     }
 
     /**
