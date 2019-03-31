@@ -14,7 +14,7 @@ class AddControllerIdToNotificationsTable extends Migration
     public function up()
     {
         Schema::table('notifications', function (Blueprint $table) {
-            $table->unsignedInteger('controller_id')->nullable()->index();
+            $table->unsignedInteger('controller_id')->nullable()->index()->after('user_id');
             $table->foreign('controller_id')->references('id')->on('controllers');
         });
     }
