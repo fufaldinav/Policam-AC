@@ -35,6 +35,10 @@ class PersonsController extends Controller
 
         $org = $user->organizations()->first();
 
+        if (! $org) {
+            return view('ac.error', ['error' => 'Огранизации отсутствуют']);
+        }
+
         /* Подразделения */
         $divs = $org
             ->divisions()
@@ -58,15 +62,13 @@ class PersonsController extends Controller
         }
 
         $org_name = $org->name ?? __('ac/common.missing');
-        $css_list = ['ac'];
         $js_list = ['add_person', 'events', 'main'];
 
         return view('ac.person_add', compact(
             'divs',
             'card_list',
             'org_name',
-            'css_list',
-            'js_list'
+            'js_list',
         ));
     }
 
@@ -81,6 +83,10 @@ class PersonsController extends Controller
 
         $org = $user->organizations()->first();
 
+        if (! $org) {
+            return view('ac.error', ['error' => 'Огранизации отсутствуют']);
+        }
+
         /* Подразделения */
         $divs = $org
             ->divisions()
@@ -104,15 +110,13 @@ class PersonsController extends Controller
         }
 
         $org_name = $org->name ?? __('ac/common.missing');
-        $css_list = ['ac', 'edit_persons'];
         $js_list = ['main', 'events', 'edit_persons', 'tree'];
 
         return view('ac.persons_edit', compact(
             'divs',
             'card_list',
             'org_name',
-            'css_list',
-            'js_list'
+            'js_list',
         ));
     }
 

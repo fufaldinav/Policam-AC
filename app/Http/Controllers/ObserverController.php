@@ -33,19 +33,19 @@ class ObserverController extends Controller
 
         $org = $user->organizations()->first();
 
+        if (! $org) {
+            return view('ac.error', ['error' => 'Огранизации отсутствуют']);
+        }
+
         /* Подразделения */
         $divs = $org
             ->divisions()
             ->orderByRaw('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
             ->get();
 
-        $data = [
-            'divs' => $divs,
-            'org_name' => $org->name ?? __('ac/common.missing'),
-            'css_list' => ['ac'],
-            'js_list' => ['main', 'observer']
-        ];
+        $org_name = $org->name ?? __('ac/common.missing');
+        $js_list = ['main', 'observer'];
 
-        return view('ac.observer', $data);
+        return view('ac.observer', compact('divs', 'org_name', 'js_list'));
     }
 }

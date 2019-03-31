@@ -2,16 +2,18 @@
 
 namespace App;
 
+use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Notifications\Notifiable;
 //Авторизация
 use Illuminate\Auth\Authenticatable;
+use App\Notifications\ResetPassword as ResetPasswordNotification;
+use App\Notifications\VerifyEmail;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
-//use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
-//Модель
+use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -29,6 +31,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Notification[] $notifications
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Organization[] $organizations
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Person[] $persons
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Role[] $roles
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Token[] $tokens
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User newQuery()
@@ -45,11 +48,12 @@ use Illuminate\Database\Eloquent\Model;
 class User extends Model implements
     AuthenticatableContract,
     AuthorizableContract,
-    CanResetPasswordContract
+    CanResetPasswordContract,
+    MustVerifyEmailContract
 {
     use Notifiable;
 
-    use Authenticatable, Authorizable, CanResetPassword;
+    use Authenticatable, Authorizable, CanResetPassword, MustVerifyEmail;
 
     /**
      * The attributes that are mass assignable.
@@ -66,7 +70,7 @@ class User extends Model implements
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token', 'notifications', 'organizations', 'persons', 'tokens',
+        'password', 'remember_token', 'notifications', 'organizations', 'persons', 'tokens', 'roles',
     ];
 
     /**
@@ -77,6 +81,16 @@ class User extends Model implements
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function hasRole($role)
+    {
+        return $this->belongsToMany('App\Role')->get()->contains($role);
+    }
+
+    public function isAdmin()
+    {
+        return $this->hasRole(1);
+    }
 
     public function notifications()
     {
@@ -93,8 +107,34 @@ class User extends Model implements
         return $this->belongsToMany('App\Person');
     }
 
+    public function roles()
+    {
+        return $this->belongsToMany('App\Role');
+    }
+
     public function tokens()
     {
         return $this->hasMany('App\Token');
+    }
+
+    /**
+     * Send the password reset notification.
+     *
+     * @param  string  $token
+     * @return void
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordNotification($token));
+    }
+
+    /**
+     * Send the email verification notification.
+     *
+     * @return void
+     */
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new VerifyEmail);
     }
 }
