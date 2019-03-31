@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * App\Camera
+ * App\CameraSnapshot
  *
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
@@ -13,18 +13,18 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property string $name
  * @property int $type
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\CameraSnapshot[] $snapshots
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Controller[] $controllers
+ * @property-read \App\Camera $camera
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Card newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Card newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Card query()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Card whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Card whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Card whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Card whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Card whereCameraId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Card wherePath($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Card whereTime($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Card whereUpdatedAt($value)
  */
-class Camera extends Model
+class CameraSnapshot extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -32,7 +32,7 @@ class Camera extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'type',
+        'camera_id', 'time', 'path',
     ];
 
     /**
@@ -41,7 +41,7 @@ class Camera extends Model
      * @var array
      */
     protected $hidden = [
-        'controllers', 'snapshots',
+        'camera',
     ];
 
     /**
@@ -50,16 +50,11 @@ class Camera extends Model
      * @var array
      */
     protected $casts = [
-        'type' => 'integer',
+        'camera_id' => 'integer',
     ];
 
-    public function snapshots()
+    public function camera()
     {
-        return $this->HasMany('App\CameraSnapshot');
-    }
-
-    public function controllers()
-    {
-        return $this->belongsToMany('App\Controller');
+        return $this->belongsTo('App\Camera');
     }
 }
