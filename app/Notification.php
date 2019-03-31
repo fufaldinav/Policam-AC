@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * App\Notification
@@ -14,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string|null $deleted_at
+ * @property-read \App\Controller $controller
  * @property-read \App\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Notification newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Notification newQuery()
@@ -27,6 +29,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Notification extends Model
 {
+    use SoftDeletes;
     /**
      * The attributes that are mass assignable.
      *
@@ -53,6 +56,11 @@ class Notification extends Model
     protected $casts = [
         'user_id' => 'integer',
     ];
+
+    public function controller()
+    {
+        return $this->belongsTo('App\Controller');
+    }
 
     public function user()
     {

@@ -15,7 +15,6 @@ class AddForeignKeysToPhotosTable extends Migration
     {
         Schema::table('photos', function (Blueprint $table) {
             $table->foreign('person_id')->references('id')->on('persons');
-
         });
     }
 

@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Organization $organization
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Camera[] $cameras
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Notification[] $notifications
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Task[] $tasks
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Controller newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Controller newQuery()
@@ -79,6 +80,11 @@ class Controller extends Model
     public function cameras()
     {
         return $this->belongsToMany('App\Camera');
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany('App\Notification');
     }
 
     public function organization()
