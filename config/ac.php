@@ -19,11 +19,16 @@ return [
     | Каталог с фотографиями
     */
     'img_path' => '/var/www/img_ac',
+
+    /*
+    | Каталог с фотографиями камер
+    */
+    'camera_path' => '/home/policam/test',
     
     /*
     | Каталог с логами
     */
-    'log_path' => '/var/www/logs_test',
+    'log_path' => '/var/www/logs',
     
     /*
     | Таймаут одного long poll

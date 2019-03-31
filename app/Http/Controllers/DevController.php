@@ -19,11 +19,23 @@
 namespace App\Http\Controllers;
 
 use App;
+use App\Policam\Ac\Notificator;
+use Carbon\Carbon;
 
 class DevController extends Controller
 {
     public function index()
     {
+        $notification = App\Notification::find(19);
+
+        $photos = Notificator::getPhotos($notification);
+
+        foreach ($photos as $photo) {
+            //echo "$photo<br>";
+        }
+
+        $path = '/home/';
+
     }
 
     public function test()

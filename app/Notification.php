@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @mixin \Eloquent
  * @property int $id
  * @property string $hash
+ * @property int $controller_id
  * @property int $user_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -20,6 +21,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Notification newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Notification newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Notification query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Notification whereControllerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Notification whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Notification whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Notification whereHash($value)
@@ -36,7 +38,7 @@ class Notification extends Model
      * @var array
      */
     protected $fillable = [
-        'hash', 'user_id',
+        'hash', 'controller_id', 'user_id',
     ];
 
     /**

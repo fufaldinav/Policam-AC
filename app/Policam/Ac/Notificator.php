@@ -20,6 +20,7 @@ namespace app\Policam\Ac;
 
 use App;
 use Carbon\Carbon;
+use Log;
 
 class Notificator
 {
@@ -30,7 +31,16 @@ class Notificator
     private $server_key;
 
     /** @var array Параметры уведомления */
-    private $notification = [];
+    private $notification_body = [];
+
+    /** @var App\Controller */
+    private $controller;
+
+    /** @var App\Event */
+    private $event;
+
+    /** @var App\Person */
+    private $person;
 
     public function __construct()
     {
@@ -54,33 +64,34 @@ class Notificator
 
         $pass_time = Carbon::createFromTimeString($event->time);
 
-        $event = App\Event::where('event', 4)
-            ->orWhere('event', 5)
+        $this->event = App\Event::whereIn('event', [4, 5])
             ->where('time', '<=', $pass_time->toDateTimeString())
             ->orderBy('time', 'DESC')
             ->first();
 
-        if (! $event) {
+        if (! $this->event) {
             return null;
         }
 
-        $open_time = Carbon::createFromTimeString($event->time);
+        $open_time = Carbon::createFromTimeString($this->event->time);
 
         if ($open_time->diffInSeconds($pass_time) > 5) {
             return null;
         }
 
-        $card = App\Card::find($event->card_id);
+        $this->controller = App\Controller::find($this->event->controller_id);
 
-        $person = $card->person;
+        $card = App\Card::find($this->event->card_id);
 
-        $this->generate($person->id, $event->event);
+        $this->person = $card->person;
 
-        if (! $this->notification) {
+        $this->generate();
+
+        if (!$this->notification_body) {
             return null;
         }
 
-        $subs = $person->users;
+        $subs = $this->person->users;
 
         foreach ($subs as $sub) {
             $this->send($sub->id);
@@ -89,16 +100,116 @@ class Notificator
     }
 
     /**
-     * Генерирует уведомление
+     * Подготавливает фото для отображения
      *
-     * @param int $person_id ID человека
-     * @param int $event_id ID события
+     * @param App\Notification $notification
+     *
+     * @return array
+     */
+    public static function getPhotos(App\Notification $notification): array
+    {
+        $datetime = Carbon::createFromTimeString($notification->created_at);
+
+        $cameras = $notification->controller->cameras;
+
+        $camera_path = config('ac.camera_path');
+        $files = [];
+
+        foreach ($cameras as $camera) {
+            $path = $camera_path . DIRECTORY_SEPARATOR . $camera->name;
+            $files = array_merge($files, self::scanDir($path));
+            self::scanDirByTime($path, $datetime);
+        }
+
+        return $files;
+    }
+
+    /**
+     * Сканирует директорию и возвращает полные пути к файлам
+     *
+     * @param $dir
+     * @param Carbon $datetime
+     * @param int $delta
+     *
+     * @return array
+     */
+    private static function scanDirByTime($dir, Carbon $datetime, $delta = 10)
+    {
+        $datetime = Carbon::createFromTimeString('2019-03-31 18:42:58');
+        $first_deadline = clone $datetime;
+        $first_deadline->subSeconds($delta);
+        $second_deadline = clone $datetime;
+        $second_deadline->addSeconds($delta);
+
+        $path = $dir . DIRECTORY_SEPARATOR . $first_deadline->toDateString() . DIRECTORY_SEPARATOR . '001' . DIRECTORY_SEPARATOR . 'jpg';
+
+        $files = [];
+
+        do {
+            $path = $dir . DIRECTORY_SEPARATOR . $first_deadline->toDateString();
+            $path .= DIRECTORY_SEPARATOR . '001' . DIRECTORY_SEPARATOR . 'jpg';
+            $path .= DIRECTORY_SEPARATOR . $first_deadline->isoFormat('HH');
+            $path .= DIRECTORY_SEPARATOR . $first_deadline->isoFormat('mm');
+            if (is_dir($path)) {
+
+                $content = array_diff(scandir($path), ['..', '.']);
+
+                foreach ($content as $item) {
+                    if (is_dir($item)) {
+                        continue;
+                    }
+
+                    $files[] = realpath($path . DIRECTORY_SEPARATOR . $item);
+                }
+            }
+
+            $first_deadline->addMinute();
+            $first_deadline->second(0);
+        } while ($first_deadline->diffInSeconds($second_deadline, false) > 0);
+
+        $first_deadline = clone $datetime;
+        $first_deadline->subSeconds($delta);
+
+        foreach ($files as $file) {
+            echo $file . '<br>';
+        }
+    }
+
+    /**
+     * Сканирует директорию и возвращает полные пути к файлам
+     *
+     * @param $dir
+     * @param array $result
+     *
+     * @return array
+     */
+    private static function scanDir($dir, &$result = []): array
+    {
+        if (is_dir($dir)) {
+            $content = array_diff(scandir($dir), ['..', '.', 'DVRWorkDirectory']);
+            foreach ($content as $item)
+            {
+                $path = realpath($dir . DIRECTORY_SEPARATOR . $item);
+
+                if (! is_dir($path)) {
+                    $result[] = $path;
+                } else {
+                    self::scanDir($path, $result);
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Генерирует уведомление
      *
      * @return mixed[]|null Параметры уведомления или NULL - неподходящее событие
      */
-    private function generate(int $person_id, int $event_id): ?array
+    private function generate(): ?array
     {
-        switch ($event_id) {
+        switch ($this->event->event) {
             case 4: //вход
                 $event = __('ac/common.entrace');
                 break;
@@ -111,15 +222,13 @@ class Notificator
                 return null;
         }
 
-        $person = App\Person::find($person_id);
-
-        $photo = $person->photos()->first();
+        $photo = $this->person->photos()->first();
 
         $photo_url = "https://{$_SERVER['HTTP_HOST']}/img/ac/s/" . ($photo->id ?? 0) . ".jpg";
 
-        return $this->notification = [
+        return $this->notification_body = [
             'title' => $event,
-            'body' => "{$person->f} {$person->i}",
+            'body' => "{$this->person->f} {$this->person->i}",
             'icon' => $photo_url,
             'click_action' => url('/')
         ];
@@ -142,9 +251,10 @@ class Notificator
 
         $notification = new App\Notification();
         $notification->hash = bin2hex(random_bytes(16));
+        $notification->controller_id = $this->controller->id ?? null;
         $notification->user_id = $user->id;
 
-        $this->notification['click_action'] = url("users/notification/$notification->hash");
+        $this->notification_body['click_action'] = url("users/notification/$notification->hash");
 
         $tokens = $user->tokens;
 
@@ -153,7 +263,7 @@ class Notificator
         }
 
         $request_body = [
-            'notification' => $this->notification,
+            'notification' => $this->notification_body,
             'registration_ids' => $registration_ids
         ];
 

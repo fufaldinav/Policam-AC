@@ -19,6 +19,7 @@
 namespace App\Http\Controllers;
 
 use App, Auth;
+use App\Policam\Ac\Notificator;
 use Illuminate\Http\Request;
 
 class UsersController extends Controller
@@ -68,6 +69,7 @@ class UsersController extends Controller
      * @param string|null $hash Хэш уведомления
      *
      * @return string|null
+     * @throws \Exception
      */
     public function notification(string $hash = null): ?string
     {
@@ -75,14 +77,15 @@ class UsersController extends Controller
             return null;
         }
 
-        $notification = App\Notification::where(['hash' => $hash, 'active' => 1])->first();
+        $notification = App\Notification::where(['hash' => $hash])->first();
 
-        if (!isset($notification->id)) {
+        if (! $notification) {
             return 'Уведомление устарело или не существует'; //TODO перевод
         }
 
-        $notification->active = 0;
-        $notification->save();
+        $photos = Notificator::getPhotos($notification);
+
+        $notification->delete();
 
         return $notification->created_at;
     }
