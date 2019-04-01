@@ -83,9 +83,9 @@ Route::post('server', 'ServersController@index')->name('server');
  */
 Route::group(['prefix' =>'users', 'as' => 'users.', 'middleware' => ['auth', 'verified']], function() {
     Route::redirect('cp', '/cp')->name('users.cp');
-    Route::get('notification/{hash}', 'UsersController@notification')->name('notification');
     Route::post('token', 'UsersController@token')->name('token');
 });
+Route::get('users/notification/{hash?}', 'UsersController@notification')->name('users.notification');
 /*
  * Util
  */

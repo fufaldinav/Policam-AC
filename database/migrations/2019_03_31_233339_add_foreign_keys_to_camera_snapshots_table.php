@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddForeignKeysToPhotosTable extends Migration
+class AddForeignKeysToCameraSnapshotsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddForeignKeysToPhotosTable extends Migration
      */
     public function up()
     {
-        Schema::table('photos', function (Blueprint $table) {
-            $table->foreign('person_id')->references('id')->on('persons');
+        Schema::table('camera_snapshots', function (Blueprint $table) {
+            $table->foreign('camera_id')->references('id')->on('cameras');
         });
     }
 
@@ -25,8 +25,8 @@ class AddForeignKeysToPhotosTable extends Migration
      */
     public function down()
     {
-        Schema::table('photos', function (Blueprint $table) {
-            $table->dropForeign('photos_person_id_foreign');
+        Schema::table('camera_snapshots', function (Blueprint $table) {
+            $table->dropForeign('camera_snapshots_camera_id_foreign');
         });
     }
 }
