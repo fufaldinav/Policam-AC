@@ -27,6 +27,12 @@ use Illuminate\Http\Request;
 
 class UtilsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('verified');
+    }
+
     /**
      * Возвращает текущее время
      */

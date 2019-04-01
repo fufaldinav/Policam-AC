@@ -23,6 +23,12 @@ use App\Policam\Ac\Tasker;
 
 class ControllersController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('verified');
+    }
+
     /**
      * Устанавливает параметры открытия двери
      *
