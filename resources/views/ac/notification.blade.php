@@ -12,7 +12,12 @@
 <button class="button controls controls-right" id="next">Вперёд</button>
 <ul id="slides">
     @foreach($photos as $photo)
-        <li class="slide">
+        @if ($loop->first)
+            @php($class = "slide showing")
+        @else
+            @php($class = "slide")
+        @endif
+        <li class="{{ $class }}">
             <img src="{{ str_replace(config('ac.camera_path'), '/img/snapshots', $photo) }}" class="slideimg">
         </li>
     @endforeach
