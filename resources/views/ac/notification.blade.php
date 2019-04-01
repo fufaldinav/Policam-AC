@@ -2,12 +2,14 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8"/>
-    <link rel="stylesheet" href="{{ url("css/notification.css") }}?{{ time() }}"/>
+    <link rel="stylesheet" href="{{ asset('css/notification.css') }}?{{ time() }}"/>
+    <script type="text/javascript" src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jquery.touchSwipe.min.js') }}"></script>
     @include('js.notification')
 </head>
 <body>
-<button class="controls controls-left" id="previous"><</button>
-<button class="controls controls-right" id="next">></button>
+<button class="button controls controls-left" id="previous">Назад</button>
+<button class="button controls controls-right" id="next">Вперёд</button>
 <ul id="slides">
     @foreach($photos as $photo)
         <li class="slide">

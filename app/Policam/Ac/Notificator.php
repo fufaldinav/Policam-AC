@@ -20,7 +20,6 @@ namespace app\Policam\Ac;
 
 use App;
 use Carbon\Carbon;
-use Log;
 
 class Notificator
 {

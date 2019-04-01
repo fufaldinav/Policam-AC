@@ -38,9 +38,15 @@ body {
     background: #333;
     color: #fff;
 }
-img.slideimg {
-    height: 100%;
-    width: 100%;
+.slideimg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
 }
 .controls {
     position: absolute;
@@ -53,15 +59,37 @@ img.slideimg {
 .controls-right {
     right: 10px;
 }
-button {
-    font-size: 50px;
-    border: 0;
-    background-color: rgba(27, 27, 27, 0.99);
-    box-shadow: 0 1px 0 0 #a2a3a6, 0 0 0 1px #96979a;
-    color: #ffffff;
+.button{
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+    padding: 6px 20px;
+    margin: 0;
+    cursor: pointer;
+    border: 1px solid #bbb;
+    overflow: visible;
+    font: bold 16px arial, helvetica, sans-serif;
+    text-decoration: none;
+    white-space: nowrap;
+    color: #555;
+    background-color: #ddd;
+    background-image: linear-gradient(top, rgba(255,255,255,1),
+    rgba(255,255,255,0)),
+    url(data:image/png;base64,iVBORw0KGg[...]QmCC);
+    transition: background-color .2s ease-out;
+    background-clip: padding-box; /* Fix bleeding */
+    border-radius: 3px;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, .3),
+    0 2px 2px -1px rgba(0, 0, 0, .5),
+    0 1px 0 rgba(255, 255, 255, .3) inset;
+    text-shadow: 0 1px 0 rgba(255,255,255, .9);
 }
-button:hover {
-    background-color: #ffffff;
-    box-shadow: 0 1px 0 0 #2b2b2b, 0 0 0 1px #1b1b1b;
-    color: #000000;
+.button:hover{
+    background-color: #eee;
+    color: #555;
+}
+.button:active{
+    background: #e9e9e9;
+    text-shadow: none;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .3) inset;
 }
