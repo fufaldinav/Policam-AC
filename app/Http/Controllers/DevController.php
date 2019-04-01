@@ -19,14 +19,11 @@
 namespace App\Http\Controllers;
 
 use App;
-use App\Policam\Ac\Notificator;
-use Carbon\Carbon;
 
 class DevController extends Controller
 {
     public function index()
     {
-
     }
 
     public function test()

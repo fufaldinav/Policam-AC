@@ -20,6 +20,7 @@ namespace App\Http\Controllers;
 
 use App, Auth;
 use App\Policam\Ac\Notificator;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class UsersController extends Controller
@@ -81,12 +82,15 @@ class UsersController extends Controller
 
         if (! $notification) {
             return 'Уведомление устарело или не существует'; //TODO перевод
+        } elseif (Carbon::parse($notification->created_at) < Carbon::now()->subMinute()) {
+            $notification->delete();
+            return 'Уведомление устарело или не существует'; //TODO перевод
         }
 
         $photos = Notificator::getPhotos($notification);
+        $css_list = ['notification'];
+        $js_list = ['notification'];
 
-        $notification->delete();
-
-        return $notification->created_at;
+        return view('ac.notification', compact('photos', 'css_list', 'js_list'));
     }
 }

@@ -69,7 +69,7 @@ class Notificator
             ->orderBy('time', 'DESC')
             ->first();
 
-        if (! $this->event) {
+        if (!$this->event) {
             return null;
         }
 
@@ -113,15 +113,15 @@ class Notificator
         $cameras = $notification->controller->cameras;
 
         $camera_path = config('ac.camera_path');
-        $files = [];
+        $photos = [];
 
         foreach ($cameras as $camera) {
-            $path = $camera_path . DIRECTORY_SEPARATOR . $camera->name;
-            $files = array_merge($files, self::scanDir($path));
-            self::scanDirByTime($path, $datetime);
+            $path = $camera_path . DIRECTORY_SEPARATOR . config("ac.cameras.$camera->type");
+            $path .= DIRECTORY_SEPARATOR . $camera->name;
+            $photos = array_merge($photos, self::findLastFiles($path, $datetime, 5));
         }
 
-        return $files;
+        return $photos;
     }
 
     /**
@@ -133,15 +133,12 @@ class Notificator
      *
      * @return array
      */
-    private static function scanDirByTime($dir, Carbon $datetime, $delta = 10)
+    private static function findLastFiles($dir, Carbon $datetime, $delta = 5): array
     {
-        $datetime = Carbon::createFromTimeString('2019-03-31 18:42:58');
         $first_deadline = clone $datetime;
         $first_deadline->subSeconds($delta);
         $second_deadline = clone $datetime;
         $second_deadline->addSeconds($delta);
-
-        $path = $dir . DIRECTORY_SEPARATOR . $first_deadline->toDateString() . DIRECTORY_SEPARATOR . '001' . DIRECTORY_SEPARATOR . 'jpg';
 
         $files = [];
 
@@ -151,28 +148,29 @@ class Notificator
             $path .= DIRECTORY_SEPARATOR . $first_deadline->isoFormat('HH');
             $path .= DIRECTORY_SEPARATOR . $first_deadline->isoFormat('mm');
             if (is_dir($path)) {
-
-                $content = array_diff(scandir($path), ['..', '.']);
-
-                foreach ($content as $item) {
-                    if (is_dir($item)) {
-                        continue;
+                $seconds = [];
+                for ($i = $first_deadline->second; $i < 60; $i++) {
+                    $seconds[] = $i;
+                    if ($first_deadline->diffInSeconds($second_deadline, false) <= 0) {
+                        break;
                     }
-
-                    $files[] = realpath($path . DIRECTORY_SEPARATOR . $item);
+                    $first_deadline->addSecond();
                 }
+                $content = array_diff(scandir($path), ['..', '.', 'DVRWorkDirectory']);
+                foreach ($content as $item) {
+                    $file = realpath($path . DIRECTORY_SEPARATOR . $item);
+                    $item_second = substr($item, 0, 2);
+                    if (! is_dir($file) && in_array($item_second, $seconds)) {
+                        $files[] = $file;
+                    }
+                }
+            } else {
+                $first_deadline->second(0);
+                $first_deadline->addMinute();
             }
-
-            $first_deadline->addMinute();
-            $first_deadline->second(0);
         } while ($first_deadline->diffInSeconds($second_deadline, false) > 0);
 
-        $first_deadline = clone $datetime;
-        $first_deadline->subSeconds($delta);
-
-        foreach ($files as $file) {
-            echo $file . '<br>';
-        }
+        return $files;
     }
 
     /**
@@ -187,11 +185,10 @@ class Notificator
     {
         if (is_dir($dir)) {
             $content = array_diff(scandir($dir), ['..', '.', 'DVRWorkDirectory']);
-            foreach ($content as $item)
-            {
+            foreach ($content as $item) {
                 $path = realpath($dir . DIRECTORY_SEPARATOR . $item);
 
-                if (! is_dir($path)) {
+                if (!is_dir($path)) {
                     $result[] = $path;
                 } else {
                     self::scanDir($path, $result);

@@ -16,28 +16,28 @@
  */
 return [
     /*
-    | Каталог с фотографиями
-    */
+     * Каталог с фотографиями
+     */
     'img_path' => '/var/www/img_ac',
 
     /*
-    | Каталог с фотографиями камер
-    */
+     * Каталог с фотографиями камер
+     */
     'camera_path' => '/var/www/img_snapshots',
     
     /*
-    | Каталог с логами
-    */
+     * Каталог с логами
+     */
     'log_path' => '/var/www/logs',
     
     /*
-    | Таймаут одного long poll
-    */
+     * Таймаут одного long poll
+     */
     'long_poll_timeout' => 10,
     
     /*
-    | Firebase Cloud Messaging
-    */
+     * Firebase Cloud Messaging
+     */
     'fcm' => [
         'fcm_url' => 'https://fcm.googleapis.com/fcm/send',
         'server_key' => 'AAAA6hsRfn0:APA91bFXS5t_qUC7StorR89rPP0bKbc3qDA-N6xqdeaNRn1TBSqSS-qMUx4F3HKjOwTNDRdQnpxE8uvpJLwB8dcdKlCDu1N2_35zmLkDQ1TxJXBMLzWO3MrQ7WQhBjgvT_MNBIWcOzV5',
@@ -49,5 +49,13 @@ return [
         'messaging_sender_id' => '1005476478589',
         'public_vapid_key' => 'BPKQjI8lJAE9pymLNyKm5fsJSsu-7vXlPZivaRvR52lxGWgsxF2TN5s_iaIKQ1LWNZPh0S8arKNOXfq9nAAB3Yg',
     ],
-    
+
+    /*
+     * Камеры
+     */
+    'cameras' => [
+        0 => 'camera',
+        1 => 'dahua',
+        2 => 'hikvision',
+    ],
 ];
