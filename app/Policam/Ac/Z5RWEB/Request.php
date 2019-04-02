@@ -19,8 +19,8 @@
 namespace App\Policam\Ac\Z5RWEB;
 
 use App;
+use App\Events\EventReceived;
 use App\Policam\Ac\Logger;
-use App\Policam\Ac\Notificator;
 use Carbon\Carbon;
 
 final class Request
@@ -145,8 +145,7 @@ final class Request
 
                     $out_message->eventCounter();
 
-                    $notificator = new Notificator();
-                    $notificator->handleEvent($event); // TODO уведомления
+                    event(new EventReceived($event));
                 }
 
                 $response->addMessage($out_message);
