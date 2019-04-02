@@ -10,7 +10,7 @@
             <link rel="stylesheet" href="{{ url("css/$css.css") }}?{{ time() }}"/>
         @endforeach
     @endisset
-    <script src="{{ asset('js/app.js') }}?p={{ time() }}" defer></script>
+    <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="/js/jquery-3.3.1.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase-messaging.js"></script>
