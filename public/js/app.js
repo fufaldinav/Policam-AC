@@ -59248,8 +59248,8 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'pusher',
   key: "4b0f5261202dcbf80bd4",
   wsHost: window.location.hostname,
-  wsPort: 6002,
-  wssPort: 6002,
+  wsPort: "6002",
+  wssPort: "6002",
   disableStats: true
 });
 
