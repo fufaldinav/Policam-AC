@@ -19,6 +19,7 @@
 namespace App\Policam\Ac\Z5RWEB;
 
 use App;
+use App\Events\ControllerConnected;
 use App\Events\EventReceived;
 use App\Policam\Ac\Logger;
 use Carbon\Carbon;
@@ -66,6 +67,8 @@ final class Request
 
         $ctrl->last_conn = $datetime;
         $ctrl->save();
+
+        event(new ControllerConnected($ctrl));
 
         $logger->add('inc', "TYPE: $type || SN: $sn || " . json_encode($messages));
 

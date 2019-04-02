@@ -31,7 +31,10 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 //     el: '#app'
 // });
 
-// Echo.private('controller-events')
-//     .listen('EventReceived', function (e) {
-//         console.log(e.event);
-//     });
+Echo.private('controller-events')
+    .listen('EventReceived', function (e) {
+        console.log(e);
+    })
+    .listen('ControllerConnected', function (e) {
+        console.log(e);
+    });

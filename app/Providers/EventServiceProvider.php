@@ -21,6 +21,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\EventReceived' => [
             'App\Listener\SendPassNotification',
         ],
+        'App\Events\ControllerConnected' => [
+            'App\Listener\SendControllerStatus',
+        ],
     ];
 
     /**

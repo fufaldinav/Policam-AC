@@ -59180,10 +59180,12 @@ Vue.component('example-component', __webpack_require__(/*! ./components/ExampleC
 // const app = new Vue({
 //     el: '#app'
 // });
-// Echo.private('controller-events')
-//     .listen('EventReceived', function (e) {
-//         console.log(e.event);
-//     });
+
+Echo.private('controller-events').listen('EventReceived', function (e) {
+  console.log(e);
+}).listen('ControllerConnected', function (e) {
+  console.log(e);
+});
 
 /***/ }),
 
@@ -59242,6 +59244,7 @@ if (token) {
 
 window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
+  authEndpoint: "https://policam.ru/laravel" + '/broadcasting/auth',
   broadcaster: 'pusher',
   key: "4b0f5261202dcbf80bd4",
   wsHost: window.location.hostname,
