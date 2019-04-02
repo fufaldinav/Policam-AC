@@ -18,7 +18,7 @@
             @php($class = "slide")
         @endif
         <li class="{{ $class }}">
-            <img src="{{ str_replace(config('ac.camera_path'), '/img/snapshots', $photo) }}" class="slideimg">
+            <img src="{{ str_replace(config('ac.camera_path'), '/img/snapshots', $photo) }}" class="slideimg" alt="Snapshot">
         </li>
     @endforeach
 </ul>
