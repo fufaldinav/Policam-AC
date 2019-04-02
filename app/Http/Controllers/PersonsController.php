@@ -24,6 +24,12 @@ use Illuminate\Http\Request;
 
 class PersonsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('verified');
+    }
+
     /**
      * Страница добавления человека
      *

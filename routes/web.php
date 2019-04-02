@@ -14,7 +14,7 @@
 /*
  * Home Page
  */
-Route::get('/', 'ObserverController@index')->name('/')->middleware('auth', 'verified');
+Route::get('/', 'ObserverController@index')->name('/');
 /*
  * Auth
  */
@@ -22,7 +22,7 @@ Auth::routes(['verify' => true]);
 /*
  * Cards
  */
-Route::group(['prefix' =>'cards', 'as' => 'cards.', 'middleware' => ['auth', 'verified']], function() {
+Route::group(['prefix' =>'cards', 'as' => 'cards.'], function() {
     Route::get('get_list/{person_id?}', 'CardsController@getList')->name('get_list');
     Route::post('holder', 'CardsController@holder')->name('holder');
     Route::post('delete', 'CardsController@delete')->name('delete');
@@ -30,7 +30,7 @@ Route::group(['prefix' =>'cards', 'as' => 'cards.', 'middleware' => ['auth', 've
 /*
  * Controllers
  */
-Route::group(['prefix' =>'controllers', 'as' => 'controllers.', 'middleware' => ['auth', 'verified']], function() {
+Route::group(['prefix' =>'controllers', 'as' => 'controllers.'], function() {
     Route::get('set_door_params/{controller_id}/{open_time}', 'ControllersController@setDoorParams')->name('set_door_params');
     Route::get('clear/{controller_id}', 'ControllersController@clear')->name('clear');
     Route::get('reload_cards/{controller_id}', 'ControllersController@reloadCards')->name('reload_cards');
@@ -38,16 +38,16 @@ Route::group(['prefix' =>'controllers', 'as' => 'controllers.', 'middleware' => 
 /*
  * Control Panel
  */
-Route::get('cp', 'UsersController@index')->name('cp')->middleware('auth', 'verified');
+Route::get('cp', 'UsersController@index')->name('cp');
 /*
  * Development
  */
-Route::get('dev', 'DevController@index')->name('dev')->middleware('auth', 'verified');
-Route::get('dev/test', 'DevController@test')->name('dev.test')->middleware('auth', 'verified');
+Route::get('dev', 'DevController@index')->name('dev');
+Route::get('dev/test', 'DevController@test')->name('dev.test');
 /*
  * Divisions
  */
-Route::group(['prefix' =>'divisions', 'as' => 'divisions.', 'middleware' => ['auth', 'verified']], function() {
+Route::group(['prefix' =>'divisions', 'as' => 'divisions.'], function() {
     Route::get('classes', 'DivisionsController@classes')->name('classes')->middleware('role:3');
     Route::get('get_list', 'DivisionsController@getList')->name('get_list');
     Route::post('save', 'DivisionsController@save')->name('save');
@@ -56,7 +56,7 @@ Route::group(['prefix' =>'divisions', 'as' => 'divisions.', 'middleware' => ['au
 /*
  * Persons
  */
-Route::group(['prefix' =>'persons', 'as' => 'persons.', 'middleware' => ['auth', 'verified']], function() {
+Route::group(['prefix' =>'persons', 'as' => 'persons.'], function() {
     Route::group(['middleware' => 'role:3'], function () {
         Route::get('add', 'PersonsController@add')->name('add');
         Route::get('edit', 'PersonsController@edit')->name('edit');
@@ -70,7 +70,7 @@ Route::group(['prefix' =>'persons', 'as' => 'persons.', 'middleware' => ['auth',
 /*
  * Photos
  */
-Route::group(['prefix' =>'photos', 'as' => 'photos.', 'middleware' => ['auth', 'verified']], function() {
+Route::group(['prefix' =>'photos', 'as' => 'photos.'], function() {
     Route::post('save', 'PhotosController@save')->name('save');
     Route::post('delete', 'PhotosController@delete')->name('delete');
 });
@@ -81,7 +81,7 @@ Route::post('server', 'ServersController@index')->name('server');
 /*
  * Users
  */
-Route::group(['prefix' =>'users', 'as' => 'users.', 'middleware' => ['auth', 'verified']], function() {
+Route::group(['prefix' =>'users', 'as' => 'users.'], function() {
     Route::redirect('cp', '/cp')->name('users.cp');
     Route::post('token', 'UsersController@token')->name('token');
 });
@@ -89,7 +89,7 @@ Route::get('users/notification/{hash?}', 'UsersController@notification')->name('
 /*
  * Util
  */
-Route::group(['prefix' =>'util', 'as' => 'util.', 'middleware' => ['auth', 'verified']], function() {
+Route::group(['prefix' =>'util', 'as' => 'util.'], function() {
     Route::get('get_time', 'UtilsController@getTime')->name('get_time');
     Route::post('get_events', 'UtilsController@getEvents')->name('get_events');
     Route::post('save_errors', 'UtilsController@saveErrors')->name('save_errors');

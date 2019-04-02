@@ -19,12 +19,18 @@
 namespace App\Http\Controllers;
 
 use App, Auth;
-use App\Policam\Ac\Notificator;
+use App\Policam\Ac\Snapshot;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class UsersController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('verified');
+    }
+
     /**
      * Панель управления
      *
@@ -87,7 +93,7 @@ class UsersController extends Controller
             return 'Уведомление устарело или не существует'; //TODO перевод
         }
 
-        $photos = Notificator::getPhotos($notification);
+        $photos = Snapshot::getByNotification($notification);
         $css_list = ['notification'];
         $js_list = ['notification'];
 
