@@ -33,5 +33,8 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 
 Echo.private('controller-events')
     .listen('EventReceived', function (e) {
-        console.log(e.event);
+        console.log(e);
+    })
+    .listen('ControllerConnected', function (e) {
+        console.log(e);
     });

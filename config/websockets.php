@@ -17,7 +17,7 @@ return [
             'name' => env('APP_NAME'),
             'key' => env('PUSHER_APP_KEY'),
             'secret' => env('PUSHER_APP_SECRET'),
-            'enable_client_messages' => false,
+            'enable_client_messages' => true,
             'enable_statistics' => true,
         ],
     ],
@@ -99,17 +99,21 @@ return [
          * in a separate file specified by local_pk.
          */
         'local_cert' => '/etc/ssl/policam.ru_crt.crt',
+//        'local_cert' => null,
 
         /*
          * Path to local private key file on filesystem in case of separate files for
          * certificate (local_cert) and private key.
          */
         'local_pk' => '/etc/ssl/policam.ru_key.key',
+//        'local_pk' => null,
 
         /*
          * Passphrase for your local_cert file.
          */
         'passphrase' => null,
+
+        'verify_peer' => false,
     ],
 
     /*

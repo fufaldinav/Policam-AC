@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Event;
+use App\Controller;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -11,22 +11,19 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class EventReceived implements ShouldBroadcast
+class ControllerConnected implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $event;
-
+    public $controller;
     /**
      * Create a new event instance.
      *
-     * @param Event $event
-     *
      * @return void
      */
-    public function __construct(Event $event)
+    public function __construct(Controller $controller)
     {
-        $this->event = $event;
+        $this->controller = $controller;
     }
 
     /**
@@ -46,6 +43,6 @@ class EventReceived implements ShouldBroadcast
      */
     public function broadcastWith()
     {
-        return ['card_id' => $this->event->card_id];
+        return ['controller_id' => $this->controller->id];
     }
 }
