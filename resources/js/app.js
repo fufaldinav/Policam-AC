@@ -19,7 +19,7 @@ window.Vue = require('vue');
 // const files = require.context('./', true, /\.vue$/i);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+// Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -32,9 +32,15 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 // });
 
 Echo.private('controller-events')
-    .listen('EventReceived', function (e) {
-        console.log(e);
+    .listen('EventReceived', (e) => {
+        if (e.event == 4 || e.event == 5) {
+            setPersonInfo(e.card_id);
+        }
     })
-    .listen('ControllerConnected', function (e) {
-        console.log(e);
+    .listen('ControllerConnected', (e) => {
+        SetControllerStatus(e.controller_id);
     });
+
+function SetControllerStatus() {
+    //
+}
