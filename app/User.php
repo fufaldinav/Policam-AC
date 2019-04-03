@@ -14,6 +14,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Notifications\Notifiable;
+use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
 /**
  * App\User
@@ -52,7 +53,7 @@ class User extends Model implements
 {
     use Notifiable;
 
-    use Authenticatable, Authorizable, CanResetPassword, MustVerifyEmail;
+    use Authenticatable, Authorizable, CanResetPassword, MustVerifyEmail, HasRelationships;
 
     /**
      * The attributes that are mass assignable.
@@ -89,6 +90,11 @@ class User extends Model implements
     public function isAdmin()
     {
         return $this->hasRole(1);
+    }
+
+    public function controllers()
+    {
+        return $this->hasManyDeep('App\Controller', ['organization_user', 'App\Organization']);
     }
 
     public function notifications()
