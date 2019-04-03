@@ -41,6 +41,6 @@ Echo.private('controller-events')
         SetControllerStatus(e.controller_id);
     });
 
-function SetControllerStatus() {
-    //
+function SetControllerStatus(controller_id) {
+    console.log(controller_id);
 }
