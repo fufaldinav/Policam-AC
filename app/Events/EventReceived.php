@@ -34,7 +34,7 @@ class EventReceived implements ShouldBroadcastNow
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('controller-events');
+        return new PrivateChannel('controller-events.' . $this->event->controller_id);
     }
 
     /**

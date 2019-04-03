@@ -32,7 +32,7 @@ class ControllerConnected implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('controller-events');
+        return new PrivateChannel('controller-events.' . $this->controller->id);
     }
 
     /**

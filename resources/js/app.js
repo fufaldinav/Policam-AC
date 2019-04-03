@@ -31,14 +31,22 @@ window.Vue = require('vue');
 //     el: '#app'
 // });
 
-Echo.private('controller-events')
-    .listen('EventReceived', (e) => {
-        if (e.event == 4 || e.event == 5) {
-            setPersonInfo(e.card_id);
+axios.get(process.env.MIX_APP_URL + '/controllers/get_list')
+    .then(function (response) {
+        for (let k in response.data) {
+            Echo.private(`controller-events.${response.data[k].id}`)
+                .listen('EventReceived', (e) => {
+                    if (e.event == 4 || e.event == 5) {
+                        setPersonInfo(e.card_id);
+                    }
+                })
+                .listen('ControllerConnected', (e) => {
+                    SetControllerStatus(e.controller_id);
+                });
         }
     })
-    .listen('ControllerConnected', (e) => {
-        SetControllerStatus(e.controller_id);
+    .catch(function (error) {
+        console.log(error);
     });
 
 function SetControllerStatus(controller_id) {
