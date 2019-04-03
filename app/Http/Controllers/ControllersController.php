@@ -18,7 +18,7 @@
 
 namespace App\Http\Controllers;
 
-use App;
+use App, Auth;
 use App\Policam\Ac\Tasker;
 
 class ControllersController extends Controller
@@ -27,6 +27,13 @@ class ControllersController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('verified');
+    }
+
+    public function getList()
+    {
+        $controllers = App\User::find(Auth::id())->controllers;
+
+        return response()->json($controllers);
     }
 
     /**
@@ -91,7 +98,7 @@ class ControllersController extends Controller
      *
      * @return string
      */
-    public function reload_cards(int $ctrl_id = null): string
+    public function reloadCards(int $ctrl_id = null): string
     {
         if (is_null($ctrl_id)) {
             return 'Не выбран контроллер'; //TODO перевод

@@ -31,6 +31,7 @@ Route::group(['prefix' =>'cards', 'as' => 'cards.'], function() {
  * Controllers
  */
 Route::group(['prefix' =>'controllers', 'as' => 'controllers.'], function() {
+    Route::get('get_list', 'ControllersController@getList')->name('get_list');
     Route::get('set_door_params/{controller_id}/{open_time}', 'ControllersController@setDoorParams')->name('set_door_params');
     Route::get('clear/{controller_id}', 'ControllersController@clear')->name('clear');
     Route::get('reload_cards/{controller_id}', 'ControllersController@reloadCards')->name('reload_cards');
