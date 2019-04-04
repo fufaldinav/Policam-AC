@@ -18,7 +18,8 @@
 
 namespace App\Http\Controllers;
 
-use App, Auth;
+use App;
+use Illuminate\Http\Request;
 
 class ObserverController extends Controller
 {
@@ -31,13 +32,13 @@ class ObserverController extends Controller
     /**
      * Страница наблюдения
      *
+     * @param Request $request
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index()
+    public function index(Request $request)
     {
-        $user = App\User::find(Auth::id());
-
-        $org = $user->organizations()->first();
+        $org = $request->user()->organizations()->first();
 
         if (! $org) {
             return view('ac.error', ['error' => 'Огранизации отсутствуют']);

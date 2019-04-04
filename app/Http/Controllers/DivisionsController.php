@@ -18,7 +18,7 @@
 
 namespace App\Http\Controllers;
 
-use App, Auth;
+use App;
 use Illuminate\Http\Request;
 
 class DivisionsController extends Controller
@@ -32,23 +32,23 @@ class DivisionsController extends Controller
     /**
      * Страница управления классами
      *
+     * @param Request $request
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function classes()
+    public function classes(Request $request)
     {
-        $user = App\User::find(Auth::id());
-
-        $org = $user->organizations()->first();
+        $org = $request->user()->organizations()->first();
 
         if (! $org) {
             return view('ac.error', ['error' => 'Огранизации отсутствуют']);
         }
 
+        $org_id = $org->id;
+
         $divs = $org->divisions()
             ->orderByRaw('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
             ->get();
-
-        $org_id = $org->id;
 
         $org_name = $org->name ?? __('ac/common.missing');
         $css_list = ['tables'];
@@ -59,29 +59,22 @@ class DivisionsController extends Controller
             'divs',
             'org_name',
             'css_list',
-            'js_list',
+            'js_list'
         ));
     }
 
     /**
      * Получает коллекцию подразделений
      *
+     * @param Request $request
+     *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getList()
+    public function getList(Request $request)
     {
-        $user = App\User::find(Auth::id());
-
-        $divs = [];
-
-        foreach ($user->organizations as $org) {
-            $cur_div = $org->divisions()
-                ->orderByRaw('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
-                ->get()
-                ->toArray();
-
-            $divs = array_merge($divs, $cur_div);
-        }
+        $divs = $request->user()->divisions()
+            ->orderByRaw('divisions.type ASC, CAST(divisions.name AS UNSIGNED) ASC, divisions.name ASC')
+            ->get();
 
         return response()->json($divs);
     }
@@ -97,7 +90,7 @@ class DivisionsController extends Controller
     {
         $div_data = json_decode($request->input('div'), true);
 
-        $div = App\Division::create($div_data);
+        $div = App\Division::firstOrCreate($div_data);
 
         return response()->json($div);
     }
@@ -118,11 +111,11 @@ class DivisionsController extends Controller
             return 0;
         }
 
-        $user = App\User::find(Auth::id());
+        $org = $request->user()->organizations()->first();
 
-        $org = $user->organizations()->first();
+        $cur_div = $request->user()->divisions()->where('id', $div_id)->first();
 
-        $cur_div = App\Division::find($div_id);
+        abort_if(! $cur_div, 403);
 
         //"Пустое" подразделение
         $empty_div = App\Division::where('organization_id', $org->id)

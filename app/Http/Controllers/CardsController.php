@@ -18,7 +18,7 @@
 
 namespace App\Http\Controllers;
 
-use App, Auth;
+use App;
 use App\Policam\Ac\Tasker;
 use Illuminate\Http\Request;
 
@@ -44,9 +44,7 @@ class CardsController extends Controller
 
         $card = $request->user()->cards->where('id', $card_id)->first();
 
-        if (! $card) {
-            abort(403);
-        }
+        abort_if(! $card, 403);
 
         $card->person_id = $person_id;
 
@@ -83,9 +81,7 @@ class CardsController extends Controller
 
         $card = $request->user()->cards->where('id', $card_id)->first();
 
-        if (! $card) {
-            abort(403);
-        }
+        abort_if(! $card, 403);
 
         return (int)$card->delete();
     }

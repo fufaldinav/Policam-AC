@@ -142,9 +142,13 @@
             success: function(data) {
                 if (data) {
                     for (let k in data.person) {
+                        let elem = document.getElementById(k);
+                        if (elem == null) {
+                            continue;
+                        }
                         person[k] = data.person[k];
-                        document.getElementById(k).value = data.person[k];
-                        document.getElementById(k).readOnly = false;
+                        elem.value = data.person[k];
+                        elem.readOnly = false;
                     }
 
                     let photo_id = 0;

@@ -18,8 +18,7 @@
 
 namespace App\Http\Controllers;
 
-use App, Auth;
-use App\Policam\Ac\Polling;
+use App;
 use App\Policam\Ac\Tasker;
 use App\Policam\Ac\Logger;
 use Carbon\Carbon;
@@ -31,36 +30,6 @@ class UtilsController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('verified');
-    }
-
-    /**
-     * Возвращает текущее время
-     */
-    public function getTime()
-    {
-        return Carbon::now()->toDateTimeString();
-    }
-
-    /**
-     * Возвращает последние события и реализует long polling
-     *
-     * @param Request $request
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getEvents(Request $request)
-    {
-        $events = $request->input('events');
-        $time = $request->input('time');
-
-        $request->session()->save();
-
-        $msgs = Polling::polling($events, $time);
-
-        return response()->json([
-            'time' => Carbon::now()->toDateTimeString(),
-            'msgs' => $msgs,
-        ]);
     }
 
     /**
@@ -147,7 +116,7 @@ class UtilsController extends Controller
         }
 
         App\Userevent::create([
-            'user_id' => Auth::id(),
+            'user_id' => $request->user()->id,
             'type' => $problem_type,
             'description' => $description,
             'time' => Carbon::now()->toDateTimeString()
