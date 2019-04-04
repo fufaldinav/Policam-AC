@@ -214,7 +214,7 @@ class PersonsController extends Controller
 
         $org = $request->user()->organizations()->first();
 
-        $person = $request->user()->persons()->where('id', $person_id)->first();
+        $person = $request->user()->persons()->where('persons.id', $person_id)->first();
 
         abort_if(!$person, 403);
 
@@ -262,7 +262,7 @@ class PersonsController extends Controller
      */
     public function get(Request $request, int $person_id)
     {
-        $person = $request->user()->persons()->where('person_id', $person_id)->first();
+        $person = $request->user()->persons()->where('persons.id', $person_id)->first();
 
         abort_if(! $person, 403);
 
@@ -283,7 +283,7 @@ class PersonsController extends Controller
      */
     public function getByCard(Request $request, int $card_id)
     {
-        $card = $request->user()->cards()->where('id', $card_id)->first();
+        $card = $request->user()->cards()->where('cards.id', $card_id)->first();
 
         abort_if(! $card, 403);
 
