@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\User;
+use Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -25,6 +27,8 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        Gate::define('viewWebSocketsDashboard', function ($user = null) {
+            return Auth::user()->isAdmin();
+        });
     }
 }
