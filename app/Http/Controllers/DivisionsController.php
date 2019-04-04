@@ -113,7 +113,7 @@ class DivisionsController extends Controller
 
         $org = $request->user()->organizations()->first();
 
-        $cur_div = $request->user()->divisions()->where('id', $div_id)->first();
+        $cur_div = $request->user()->divisions()->where('divisions.id', $div_id)->first();
 
         abort_if(! $cur_div, 403);
 
