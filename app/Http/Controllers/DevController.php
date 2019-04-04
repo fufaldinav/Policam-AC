@@ -30,6 +30,9 @@ class DevController extends Controller
 
     public function index()
     {
+        $response = print_r('some data', true);
+
+        return response($response)->header('Content-Type', 'text/plain');
     }
 
     public function test()

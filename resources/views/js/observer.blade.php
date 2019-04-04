@@ -1,6 +1,8 @@
 <script>
     `use strict`;
 
+    let events = [4, 5]; //где 4, 5 - события входа/выхода
+
     //получение данных пользователя из БД
     function setPersonInfo(card_id) {
         axios.get(`{{ url('/') }}/persons/get_by_card/${card_id}`)

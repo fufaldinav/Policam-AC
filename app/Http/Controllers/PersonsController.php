@@ -68,13 +68,13 @@ class PersonsController extends Controller
         }
 
         $org_name = $org->name ?? __('ac/common.missing');
-        $js_list = ['add_person', 'events', 'main'];
+        $js_list = ['add_person', 'main'];
 
         return view('ac.person_add', compact(
             'divs',
             'card_list',
             'org_name',
-            'js_list',
+            'js_list'
         ));
     }
 
@@ -117,14 +117,14 @@ class PersonsController extends Controller
 
         $org_name = $org->name ?? __('ac/common.missing');
         $css_list = ['edit_persons'];
-        $js_list = ['main', 'events', 'edit_persons', 'tree'];
+        $js_list = ['main', 'edit_persons', 'tree'];
 
         return view('ac.persons_edit', compact(
             'divs',
             'card_list',
             'org_name',
             'css_list',
-            'js_list',
+            'js_list'
         ));
     }
 
