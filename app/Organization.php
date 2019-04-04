@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
 /**
  * App\Organization
@@ -16,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Controller[] $controllers
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Division[] $divisions
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Person[] $persons
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\User[] $users
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Organization newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Organization newQuery()
@@ -29,6 +31,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Organization extends Model
 {
+    use HasRelationships;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -64,6 +68,11 @@ class Organization extends Model
     public function divisions()
     {
         return $this->hasMany('App\Division');
+    }
+
+    public function persons()
+    {
+        return $this->hasManyDeep('App\Person', ['App\Division', 'division_person']);
     }
 
     public function users()
