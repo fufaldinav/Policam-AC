@@ -66,7 +66,7 @@ class PhotosController extends Controller
             return (new Photo())->remove($id);
         }
 
-        $person = $request->user()->persons()->where('person_id', $photo->person_id)->first();
+        $person = $request->user()->persons()->where('persons.id', $photo->person_id)->first();
 
         abort_if(! $person, 403);
 
