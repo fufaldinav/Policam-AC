@@ -23,9 +23,10 @@ Auth::routes(['verify' => true]);
  * Cards
  */
 Route::group(['prefix' =>'cards', 'as' => 'cards.'], function() {
-    Route::get('get_list/{person_id?}', 'CardsController@getList')->name('get_list');
-    Route::post('holder', 'CardsController@holder')->name('holder');
-    Route::post('delete', 'CardsController@delete')->name('delete');
+    Route::get('get_list', 'CardsController@getListOfUnknownCards');
+    Route::get('get_list/{person_id}', 'CardsController@getListByPerson');
+    Route::post('holder', 'CardsController@setHolder');
+    Route::post('delete', 'CardsController@delete');
 });
 /*
  * Controllers

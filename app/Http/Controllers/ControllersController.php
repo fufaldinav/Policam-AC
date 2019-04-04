@@ -18,8 +18,9 @@
 
 namespace App\Http\Controllers;
 
-use App, Auth;
+use App;
 use App\Policam\Ac\Tasker;
+use Illuminate\Http\Request;
 
 class ControllersController extends Controller
 {
@@ -29,9 +30,9 @@ class ControllersController extends Controller
         $this->middleware('verified');
     }
 
-    public function getList()
+    public function getList(Request $request)
     {
-        $controllers = App\User::find(Auth::id())->controllers;
+        $controllers = $request->user()->controllers;
 
         return response()->json($controllers);
     }

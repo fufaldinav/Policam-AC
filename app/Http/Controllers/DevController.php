@@ -19,6 +19,7 @@
 namespace App\Http\Controllers;
 
 use App;
+use Illuminate\Http\Request;
 
 class DevController extends Controller
 {
@@ -28,7 +29,7 @@ class DevController extends Controller
         $this->middleware('verified');
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $response = print_r('some data', true);
 
