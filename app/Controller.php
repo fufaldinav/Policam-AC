@@ -61,7 +61,7 @@ class Controller extends Model
      * @var array
      */
     protected $hidden = [
-        'cameras', 'organization', 'tasks',
+        'cameras', 'notifications', 'organization', 'tasks',
     ];
 
     /**

@@ -52,7 +52,7 @@ class Notification extends Model
      * @var array
      */
     protected $hidden = [
-        'user',
+        'controller', 'user',
     ];
 
     /**

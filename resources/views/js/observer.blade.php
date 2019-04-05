@@ -15,7 +15,11 @@
                                 document.getElementById(k).innerHTML = div.name; //TODO списком
                             });
                         } else {
-                            document.getElementById(k).value = data.person[k];
+                            let elem = document.getElementById(k);
+                            if (elem == null) {
+                                continue;
+                            }
+                            elem.value = data.person[k];
                         }
                     }
 

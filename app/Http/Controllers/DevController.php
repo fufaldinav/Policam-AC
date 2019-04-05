@@ -35,13 +35,4 @@ class DevController extends Controller
 
         return response($response)->header('Content-Type', 'text/plain');
     }
-
-    public function test()
-    {
-        return view('ac.test', [
-            'org_name' => '123',
-            'css_list' => [],
-            'js_list' => ['test'],
-        ]);
-    }
 }

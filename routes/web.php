@@ -32,10 +32,10 @@ Route::group(['prefix' =>'cards', 'as' => 'cards.'], function() {
  * Controllers
  */
 Route::group(['prefix' =>'controllers', 'as' => 'controllers.'], function() {
-    Route::get('get_list', 'ControllersController@getList')->name('get_list');
-    Route::get('set_door_params/{controller_id}/{open_time}', 'ControllersController@setDoorParams')->name('set_door_params');
-    Route::get('clear/{controller_id}', 'ControllersController@clear')->name('clear');
-    Route::get('reload_cards/{controller_id}', 'ControllersController@reloadCards')->name('reload_cards');
+    Route::get('get_list', 'ControllersController@getList');
+    Route::get('set_door_params/{controller_id}/{open_time}', 'ControllersController@setDoorParams');
+    Route::get('clear/{controller_id}', 'ControllersController@clear');
+    Route::get('reload_cards/{controller_id}', 'ControllersController@reloadCards');
 });
 /*
  * Control Panel
@@ -44,16 +44,17 @@ Route::get('cp', 'UsersController@index')->name('cp');
 /*
  * Development
  */
-Route::get('dev', 'DevController@index')->name('dev');
-Route::get('dev/test', 'DevController@test')->name('dev.test');
+Route::get('dev', 'DevController@index');
 /*
  * Divisions
  */
 Route::group(['prefix' =>'divisions', 'as' => 'divisions.'], function() {
-    Route::get('classes', 'DivisionsController@classes')->name('classes')->middleware('role:3');
-    Route::get('get_list', 'DivisionsController@getList')->name('get_list');
-    Route::post('save', 'DivisionsController@save')->name('save');
-    Route::post('delete', 'DivisionsController@delete')->name('delete');
+    Route::group(['middleware' => 'role:3'], function () {
+        Route::get('classes', 'DivisionsController@classes')->name('classes');
+        Route::post('save', 'DivisionsController@save');
+        Route::post('delete', 'DivisionsController@delete');
+    });
+    Route::get('get_list', 'DivisionsController@getList');
 });
 /*
  * Persons
@@ -62,38 +63,35 @@ Route::group(['prefix' =>'persons', 'as' => 'persons.'], function() {
     Route::group(['middleware' => 'role:3'], function () {
         Route::get('add', 'PersonsController@add')->name('add');
         Route::get('edit', 'PersonsController@edit')->name('edit');
-        Route::post('save/{person_id?}', 'PersonsController@save')->name('save');
-        Route::post('delete', 'PersonsController@delete')->name('delete');
+        Route::post('save/{person_id?}', 'PersonsController@save');
+        Route::post('delete', 'PersonsController@delete');
     });
-    Route::get('get/{person_id}', 'PersonsController@get')->name('get');
-    Route::get('get_by_card/{card_id}', 'PersonsController@getByCard')->name('get_by_card');
-    Route::get('get_list/{division_id}', 'PersonsController@getList')->name('get_list');
+    Route::get('get/{person_id}', 'PersonsController@get');
+    Route::get('get_by_card/{card_id}', 'PersonsController@getByCard');
+    Route::get('get_list/{division_id}', 'PersonsController@getListByDivision');
 });
 /*
  * Photos
  */
-Route::group(['prefix' =>'photos', 'as' => 'photos.'], function() {
-    Route::post('save', 'PhotosController@save')->name('save');
-    Route::post('delete', 'PhotosController@delete')->name('delete');
+Route::group(['prefix' =>'photos', 'as' => 'photos.', 'middleware' => 'role:3'], function() {
+    Route::post('save', 'PhotosController@save');
+    Route::post('delete', 'PhotosController@delete');
 });
 /*
  * Server
  */
-Route::post('server', 'ServersController@index')->name('server');
+Route::post('server', 'ServersController@index');
 /*
  * Users
  */
 Route::group(['prefix' =>'users', 'as' => 'users.'], function() {
-    Route::redirect('cp', '/cp')->name('users.cp');
-    Route::post('token', 'UsersController@token')->name('token');
+    Route::post('token', 'UsersController@token');
 });
-Route::get('users/notification/{hash?}', 'UsersController@notification')->name('users.notification');
+Route::get('users/notification/{hash}', 'UsersController@notification');
 /*
  * Util
  */
 Route::group(['prefix' =>'util', 'as' => 'util.'], function() {
-    Route::get('get_time', 'UtilsController@getTime')->name('get_time');
-    Route::post('get_events', 'UtilsController@getEvents')->name('get_events');
-    Route::post('save_errors', 'UtilsController@saveErrors')->name('save_errors');
-    Route::post('card_problem', 'UtilsController@cardProblem')->name('card_problem');
+    Route::post('save_errors', 'UtilsController@saveErrors');
+    Route::post('card_problem', 'UtilsController@cardProblem');
 });

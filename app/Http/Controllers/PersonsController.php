@@ -18,7 +18,7 @@
 
 namespace App\Http\Controllers;
 
-use App, Auth;
+use App;
 use App\Policam\Ac\Tasker;
 use Illuminate\Http\Request;
 
@@ -33,13 +33,13 @@ class PersonsController extends Controller
     /**
      * Страница добавления человека
      *
+     * @param Request $request
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function add()
+    public function add(Request $request)
     {
-        $user = App\User::find(Auth::id());
-
-        $org = $user->organizations()->first();
+        $org = $request->user()->organizations()->first();
 
         if (! $org) {
             return view('ac.error', ['error' => 'Огранизации отсутствуют']);
@@ -54,11 +54,9 @@ class PersonsController extends Controller
         /* Карты */
         $card_list = [];
 
-        $person = App\Person::find(0);
+        $cards = App\Card::where('person_id', 0)->get();
 
-        $cards = $person->cards;
-
-        if (! $cards) {
+        if (!$cards) {
             $card_list[] = __('ac/common.missing');
         } else {
             $card_list[] = __('ac/common.not_selected');
@@ -70,24 +68,19 @@ class PersonsController extends Controller
         $org_name = $org->name ?? __('ac/common.missing');
         $js_list = ['add_person', 'main'];
 
-        return view('ac.person_add', compact(
-            'divs',
-            'card_list',
-            'org_name',
-            'js_list'
-        ));
+        return view('ac.person_add', compact('divs', 'card_list', 'org_name', 'js_list'));
     }
 
     /**
      * Страница редактирования людей
      *
+     * @param Request $request
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function edit()
+    public function edit(Request $request)
     {
-        $user = App\User::find(Auth::id());
-
-        $org = $user->organizations()->first();
+        $org = $request->user()->organizations()->first();
 
         if (! $org) {
             return view('ac.error', ['error' => 'Огранизации отсутствуют']);
@@ -102,11 +95,9 @@ class PersonsController extends Controller
         /* Карты */
         $card_list = [];
 
-        $person = App\Person::find(0);
+        $cards = App\Card::where('person_id', 0)->get();
 
-        $cards = $person->cards;
-
-        if (! $cards) {
+        if (!$cards) {
             $card_list[] = __('ac/common.missing');
         } else {
             $card_list[] = __('ac/common.not_selected');
@@ -120,11 +111,8 @@ class PersonsController extends Controller
         $js_list = ['main', 'edit_persons', 'tree'];
 
         return view('ac.persons_edit', compact(
-            'divs',
-            'card_list',
-            'org_name',
-            'css_list',
-            'js_list'
+            'divs', 'card_list',
+            'org_name', 'css_list', 'js_list'
         ));
     }
 
@@ -138,9 +126,9 @@ class PersonsController extends Controller
      */
     public function save(Request $request, int $person_id = null): int
     {
-        $user = App\User::find(Auth::id());
+        $org = $request->user()->organizations()->first();
 
-        $org = $user->organizations()->first();
+        abort_if(! $org, 403);
 
         $person_data = json_decode($request->input('person'), true);
         $card_list = json_decode($request->input('cards'), true);
@@ -158,6 +146,10 @@ class PersonsController extends Controller
         foreach ($card_list as $card_id) {
             $card = App\Card::find($card_id);
 
+            if (!$card) {
+                continue;
+            }
+
             $person->cards()->save($card);
 
             $tasker->addCards([$card->wiegand]);
@@ -174,6 +166,10 @@ class PersonsController extends Controller
             foreach ($div_list as $div_id) {
                 $div = App\Division::find($div_id);
 
+                if (!$div) {
+                    continue;
+                }
+
                 $person->divisions()->syncWithoutDetaching([$div->id]);
             }
         } else {
@@ -181,12 +177,18 @@ class PersonsController extends Controller
                 ->where('type', 0)
                 ->first();
 
-            $person->divisions()->syncWithoutDetaching([$div->id]);
+            if ($div) {
+                $person->divisions()->syncWithoutDetaching([$div->id]);
+            }
         }
 
         /* Фотографии */
         foreach ($photo_list as $photo_id) {
             $photo = App\Photo::find($photo_id);
+
+            if (!$photo) {
+                continue;
+            }
 
             $person->photos()->save($photo);
         }
@@ -210,11 +212,11 @@ class PersonsController extends Controller
             return 0;
         }
 
-        $user = App\User::find(Auth::id());
+        $org = $request->user()->organizations()->first();
 
-        $org = $user->organizations()->first();
+        $person = $request->user()->persons()->where('persons.id', $person_id)->first();
 
-        $person = App\Person::find($person_id);
+        abort_if(!$person, 403);
 
         /* Подразделения */
         foreach ($person->divisions as $div) {
@@ -253,19 +255,16 @@ class PersonsController extends Controller
     /**
      * Возвращает человека
      *
-     * @param int|null $person_id ID человека
+     * @param Request $request
+     * @param int     $person_id ID человека
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function get(int $person_id = null)
+    public function get(Request $request, int $person_id)
     {
-        if (is_null($person_id)) {
-            return null;
-        }
+        $person = $request->user()->persons()->where('persons.id', $person_id)->first();
 
-        $person = App\Person::where('id', $person_id)->first([
-            'id', 'f', 'i', 'o', 'type', 'birthday', 'address', 'phone'
-        ]);
+        abort_if(! $person, 403);
 
         return response()->json([
             'person' => $person,
@@ -277,21 +276,18 @@ class PersonsController extends Controller
     /**
      * Получает человека по карте
      *
-     * @param int|null $card_id ID карты
+     * @param Request $request
+     * @param int     $card_id ID карты
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getByCard(int $card_id = null)
+    public function getByCard(Request $request, int $card_id)
     {
-        if (is_null($card_id)) {
-            return null;
-        }
+        $card = $request->user()->cards()->where('cards.id', $card_id)->first();
 
-        $card = App\Card::find($card_id);
+        abort_if(! $card, 403);
 
-        $person = $card->person()->first([
-            'id', 'f', 'i', 'o', 'type', 'birthday', 'address', 'phone'
-        ]);
+        $person = $card->person;
 
         return response()->json([
             'person' => $person,
@@ -303,20 +299,19 @@ class PersonsController extends Controller
     /**
      * Получает людей по подразделению
      *
-     * @param int|null $div_id ID подразделения
+     * @param Request $request
+     * @param int     $div_id ID подразделения
      *
      * @return \Illuminate\Http\JsonResponse|null
      */
-    public function getList(int $div_id = null)
+    public function getListByDivision(Request $request, int $div_id)
     {
-        if (is_null($div_id)) {
-            return null;
-        }
+        $div = $request->user()->divisions()->where('divisions.id', $div_id)->first();
 
-        $div = App\Division::find($div_id);
+        abort_if(! $div, 403);
 
         $persons = $div->persons()->orderByRaw('f ASC, i ASC, o ASC')->get([
-            'person_id as id', 'f', 'i', 'o', 'type', 'birthday', 'address', 'phone'
+            'person_id as id', 'f', 'i', 'o', 'type', 'birthday', 'address', 'phone',
         ]);
 
         return response()->json($persons);

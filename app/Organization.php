@@ -48,7 +48,7 @@ class Organization extends Model
      * @var array
      */
     protected $hidden = [
-        'controllers', 'divisions', 'users',
+        'controllers', 'divisions', 'persons', 'users',
     ];
 
     /**

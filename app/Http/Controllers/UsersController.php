@@ -18,7 +18,7 @@
 
 namespace App\Http\Controllers;
 
-use App, Auth;
+use App;
 use App\Policam\Ac\Snapshot;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -55,7 +55,7 @@ class UsersController extends Controller
      */
     public function token(Request $request): void
     {
-        $user = App\User::find(Auth::id());
+        $user = $request->user();
 
         $token_key = $request->input('token');
 
@@ -73,22 +73,18 @@ class UsersController extends Controller
     /**
      * Возвращает уведомление для пользователя
      *
-     * @param string|null $hash Хэш уведомления
+     * @param string $hash Хэш уведомления
      *
-     * @return string|null
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      * @throws \Exception
      */
-    public function notification(string $hash = null): ?string
+    public function notification(string $hash)
     {
-        if (!isset($hash)) {
-            return null;
-        }
-
         $notification = App\Notification::where(['hash' => $hash])->first();
 
         if (! $notification) {
             return 'Уведомление устарело или не существует'; //TODO перевод
-        } elseif (Carbon::parse($notification->created_at) < Carbon::now()->subMinute()) {
+        } elseif (Carbon::parse($notification->created_at) < Carbon::now()->subHour()) {
             $notification->delete();
             return 'Уведомление устарело или не существует'; //TODO перевод
         }

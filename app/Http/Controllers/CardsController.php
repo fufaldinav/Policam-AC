@@ -18,7 +18,7 @@
 
 namespace App\Http\Controllers;
 
-use App, Auth;
+use App;
 use App\Policam\Ac\Tasker;
 use Illuminate\Http\Request;
 
@@ -42,11 +42,9 @@ class CardsController extends Controller
         $card_id = $request->input('card_id');
         $person_id = $request->input('person_id') ?? 0;
 
-        $card = $request->user()->cards->where('id', $card_id)->first();
+        $card = $request->user()->cards->where('cards.id', $card_id)->first();
 
-        if (! $card) {
-            abort(403);
-        }
+        abort_if(! $card, 403);
 
         $card->person_id = $person_id;
 
@@ -81,11 +79,9 @@ class CardsController extends Controller
     {
         $card_id = $request->input('card_id');
 
-        $card = $request->user()->cards->where('id', $card_id)->first();
+        $card = $request->user()->cards->where('cards.id', $card_id)->first();
 
-        if (! $card) {
-            abort(403);
-        }
+        abort_if(! $card, 403);
 
         return (int)$card->delete();
     }
@@ -100,7 +96,7 @@ class CardsController extends Controller
      */
     public function getListByPerson(Request $request, int $person_id)
     {
-        $person = $request->user()->persons->where('id', $person_id)->first();
+        $person = $request->user()->persons->where('persons.id', $person_id)->first();
 
         if (! $person) {
             abort(403);

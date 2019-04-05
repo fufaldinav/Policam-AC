@@ -74,7 +74,10 @@ class User extends Model implements
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token', 'notifications', 'organizations', 'persons', 'tokens', 'roles',
+        'password', 'remember_token', 'cards',
+        'controllers', 'divisions', 'notifications',
+        'organizations', 'persons', 'subscriptions',
+        'tokens', 'roles',
     ];
 
     /**
