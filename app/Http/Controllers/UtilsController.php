@@ -84,7 +84,6 @@ class UtilsController extends Controller
         } elseif ($problem_type == 2 || $problem_type == 3) {
             $tasker = new Tasker();
 
-            $ctrls = [];
             $cards_to_delete = [];
 
             foreach ($cards as &$card) {
@@ -97,12 +96,7 @@ class UtilsController extends Controller
 
             $tasker->delCards($cards_to_delete);
 
-            foreach ($person->divisions as $div) {
-                $org = $div->organization;
-                $ctrls = array_merge($ctrls, $org->controllers()->get()->toArray());
-            }
-
-            foreach ($ctrls as $ctrl) {
+            foreach ($person->controllers as $ctrl) {
                 $tasker->add($ctrl->id);
             }
 

@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
 /**
  * App\Person
@@ -19,6 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Card[] $cards
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Controller[] $controllers
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Division[] $divisions
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Photo[] $photos
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\User[] $users
@@ -38,6 +40,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Person extends Model
 {
+    use HasRelationships;
+
     protected $table = 'persons';
 
     /**
@@ -55,7 +59,7 @@ class Person extends Model
      * @var array
      */
     protected $hidden = [
-        'cards', 'divisions', 'photos', 'users',
+        'cards', 'controllers', 'divisions', 'photos', 'users',
     ];
 
     /**
@@ -70,6 +74,24 @@ class Person extends Model
     public function cards()
     {
         return $this->hasMany('App\Card');
+    }
+
+    public function controllers()
+    {
+        return $this->hasManyDeep(
+            'App\Controller',
+            ['division_person', 'App\Division', 'App\Organization'],
+            [
+                'person_id',
+                'id',
+                'id',
+            ],
+            [
+                'id',
+                'division_id',
+                'organization_id',
+            ]
+        );
     }
 
     public function divisions()
