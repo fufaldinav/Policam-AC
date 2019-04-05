@@ -23,6 +23,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Card wherePath($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Card whereTime($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Card whereUpdatedAt($value)
+ * @property int $camera_id
+ * @property string $time
+ * @property string $path
  */
 class CameraSnapshot extends Model
 {

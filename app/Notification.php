@@ -28,6 +28,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Notification whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Notification whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Notification whereUserId($value)
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Query\Builder|\App\Notification onlyTrashed()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Query\Builder|\App\Notification withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Notification withoutTrashed()
  */
 class Notification extends Model
 {
@@ -47,7 +52,7 @@ class Notification extends Model
      * @var array
      */
     protected $hidden = [
-        'user',
+        'controller', 'user',
     ];
 
     /**

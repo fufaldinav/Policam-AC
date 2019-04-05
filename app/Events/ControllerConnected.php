@@ -3,23 +3,22 @@
 namespace App\Events;
 
 use App\Controller;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
-class ControllerConnected implements ShouldBroadcast
+class ControllerConnected implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $controller;
+
     /**
      * Create a new event instance.
      *
-     * @return void
+     * @param Controller $controller
      */
     public function __construct(Controller $controller)
     {
@@ -33,7 +32,7 @@ class ControllerConnected implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('controller-events');
+        return new PrivateChannel('controller-events.' . $this->controller->id);
     }
 
     /**

@@ -14,6 +14,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Notifications\Notifiable;
+use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
 /**
  * App\User
@@ -27,10 +28,14 @@ use Illuminate\Notifications\Notifiable;
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Card[] $cards
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Controller[] $controllers
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Division[] $divisions
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Notification[] $notifications
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Organization[] $organizations
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Person[] $persons
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Role[] $roles
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Person[] $subscriptions
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Token[] $tokens
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User newQuery()
@@ -52,7 +57,7 @@ class User extends Model implements
 {
     use Notifiable;
 
-    use Authenticatable, Authorizable, CanResetPassword, MustVerifyEmail;
+    use Authenticatable, Authorizable, CanResetPassword, MustVerifyEmail, HasRelationships;
 
     /**
      * The attributes that are mass assignable.
@@ -69,7 +74,10 @@ class User extends Model implements
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token', 'notifications', 'organizations', 'persons', 'tokens', 'roles',
+        'password', 'remember_token', 'cards',
+        'controllers', 'divisions', 'notifications',
+        'organizations', 'persons', 'subscriptions',
+        'tokens', 'roles',
     ];
 
     /**
@@ -91,6 +99,21 @@ class User extends Model implements
         return $this->hasRole(1);
     }
 
+    public function cards()
+    {
+        return $this->hasManyDeep('App\Card', ['organization_user', 'App\Organization', 'App\Division', 'division_person', 'App\Person']);
+    }
+
+    public function controllers()
+    {
+        return $this->hasManyDeep('App\Controller', ['organization_user', 'App\Organization']);
+    }
+
+    public function divisions()
+    {
+        return $this->hasManyDeep('App\Division', ['organization_user', 'App\Organization']);
+    }
+
     public function notifications()
     {
         return $this->hasMany('App\Notification');
@@ -102,6 +125,11 @@ class User extends Model implements
     }
 
     public function persons()
+    {
+        return $this->hasManyDeep('App\Person', ['organization_user', 'App\Organization', 'App\Division', 'division_person']);
+    }
+
+    public function subscriptions()
     {
         return $this->belongsToMany('App\Person');
     }

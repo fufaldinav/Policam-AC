@@ -19,6 +19,7 @@
 namespace App\Http\Controllers;
 
 use App;
+use Illuminate\Http\Request;
 
 class DevController extends Controller
 {
@@ -28,16 +29,10 @@ class DevController extends Controller
         $this->middleware('verified');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-    }
+        $response = print_r('some data', true);
 
-    public function test()
-    {
-        return view('ac.test', [
-            'org_name' => '123',
-            'css_list' => [],
-            'js_list' => ['test'],
-        ]);
+        return response($response)->header('Content-Type', 'text/plain');
     }
 }

@@ -1,71 +1,25 @@
 <script>
     `use strict`;
 
-    let time, events = [4, 5]; //где 4,5 - события разрешенного входа/выхода
-
-    document.addEventListener("DOMContentLoaded", function() {
-        time = getServerTime();
-        getNewMsgs(events, time);
-    });
-
-    //получение времени от сервера
-    function getServerTime() {
-        $.ajax({
-            url: `{{ url('/') }}/util/get_time`,
-            type: `GET`,
-            success: function(data) {
-                time = data;
-            }
-        });
-    }
-
-    //получение сообщений от сервера
-    function getNewMsgs(events, time) {
-        $.ajax({
-            url: `{{ url('/') }}/util/get_events`,
-            type: `POST`,
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
-            },
-            data: {
-                events: events,
-                time: time
-            },
-            success: function(data) {
-                if (data) {
-                    time = data.time;
-                    let msgs = data.msgs;
-                    if (msgs.length > 0) {
-                        let card = msgs[msgs.length - 1].card_id; //последний прочитанный ключ из БД
-                        setPersonInfo(card);
-                    }
-                    setTimeout(function() {
-                        getNewMsgs(events, time);
-                    }, 10);
-                } else {
-                    alert(`Пустой ответ от сервера`); //TODO перевод
-                }
-            },
-            error: function() {
-                alert(`Неизвестная ошибка`); //TODO перевод
-            }
-        });
-    }
+    let events = [16, 17]; //где 16, 17 - вход/выход состоялся
 
     //получение данных пользователя из БД
     function setPersonInfo(card_id) {
-        $.ajax({
-            url: `{{ url('/') }}/persons/get_by_card/${card_id}`,
-            type: `GET`,
-            success: function(data) {
-                if (data) {
+        axios.get(`{{ url('/') }}/persons/get_by_card/${card_id}`)
+            .then(function (response) {
+                if (response.data) {
+                    let data = response.data;
                     for (let k in data.person) {
                         if (k === `divs`) {
-                            data.person[k].forEach(function(div) {
+                            data.person[k].forEach(function (div) {
                                 document.getElementById(k).innerHTML = div.name; //TODO списком
                             });
                         } else {
-                            document.getElementById(k).value = data.person[k];
+                            let elem = document.getElementById(k);
+                            if (elem == null) {
+                                continue;
+                            }
+                            elem.value = data.person[k];
                         }
                     }
 
@@ -76,23 +30,24 @@
                     }
                     photo.style.backgroundImage = 'url(/img/ac/s/' + photo_id + '.jpg)';
                 } else {
-                    alert(`Пустой ответ от сервера`); //TODO перевод
+                    console.log(`Пустой ответ от сервера`); //TODO перевод
                 }
-            },
-            error: function() {
-                alert(`Неизвестная ошибка`); //TODO перевод
-            }
-        });
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+            .then(function () {
+                // always executed
+            });
     }
 
     function getDivisions() {
-        $.ajax({
-            url: `{{ url('/') }}/divisions/get_list`,
-            type: `GET`,
-            success: function(data) {
+        axios.get(`{{ url('/') }}/divisions/get_list`)
+            .then(function (response) {
+                let data = response.data;
                 if (data.length > 0) {
                     let divisions = ``;
-                    data.forEach(function(div) {
+                    data.forEach(function (div) {
                         divisions += `<div id="div${div.id}" class="menu-item" onclick="getPersons(${div.id});">${div.name}</div>`;
                     });
                     let menu = document.getElementById(`menu`);
@@ -100,27 +55,29 @@
                 } else {
                     alert(`Пустой ответ от сервера`); //TODO перевод
                 }
-            },
-            error: function() {
-                alert(`Неизвестная ошибка`); //TODO перевод
-            }
-        });
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+            .then(function () {
+                // always executed
+            });
     }
 
     function getPersons(div_id) {
         $.ajax({
             url: `{{ url('/') }}/persons/get_list/${div_id}`,
             type: `GET`,
-            success: function(data) {
+            success: function (data) {
                 let persons = `<div id="menu-button-back" class="menu-item" onclick="getDivisions();">Назад</div>`; //TODO перевод
                 if (data.length > 0) {
-                    data.forEach(function(person) {
+                    data.forEach(function (person) {
                         persons += `<div id="person${person.id}" class="menu-item" onclick="openEntraceOptions(${person.id}, ${div_id});">${person.f} ${person.i}</div>`;
                     });
                 }
                 document.getElementById(`menu`).innerHTML = persons;
             },
-            error: function() {
+            error: function () {
                 alert(`Неизвестная ошибка`); //TODO перевод
             }
         });
@@ -166,14 +123,14 @@
                 type: type,
                 person_id: person_id
             },
-            success: function(res) {
+            success: function (res) {
                 if (res) {
                     alert(res);
                 } else {
                     alert(`Пустой ответ от сервера`); //TODO перевод
                 }
             },
-            error: function() {
+            error: function () {
                 alert(`Неизвестная ошибка`); //TODO перевод
             }
         });

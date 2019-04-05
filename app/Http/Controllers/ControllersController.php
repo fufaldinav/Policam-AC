@@ -20,6 +20,7 @@ namespace App\Http\Controllers;
 
 use App;
 use App\Policam\Ac\Tasker;
+use Illuminate\Http\Request;
 
 class ControllersController extends Controller
 {
@@ -29,16 +30,26 @@ class ControllersController extends Controller
         $this->middleware('verified');
     }
 
+    public function getList(Request $request)
+    {
+        $controllers = $request->user()->controllers;
+
+        return response()->json($controllers);
+    }
+
     /**
      * Устанавливает параметры открытия двери
      *
+     * @param Request $request
      * @param int|null $ctrl_id
      * @param int|null $open_time
      *
      * @return string
      */
-    public function setDoorParams(int $ctrl_id = null, int $open_time = null): string
+    public function setDoorParams(Request $request, int $ctrl_id = null, int $open_time = null): string
     {
+        abort_if(! $request->user()->isAdmin(), 403);
+
         if (is_null($ctrl_id) || is_null($open_time)) {
             return 'Не выбран контроллер или не задано время открытия'; //TODO перевод
         }
@@ -60,12 +71,15 @@ class ControllersController extends Controller
     /**
      * Очищает память контроллера
      *
+     * @param Request $request
      * @param int|null $ctrl_id
      *
      * @return string
      */
-    public function clear(int $ctrl_id = null): string
+    public function clear(Request $request, int $ctrl_id = null): string
     {
+        abort_if(! $request->user()->isAdmin(), 403);
+
         if (is_null($ctrl_id)) {
             return 'Не выбран контроллер'; //TODO перевод
         }
@@ -87,12 +101,15 @@ class ControllersController extends Controller
     /**
      * Загружает в контроллер все карты
      *
+     * @param Request $request
      * @param int|null $ctrl_id
      *
      * @return string
      */
-    public function reload_cards(int $ctrl_id = null): string
+    public function reloadCards(Request $request, int $ctrl_id = null): string
     {
+        abort_if(! $request->user()->isAdmin(), 403);
+
         if (is_null($ctrl_id)) {
             return 'Не выбран контроллер'; //TODO перевод
         }

@@ -18,7 +18,7 @@
 
 namespace App\Http\Controllers;
 
-use App, Auth;
+use App;
 use App\Policam\Ac\Tasker;
 use Illuminate\Http\Request;
 
@@ -37,20 +37,15 @@ class CardsController extends Controller
      *
      * @return int
      */
-    public function holder(Request $request): int
+    public function setHolder(Request $request): int
     {
         $card_id = $request->input('card_id');
         $person_id = $request->input('person_id') ?? 0;
 
-        if (is_null($card_id)) {
-            return 0;
-        }
+        $card = $request->user()->cards->where('cards.id', $card_id)->first();
 
-        $user = App\User::find(Auth::id());
+        abort_if(! $card, 403);
 
-        $org = $user->organizations()->first();
-
-        $card = App\Card::find($card_id);
         $card->person_id = $person_id;
 
         $tasker = new Tasker();
@@ -61,7 +56,7 @@ class CardsController extends Controller
             $tasker->addCards([$card->wiegand]);
         }
 
-        $ctrls = $org->controllers;
+        $ctrls = $request->user()->controllers;
 
         foreach ($ctrls as $ctrl) {
             $tasker->add($ctrl->id);
@@ -75,33 +70,50 @@ class CardsController extends Controller
     /**
      * Удаляет карту
      *
-     * @param int|null $card_id
+     * @param Request $request
      *
      * @return int
      * @throws \Exception
      */
-    public function delete(int $card_id = null): int
+    public function delete(Request $request): int
     {
-        if (is_null($card_id)) {
-            return 0;
-        }
+        $card_id = $request->input('card_id');
 
-        $card = App\Card::find($card_id);
+        $card = $request->user()->cards->where('cards.id', $card_id)->first();
+
+        abort_if(! $card, 403);
 
         return (int)$card->delete();
     }
 
     /**
-     * Получает список карт
+     * Получает список карт пользователя
      *
+     * @param Request $request
      * @param int $person_id
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getList(int $person_id = 0)
+    public function getListByPerson(Request $request, int $person_id)
     {
-        $person = App\Person::find($person_id);
+        $person = $request->user()->persons->where('persons.id', $person_id)->first();
+
+        if (! $person) {
+            abort(403);
+        }
 
         return response()->json($person->cards);
+    }
+
+    /**
+     * Получает список неизвестных карт
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getListOfUnknownCards()
+    {
+        $cards = App\Card::where('person_id', 0)->get();
+
+        return response()->json($cards);
     }
 }

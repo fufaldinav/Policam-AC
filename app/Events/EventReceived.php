@@ -3,15 +3,13 @@
 namespace App\Events;
 
 use App\Event;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
-class EventReceived implements ShouldBroadcast
+class EventReceived implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -36,7 +34,7 @@ class EventReceived implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('controller-events');
+        return new PrivateChannel('controller-events.' . $this->event->controller_id);
     }
 
     /**
@@ -46,6 +44,9 @@ class EventReceived implements ShouldBroadcast
      */
     public function broadcastWith()
     {
-        return ['card_id' => $this->event->card_id];
+        return [
+            'card_id' => $this->event->card_id,
+            'event' => $this->event->event,
+        ];
     }
 }

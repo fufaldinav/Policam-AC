@@ -3,7 +3,7 @@
 
     let div = {
         'name': null,
-        'org_id': null
+        'organization_id': null
     };
 
     //удалить из базы

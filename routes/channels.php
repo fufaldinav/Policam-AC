@@ -11,6 +11,11 @@
 |
 */
 
-Broadcast::channel('controller-events', function ($user) {
-    return $user->id === Auth::id();
+Broadcast::channel('controller-events.{controllerId}', function ($user, $controllerId) {
+    $controller = App\Controller::find($controllerId);
+    $user = $controller->organization->users()->where('user_id', $user->id)->first();
+
+    if ($user) {
+        return true;
+    }
 });

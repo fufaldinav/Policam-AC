@@ -15,6 +15,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Person newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Person query()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Person whereName($value)
+ * @property int $type
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Role whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Role whereType($value)
  */
 class Role extends Model
 {
