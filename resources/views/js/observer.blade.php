@@ -1,7 +1,7 @@
 <script>
     `use strict`;
 
-    let events = [4, 5]; //где 4, 5 - события входа/выхода
+    let events = [16, 17]; //где 16, 17 - вход/выход состоялся
 
     //получение данных пользователя из БД
     function setPersonInfo(card_id) {

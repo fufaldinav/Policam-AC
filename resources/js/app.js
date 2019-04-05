@@ -39,7 +39,7 @@ axios.get(process.env.MIX_APP_URL + '/controllers/get_list')
                     if (!events.includes(e.event)) {
                         return;
                     }
-                    if (e.event == 4 || e.event == 5) {
+                    if (e.event == 16 || e.event == 17) {
                         setPersonInfo(e.card_id);
                     } else if (e.event == 2 || e.event == 3) {
                         if (!document.getElementById(`cards`).disabled) { //если меню неизвестных карт активно
