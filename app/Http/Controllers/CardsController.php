@@ -96,7 +96,7 @@ class CardsController extends Controller
      */
     public function getListByPerson(Request $request, int $person_id)
     {
-        $person = $request->user()->persons->where('persons.id', $person_id)->first();
+        $person = $request->user()->persons->where('id', $person_id)->first();
 
         if (! $person) {
             abort(403);
