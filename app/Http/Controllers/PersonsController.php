@@ -90,7 +90,10 @@ class PersonsController extends Controller
         $divs = $org
             ->divisions()
             ->orderByRaw('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
-            ->get();
+            ->get()
+            ->load(['persons' => function ($query) {
+                $query->orderByRaw('f ASC, i ASC, o ASC')->get()->load('cards');
+            }]);
 
         /* Карты */
         $card_list = [];

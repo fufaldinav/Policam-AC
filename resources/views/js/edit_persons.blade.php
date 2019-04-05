@@ -15,6 +15,35 @@
         divs = [],
         photos = [];
 
+    let divisions = [];
+    let persons = [];
+
+    class AcObject {
+        constructor(data) {
+            for (let k in data) {
+                this[k] = data[k];
+            }
+        }
+    }
+
+    class Division extends AcObject {
+
+    }
+
+    class Person extends AcObject {
+
+    }
+
+    function showPersons(div_id) {
+        $(`.divisions`).hide();
+        $(`#persons-div-${div_id}`).show();
+    }
+
+    function showDivisions(div_id) {
+        $(`.persons`).hide();
+        $(`.divisions`).show();
+    }
+
     //обновление информации пользователя в БД
     function updatePersonInfo() {
         let checkValidity = true;
@@ -52,7 +81,7 @@
                     person: JSON.stringify(person),
                     photos: JSON.stringify(photos)
                 },
-                success: function(res) {
+                success: function (res) {
                     if (res > 0) {
                         alert(`Пользователь успешно сохранен`); //TODO перевод
                     } else {
@@ -60,7 +89,7 @@
                     }
                     getCardsByPerson(person.id);
                 },
-                error: function() {
+                error: function () {
                     alert(`Неизвестная ошибка`); //TODO перевод
                 }
             });
@@ -81,7 +110,7 @@
             data: {
                 person_id: person.id
             },
-            success: function(res) {
+            success: function (res) {
                 if (res > 0) {
                     let currentElement = document.getElementById(`person${person.id}`);
                     let parentElement = currentElement.parentElement; //родитель этого элемента
@@ -101,10 +130,10 @@
                     photos = [];
                     document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/0.jpg)';
                     document.getElementById(`photo`).hidden = true;
-                    document.getElementById(`photo`).onchange = function() {
+                    document.getElementById(`photo`).onchange = function () {
                         return false;
                     };
-                    document.getElementById(`photo_del`).onclick = function() {
+                    document.getElementById(`photo_del`).onclick = function () {
                         return false;
                     };
                     document.getElementById(`photo_del`).hidden = true;
@@ -117,10 +146,10 @@
 
                     divs = [];
 
-                    document.getElementById(`save`).onclick = function() {
+                    document.getElementById(`save`).onclick = function () {
                         return false;
                     };
-                    document.getElementById(`delete`).onclick = function() {
+                    document.getElementById(`delete`).onclick = function () {
                         return false;
                     };
                     alert(`Пользователь успешно удален`); //TODO перевод
@@ -128,7 +157,7 @@
                     alert(`Пустой ответ от сервера`); //TODO перевод
                 }
             },
-            error: function() {
+            error: function () {
                 alert(`Неизвестная ошибка`); //TODO перевод
             }
         });
@@ -139,7 +168,7 @@
         $.ajax({
             url: `{{ url('/') }}/persons/get/${person_id}`,
             type: `GET`,
-            success: function(data) {
+            success: function (data) {
                 if (data) {
                     for (let k in data.person) {
                         let elem = document.getElementById(k);
@@ -157,7 +186,7 @@
                     if (data.photos.length === 0) {
                         document.getElementById(`photo`).hidden = false;
                         document.getElementById(`photo_del`).hidden = true;
-                        document.getElementById(`photo_del`).onclick = function() {
+                        document.getElementById(`photo_del`).onclick = function () {
                             return false;
                         };
                     } else {
@@ -168,7 +197,7 @@
                         document.getElementById(`photo_del`).onclick = deletePhoto;
                     }
                     document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/' + photo_id + '.jpg)';
-                    document.getElementById(`photo`).onchange = function() {
+                    document.getElementById(`photo`).onchange = function () {
                         handleFiles(this.files);
                     };
 
@@ -179,13 +208,11 @@
 
                     document.getElementById(`save`).onclick = updatePersonInfo;
                     document.getElementById(`delete`).onclick = deletePerson;
-
-                    getCardsByPerson(person.id);
                 } else {
                     alert(`Пустой ответ от сервера`); //TODO перевод
                 }
             },
-            error: function() {
+            error: function () {
                 alert(`Неизвестная ошибка`); //TODO перевод
             }
         });
@@ -196,7 +223,7 @@
         $.ajax({
             url: `{{ url('/') }}/cards/get_list/${person_id}`,
             type: `GET`,
-            success: function(data) {
+            success: function (data) {
                 cards = [];
                 let person_cards = document.getElementById(`person_cards`);
                 person_cards.innerHTML = ``;
@@ -215,7 +242,7 @@
                     getCards();
                 }
             },
-            error: function() {
+            error: function () {
                 alert(`Неизвестная ошибка`); //TODO перевод
             }
         });
@@ -233,7 +260,7 @@
                 card_id: card_id,
                 person_id: person.id
             },
-            success: function(res) {
+            success: function (res) {
                 if (res > 0) {
                     getCardsByPerson(person.id);
                     alert(`Ключ успешно добавлен`); //TODO перевод
@@ -241,7 +268,7 @@
                     alert(`Неизвестная ошибка`); //TODO перевод
                 }
             },
-            error: function() {
+            error: function () {
                 alert(`Неизвестная ошибка`); //TODO перевод
             }
         });
@@ -262,7 +289,7 @@
                 card_id: card_id,
                 person_id: 0
             },
-            success: function(res) {
+            success: function (res) {
                 if (res > 0) {
                     let card = document.getElementById(`card${card_id}`);
                     card.remove(); //удалим карту из списка привязанных
@@ -281,7 +308,7 @@
                     alert(`Неизвестная ошибка`); //TODO перевод
                 }
             },
-            error: function() {
+            error: function () {
                 alert(`Неизвестная ошибка`); //TODO перевод
             }
         });
