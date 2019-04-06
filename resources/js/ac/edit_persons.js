@@ -1,8 +1,5 @@
-`use strict`;
-
-console.log(trans('auth'));
-let events = [2, 3]; //где 2,3 - события запрещенного входа/выхода
-let person = {
+window.events = [2, 3]; //где 2,3 - события запрещенного входа/выхода
+window.person = {
     'f': null,
     'i': null,
     'o': null,
@@ -11,12 +8,12 @@ let person = {
     'phone': null
 };
 
-let cards = [],
-    divs = [],
-    photos = [];
+window.cards = [];
+window.divs = [];
+window.photos = [];
 
-let divisions = [];
-let persons = [];
+window.divisions = [];
+window.persons = [];
 
 class AcObject {
     constructor(data) {
@@ -34,18 +31,18 @@ class Person extends AcObject {
 
 }
 
-function showPersons(div_id) {
+window.showPersons = function (div_id) {
     $(`.divisions`).hide();
     $(`#persons-div-${div_id}`).show();
 }
 
-function showDivisions(div_id) {
+window.showDivisions = function (div_id) {
     $(`.persons`).hide();
     $(`.divisions`).show();
 }
 
 //обновление информации пользователя в БД
-function updatePersonInfo() {
+window.updatePersonInfo = function () {
     let checkValidity = true;
 
     for (let k in person) {
@@ -69,49 +66,37 @@ function updatePersonInfo() {
     if (!checkValidity) {
         alert(`Введены не все данные`); //TODO перевод
     } else {
-        $.ajax({
-            url: `save/${person.id}`,
-            type: `POST`,
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
-            },
-            data: {
+        axios.post(process.env.MIX_APP_URL + `/persons/save`,
+            {
                 cards: JSON.stringify(cards),
                 divs: JSON.stringify(divs),
                 person: JSON.stringify(person),
                 photos: JSON.stringify(photos)
-            },
-            success: function (res) {
-                if (res > 0) {
+            })
+            .then(function (response) {
+                if (response.data > 0) {
                     alert(`Пользователь успешно сохранен`); //TODO перевод
                 } else {
                     alert(`Не сохранено или данные совпали`); //TODO перевод
                 }
                 getCardsByPerson(person.id);
-            },
-            error: function () {
-                alert(`Неизвестная ошибка`); //TODO перевод
-            }
-        });
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 }
 
 //удаление пользователя из БД
-function deletePerson() {
+window.deletePerson = function () {
     if (!confirm(`Подтвердите удаление.`)) { //TODO перевод
         return;
     }
-    $.ajax({
-        url: `delete`,
-        type: `POST`,
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
-        },
-        data: {
+    axios.post(process.env.MIX_APP_URL + `/persons/delete`, {
             person_id: person.id
-        },
-        success: function (res) {
-            if (res > 0) {
+        })
+        .then(function (response) {
+            if (response.data > 0) {
                 let currentElement = document.getElementById(`person${person.id}`);
                 let parentElement = currentElement.parentElement; //родитель этого элемента
                 currentElement.remove(); //удаляем элемент
@@ -127,7 +112,7 @@ function deletePerson() {
                     person[k] = null;
                 }
 
-                photos = [];
+                window.photos = [];
                 document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/0.jpg)';
                 document.getElementById(`photo`).hidden = true;
                 document.getElementById(`photo`).onchange = function () {
@@ -138,13 +123,13 @@ function deletePerson() {
                 };
                 document.getElementById(`photo_del`).hidden = true;
 
-                cards = [];
+                window.cards = [];
                 document.getElementById(`cards`).value = 0;
                 document.getElementById(`person_cards`).innerHTML = ``; //очистка списка привязанных карт
                 document.getElementById(`unknown_cards`).hidden = false; //отобразим меню с неизвестными картами
                 document.getElementById(`cards`).disabled = true; //но запретим редактирование
 
-                divs = [];
+                window.divs = [];
 
                 document.getElementById(`save`).onclick = function () {
                     return false;
@@ -156,19 +141,17 @@ function deletePerson() {
             } else {
                 alert(`Пустой ответ от сервера`); //TODO перевод
             }
-        },
-        error: function () {
-            alert(`Неизвестная ошибка`); //TODO перевод
-        }
-    });
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
 }
 
 //получение данных пользователя из БД
-function getPersonInfo(person_id) {
-    $.ajax({
-        url: `get/${person_id}`,
-        type: `GET`,
-        success: function (data) {
+window.getPersonInfo = function (person_id) {
+    axios.get(process.env.MIX_APP_URL + `/persons/get/${person_id}`)
+        .then(function (response) {
+            let data = response.data;
             if (data) {
                 for (let k in data.person) {
                     let elem = document.getElementById(k);
@@ -181,7 +164,7 @@ function getPersonInfo(person_id) {
                 }
 
                 let photo_id = 0;
-                photos = [];
+                window.photos = [];
                 document.getElementById(`photo`).value = null;
                 if (data.photos.length === 0) {
                     document.getElementById(`photo`).hidden = false;
@@ -201,7 +184,7 @@ function getPersonInfo(person_id) {
                     handleFiles(this.files);
                 };
 
-                divs = [];
+                window.divs = [];
                 for (let k in data.divs) {
                     divs.push(data.divs[k].id);
                 }
@@ -211,20 +194,18 @@ function getPersonInfo(person_id) {
             } else {
                 alert(`Пустой ответ от сервера`); //TODO перевод
             }
-        },
-        error: function () {
-            alert(`Неизвестная ошибка`); //TODO перевод
-        }
-    });
+        })
+        .catch(function (error) {
+           console.log(error);
+        });
 }
 
 //получение списка карт (брелоков) от сервера
-function getCardsByPerson(person_id) {
-    $.ajax({
-        url: `/laravel/cards/get_list/${person_id}`,
-        type: `GET`,
-        success: function (data) {
-            cards = [];
+window.getCardsByPerson = function (person_id) {
+    axios.get(process.env.MIX_APP_URL + `/cards/get_list/${person_id}`)
+        .then(function (response) {
+            let data = response.data;
+            window.cards = [];
             let person_cards = document.getElementById(`person_cards`);
             person_cards.innerHTML = ``;
             if (data.length > 0) {
@@ -241,56 +222,42 @@ function getCardsByPerson(person_id) {
                 document.getElementById(`cards`).disabled = false; //включим меню неизвеснтых карт
                 getCards();
             }
-        },
-        error: function () {
-            alert(`Неизвестная ошибка`); //TODO перевод
-        }
-    });
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
 }
 
 //добавление карты в БД
-function saveCard(card_id) {
-    $.ajax({
-        url: `/laravel/cards/holder`,
-        type: `POST`,
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
-        },
-        data: {
+window.saveCard = function (card_id) {
+    axios.post(process.env.MIX_APP_URL + `/cards/holder`, {
             card_id: card_id,
             person_id: person.id
-        },
-        success: function (res) {
-            if (res > 0) {
+        })
+        .then(function (response) {
+            if (response.data > 0) {
                 getCardsByPerson(person.id);
                 alert(`Ключ успешно добавлен`); //TODO перевод
             } else {
                 alert(`Неизвестная ошибка`); //TODO перевод
             }
-        },
-        error: function () {
-            alert(`Неизвестная ошибка`); //TODO перевод
-        }
-    });
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
 }
 
 //удаление карты из БД
-function delCard(card_id) {
+window.delCard = function (card_id) {
     if (!confirm(`Подтвердите удаление.`)) { //TODO перевод
         return;
     }
-    $.ajax({
-        url: `/laravel/cards/holder`,
-        type: `POST`,
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
-        },
-        data: {
+    axios.post(process.env.MIX_APP_URL + `/cards/holder`, {
             card_id: card_id,
             person_id: 0
-        },
-        success: function (res) {
-            if (res > 0) {
+        })
+        .then(function (response) {
+            if (response.data > 0) {
                 let card = document.getElementById(`card${card_id}`);
                 card.remove(); //удалим карту из списка привязанных
                 let cardsHtml = document.getElementById(`person_cards`).innerHTML;
@@ -307,9 +274,8 @@ function delCard(card_id) {
             } else {
                 alert(`Неизвестная ошибка`); //TODO перевод
             }
-        },
-        error: function () {
-            alert(`Неизвестная ошибка`); //TODO перевод
-        }
-    });
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
 }

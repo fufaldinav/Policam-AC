@@ -1,10 +1,8 @@
-`use strict`;
-
 let events = [16, 17]; //где 16, 17 - вход/выход состоялся
 
 //получение данных пользователя из БД
-function setPersonInfo(card_id) {
-    axios.get(`{{ url('/') }}/persons/get_by_card/${card_id}`)
+window.setPersonInfo = function (card_id) {
+    axios.get(process.env.MIX_APP_URL + `/persons/get_by_card/${card_id}`)
         .then(function (response) {
             if (response.data) {
                 let data = response.data;
@@ -40,8 +38,8 @@ function setPersonInfo(card_id) {
         });
 }
 
-function getDivisions() {
-    axios.get(`{{ url('/') }}/divisions/get_list`)
+window.getDivisions = function () {
+    axios.get(process.env.MIX_APP_URL + `/divisions/get_list`)
         .then(function (response) {
             let data = response.data;
             if (data.length > 0) {
@@ -63,26 +61,24 @@ function getDivisions() {
         });
 }
 
-function getPersons(div_id) {
-    $.ajax({
-        url: `{{ url('/') }}/persons/get_list/${div_id}`,
-        type: `GET`,
-        success: function (data) {
+window.getPersons = function (div_id) {
+    axios.get(process.env.MIX_APP_URL + `/persons/get_list/${div_id}`)
+        .then(function (response) {
+            let data = response.data;
             let persons = `<div id="menu-button-back" class="menu-item" onclick="getDivisions();">Назад</div>`; //TODO перевод
             if (data.length > 0) {
                 data.forEach(function (person) {
-                    persons += `<div id="person${person.id}" class="menu-item" onclick="openEntraceOptions(${person.id}, ${div_id});">${person.f} ${person.i}</div>`;
+                    persons += `<div id="person${person.id}" class="menu-item" onclick="openEntranceOptions(${person.id}, ${div_id});">${person.f} ${person.i}</div>`;
                 });
             }
             document.getElementById(`menu`).innerHTML = persons;
-        },
-        error: function () {
-            alert(`Неизвестная ошибка`); //TODO перевод
-        }
-    });
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
 }
 
-function openEntraceOptions(person_id, div_id) {
+window.openEntranceOptions = function (person_id, div_id) {
     let options = ``;
     if (div_id === undefined) {
         options += `<div id="menu-button-back" class="menu-item" onclick="getDivisions();">Назад</div>`; //TODO перевод
@@ -96,7 +92,7 @@ function openEntraceOptions(person_id, div_id) {
     menu.innerHTML = options;
 }
 
-function sendInfo(type, person_id) {
+window.sendInfo = function (type, person_id) {
     let msg;
     switch (type) {
         case 1:
@@ -112,25 +108,18 @@ function sendInfo(type, person_id) {
             if (!confirm(msg)) return;
             break;
     }
-    $.ajax({
-        url: `{{ url('/') }}/util/card_problem`,
-        type: `POST`,
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
-        },
-        data: {
+    axios.post(process.env.MIX_APP_URL + `/util/card_problem`, {
             type: type,
             person_id: person_id
-        },
-        success: function (res) {
-            if (res) {
-                alert(res);
+        })
+        .then(function (response) {
+            if (response.data) {
+                alert(response.data);
             } else {
                 alert(`Пустой ответ от сервера`); //TODO перевод
             }
-        },
-        error: function () {
-            alert(`Неизвестная ошибка`); //TODO перевод
-        }
-    });
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
 }

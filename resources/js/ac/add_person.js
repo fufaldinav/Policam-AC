@@ -1,7 +1,5 @@
-`use strict`;
-
-let events = [2, 3]; //где 2,3 - события запрещенного входа/выхода
-let person = {
+window.events = [2, 3]; //где 2,3 - события запрещенного входа/выхода
+window.person = {
     'f': null,
     'i': null,
     'o': null,
@@ -10,22 +8,22 @@ let person = {
     'phone': null
 };
 
-let cards = [],
-    divs = [],
-    photos = [];
+window.cards = [];
+window.divs = [];
+window.photos = [];
 
-function setDiv(id) {
-    let index = divs.indexOf(id);
+window.setDiv = function (id) {
+    let index = window.divs.indexOf(id);
     if (index === -1) {
-        divs.push(id);
+        window.divs.push(id);
         document.getElementById(`div${id}`).classList.add(`checked`);
     } else {
-        divs.splice(index, 1);
+        window.divs.splice(index, 1);
         document.getElementById(`div${id}`).classList.remove(`checked`);
     }
 }
 
-function savePersonInfo() {
+window.savePersonInfo = function () {
     let checkValidity = true;
 
     for (let k in person) {
@@ -49,34 +47,28 @@ function savePersonInfo() {
     if (!checkValidity) {
         alert(`Введены не все данные`); //TODO перевод
     } else {
-        $.ajax({
-            url: `{{ url('/') }}/persons/save`,
-            type: `POST`,
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
-            },
-            data: {
+        axios.post(process.env.MIX_APP_URL + `/persons/save`, {
                 cards: JSON.stringify(cards),
                 divs: JSON.stringify(divs),
                 person: JSON.stringify(person),
                 photos: JSON.stringify(photos)
-            },
-            success: function(person_id) {
+            })
+            .then(function (response) {
+                let person_id = response.data;
                 for (let k in person) {
                     person[k] = null;
                 }
                 cards = [];
                 alert(`Пользователь №${person_id} успешно сохранен`); //TODO перевод
                 clearPersonInfo();
-            },
-            error: function() {
-                alert(`Неизвестная ошибка`); //TODO перевод
-            }
-        });
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 }
 
-function clearPersonInfo() {
+window.clearPersonInfo = function () {
     for (let k in person) {
         document.getElementById(k).value = null;
     }
@@ -84,11 +76,11 @@ function clearPersonInfo() {
     document.getElementById(`cards`).value = 0;
     document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/0.jpg)';
     document.getElementById(`photo_del`).hidden = true;
-    document.getElementById(`photo_del`).onclick = function() {
+    document.getElementById(`photo_del`).onclick = function () {
         return false;
     };
 }
 
-function checkData(e) {
+window.checkData = function (e) {
     e.classList.remove(`no-data`);
 }

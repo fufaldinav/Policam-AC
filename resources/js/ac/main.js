@@ -1,25 +1,18 @@
-`use strict`;
-
 //сохранить ошибку на сервере
-function sendError(message) {
-    $.ajax({
-        url: `{{ url('/') }}/util/save_js_errors`,
-        type: `POST`,
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
-        },
-        data: {
+window.sendError = function (message) {
+    axios.post(process.env.MIX_APP_URL + `/util/save_errors`, {
             error: message
-        }
-    });
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
 }
 
 //получим список неизвестных карт (брелоков) из БД
-function getCards(id) {
-    $.ajax({
-        url: `{{ url('/') }}/cards/get_list`,
-        type: `GET`,
-        success: function (data) {
+window.getCards = function (id) {
+    axios.get(process.env.MIX_APP_URL + `/cards/get_list`)
+        .then(function (response) {
+            let data = response.data;
             if (data) {
                 let cards = document.getElementById(`cards`);
                 while (cards.length > 0) { //удалить все элементы из меню карт
@@ -39,11 +32,10 @@ function getCards(id) {
             } else {
                 alert(`Пустой ответ от сервера`); //TODO перевод
             }
-        },
-        error: function () {
-            alert(`Неизвестная ошибка`); //TODO перевод
-        }
-    });
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
 }
 
 //добавление опций в select
@@ -55,20 +47,17 @@ function addOption(elem, value, text) {
 }
 
 //загрузка фото
-function handleFiles(files) {
+window.handleFiles = function (files) {
     let formData = new FormData();
     formData.append(`file`, files[0]);
-    $.ajax({
-        url: `{{ url('/') }}/photos/save`,
-        method: `POST`,
-        contentType: false,
-        processData: false,
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
-        },
-        cache: false,
-        data: formData,
-        success: function (data) {
+    axios({
+            method: `post`,
+            url: process.env.MIX_APP_URL + `/photos/save`,
+            data: formData,
+            config: { headers: {'Content-Type': 'multipart/form-data' }}
+        })
+        .then(function (response) {
+            let data = response.data;
             if (data) {
                 if (data.error === ``) {
                     document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/' + data.id + '.jpg)';
@@ -83,29 +72,22 @@ function handleFiles(files) {
             } else {
                 alert(`Неизвестная ошибка`); //TODO перевод
             }
-        },
-        error: function () {
-            alert(`Неизвестная ошибка`); //TODO перевод
-        }
-    });
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
 }
 
 //удаление фото
-function deletePhoto() {
+window.deletePhoto = function () {
     if (!confirm(`Подтвердите удаление.`)) { //TODO перевод
         return;
     }
-    $.ajax({
-        url: `{{ url('/') }}/photos/delete`,
-        type: `POST`,
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
-        },
-        data: {
-            'photo_id': photos.shift()
-        },
-        success: function (res) {
-            if (res) {
+    axios.post(process.env.MIX_APP_URL + `/photos/delete`, {
+            photo_id: photos.shift()
+        })
+        .then(function (response) {
+            if (response.data) {
                 document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/0.jpg)';
                 document.getElementById(`photo_del`).hidden = true;
                 document.getElementById(`photo_del`).onclick = function () {
@@ -116,9 +98,8 @@ function deletePhoto() {
             } else {
                 alert(`Неизвестная ошибка`); //TODO перевод
             }
-        },
-        error: function () {
-            alert(`Неизвестная ошибка`); //TODO перевод
-        }
-    });
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
 }

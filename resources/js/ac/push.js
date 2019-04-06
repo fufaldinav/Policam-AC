@@ -1,5 +1,3 @@
-`use strict`;
-
 // Initialize Firebase
 let config = {
     apiKey: `{{ config('ac.fcm.api_key') }}`,
@@ -16,7 +14,7 @@ if (Notification.permission === `granted`) {
     subscribe();
 }
 
-function subscribe() {
+window.subscribe = function () {
     let messaging = firebase.messaging();
     messaging.usePublicVapidKey(`{{ config('ac.fcm.public_vapid_key') }}`);
     // запрашиваем разрешение на получение уведомлений
@@ -43,22 +41,15 @@ function subscribe() {
 function sendTokenToServer(currentToken) {
     if (!isTokenSentToServer(currentToken)) {
         console.log(`Отправка токена на сервер...`); //TODO перевод
-        $.ajax({
-            url: `{{ url('/') }}/users/token`,
-            type: `POST`,
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
-            },
-            data: {
+        axios.post(process.env.MIX_APP_URL + `/users/token`, {
                 token: currentToken
-            },
-            success: function (res) {
-                console.log(res);
-            },
-            error: function () {
-                console.warn(`Неизвестная ошибка`); //TODO перевод
-            }
-        });
+            })
+            .then(function (response) {
+                console.log(response.data);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
         setTokenSentToServer(currentToken);
     } else {
         console.log(`Токен уже отправлен на сервер.`); //TODO перевод
