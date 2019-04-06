@@ -1,7 +1,7 @@
 <div id="header">
     <div id="header-container">
         <div id="header-left">
-            {{ __('ac/common.school') }}{{ isset($org_name) ? $org_name : '' }}
+            {{ __('ac.school') }}{{ isset($org_name) ? $org_name : '' }}
         </div>
         <div id="header-content">
             @include('layouts.nav')

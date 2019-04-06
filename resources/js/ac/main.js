@@ -26,9 +26,9 @@ function getCards(id) {
                     cards.remove(cards.length - 1);
                 }
                 if (data.length == 0) { //если нет известных карт
-                    addOption(cards, 0, trans('ac/common.missing'));
+                    addOption(cards, 0, trans('ac.missing'));
                 } else { //иначе заполним меню картами
-                    addOption(cards, 0, trans('ac/common.not_selected')); //первый пункт
+                    addOption(cards, 0, trans('ac.not_selected')); //первый пункт
                     data.forEach(function (c) {
                         addOption(cards, c.id, c.wiegand);
                     });

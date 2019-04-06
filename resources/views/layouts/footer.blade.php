@@ -4,10 +4,10 @@
             <!-- FOOTER LEFT -->
         </div>
         <div id="footer-content">
-            {{ __('ac/common.developed') }} <a href="http://policam.ru/">Policam.ru</a>
+            {{ __('ac.developed') }} <a href="http://policam.ru/">Policam.ru</a>
         </div>
         <div id="footer-right">
-            2019 {{ __('ac/common.year_short') }}
+            2019 {{ __('ac.year_short') }}
         </div>
     </div>
 </div>

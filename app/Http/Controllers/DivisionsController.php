@@ -50,7 +50,7 @@ class DivisionsController extends Controller
             ->orderByRaw('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
             ->get();
 
-        $org_name = $org->name ?? __('ac/common.missing');
+        $org_name = $org->name ?? __('ac.missing');
         $css_list = ['tables'];
         $js_list = ['classes'];
 

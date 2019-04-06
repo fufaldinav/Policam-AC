@@ -50,7 +50,7 @@ class ObserverController extends Controller
             ->orderByRaw('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
             ->get();
 
-        $org_name = $org->name ?? __('ac/common.missing');
+        $org_name = $org->name ?? __('ac.missing');
         $js_list = ['main', 'observer'];
 
         return view('ac.observer', compact('divs', 'org_name', 'js_list'));

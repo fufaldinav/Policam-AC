@@ -38,7 +38,7 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $org_name = __('ac/common.missing');
+        $org_name = __('ac.missing');
         $css_list = ['ac'];
         $js_list = ['push'];
 

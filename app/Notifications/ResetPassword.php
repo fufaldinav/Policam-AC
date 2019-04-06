@@ -45,10 +45,10 @@ class ResetPassword extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject(__('ac/email.reset_password_notification'))
-            ->line(__('ac/email.reset_password_greetings'))
-            ->action(__('ac/email.reset_password'), url(config('app.url').route('password.reset', ['token' => $this->token], false)))
-            ->line(__('ac/email.reset_password_expire_in', ['count' => config('auth.passwords.users.expire')]))
-            ->line(__('ac/email.reset_password_not_request'));
+            ->subject(__('email.reset_password_notification'))
+            ->line(__('email.reset_password_greetings'))
+            ->action(__('email.reset_password'), url(config('app.url').route('password.reset', ['token' => $this->token], false)))
+            ->line(__('email.reset_password_expire_in', ['count' => config('auth.passwords.users.expire')]))
+            ->line(__('email.reset_password_not_request'));
     }
 }

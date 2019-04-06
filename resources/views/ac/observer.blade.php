@@ -12,34 +12,34 @@
             <div id="photo_bg" class="photo"></div>
         </div>
         <div id="info-f" class="info-item">
-            @lang('ac/common.f')<br />
+            @lang('ac.f')<br />
             <input id="f" name="f" size="30" type="text" readonly />
         </div>
         <div id="info-i" class="info-item">
-            @lang('ac/common.i')<br />
+            @lang('ac.i')<br />
             <input id="i" name="i" size="30" type="text" readonly />
         </div>
         <div id="info-o" class="info-item">
-            @lang('ac/common.o')<br />
+            @lang('ac.o')<br />
             <input id="o" name="o" size="30" type="text" readonly />
         </div>
         <div id="info-div" class="info-item">
             <div id="divs"></div>
         </div>
         <div id="info-birthday" class="info-item">
-            @lang('ac/common.birthday')<br />
+            @lang('ac.birthday')<br />
             <input id="birthday" name="birthday" size="15" type="date" readonly />
         </div>
         <div id="info-address" class="info-item">
-            @lang('ac/common.address')<br />
+            @lang('ac.address')<br />
             <input id="address" name="address" size="60" type="text" readonly />
         </div>
         <div id="info-phone" class="info-item">
-            @lang('ac/common.phone')<br />
+            @lang('ac.phone')<br />
             <input id="phone" name="phone" size="15" type="text" readonly />
         </div>
         <div id="info-uid" class="info-item">
-            @lang('ac/common.uid')<br />
+            @lang('ac.uid')<br />
             <input id="id" name="id" size="15" type="text" readonly />
         </div>
     </div>

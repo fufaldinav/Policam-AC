@@ -4,9 +4,9 @@
 # {{ $greeting }}
 @else
 @if ($level === 'error')
-# @lang('ac/email.whoops')
+# @lang('email.whoops')
 @else
-# @lang('ac/email.hello')
+# @lang('email.hello')
 @endif
 @endif
 
@@ -43,14 +43,14 @@
 @if (! empty($salutation))
 {{ $salutation }}
 @else
-@lang('ac/email.regards'),<br>@lang('ac/email.team') {{ config('app.name') }}
+@lang('email.regards'),<br>@lang('email.team') {{ config('app.name') }}
 @endif
 
 {{-- Subcopy --}}
 @isset($actionText)
 @slot('subcopy')
 @lang(
-    'ac/email.problems',
+    'email.problems',
     [
         'actionText' => $actionText,
         'actionURL' => $actionUrl,

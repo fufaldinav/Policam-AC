@@ -57,15 +57,15 @@ class PersonsController extends Controller
         $cards = App\Card::where('person_id', 0)->get();
 
         if (!$cards) {
-            $card_list[] = __('ac/common.missing');
+            $card_list[] = __('ac.missing');
         } else {
-            $card_list[] = __('ac/common.not_selected');
+            $card_list[] = __('ac.not_selected');
             foreach ($cards as $card) {
                 $card_list[$card->id] = $card->wiegand;
             }
         }
 
-        $org_name = $org->name ?? __('ac/common.missing');
+        $org_name = $org->name ?? __('ac.missing');
         $js_list = ['add_person', 'main'];
 
         return view('ac.person_add', compact('divs', 'card_list', 'org_name', 'js_list'));
@@ -101,15 +101,15 @@ class PersonsController extends Controller
         $cards = App\Card::where('person_id', 0)->get();
 
         if (!$cards) {
-            $card_list[] = __('ac/common.missing');
+            $card_list[] = __('ac.missing');
         } else {
-            $card_list[] = __('ac/common.not_selected');
+            $card_list[] = __('ac.not_selected');
             foreach ($cards as $card) {
                 $card_list[$card->id] = $card->wiegand;
             }
         }
 
-        $org_name = $org->name ?? __('ac/common.missing');
+        $org_name = $org->name ?? __('ac.missing');
         $css_list = ['edit_persons'];
         $js_list = ['main', 'edit_persons', 'tree'];
 

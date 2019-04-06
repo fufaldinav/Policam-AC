@@ -1,6 +1,6 @@
-<a class="nav" href="{{ route('/') }}">@lang('ac/common.observ')</a>
+<a class="nav" href="{{ route('/') }}">@lang('ac.observ')</a>
 @if (true)
-    <a class="nav" href="{{ route('persons.add') }}">@lang('ac/common.adding')</a>
-    <a class="nav" href="{{ route('persons.edit') }}">@lang('ac/common.editing')</a>
-    <a class="nav" href="{{ route('divisions.classes') }}">@lang('ac/common.classes')</a>
+    <a class="nav" href="{{ route('persons.add') }}">@lang('ac.adding')</a>
+    <a class="nav" href="{{ route('persons.edit') }}">@lang('ac.editing')</a>
+    <a class="nav" href="{{ route('divisions.classes') }}">@lang('ac.classes')</a>
 @endif
