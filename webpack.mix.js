@@ -12,4 +12,8 @@ const mix = require('laravel-mix');
  */
 
 mix.js('resources/js/app.js', 'public/js')
-   .sass('resources/sass/app.scss', 'public/css');
+    .extract([
+        'axios', 'bootstrap', 'jquery', 'lodash', 'popper.js',
+        'pusher-js', 'vue',
+    ])
+    .sass('resources/sass/app.scss', 'public/css');
