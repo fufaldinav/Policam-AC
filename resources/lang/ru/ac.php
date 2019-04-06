@@ -2,7 +2,7 @@
 
 return [
     'school' => 'Школа №',
-    'observ' => 'Наблюдение',
+    'observation' => 'Наблюдение',
     'adding' => 'Добавление',
     'editing' => 'Редактирование',
     'classes' => 'Классы',

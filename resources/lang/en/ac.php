@@ -2,7 +2,7 @@
 
 return [
     'school' => 'School',
-    'observ' => 'Observing',
+    'observation' => 'Observing',
     'adding' => 'Adding',
     'editing' => 'Editing',
     'classes' => 'Classes',
@@ -23,11 +23,11 @@ return [
     'number' => 'Number',
     'letter' => 'Letter',
     'year_short' => '',
-    'developed' => 'Developet by',
+    'developed' => 'Developed by',
     'missing' => 'Missing',
     'not_selected' => 'Not selected',
     'entrance_wo_card' => 'Entrance w/o card',
-    'registered' => 'Registred',
+    'registered' => 'Registered',
     'and' => 'and',
     'card_deleted' => 'card deleted',
 ];
