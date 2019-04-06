@@ -107,7 +107,7 @@ class Notificator
     {
         switch ($this->event->event) {
             case 4: //вход
-                $event = __('ac/common.entrace');
+                $event = __('ac/common.entrance');
                 break;
 
             case 5: //выход

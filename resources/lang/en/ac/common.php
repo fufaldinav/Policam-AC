@@ -6,7 +6,7 @@ return [
     'adding' => 'Adding',
     'editing' => 'Editing',
     'classes' => 'Classes',
-    'entrace' => 'Entrace',
+    'entrance' => 'Entrance',
     'exit' => 'Exit',
     'f' => 'Last name',
     'i' => 'First name',
