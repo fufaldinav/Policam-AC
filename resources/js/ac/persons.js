@@ -1,5 +1,4 @@
-window.events = [2, 3]; //где 2,3 - события запрещенного входа/выхода
-window.person = {
+let person = {
     'f': null,
     'i': null,
     'o': null,
@@ -8,37 +7,118 @@ window.person = {
     'phone': null
 };
 
-window.cards = [];
-window.divs = [];
-window.photos = [];
+let persons = [];
 
-window.divisions = [];
-window.persons = [];
+window.setPersonInfo = function (card_id) {
+    axios.get(process.env.MIX_APP_URL + `/persons/get_by_card/${card_id}`)
+        .then(function (response) {
+            if (response.data) {
+                let data = response.data;
+                for (let k in data.person) {
+                    if (k === `divs`) {
+                        data.person[k].forEach(function (div) {
+                            document.getElementById(k).innerHTML = div.name; //TODO списком
+                        });
+                    } else {
+                        let elem = document.getElementById(k);
+                        if (elem == null) {
+                            continue;
+                        }
+                        elem.value = data.person[k];
+                    }
+                }
 
-class AcObject {
-    constructor(data) {
-        for (let k in data) {
-            this[k] = data[k];
+                let photo_id = 0;
+                let photo = document.getElementById(`photo_bg`);
+                if (data.photos.length > 0) {
+                    photo_id = data.photos[0].id;
+                }
+                photo.style.backgroundImage = 'url(/img/ac/s/' + photo_id + '.jpg)';
+            } else {
+                console.log(`Пустой ответ от сервера`); //TODO перевод
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+        .then(function () {
+            // always executed
+        });
+}
+
+window.getPersons = function (div_id) {
+    axios.get(process.env.MIX_APP_URL + `/persons/get_list/${div_id}`)
+        .then(function (response) {
+            let data = response.data;
+            let persons = `<div id="menu-button-back" class="menu-item" onclick="getDivisions();">Назад</div>`; //TODO перевод
+            if (data.length > 0) {
+                data.forEach(function (person) {
+                    persons += `<div id="person${person.id}" class="menu-item" onclick="openEntranceOptions(${person.id}, ${div_id});">${person.f} ${person.i}</div>`;
+                });
+            }
+            document.getElementById(`menu`).innerHTML = persons;
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+
+window.savePersonInfo = function () {
+    let checkValidity = true;
+
+    for (let k in person) {
+        let elem = document.getElementById(k);
+        if (elem.required && elem.value === ``) {
+            elem.classList.add(`no-data`);
+            checkValidity = false;
         }
+        if (elem.value) {
+            person[k] = elem.value;
+        } else {
+            person[k] = null;
+        }
+    }
+
+    let elem = document.getElementById(`cards`);
+    if (elem.value > 0) {
+        cards.push(elem.value);
+    }
+
+    if (!checkValidity) {
+        alert(`Введены не все данные`); //TODO перевод
+    } else {
+        axios.post(process.env.MIX_APP_URL + `/persons/save`, {
+            cards: JSON.stringify(cards),
+            divs: JSON.stringify(divs),
+            person: JSON.stringify(person),
+            photos: JSON.stringify(photos)
+        })
+            .then(function (response) {
+                let person_id = response.data;
+                for (let k in person) {
+                    person[k] = null;
+                }
+                cards = [];
+                alert(`Пользователь №${person_id} успешно сохранен`); //TODO перевод
+                clearPersonInfo();
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 }
 
-class Division extends AcObject {
-
-}
-
-class Person extends AcObject {
-
-}
-
-window.showPersons = function (div_id) {
-    $(`.divisions`).hide();
-    $(`#persons-div-${div_id}`).show();
-}
-
-window.showDivisions = function (div_id) {
-    $(`.persons`).hide();
-    $(`.divisions`).show();
+window.clearPersonInfo = function () {
+    for (let k in person) {
+        document.getElementById(k).value = null;
+    }
+    photos = [];
+    document.getElementById(`cards`).value = 0;
+    document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/0.jpg)';
+    document.getElementById(`photo_del`).hidden = true;
+    document.getElementById(`photo_del`).onclick = function () {
+        return false;
+    };
 }
 
 //обновление информации пользователя в БД
@@ -93,8 +173,8 @@ window.deletePerson = function () {
         return;
     }
     axios.post(process.env.MIX_APP_URL + `/persons/delete`, {
-            person_id: person.id
-        })
+        person_id: person.id
+    })
         .then(function (response) {
             if (response.data > 0) {
                 let currentElement = document.getElementById(`person${person.id}`);
@@ -112,7 +192,7 @@ window.deletePerson = function () {
                     person[k] = null;
                 }
 
-                window.photos = [];
+                photos = [];
                 document.getElementById(`photo_bg`).style.backgroundImage = 'url(/img/ac/s/0.jpg)';
                 document.getElementById(`photo`).hidden = true;
                 document.getElementById(`photo`).onchange = function () {
@@ -123,7 +203,7 @@ window.deletePerson = function () {
                 };
                 document.getElementById(`photo_del`).hidden = true;
 
-                window.cards = [];
+                cards = [];
                 document.getElementById(`cards`).value = 0;
                 document.getElementById(`person_cards`).innerHTML = ``; //очистка списка привязанных карт
                 document.getElementById(`unknown_cards`).hidden = false; //отобразим меню с неизвестными картами
@@ -193,86 +273,6 @@ window.getPersonInfo = function (person_id) {
                 document.getElementById(`delete`).onclick = deletePerson;
             } else {
                 alert(`Пустой ответ от сервера`); //TODO перевод
-            }
-        })
-        .catch(function (error) {
-           console.log(error);
-        });
-}
-
-//получение списка карт (брелоков) от сервера
-window.getCardsByPerson = function (person_id) {
-    axios.get(process.env.MIX_APP_URL + `/cards/get_list/${person_id}`)
-        .then(function (response) {
-            let data = response.data;
-            window.cards = [];
-            let person_cards = document.getElementById(`person_cards`);
-            person_cards.innerHTML = ``;
-            if (data.length > 0) {
-                document.getElementById(`unknown_cards`).hidden = true; //спрячем неизвестные карты
-                document.getElementById(`cards`).disabled = true; //отключим меню неизвеснтых карт
-                for (let k in data) { //добавим каждую карту в список привязанных
-                    person_cards.innerHTML += `<div id="card${data[k].id}">${data[k].wiegand} <button type="button" onclick="delCard(${data[k].id});">Отвязать</button><br /></div>`
-                }
-                let li = document.getElementById(`person${person.id}`); //добавим пользователю метку наличия ключей
-                let a = li.querySelector(`.person`);
-                a.classList.remove(`no-card`);
-            } else {
-                document.getElementById(`unknown_cards`).hidden = false; //отобразим неизвестные карты
-                document.getElementById(`cards`).disabled = false; //включим меню неизвеснтых карт
-                getCards();
-            }
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
-}
-
-//добавление карты в БД
-window.saveCard = function (card_id) {
-    axios.post(process.env.MIX_APP_URL + `/cards/holder`, {
-            card_id: card_id,
-            person_id: person.id
-        })
-        .then(function (response) {
-            if (response.data > 0) {
-                getCardsByPerson(person.id);
-                alert(`Ключ успешно добавлен`); //TODO перевод
-            } else {
-                alert(`Неизвестная ошибка`); //TODO перевод
-            }
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
-}
-
-//удаление карты из БД
-window.delCard = function (card_id) {
-    if (!confirm(`Подтвердите удаление.`)) { //TODO перевод
-        return;
-    }
-    axios.post(process.env.MIX_APP_URL + `/cards/holder`, {
-            card_id: card_id,
-            person_id: 0
-        })
-        .then(function (response) {
-            if (response.data > 0) {
-                let card = document.getElementById(`card${card_id}`);
-                card.remove(); //удалим карту из списка привязанных
-                let cardsHtml = document.getElementById(`person_cards`).innerHTML;
-                cardsHtml = (cardsHtml.trim) ? cardsHtml.trim() : cardsHtml.replace(/^\s+/, ``);
-                if (cardsHtml == ``) { //если список привязанных карт пуст, то отобразим и включим меню и запросим неизвеснтые карты
-                    document.getElementById(`unknown_cards`).hidden = false;
-                    document.getElementById(`cards`).disabled = false;
-                    getCards();
-                    let li = document.getElementById(`person${person.id}`); //удалим у пользователя метку наличия ключей
-                    let a = li.querySelector(`.person`);
-                    a.classList.add(`no-card`);
-                }
-                alert(`Ключ успешно отвязан`); //TODO перевод
-            } else {
-                alert(`Неизвестная ошибка`); //TODO перевод
             }
         })
         .catch(function (error) {
