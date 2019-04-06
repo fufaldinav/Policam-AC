@@ -1,11 +1,11 @@
 // Initialize Firebase
 let config = {
-    apiKey: `{{ config('ac.fcm.api_key') }}`,
-    authDomain: `{{ config('ac.fcm.auth_domain') }}`,
-    databaseURL: `{{ config('ac.fcm.database_url') }}`,
-    projectId: `{{ config('ac.fcm.project_id') }}`,
-    storageBucket: `{{ config('ac.fcm.storage_bucket') }}`,
-    messagingSenderId: `{{ config('ac.fcm.messaging_sender_id') }}`
+    apiKey: process.env.MIX_FCM_API_KEY,
+    authDomain: process.env.MIX_FCM_AUTH_DOMAIN,
+    databaseURL: process.env.MIX_FCM_DB_URL,
+    projectId: process.env.MIX_FCM_PROJECT_ID,
+    storageBucket: process.env.MIX_FCM_STORAGE_BUCKET,
+    messagingSenderId: process.env.MIX_FCM_SENDER_ID,
 };
 firebase.initializeApp(config);
 // пользователь уже разрешил получение уведомлений
@@ -16,7 +16,7 @@ if (Notification.permission === `granted`) {
 
 window.subscribe = function () {
     let messaging = firebase.messaging();
-    messaging.usePublicVapidKey(`{{ config('ac.fcm.public_vapid_key') }}`);
+    messaging.usePublicVapidKey(process.env.MIX_FCM_PUBLIC_VAPID_KEY);
     // запрашиваем разрешение на получение уведомлений
     messaging.requestPermission().then(function () {
         // получаем ID устройства
