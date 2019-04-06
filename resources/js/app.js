@@ -64,6 +64,30 @@ axios.get(process.env.MIX_APP_URL + '/controllers/get_list')
         console.log(error);
     });
 
-function SetControllerStatus(controller_id) {
+window.SetControllerStatus = function (controller_id) {
     console.log(controller_id);
+}
+
+window.trans = function (key, replace = {})
+{
+    let translation = key.split('.').reduce((t, i) => t[i] || null, window.translations);
+
+    for (let placeholder in replace) {
+        translation = translation.replace(`:${placeholder}`, replace[placeholder]);
+    }
+
+    return translation;
+}
+
+window.trans_choice = function (key, count = 1, replace = {})
+{
+    let translation = key.split('.').reduce((t, i) => t[i] || null, window.translations).split('|');
+
+    translation = count > 1 ? translation[1] : translation[0];
+
+    for (let placeholder in replace) {
+        translation = translation.replace(`:${placeholder}`, replace[placeholder]);
+    }
+
+    return translation;
 }
