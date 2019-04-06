@@ -10,7 +10,9 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="{{ env('APP_URL') }}{{ mix('js/manifest.js') }}" defer></script>
+    <script src="{{ env('APP_URL') }}{{ mix('js/vendor.js') }}" defer></script>
+    <script src="{{ env('APP_URL') }}{{ mix('js/app.js') }}" defer></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
