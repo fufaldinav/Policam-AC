@@ -13,7 +13,14 @@ const mix = require('laravel-mix');
 
 mix.js('resources/js/app.js', 'public/js')
     .extract([
-        'axios', 'bootstrap', 'jquery', 'lodash', 'popper.js',
-        'pusher-js', 'vue',
+        'axios', 'bootstrap', 'jquery', 'lodash', 'laravel-echo',
+        'popper.js', 'pusher-js', 'vue',
     ])
-    .sass('resources/sass/app.scss', 'public/css');
+    .version();
+
+mix.sass('resources/sass/app.scss', 'public/css');
+
+mix.scripts([
+    'resources/js/ac/notification.js',
+    'resources/js/ac/tree.js',
+], 'public/js/scripts.js');

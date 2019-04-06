@@ -91,3 +91,10 @@ window.trans_choice = function (key, count = 1, replace = {})
 
     return translation;
 }
+
+require('./ac/add_person');
+require('./ac/classes');
+require('./ac/edit_persons');
+require('./ac/main');
+require('./ac/observer');
+require('./ac/push');

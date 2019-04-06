@@ -10,14 +10,9 @@
             <link rel="stylesheet" href="{{ url("css/$css.css") }}?{{ time() }}"/>
         @endforeach
     @endisset
-    <script src="{{ asset('js/manifest.js') }}" defer></script>
-    <script src="{{ asset('js/vendor.js') }}" defer></script>
-    <script src="{{ asset('js/app.js') }}?p={{ time() }}" defer></script>
-    @isset($js_list)
-        @foreach ($js_list as $js)
-            @include('js.' . $js)
-        @endforeach
-    @endisset
+    <script src="{{ env('APP_URL') }}{{ mix('js/manifest.js') }}" defer></script>
+    <script src="{{ env('APP_URL') }}{{ mix('js/vendor.js') }}" defer></script>
+    <script src="{{ env('APP_URL') }}{{ mix('js/app.js') }}?p={{ time() }}" defer></script>
     <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase-messaging.js"></script>
 </head>
