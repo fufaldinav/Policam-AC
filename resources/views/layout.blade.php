@@ -27,5 +27,8 @@
     @yield('content')
     @include('layouts.footer')
 </div>
+<script>
+    window.translations = {!! Cache::get('translations') !!};
+</script>
 </body>
 </html>
