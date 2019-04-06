@@ -4,14 +4,14 @@
 <div id="main" class="main-grid-container">
     <div id="menu">
         @foreach($divs as $div)
-            <script>divisions[`{{ $div->id }}`] = new Division({!! $div->toJson() !!});</script>
+{{--            <script>divisions[`{{ $div->id }}`] = new Division({!! $div->toJson() !!});</script>--}}
             <div id="div-{{ $div->id }}" class="divisions menu-item" onclick="showPersons({{ $div->id }})">
                 {{ $div->name }}
             </div>
             <div id="persons-div-{{ $div->id }}" class="persons" hidden>
                 <div id="menu-button-back" class="menu-item" onclick="showDivisions({{ $div->id }});">Назад</div>
                 @foreach($div->persons as $person)
-                    <script>persons[`{{ $person->id }}`] = new Person({!! $person->toJson() !!});</script>
+{{--                    <script>persons[`{{ $person->id }}`] = new Person({!! $person->toJson() !!});</script>--}}
                     <div id="person-{{ $person->id }}" class="menu-item" onclick="getPersonInfo({{ $person->id }});">{{ $person->f }} {{ $person->i }}</div>
                     <div id="cards-person-{{ $person->id }}" class="cards" hidden>
                         @foreach($person->cards as $card)
