@@ -564,173 +564,10 @@ module.exports = function(module) {
 
 /***/ }),
 
-/***/ "./resources/js/ac/add_person.js":
-/*!***************************************!*\
-  !*** ./resources/js/ac/add_person.js ***!
-  \***************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-window.events = [2, 3]; //где 2,3 - события запрещенного входа/выхода
-
-window.person = {
-  'f': null,
-  'i': null,
-  'o': null,
-  'birthday': null,
-  'address': null,
-  'phone': null
-};
-window.cards = [];
-window.divs = [];
-window.photos = [];
-
-window.setDiv = function (id) {
-  var index = window.divs.indexOf(id);
-
-  if (index === -1) {
-    window.divs.push(id);
-    document.getElementById("div".concat(id)).classList.add("checked");
-  } else {
-    window.divs.splice(index, 1);
-    document.getElementById("div".concat(id)).classList.remove("checked");
-  }
-};
-
-window.savePersonInfo = function () {
-  var checkValidity = true;
-
-  for (var k in person) {
-    var _elem = document.getElementById(k);
-
-    if (_elem.required && _elem.value === "") {
-      _elem.classList.add("no-data");
-
-      checkValidity = false;
-    }
-
-    if (_elem.value) {
-      person[k] = _elem.value;
-    } else {
-      person[k] = null;
-    }
-  }
-
-  var elem = document.getElementById("cards");
-
-  if (elem.value > 0) {
-    cards.push(elem.value);
-  }
-
-  if (!checkValidity) {
-    alert("\u0412\u0432\u0435\u0434\u0435\u043D\u044B \u043D\u0435 \u0432\u0441\u0435 \u0434\u0430\u043D\u043D\u044B\u0435"); //TODO перевод
-  } else {
-    axios.post("https://policam.ru/laravel" + "/persons/save", {
-      cards: JSON.stringify(cards),
-      divs: JSON.stringify(divs),
-      person: JSON.stringify(person),
-      photos: JSON.stringify(photos)
-    }).then(function (response) {
-      var person_id = response.data;
-
-      for (var _k in person) {
-        person[_k] = null;
-      }
-
-      cards = [];
-      alert("\u041F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044C \u2116".concat(person_id, " \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D")); //TODO перевод
-
-      clearPersonInfo();
-    }).catch(function (error) {
-      console.log(error);
-    });
-  }
-};
-
-window.clearPersonInfo = function () {
-  for (var k in person) {
-    document.getElementById(k).value = null;
-  }
-
-  photos = [];
-  document.getElementById("cards").value = 0;
-  document.getElementById("photo_bg").style.backgroundImage = 'url(/img/ac/s/0.jpg)';
-  document.getElementById("photo_del").hidden = true;
-
-  document.getElementById("photo_del").onclick = function () {
-    return false;
-  };
-};
-
-window.checkData = function (e) {
-  e.classList.remove("no-data");
-};
-
-/***/ }),
-
-/***/ "./resources/js/ac/classes.js":
-/*!************************************!*\
-  !*** ./resources/js/ac/classes.js ***!
-  \************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-window.div = {
-  'name': null,
-  'organization_id': null
-}; //удалить из базы
-
-window.deleteDivision = function (div_id) {
-  if (!confirm("\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0435 \u0443\u0434\u0430\u043B\u0435\u043D\u0438\u0435.")) {
-    //TODO перевод
-    return;
-  }
-
-  axios.post("https://policam.ru/laravel" + "/divisions/delete", {
-    'div_id': div_id
-  }).then(function (response) {
-    if (response.data > 0) {
-      alert("\u0423\u0441\u043F\u0435\u0448\u043D\u043E\u0435 \u0443\u0434\u0430\u043B\u0435\u043D\u0438\u0435"); //TODO перевод
-
-      location.reload();
-    } else {
-      alert("\u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u0430\u044F \u043E\u0448\u0438\u0431\u043A\u0430"); //TODO перевод
-    }
-  }).catch(function (error) {
-    console.log(error);
-  });
-}; //сохранить в базу
-
-
-window.saveDivision = function (org_id) {
-  var number = document.getElementById("number").value;
-  var letter = document.getElementById("letter").value;
-
-  if (!number || !letter) {
-    alert("\u0412\u0432\u0435\u0434\u0435\u043D\u044B \u043D\u0435 \u0432\u0441\u0435 \u0434\u0430\u043D\u043D\u044B\u0435"); //TODO перевод
-
-    return;
-  }
-
-  window.div.name = "".concat(number, " \"").concat(letter, "\"");
-  window.div.organization_id = org_id;
-  axios.post("https://policam.ru/laravel" + "/divisions/save", {
-    div: JSON.stringify(window.div)
-  }).then(function (response) {
-    alert("\u041A\u043B\u0430\u0441\u0441 ".concat(response.data.name, " \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D")); //TODO перевод
-
-    location.reload();
-  }).catch(function (error) {
-    console.log(error);
-  });
-};
-
-/***/ }),
-
-/***/ "./resources/js/ac/edit_persons.js":
-/*!*****************************************!*\
-  !*** ./resources/js/ac/edit_persons.js ***!
-  \*****************************************/
+/***/ "./resources/js/ac/ac.js":
+/*!*******************************!*\
+  !*** ./resources/js/ac/ac.js ***!
+  \*******************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -747,22 +584,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-window.events = [2, 3]; //где 2,3 - события запрещенного входа/выхода
-
-window.person = {
-  'f': null,
-  'i': null,
-  'o': null,
-  'birthday': null,
-  'address': null,
-  'phone': null
-};
-window.cards = [];
-window.divs = [];
-window.photos = [];
-window.divisions = [];
-window.persons = [];
 
 var AcObject = function AcObject(data) {
   _classCallCheck(this, AcObject);
@@ -808,176 +629,148 @@ window.showPersons = function (div_id) {
 window.showDivisions = function (div_id) {
   $(".persons").hide();
   $(".divisions").show();
-}; //обновление информации пользователя в БД
+};
 
+window.openEntranceOptions = function (person_id, div_id) {
+  var options = "";
 
-window.updatePersonInfo = function () {
-  var checkValidity = true;
-
-  for (var k in person) {
-    var _elem = document.getElementById(k);
-
-    if (_elem.required && _elem.value === "") {
-      _elem.classList.add("no-data");
-
-      checkValidity = false;
-    }
-
-    if (_elem.value) {
-      person[k] = _elem.value;
-    } else {
-      person[k] = null;
-    }
-  }
-
-  var elem = document.getElementById("cards");
-
-  if (elem.value > 0) {
-    cards.push(elem.value);
-  }
-
-  if (!checkValidity) {
-    alert("\u0412\u0432\u0435\u0434\u0435\u043D\u044B \u043D\u0435 \u0432\u0441\u0435 \u0434\u0430\u043D\u043D\u044B\u0435"); //TODO перевод
+  if (div_id === undefined) {
+    options += "<div id=\"menu-button-back\" class=\"menu-item\" onclick=\"getDivisions();\">\u041D\u0430\u0437\u0430\u0434</div>"; //TODO перевод
   } else {
-    axios.post("https://policam.ru/laravel" + "/persons/save", {
-      cards: JSON.stringify(cards),
-      divs: JSON.stringify(divs),
-      person: JSON.stringify(person),
-      photos: JSON.stringify(photos)
-    }).then(function (response) {
-      if (response.data > 0) {
-        alert("\u041F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044C \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D"); //TODO перевод
-      } else {
-        alert("\u041D\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E \u0438\u043B\u0438 \u0434\u0430\u043D\u043D\u044B\u0435 \u0441\u043E\u0432\u043F\u0430\u043B\u0438"); //TODO перевод
-      }
-
-      getCardsByPerson(person.id);
-    }).catch(function (error) {
-      console.log(error);
-    });
-  }
-}; //удаление пользователя из БД
-
-
-window.deletePerson = function () {
-  if (!confirm("\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0435 \u0443\u0434\u0430\u043B\u0435\u043D\u0438\u0435.")) {
-    //TODO перевод
-    return;
+    options += "<div id=\"menu-button-back\" class=\"menu-item\" onclick=\"getPersons(".concat(div_id, ");\">\u041D\u0430\u0437\u0430\u0434</div>"); //TODO перевод
   }
 
-  axios.post("https://policam.ru/laravel" + "/persons/delete", {
-    person_id: person.id
+  options += "<div id=\"menu-button-forgot\" class=\"menu-item\" onclick=\"sendInfo(1, ".concat(person_id, ")\">\u0417\u0430\u0431\u044B\u043B</div>"); //TODO перевод
+
+  options += "<div id=\"menu-button-lost\" class=\"menu-item\" onclick=\"sendInfo(2, ".concat(person_id, ")\">\u041F\u043E\u0442\u0435\u0440\u044F\u043B</div>"); //TODO перевод
+
+  options += "<div id=\"menu-button-broke\" class=\"menu-item\" onclick=\"sendInfo(3, ".concat(person_id, ")\">\u0421\u043B\u043E\u043C\u0430\u043B</div>"); //TODO перевод
+
+  var menu = document.getElementById("menu");
+  menu.innerHTML = options;
+};
+
+window.sendInfo = function (type, person_id) {
+  var msg;
+
+  switch (type) {
+    case 1:
+      msg = "\u041D\u0430 \u0441\u0435\u0440\u0432\u0435\u0440 \u0431\u0443\u0434\u0435\u0442 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u0435."; //TODO перевод
+
+      if (!confirm(msg)) return;
+      break;
+
+    case 2:
+      msg = "\u041A\u0430\u0440\u0442\u0430 \u0431\u0443\u0434\u0435\u0442 \u0443\u0434\u0430\u043B\u0435\u043D\u0430, \u0430 \u043D\u0430 \u0441\u0435\u0440\u0432\u0435\u0440 \u0431\u0443\u0434\u0435\u0442 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u0435."; //TODO перевод
+
+      if (!confirm(msg)) return;
+      break;
+
+    case 3:
+      msg = "\u041A\u0430\u0440\u0442\u0430 \u0431\u0443\u0434\u0435\u0442 \u0443\u0434\u0430\u043B\u0435\u043D\u0430, \u0430 \u043D\u0430 \u0441\u0435\u0440\u0432\u0435\u0440 \u0431\u0443\u0434\u0435\u0442 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u0435."; //TODO перевод
+
+      if (!confirm(msg)) return;
+      break;
+  }
+
+  axios.post("https://policam.ru/laravel" + "/util/card_problem", {
+    type: type,
+    person_id: person_id
   }).then(function (response) {
-    if (response.data > 0) {
-      var currentElement = document.getElementById("person".concat(person.id));
-      var parentElement = currentElement.parentElement; //родитель этого элемента
-
-      currentElement.remove(); //удаляем элемент
-
-      var lastElement = parentElement.lastElementChild;
-
-      if (lastElement !== null) {
-        lastElement.classList.add("tree-is-last"); //устанавливаем последний элемент в ветке
-      }
-
-      for (var k in person) {
-        var elem = document.getElementById(k);
-        elem.value = null;
-        elem.readOnly = true;
-        person[k] = null;
-      }
-
-      window.photos = [];
-      document.getElementById("photo_bg").style.backgroundImage = 'url(/img/ac/s/0.jpg)';
-      document.getElementById("photo").hidden = true;
-
-      document.getElementById("photo").onchange = function () {
-        return false;
-      };
-
-      document.getElementById("photo_del").onclick = function () {
-        return false;
-      };
-
-      document.getElementById("photo_del").hidden = true;
-      window.cards = [];
-      document.getElementById("cards").value = 0;
-      document.getElementById("person_cards").innerHTML = ""; //очистка списка привязанных карт
-
-      document.getElementById("unknown_cards").hidden = false; //отобразим меню с неизвестными картами
-
-      document.getElementById("cards").disabled = true; //но запретим редактирование
-
-      window.divs = [];
-
-      document.getElementById("save").onclick = function () {
-        return false;
-      };
-
-      document.getElementById("delete").onclick = function () {
-        return false;
-      };
-
-      alert("\u041F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044C \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0443\u0434\u0430\u043B\u0435\u043D"); //TODO перевод
+    if (response.data) {
+      alert(response.data);
     } else {
       alert("\u041F\u0443\u0441\u0442\u043E\u0439 \u043E\u0442\u0432\u0435\u0442 \u043E\u0442 \u0441\u0435\u0440\u0432\u0435\u0440\u0430"); //TODO перевод
     }
   }).catch(function (error) {
     console.log(error);
   });
-}; //получение данных пользователя из БД
+}; //сохранить ошибку на сервере
 
 
-window.getPersonInfo = function (person_id) {
-  axios.get("https://policam.ru/laravel" + "/persons/get/".concat(person_id)).then(function (response) {
+window.sendError = function (message) {
+  axios.post("https://policam.ru/laravel" + "/util/save_errors", {
+    error: message
+  }).catch(function (error) {
+    console.log(error);
+  });
+}; //добавление опций в select
+
+
+function addOption(elem, value, text) {
+  var option = document.createElement("option");
+  option.value = value;
+  option.text = text;
+  elem.add(option);
+}
+
+var trans = function trans(key) {
+  var replace = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  var translation = key.split('.').reduce(function (t, i) {
+    return t[i] || null;
+  }, window.translations);
+
+  for (var placeholder in replace) {
+    translation = translation.replace(":".concat(placeholder), replace[placeholder]);
+  }
+
+  return translation;
+};
+
+var trans_choice = function trans_choice(key) {
+  var count = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+  var replace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  var translation = key.split('.').reduce(function (t, i) {
+    return t[i] || null;
+  }, window.translations).split('|');
+  translation = count > 1 ? translation[1] : translation[0];
+
+  for (var placeholder in replace) {
+    translation = translation.replace(":".concat(placeholder), replace[placeholder]);
+  }
+
+  return translation;
+};
+
+/***/ }),
+
+/***/ "./resources/js/ac/cards.js":
+/*!**********************************!*\
+  !*** ./resources/js/ac/cards.js ***!
+  \**********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var cards = []; //получим список неизвестных карт (брелоков) из БД
+
+window.getCards = function (id) {
+  axios.get("https://policam.ru/laravel" + "/cards/get_list").then(function (response) {
     var data = response.data;
 
     if (data) {
-      for (var k in data.person) {
-        var elem = document.getElementById(k);
+      var cards_selector = document.getElementById("cards");
 
-        if (elem == null) {
-          continue;
-        }
-
-        person[k] = data.person[k];
-        elem.value = data.person[k];
-        elem.readOnly = false;
+      while (cards_selector.length > 0) {
+        //удалить все элементы из меню карт
+        cards_selector.remove(cards_selector.length - 1);
       }
 
-      var photo_id = 0;
-      window.photos = [];
-      document.getElementById("photo").value = null;
-
-      if (data.photos.length === 0) {
-        document.getElementById("photo").hidden = false;
-        document.getElementById("photo_del").hidden = true;
-
-        document.getElementById("photo_del").onclick = function () {
-          return false;
-        };
+      if (data.length == 0) {
+        //если нет известных карт
+        addOption(cards_selector, 0, trans('ac.missing'));
       } else {
-        photo_id = data.photos[0].id;
-        photos.unshift(photo_id);
-        document.getElementById("photo").hidden = true;
-        document.getElementById("photo_del").hidden = false;
-        document.getElementById("photo_del").onclick = deletePhoto;
+        //иначе заполним меню картами
+        addOption(cards_selector, 0, trans('ac.not_selected')); //первый пункт
+
+        data.forEach(function (c) {
+          addOption(cards_selector, c.id, c.wiegand);
+        });
       }
 
-      document.getElementById("photo_bg").style.backgroundImage = 'url(/img/ac/s/' + photo_id + '.jpg)';
-
-      document.getElementById("photo").onchange = function () {
-        handleFiles(this.files);
-      };
-
-      window.divs = [];
-
-      for (var _k in data.divs) {
-        divs.push(data.divs[_k].id);
+      if (id) {
+        //если передавали id, то установим карту как текущую
+        cards_selector.value = id;
       }
-
-      document.getElementById("save").onclick = updatePersonInfo;
-      document.getElementById("delete").onclick = deletePerson;
     } else {
       alert("\u041F\u0443\u0441\u0442\u043E\u0439 \u043E\u0442\u0432\u0435\u0442 \u043E\u0442 \u0441\u0435\u0440\u0432\u0435\u0440\u0430"); //TODO перевод
     }
@@ -990,7 +783,7 @@ window.getPersonInfo = function (person_id) {
 window.getCardsByPerson = function (person_id) {
   axios.get("https://policam.ru/laravel" + "/cards/get_list/".concat(person_id)).then(function (response) {
     var data = response.data;
-    window.cards = [];
+    cards = [];
     var person_cards = document.getElementById("person_cards");
     person_cards.innerHTML = "";
 
@@ -1077,67 +870,474 @@ window.delCard = function (card_id) {
 
 /***/ }),
 
-/***/ "./resources/js/ac/main.js":
-/*!*********************************!*\
-  !*** ./resources/js/ac/main.js ***!
-  \*********************************/
+/***/ "./resources/js/ac/controllers.js":
+/*!****************************************!*\
+  !*** ./resources/js/ac/controllers.js ***!
+  \****************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-//сохранить ошибку на сервере
-window.sendError = function (message) {
-  axios.post("https://policam.ru/laravel" + "/util/save_errors", {
-    error: message
+axios.get("https://policam.ru/laravel" + '/controllers/get_list').then(function (response) {
+  for (var k in response.data) {
+    Echo.private("controller-events.".concat(response.data[k].id)).listen('EventReceived', function (e) {
+      if (!events.includes(e.event)) {
+        return;
+      }
+
+      if (e.event == 16 || e.event == 17) {
+        setPersonInfo(e.card_id);
+      } else if (e.event == 2 || e.event == 3) {
+        if (!document.getElementById("cards").disabled) {
+          //если меню неизвестных карт активно
+          var o = confirm("\u0412\u0432\u0435\u0434\u0435\u043D \u043D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u044B\u0439 \u043A\u043B\u044E\u0447. \u0412\u044B\u0431\u0440\u0430\u0442\u044C \u0435\u0433\u043E \u0432 \u043A\u0430\u0447\u0435\u0441\u0442\u0432\u0435 \u043D\u043E\u0432\u043E\u0433\u043E \u043A\u043B\u044E\u0447\u0430 \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044F?"); //TODO перевод
+
+          if (o) {
+            getCards(e.card_id);
+          }
+        } else if (document.getElementById("unknown_cards").hidden) {
+          var _o = confirm("\u0412\u0432\u0435\u0434\u0435\u043D \u043D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u044B\u0439 \u043A\u043B\u044E\u0447. \u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0435\u0433\u043E \u0442\u0435\u043A\u0443\u0449\u0435\u043C\u0443 \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044E?"); //TODO перевод
+
+
+          if (_o) {
+            saveCard(e.card_id);
+          }
+        }
+      }
+    }).listen('ControllerConnected', function (e) {
+      SetControllerStatus(e.controller_id);
+    });
+  }
+}).catch(function (error) {
+  console.log(error);
+});
+
+window.SetControllerStatus = function (controller_id) {//console.log(controller_id);
+};
+
+/***/ }),
+
+/***/ "./resources/js/ac/divisions.js":
+/*!**************************************!*\
+  !*** ./resources/js/ac/divisions.js ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var division = {
+  'name': null,
+  'organization_id': null
+};
+var divisions = [];
+
+window.getDivisions = function () {
+  axios.get("https://policam.ru/laravel" + "/divisions/get_list").then(function (response) {
+    var data = response.data;
+
+    if (data.length > 0) {
+      var _divisions = "";
+      data.forEach(function (div) {
+        _divisions += "<div id=\"div".concat(div.id, "\" class=\"menu-item\" onclick=\"getPersons(").concat(div.id, ");\">").concat(div.name, "</div>");
+      });
+      var menu = document.getElementById("menu");
+      menu.innerHTML = _divisions;
+    } else {
+      alert("\u041F\u0443\u0441\u0442\u043E\u0439 \u043E\u0442\u0432\u0435\u0442 \u043E\u0442 \u0441\u0435\u0440\u0432\u0435\u0440\u0430"); //TODO перевод
+    }
+  }).catch(function (error) {
+    console.log(error);
+  }).then(function () {// always executed
+  });
+}; //сохранить в базу
+
+
+window.saveDivision = function (org_id) {
+  var number = document.getElementById("number").value;
+  var letter = document.getElementById("letter").value;
+
+  if (!number || !letter) {
+    alert("\u0412\u0432\u0435\u0434\u0435\u043D\u044B \u043D\u0435 \u0432\u0441\u0435 \u0434\u0430\u043D\u043D\u044B\u0435"); //TODO перевод
+
+    return;
+  }
+
+  window.div.name = "".concat(number, " \"").concat(letter, "\"");
+  window.div.organization_id = org_id;
+  axios.post("https://policam.ru/laravel" + "/divisions/save", {
+    div: JSON.stringify(window.div)
+  }).then(function (response) {
+    alert("\u041A\u043B\u0430\u0441\u0441 ".concat(response.data.name, " \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D")); //TODO перевод
+
+    location.reload();
   }).catch(function (error) {
     console.log(error);
   });
-}; //получим список неизвестных карт (брелоков) из БД
+}; //удалить из базы
 
 
-window.getCards = function (id) {
-  axios.get("https://policam.ru/laravel" + "/cards/get_list").then(function (response) {
+window.deleteDivision = function (div_id) {
+  if (!confirm("\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0435 \u0443\u0434\u0430\u043B\u0435\u043D\u0438\u0435.")) {
+    //TODO перевод
+    return;
+  }
+
+  axios.post("https://policam.ru/laravel" + "/divisions/delete", {
+    'div_id': div_id
+  }).then(function (response) {
+    if (response.data > 0) {
+      alert("\u0423\u0441\u043F\u0435\u0448\u043D\u043E\u0435 \u0443\u0434\u0430\u043B\u0435\u043D\u0438\u0435"); //TODO перевод
+
+      location.reload();
+    } else {
+      alert("\u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u0430\u044F \u043E\u0448\u0438\u0431\u043A\u0430"); //TODO перевод
+    }
+  }).catch(function (error) {
+    console.log(error);
+  });
+};
+
+window.setDiv = function (id) {
+  var index = window.divs.indexOf(id);
+
+  if (index === -1) {
+    window.divs.push(id);
+    document.getElementById("div".concat(id)).classList.add("checked");
+  } else {
+    window.divs.splice(index, 1);
+    document.getElementById("div".concat(id)).classList.remove("checked");
+  }
+};
+
+/***/ }),
+
+/***/ "./resources/js/ac/persons.js":
+/*!************************************!*\
+  !*** ./resources/js/ac/persons.js ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var person = {
+  'f': null,
+  'i': null,
+  'o': null,
+  'birthday': null,
+  'address': null,
+  'phone': null
+};
+var persons = [];
+
+window.setPersonInfo = function (card_id) {
+  axios.get("https://policam.ru/laravel" + "/persons/get_by_card/".concat(card_id)).then(function (response) {
+    if (response.data) {
+      var data = response.data;
+
+      var _loop = function _loop(k) {
+        if (k === "divs") {
+          data.person[k].forEach(function (div) {
+            document.getElementById(k).innerHTML = div.name; //TODO списком
+          });
+        } else {
+          var elem = document.getElementById(k);
+
+          if (elem == null) {
+            return "continue";
+          }
+
+          elem.value = data.person[k];
+        }
+      };
+
+      for (var k in data.person) {
+        var _ret = _loop(k);
+
+        if (_ret === "continue") continue;
+      }
+
+      var photo_id = 0;
+      var photo = document.getElementById("photo_bg");
+
+      if (data.photos.length > 0) {
+        photo_id = data.photos[0].id;
+      }
+
+      photo.style.backgroundImage = 'url(/img/ac/s/' + photo_id + '.jpg)';
+    } else {
+      console.log("\u041F\u0443\u0441\u0442\u043E\u0439 \u043E\u0442\u0432\u0435\u0442 \u043E\u0442 \u0441\u0435\u0440\u0432\u0435\u0440\u0430"); //TODO перевод
+    }
+  }).catch(function (error) {
+    console.log(error);
+  }).then(function () {// always executed
+  });
+};
+
+window.getPersons = function (div_id) {
+  axios.get("https://policam.ru/laravel" + "/persons/get_list/".concat(div_id)).then(function (response) {
     var data = response.data;
+    var persons = "<div id=\"menu-button-back\" class=\"menu-item\" onclick=\"getDivisions();\">\u041D\u0430\u0437\u0430\u0434</div>"; //TODO перевод
 
-    if (data) {
-      var cards = document.getElementById("cards");
+    if (data.length > 0) {
+      data.forEach(function (person) {
+        persons += "<div id=\"person".concat(person.id, "\" class=\"menu-item\" onclick=\"openEntranceOptions(").concat(person.id, ", ").concat(div_id, ");\">").concat(person.f, " ").concat(person.i, "</div>");
+      });
+    }
 
-      while (cards.length > 0) {
-        //удалить все элементы из меню карт
-        cards.remove(cards.length - 1);
+    document.getElementById("menu").innerHTML = persons;
+  }).catch(function (error) {
+    console.log(error);
+  });
+};
+
+window.savePersonInfo = function () {
+  var checkValidity = true;
+
+  for (var k in person) {
+    var _elem = document.getElementById(k);
+
+    if (_elem.required && _elem.value === "") {
+      _elem.classList.add("no-data");
+
+      checkValidity = false;
+    }
+
+    if (_elem.value) {
+      person[k] = _elem.value;
+    } else {
+      person[k] = null;
+    }
+  }
+
+  var elem = document.getElementById("cards");
+
+  if (elem.value > 0) {
+    cards.push(elem.value);
+  }
+
+  if (!checkValidity) {
+    alert("\u0412\u0432\u0435\u0434\u0435\u043D\u044B \u043D\u0435 \u0432\u0441\u0435 \u0434\u0430\u043D\u043D\u044B\u0435"); //TODO перевод
+  } else {
+    axios.post("https://policam.ru/laravel" + "/persons/save", {
+      cards: JSON.stringify(cards),
+      divs: JSON.stringify(divs),
+      person: JSON.stringify(person),
+      photos: JSON.stringify(photos)
+    }).then(function (response) {
+      var person_id = response.data;
+
+      for (var _k in person) {
+        person[_k] = null;
       }
 
-      if (data.length == 0) {
-        //если нет известных карт
-        addOption(cards, 0, trans('ac.missing'));
+      cards = [];
+      alert("\u041F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044C \u2116".concat(person_id, " \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D")); //TODO перевод
+
+      clearPersonInfo();
+    }).catch(function (error) {
+      console.log(error);
+    });
+  }
+};
+
+window.clearPersonInfo = function () {
+  for (var k in person) {
+    document.getElementById(k).value = null;
+  }
+
+  photos = [];
+  document.getElementById("cards").value = 0;
+  document.getElementById("photo_bg").style.backgroundImage = 'url(/img/ac/s/0.jpg)';
+  document.getElementById("photo_del").hidden = true;
+
+  document.getElementById("photo_del").onclick = function () {
+    return false;
+  };
+}; //обновление информации пользователя в БД
+
+
+window.updatePersonInfo = function () {
+  var checkValidity = true;
+
+  for (var k in person) {
+    var _elem2 = document.getElementById(k);
+
+    if (_elem2.required && _elem2.value === "") {
+      _elem2.classList.add("no-data");
+
+      checkValidity = false;
+    }
+
+    if (_elem2.value) {
+      person[k] = _elem2.value;
+    } else {
+      person[k] = null;
+    }
+  }
+
+  var elem = document.getElementById("cards");
+
+  if (elem.value > 0) {
+    cards.push(elem.value);
+  }
+
+  if (!checkValidity) {
+    alert("\u0412\u0432\u0435\u0434\u0435\u043D\u044B \u043D\u0435 \u0432\u0441\u0435 \u0434\u0430\u043D\u043D\u044B\u0435"); //TODO перевод
+  } else {
+    axios.post("https://policam.ru/laravel" + "/persons/save", {
+      cards: JSON.stringify(cards),
+      divs: JSON.stringify(divs),
+      person: JSON.stringify(person),
+      photos: JSON.stringify(photos)
+    }).then(function (response) {
+      if (response.data > 0) {
+        alert("\u041F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044C \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D"); //TODO перевод
       } else {
-        //иначе заполним меню картами
-        addOption(cards, 0, trans('ac.not_selected')); //первый пункт
-
-        data.forEach(function (c) {
-          addOption(cards, c.id, c.wiegand);
-        });
+        alert("\u041D\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E \u0438\u043B\u0438 \u0434\u0430\u043D\u043D\u044B\u0435 \u0441\u043E\u0432\u043F\u0430\u043B\u0438"); //TODO перевод
       }
 
-      if (id) {
-        //если передавали id, то установим карту как текущую
-        cards.value = id;
+      getCardsByPerson(person.id);
+    }).catch(function (error) {
+      console.log(error);
+    });
+  }
+}; //удаление пользователя из БД
+
+
+window.deletePerson = function () {
+  if (!confirm("\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0435 \u0443\u0434\u0430\u043B\u0435\u043D\u0438\u0435.")) {
+    //TODO перевод
+    return;
+  }
+
+  axios.post("https://policam.ru/laravel" + "/persons/delete", {
+    person_id: person.id
+  }).then(function (response) {
+    if (response.data > 0) {
+      var currentElement = document.getElementById("person".concat(person.id));
+      var parentElement = currentElement.parentElement; //родитель этого элемента
+
+      currentElement.remove(); //удаляем элемент
+
+      var lastElement = parentElement.lastElementChild;
+
+      if (lastElement !== null) {
+        lastElement.classList.add("tree-is-last"); //устанавливаем последний элемент в ветке
       }
+
+      for (var k in person) {
+        var elem = document.getElementById(k);
+        elem.value = null;
+        elem.readOnly = true;
+        person[k] = null;
+      }
+
+      photos = [];
+      document.getElementById("photo_bg").style.backgroundImage = 'url(/img/ac/s/0.jpg)';
+      document.getElementById("photo").hidden = true;
+
+      document.getElementById("photo").onchange = function () {
+        return false;
+      };
+
+      document.getElementById("photo_del").onclick = function () {
+        return false;
+      };
+
+      document.getElementById("photo_del").hidden = true;
+      cards = [];
+      document.getElementById("cards").value = 0;
+      document.getElementById("person_cards").innerHTML = ""; //очистка списка привязанных карт
+
+      document.getElementById("unknown_cards").hidden = false; //отобразим меню с неизвестными картами
+
+      document.getElementById("cards").disabled = true; //но запретим редактирование
+
+      window.divs = [];
+
+      document.getElementById("save").onclick = function () {
+        return false;
+      };
+
+      document.getElementById("delete").onclick = function () {
+        return false;
+      };
+
+      alert("\u041F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044C \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0443\u0434\u0430\u043B\u0435\u043D"); //TODO перевод
     } else {
       alert("\u041F\u0443\u0441\u0442\u043E\u0439 \u043E\u0442\u0432\u0435\u0442 \u043E\u0442 \u0441\u0435\u0440\u0432\u0435\u0440\u0430"); //TODO перевод
     }
   }).catch(function (error) {
     console.log(error);
   });
-}; //добавление опций в select
+}; //получение данных пользователя из БД
 
 
-function addOption(elem, value, text) {
-  var option = document.createElement("option");
-  option.value = value;
-  option.text = text;
-  elem.add(option);
-} //загрузка фото
+window.getPersonInfo = function (person_id) {
+  axios.get("https://policam.ru/laravel" + "/persons/get/".concat(person_id)).then(function (response) {
+    var data = response.data;
 
+    if (data) {
+      for (var k in data.person) {
+        var elem = document.getElementById(k);
+
+        if (elem == null) {
+          continue;
+        }
+
+        person[k] = data.person[k];
+        elem.value = data.person[k];
+        elem.readOnly = false;
+      }
+
+      var photo_id = 0;
+      window.photos = [];
+      document.getElementById("photo").value = null;
+
+      if (data.photos.length === 0) {
+        document.getElementById("photo").hidden = false;
+        document.getElementById("photo_del").hidden = true;
+
+        document.getElementById("photo_del").onclick = function () {
+          return false;
+        };
+      } else {
+        photo_id = data.photos[0].id;
+        photos.unshift(photo_id);
+        document.getElementById("photo").hidden = true;
+        document.getElementById("photo_del").hidden = false;
+        document.getElementById("photo_del").onclick = deletePhoto;
+      }
+
+      document.getElementById("photo_bg").style.backgroundImage = 'url(/img/ac/s/' + photo_id + '.jpg)';
+
+      document.getElementById("photo").onchange = function () {
+        handleFiles(this.files);
+      };
+
+      window.divs = [];
+
+      for (var _k2 in data.divs) {
+        divs.push(data.divs[_k2].id);
+      }
+
+      document.getElementById("save").onclick = updatePersonInfo;
+      document.getElementById("delete").onclick = deletePerson;
+    } else {
+      alert("\u041F\u0443\u0441\u0442\u043E\u0439 \u043E\u0442\u0432\u0435\u0442 \u043E\u0442 \u0441\u0435\u0440\u0432\u0435\u0440\u0430"); //TODO перевод
+    }
+  }).catch(function (error) {
+    console.log(error);
+  });
+};
+
+/***/ }),
+
+/***/ "./resources/js/ac/photos.js":
+/*!***********************************!*\
+  !*** ./resources/js/ac/photos.js ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var photos = []; //загрузка фото
 
 window.handleFiles = function (files) {
   var formData = new FormData();
@@ -1203,155 +1403,6 @@ window.deletePhoto = function () {
 
 /***/ }),
 
-/***/ "./resources/js/ac/observer.js":
-/*!*************************************!*\
-  !*** ./resources/js/ac/observer.js ***!
-  \*************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-var events = [16, 17]; //где 16, 17 - вход/выход состоялся
-//получение данных пользователя из БД
-
-window.setPersonInfo = function (card_id) {
-  axios.get("https://policam.ru/laravel" + "/persons/get_by_card/".concat(card_id)).then(function (response) {
-    if (response.data) {
-      var data = response.data;
-
-      var _loop = function _loop(k) {
-        if (k === "divs") {
-          data.person[k].forEach(function (div) {
-            document.getElementById(k).innerHTML = div.name; //TODO списком
-          });
-        } else {
-          var elem = document.getElementById(k);
-
-          if (elem == null) {
-            return "continue";
-          }
-
-          elem.value = data.person[k];
-        }
-      };
-
-      for (var k in data.person) {
-        var _ret = _loop(k);
-
-        if (_ret === "continue") continue;
-      }
-
-      var photo_id = 0;
-      var photo = document.getElementById("photo_bg");
-
-      if (data.photos.length > 0) {
-        photo_id = data.photos[0].id;
-      }
-
-      photo.style.backgroundImage = 'url(/img/ac/s/' + photo_id + '.jpg)';
-    } else {
-      console.log("\u041F\u0443\u0441\u0442\u043E\u0439 \u043E\u0442\u0432\u0435\u0442 \u043E\u0442 \u0441\u0435\u0440\u0432\u0435\u0440\u0430"); //TODO перевод
-    }
-  }).catch(function (error) {
-    console.log(error);
-  }).then(function () {// always executed
-  });
-};
-
-window.getDivisions = function () {
-  axios.get("https://policam.ru/laravel" + "/divisions/get_list").then(function (response) {
-    var data = response.data;
-
-    if (data.length > 0) {
-      var divisions = "";
-      data.forEach(function (div) {
-        divisions += "<div id=\"div".concat(div.id, "\" class=\"menu-item\" onclick=\"getPersons(").concat(div.id, ");\">").concat(div.name, "</div>");
-      });
-      var menu = document.getElementById("menu");
-      menu.innerHTML = divisions;
-    } else {
-      alert("\u041F\u0443\u0441\u0442\u043E\u0439 \u043E\u0442\u0432\u0435\u0442 \u043E\u0442 \u0441\u0435\u0440\u0432\u0435\u0440\u0430"); //TODO перевод
-    }
-  }).catch(function (error) {
-    console.log(error);
-  }).then(function () {// always executed
-  });
-};
-
-window.getPersons = function (div_id) {
-  axios.get("https://policam.ru/laravel" + "/persons/get_list/".concat(div_id)).then(function (response) {
-    var data = response.data;
-    var persons = "<div id=\"menu-button-back\" class=\"menu-item\" onclick=\"getDivisions();\">\u041D\u0430\u0437\u0430\u0434</div>"; //TODO перевод
-
-    if (data.length > 0) {
-      data.forEach(function (person) {
-        persons += "<div id=\"person".concat(person.id, "\" class=\"menu-item\" onclick=\"openEntranceOptions(").concat(person.id, ", ").concat(div_id, ");\">").concat(person.f, " ").concat(person.i, "</div>");
-      });
-    }
-
-    document.getElementById("menu").innerHTML = persons;
-  }).catch(function (error) {
-    console.log(error);
-  });
-};
-
-window.openEntranceOptions = function (person_id, div_id) {
-  var options = "";
-
-  if (div_id === undefined) {
-    options += "<div id=\"menu-button-back\" class=\"menu-item\" onclick=\"getDivisions();\">\u041D\u0430\u0437\u0430\u0434</div>"; //TODO перевод
-  } else {
-    options += "<div id=\"menu-button-back\" class=\"menu-item\" onclick=\"getPersons(".concat(div_id, ");\">\u041D\u0430\u0437\u0430\u0434</div>"); //TODO перевод
-  }
-
-  options += "<div id=\"menu-button-forgot\" class=\"menu-item\" onclick=\"sendInfo(1, ".concat(person_id, ")\">\u0417\u0430\u0431\u044B\u043B</div>"); //TODO перевод
-
-  options += "<div id=\"menu-button-lost\" class=\"menu-item\" onclick=\"sendInfo(2, ".concat(person_id, ")\">\u041F\u043E\u0442\u0435\u0440\u044F\u043B</div>"); //TODO перевод
-
-  options += "<div id=\"menu-button-broke\" class=\"menu-item\" onclick=\"sendInfo(3, ".concat(person_id, ")\">\u0421\u043B\u043E\u043C\u0430\u043B</div>"); //TODO перевод
-
-  var menu = document.getElementById("menu");
-  menu.innerHTML = options;
-};
-
-window.sendInfo = function (type, person_id) {
-  var msg;
-
-  switch (type) {
-    case 1:
-      msg = "\u041D\u0430 \u0441\u0435\u0440\u0432\u0435\u0440 \u0431\u0443\u0434\u0435\u0442 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u0435."; //TODO перевод
-
-      if (!confirm(msg)) return;
-      break;
-
-    case 2:
-      msg = "\u041A\u0430\u0440\u0442\u0430 \u0431\u0443\u0434\u0435\u0442 \u0443\u0434\u0430\u043B\u0435\u043D\u0430, \u0430 \u043D\u0430 \u0441\u0435\u0440\u0432\u0435\u0440 \u0431\u0443\u0434\u0435\u0442 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u0435."; //TODO перевод
-
-      if (!confirm(msg)) return;
-      break;
-
-    case 3:
-      msg = "\u041A\u0430\u0440\u0442\u0430 \u0431\u0443\u0434\u0435\u0442 \u0443\u0434\u0430\u043B\u0435\u043D\u0430, \u0430 \u043D\u0430 \u0441\u0435\u0440\u0432\u0435\u0440 \u0431\u0443\u0434\u0435\u0442 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u0435."; //TODO перевод
-
-      if (!confirm(msg)) return;
-      break;
-  }
-
-  axios.post("https://policam.ru/laravel" + "/util/card_problem", {
-    type: type,
-    person_id: person_id
-  }).then(function (response) {
-    if (response.data) {
-      alert(response.data);
-    } else {
-      alert("\u041F\u0443\u0441\u0442\u043E\u0439 \u043E\u0442\u0432\u0435\u0442 \u043E\u0442 \u0441\u0435\u0440\u0432\u0435\u0440\u0430"); //TODO перевод
-    }
-  }).catch(function (error) {
-    console.log(error);
-  });
-};
-
-/***/ }),
-
 /***/ "./resources/js/ac/push.js":
 /*!*********************************!*\
   !*** ./resources/js/ac/push.js ***!
@@ -1361,12 +1412,12 @@ window.sendInfo = function (type, person_id) {
 
 // Initialize Firebase
 var config = {
-  apiKey: "{{ config('ac.fcm.api_key') }}",
-  authDomain: "{{ config('ac.fcm.auth_domain') }}",
-  databaseURL: "{{ config('ac.fcm.database_url') }}",
-  projectId: "{{ config('ac.fcm.project_id') }}",
-  storageBucket: "{{ config('ac.fcm.storage_bucket') }}",
-  messagingSenderId: "{{ config('ac.fcm.messaging_sender_id') }}"
+  apiKey: "AIzaSyDI_-AwpqcTclSXCyXgYJzvaTNC-dky9iY",
+  authDomain: "policam-ac.firebaseapp.com",
+  databaseURL: "https://policam-ac.firebaseio.com",
+  projectId: "policam-ac",
+  storageBucket: "policam-ac.appspot.com",
+  messagingSenderId: "1005476478589"
 };
 firebase.initializeApp(config); // пользователь уже разрешил получение уведомлений
 // подписываем на уведомления если ещё не подписали
@@ -1377,7 +1428,7 @@ if (Notification.permission === "granted") {
 
 window.subscribe = function () {
   var messaging = firebase.messaging();
-  messaging.usePublicVapidKey("{{ config('ac.fcm.public_vapid_key') }}"); // запрашиваем разрешение на получение уведомлений
+  messaging.usePublicVapidKey("BPKQjI8lJAE9pymLNyKm5fsJSsu-7vXlPZivaRvR52lxGWgsxF2TN5s_iaIKQ1LWNZPh0S8arKNOXfq9nAAB3Yg"); // запрашиваем разрешение на получение уведомлений
 
   messaging.requestPermission().then(function () {
     // получаем ID устройства
@@ -1466,81 +1517,17 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 //     el: '#app'
 // });
 
-axios.get("https://policam.ru/laravel" + '/controllers/get_list').then(function (response) {
-  for (var k in response.data) {
-    Echo.private("controller-events.".concat(response.data[k].id)).listen('EventReceived', function (e) {
-      if (!events.includes(e.event)) {
-        return;
-      }
+__webpack_require__(/*! ./ac/ac */ "./resources/js/ac/ac.js");
 
-      if (e.event == 16 || e.event == 17) {
-        setPersonInfo(e.card_id);
-      } else if (e.event == 2 || e.event == 3) {
-        if (!document.getElementById("cards").disabled) {
-          //если меню неизвестных карт активно
-          var o = confirm("\u0412\u0432\u0435\u0434\u0435\u043D \u043D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u044B\u0439 \u043A\u043B\u044E\u0447. \u0412\u044B\u0431\u0440\u0430\u0442\u044C \u0435\u0433\u043E \u0432 \u043A\u0430\u0447\u0435\u0441\u0442\u0432\u0435 \u043D\u043E\u0432\u043E\u0433\u043E \u043A\u043B\u044E\u0447\u0430 \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044F?"); //TODO перевод
+__webpack_require__(/*! ./ac/cards */ "./resources/js/ac/cards.js");
 
-          if (o) {
-            getCards(e.card_id);
-          }
-        } else if (document.getElementById("unknown_cards").hidden) {
-          var _o = confirm("\u0412\u0432\u0435\u0434\u0435\u043D \u043D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u044B\u0439 \u043A\u043B\u044E\u0447. \u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0435\u0433\u043E \u0442\u0435\u043A\u0443\u0449\u0435\u043C\u0443 \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044E?"); //TODO перевод
+__webpack_require__(/*! ./ac/controllers */ "./resources/js/ac/controllers.js");
 
+__webpack_require__(/*! ./ac/divisions */ "./resources/js/ac/divisions.js");
 
-          if (_o) {
-            saveCard(e.card_id);
-          }
-        }
-      }
-    }).listen('ControllerConnected', function (e) {
-      SetControllerStatus(e.controller_id);
-    });
-  }
-}).catch(function (error) {
-  console.log(error);
-});
+__webpack_require__(/*! ./ac/persons */ "./resources/js/ac/persons.js");
 
-window.SetControllerStatus = function (controller_id) {
-  console.log(controller_id);
-};
-
-window.trans = function (key) {
-  var replace = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  var translation = key.split('.').reduce(function (t, i) {
-    return t[i] || null;
-  }, window.translations);
-
-  for (var placeholder in replace) {
-    translation = translation.replace(":".concat(placeholder), replace[placeholder]);
-  }
-
-  return translation;
-};
-
-window.trans_choice = function (key) {
-  var count = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
-  var replace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  var translation = key.split('.').reduce(function (t, i) {
-    return t[i] || null;
-  }, window.translations).split('|');
-  translation = count > 1 ? translation[1] : translation[0];
-
-  for (var placeholder in replace) {
-    translation = translation.replace(":".concat(placeholder), replace[placeholder]);
-  }
-
-  return translation;
-};
-
-__webpack_require__(/*! ./ac/add_person */ "./resources/js/ac/add_person.js");
-
-__webpack_require__(/*! ./ac/classes */ "./resources/js/ac/classes.js");
-
-__webpack_require__(/*! ./ac/edit_persons */ "./resources/js/ac/edit_persons.js");
-
-__webpack_require__(/*! ./ac/main */ "./resources/js/ac/main.js");
-
-__webpack_require__(/*! ./ac/observer */ "./resources/js/ac/observer.js");
+__webpack_require__(/*! ./ac/photos */ "./resources/js/ac/photos.js");
 
 __webpack_require__(/*! ./ac/push */ "./resources/js/ac/push.js");
 
