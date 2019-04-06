@@ -32,1266 +32,6 @@ function isSlowBuffer (obj) {
 
 /***/ }),
 
-/***/ "./node_modules/laravel-echo/dist/echo.js":
-/*!************************************************!*\
-  !*** ./node_modules/laravel-echo/dist/echo.js ***!
-  \************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-var classCallCheck = function (instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-};
-
-var createClass = function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];
-      descriptor.enumerable = descriptor.enumerable || false;
-      descriptor.configurable = true;
-      if ("value" in descriptor) descriptor.writable = true;
-      Object.defineProperty(target, descriptor.key, descriptor);
-    }
-  }
-
-  return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) defineProperties(Constructor, staticProps);
-    return Constructor;
-  };
-}();
-
-var _extends = Object.assign || function (target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i];
-
-    for (var key in source) {
-      if (Object.prototype.hasOwnProperty.call(source, key)) {
-        target[key] = source[key];
-      }
-    }
-  }
-
-  return target;
-};
-
-var inherits = function (subClass, superClass) {
-  if (typeof superClass !== "function" && superClass !== null) {
-    throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
-  }
-
-  subClass.prototype = Object.create(superClass && superClass.prototype, {
-    constructor: {
-      value: subClass,
-      enumerable: false,
-      writable: true,
-      configurable: true
-    }
-  });
-  if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
-};
-
-var possibleConstructorReturn = function (self, call) {
-  if (!self) {
-    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-  }
-
-  return call && (typeof call === "object" || typeof call === "function") ? call : self;
-};
-
-var Connector = function () {
-    /**
-     * Create a new class instance.
-     */
-    function Connector(options) {
-        classCallCheck(this, Connector);
-
-        /**
-         * Default connector options.
-         */
-        this._defaultOptions = {
-            auth: {
-                headers: {}
-            },
-            authEndpoint: '/broadcasting/auth',
-            broadcaster: 'pusher',
-            csrfToken: null,
-            host: null,
-            key: null,
-            namespace: 'App.Events'
-        };
-        this.setOptions(options);
-        this.connect();
-    }
-    /**
-     * Merge the custom options with the defaults.
-     */
-
-
-    createClass(Connector, [{
-        key: 'setOptions',
-        value: function setOptions(options) {
-            this.options = _extends(this._defaultOptions, options);
-            if (this.csrfToken()) {
-                this.options.auth.headers['X-CSRF-TOKEN'] = this.csrfToken();
-            }
-            return options;
-        }
-        /**
-         * Extract the CSRF token from the page.
-         */
-
-    }, {
-        key: 'csrfToken',
-        value: function csrfToken() {
-            var selector = void 0;
-            if (typeof window !== 'undefined' && window['Laravel'] && window['Laravel'].csrfToken) {
-                return window['Laravel'].csrfToken;
-            } else if (this.options.csrfToken) {
-                return this.options.csrfToken;
-            } else if (typeof document !== 'undefined' && (selector = document.querySelector('meta[name="csrf-token"]'))) {
-                return selector.getAttribute('content');
-            }
-            return null;
-        }
-    }]);
-    return Connector;
-}();
-
-/**
- * This class represents a basic channel.
- */
-var Channel = function () {
-  function Channel() {
-    classCallCheck(this, Channel);
-  }
-
-  createClass(Channel, [{
-    key: 'listenForWhisper',
-
-    /**
-     * Listen for a whisper event on the channel instance.
-     */
-    value: function listenForWhisper(event, callback) {
-      return this.listen('.client-' + event, callback);
-    }
-    /**
-     * Listen for an event on the channel instance.
-     */
-
-  }, {
-    key: 'notification',
-    value: function notification(callback) {
-      return this.listen('.Illuminate\\Notifications\\Events\\BroadcastNotificationCreated', callback);
-    }
-  }]);
-  return Channel;
-}();
-
-/**
- * Event name formatter
- */
-var EventFormatter = function () {
-    /**
-     * Create a new class instance.
-     */
-    function EventFormatter(namespace) {
-        classCallCheck(this, EventFormatter);
-
-        this.setNamespace(namespace);
-    }
-    /**
-     * Format the given event name.
-     */
-
-
-    createClass(EventFormatter, [{
-        key: 'format',
-        value: function format(event) {
-            if (event.charAt(0) === '.' || event.charAt(0) === '\\') {
-                return event.substr(1);
-            } else if (this.namespace) {
-                event = this.namespace + '.' + event;
-            }
-            return event.replace(/\./g, '\\');
-        }
-        /**
-         * Set the event namespace.
-         */
-
-    }, {
-        key: 'setNamespace',
-        value: function setNamespace(value) {
-            this.namespace = value;
-        }
-    }]);
-    return EventFormatter;
-}();
-
-/**
- * This class represents a Pusher channel.
- */
-var PusherChannel = function (_Channel) {
-    inherits(PusherChannel, _Channel);
-
-    /**
-     * Create a new class instance.
-     */
-    function PusherChannel(pusher, name, options) {
-        classCallCheck(this, PusherChannel);
-
-        var _this = possibleConstructorReturn(this, (PusherChannel.__proto__ || Object.getPrototypeOf(PusherChannel)).call(this));
-
-        _this.name = name;
-        _this.pusher = pusher;
-        _this.options = options;
-        _this.eventFormatter = new EventFormatter(_this.options.namespace);
-        _this.subscribe();
-        return _this;
-    }
-    /**
-     * Subscribe to a Pusher channel.
-     */
-
-
-    createClass(PusherChannel, [{
-        key: 'subscribe',
-        value: function subscribe() {
-            this.subscription = this.pusher.subscribe(this.name);
-        }
-        /**
-         * Unsubscribe from a Pusher channel.
-         */
-
-    }, {
-        key: 'unsubscribe',
-        value: function unsubscribe() {
-            this.pusher.unsubscribe(this.name);
-        }
-        /**
-         * Listen for an event on the channel instance.
-         */
-
-    }, {
-        key: 'listen',
-        value: function listen(event, callback) {
-            this.on(this.eventFormatter.format(event), callback);
-            return this;
-        }
-        /**
-         * Stop listening for an event on the channel instance.
-         */
-
-    }, {
-        key: 'stopListening',
-        value: function stopListening(event) {
-            this.subscription.unbind(this.eventFormatter.format(event));
-            return this;
-        }
-        /**
-         * Bind a channel to an event.
-         */
-
-    }, {
-        key: 'on',
-        value: function on(event, callback) {
-            this.subscription.bind(event, callback);
-            return this;
-        }
-    }]);
-    return PusherChannel;
-}(Channel);
-
-/**
- * This class represents a Pusher private channel.
- */
-var PusherPrivateChannel = function (_PusherChannel) {
-    inherits(PusherPrivateChannel, _PusherChannel);
-
-    function PusherPrivateChannel() {
-        classCallCheck(this, PusherPrivateChannel);
-        return possibleConstructorReturn(this, (PusherPrivateChannel.__proto__ || Object.getPrototypeOf(PusherPrivateChannel)).apply(this, arguments));
-    }
-
-    createClass(PusherPrivateChannel, [{
-        key: 'whisper',
-
-        /**
-         * Trigger client event on the channel.
-         */
-        value: function whisper(eventName, data) {
-            this.pusher.channels.channels[this.name].trigger('client-' + eventName, data);
-            return this;
-        }
-    }]);
-    return PusherPrivateChannel;
-}(PusherChannel);
-
-/**
- * This class represents a Pusher presence channel.
- */
-var PusherPresenceChannel = function (_PusherChannel) {
-    inherits(PusherPresenceChannel, _PusherChannel);
-
-    function PusherPresenceChannel() {
-        classCallCheck(this, PusherPresenceChannel);
-        return possibleConstructorReturn(this, (PusherPresenceChannel.__proto__ || Object.getPrototypeOf(PusherPresenceChannel)).apply(this, arguments));
-    }
-
-    createClass(PusherPresenceChannel, [{
-        key: 'here',
-
-        /**
-         * Register a callback to be called anytime the member list changes.
-         */
-        value: function here(callback) {
-            this.on('pusher:subscription_succeeded', function (data) {
-                callback(Object.keys(data.members).map(function (k) {
-                    return data.members[k];
-                }));
-            });
-            return this;
-        }
-        /**
-         * Listen for someone joining the channel.
-         */
-
-    }, {
-        key: 'joining',
-        value: function joining(callback) {
-            this.on('pusher:member_added', function (member) {
-                callback(member.info);
-            });
-            return this;
-        }
-        /**
-         * Listen for someone leaving the channel.
-         */
-
-    }, {
-        key: 'leaving',
-        value: function leaving(callback) {
-            this.on('pusher:member_removed', function (member) {
-                callback(member.info);
-            });
-            return this;
-        }
-        /**
-         * Trigger client event on the channel.
-         */
-
-    }, {
-        key: 'whisper',
-        value: function whisper(eventName, data) {
-            this.pusher.channels.channels[this.name].trigger('client-' + eventName, data);
-            return this;
-        }
-    }]);
-    return PusherPresenceChannel;
-}(PusherChannel);
-
-/**
- * This class represents a Socket.io channel.
- */
-var SocketIoChannel = function (_Channel) {
-    inherits(SocketIoChannel, _Channel);
-
-    /**
-     * Create a new class instance.
-     */
-    function SocketIoChannel(socket, name, options) {
-        classCallCheck(this, SocketIoChannel);
-
-        /**
-         * The event callbacks applied to the channel.
-         */
-        var _this = possibleConstructorReturn(this, (SocketIoChannel.__proto__ || Object.getPrototypeOf(SocketIoChannel)).call(this));
-
-        _this.events = {};
-        _this.name = name;
-        _this.socket = socket;
-        _this.options = options;
-        _this.eventFormatter = new EventFormatter(_this.options.namespace);
-        _this.subscribe();
-        _this.configureReconnector();
-        return _this;
-    }
-    /**
-     * Subscribe to a Socket.io channel.
-     */
-
-
-    createClass(SocketIoChannel, [{
-        key: 'subscribe',
-        value: function subscribe() {
-            this.socket.emit('subscribe', {
-                channel: this.name,
-                auth: this.options.auth || {}
-            });
-        }
-        /**
-         * Unsubscribe from channel and ubind event callbacks.
-         */
-
-    }, {
-        key: 'unsubscribe',
-        value: function unsubscribe() {
-            this.unbind();
-            this.socket.emit('unsubscribe', {
-                channel: this.name,
-                auth: this.options.auth || {}
-            });
-        }
-        /**
-         * Listen for an event on the channel instance.
-         */
-
-    }, {
-        key: 'listen',
-        value: function listen(event, callback) {
-            this.on(this.eventFormatter.format(event), callback);
-            return this;
-        }
-        /**
-         * Stop listening for an event on the channel instance.
-         */
-
-    }, {
-        key: 'stopListening',
-        value: function stopListening(event) {
-            var name = this.eventFormatter.format(event);
-            this.socket.removeListener(name);
-            delete this.events[name];
-            return this;
-        }
-        /**
-         * Bind the channel's socket to an event and store the callback.
-         */
-
-    }, {
-        key: 'on',
-        value: function on(event, callback) {
-            var _this2 = this;
-
-            var listener = function listener(channel, data) {
-                if (_this2.name == channel) {
-                    callback(data);
-                }
-            };
-            this.socket.on(event, listener);
-            this.bind(event, listener);
-        }
-        /**
-         * Attach a 'reconnect' listener and bind the event.
-         */
-
-    }, {
-        key: 'configureReconnector',
-        value: function configureReconnector() {
-            var _this3 = this;
-
-            var listener = function listener() {
-                _this3.subscribe();
-            };
-            this.socket.on('reconnect', listener);
-            this.bind('reconnect', listener);
-        }
-        /**
-         * Bind the channel's socket to an event and store the callback.
-         */
-
-    }, {
-        key: 'bind',
-        value: function bind(event, callback) {
-            this.events[event] = this.events[event] || [];
-            this.events[event].push(callback);
-        }
-        /**
-         * Unbind the channel's socket from all stored event callbacks.
-         */
-
-    }, {
-        key: 'unbind',
-        value: function unbind() {
-            var _this4 = this;
-
-            Object.keys(this.events).forEach(function (event) {
-                _this4.events[event].forEach(function (callback) {
-                    _this4.socket.removeListener(event, callback);
-                });
-                delete _this4.events[event];
-            });
-        }
-    }]);
-    return SocketIoChannel;
-}(Channel);
-
-/**
- * This class represents a Socket.io presence channel.
- */
-var SocketIoPrivateChannel = function (_SocketIoChannel) {
-    inherits(SocketIoPrivateChannel, _SocketIoChannel);
-
-    function SocketIoPrivateChannel() {
-        classCallCheck(this, SocketIoPrivateChannel);
-        return possibleConstructorReturn(this, (SocketIoPrivateChannel.__proto__ || Object.getPrototypeOf(SocketIoPrivateChannel)).apply(this, arguments));
-    }
-
-    createClass(SocketIoPrivateChannel, [{
-        key: 'whisper',
-
-        /**
-         * Trigger client event on the channel.
-         */
-        value: function whisper(eventName, data) {
-            this.socket.emit('client event', {
-                channel: this.name,
-                event: 'client-' + eventName,
-                data: data
-            });
-            return this;
-        }
-    }]);
-    return SocketIoPrivateChannel;
-}(SocketIoChannel);
-
-/**
- * This class represents a Socket.io presence channel.
- */
-var SocketIoPresenceChannel = function (_SocketIoPrivateChann) {
-    inherits(SocketIoPresenceChannel, _SocketIoPrivateChann);
-
-    function SocketIoPresenceChannel() {
-        classCallCheck(this, SocketIoPresenceChannel);
-        return possibleConstructorReturn(this, (SocketIoPresenceChannel.__proto__ || Object.getPrototypeOf(SocketIoPresenceChannel)).apply(this, arguments));
-    }
-
-    createClass(SocketIoPresenceChannel, [{
-        key: 'here',
-
-        /**
-         * Register a callback to be called anytime the member list changes.
-         */
-        value: function here(callback) {
-            this.on('presence:subscribed', function (members) {
-                callback(members.map(function (m) {
-                    return m.user_info;
-                }));
-            });
-            return this;
-        }
-        /**
-         * Listen for someone joining the channel.
-         */
-
-    }, {
-        key: 'joining',
-        value: function joining(callback) {
-            this.on('presence:joining', function (member) {
-                return callback(member.user_info);
-            });
-            return this;
-        }
-        /**
-         * Listen for someone leaving the channel.
-         */
-
-    }, {
-        key: 'leaving',
-        value: function leaving(callback) {
-            this.on('presence:leaving', function (member) {
-                return callback(member.user_info);
-            });
-            return this;
-        }
-    }]);
-    return SocketIoPresenceChannel;
-}(SocketIoPrivateChannel);
-
-/**
- * This class represents a null channel.
- */
-var NullChannel = function (_Channel) {
-  inherits(NullChannel, _Channel);
-
-  function NullChannel() {
-    classCallCheck(this, NullChannel);
-    return possibleConstructorReturn(this, (NullChannel.__proto__ || Object.getPrototypeOf(NullChannel)).apply(this, arguments));
-  }
-
-  createClass(NullChannel, [{
-    key: 'subscribe',
-
-    /**
-     * Subscribe to a channel.
-     */
-    value: function subscribe() {}
-    //
-
-    /**
-     * Unsubscribe from a channel.
-     */
-
-  }, {
-    key: 'unsubscribe',
-    value: function unsubscribe() {}
-    //
-
-    /**
-     * Listen for an event on the channel instance.
-     */
-
-  }, {
-    key: 'listen',
-    value: function listen(event, callback) {
-      return this;
-    }
-    /**
-     * Stop listening for an event on the channel instance.
-     */
-
-  }, {
-    key: 'stopListening',
-    value: function stopListening(event) {
-      return this;
-    }
-    /**
-     * Bind a channel to an event.
-     */
-
-  }, {
-    key: 'on',
-    value: function on(event, callback) {
-      return this;
-    }
-  }]);
-  return NullChannel;
-}(Channel);
-
-/**
- * This class represents a null private channel.
- */
-var NullPrivateChannel = function (_NullChannel) {
-  inherits(NullPrivateChannel, _NullChannel);
-
-  function NullPrivateChannel() {
-    classCallCheck(this, NullPrivateChannel);
-    return possibleConstructorReturn(this, (NullPrivateChannel.__proto__ || Object.getPrototypeOf(NullPrivateChannel)).apply(this, arguments));
-  }
-
-  createClass(NullPrivateChannel, [{
-    key: 'whisper',
-
-    /**
-     * Trigger client event on the channel.
-     */
-    value: function whisper(eventName, data) {
-      return this;
-    }
-  }]);
-  return NullPrivateChannel;
-}(NullChannel);
-
-/**
- * This class represents a null presence channel.
- */
-var NullPresenceChannel = function (_NullChannel) {
-  inherits(NullPresenceChannel, _NullChannel);
-
-  function NullPresenceChannel() {
-    classCallCheck(this, NullPresenceChannel);
-    return possibleConstructorReturn(this, (NullPresenceChannel.__proto__ || Object.getPrototypeOf(NullPresenceChannel)).apply(this, arguments));
-  }
-
-  createClass(NullPresenceChannel, [{
-    key: 'here',
-
-    /**
-     * Register a callback to be called anytime the member list changes.
-     */
-    value: function here(callback) {
-      return this;
-    }
-    /**
-     * Listen for someone joining the channel.
-     */
-
-  }, {
-    key: 'joining',
-    value: function joining(callback) {
-      return this;
-    }
-    /**
-     * Listen for someone leaving the channel.
-     */
-
-  }, {
-    key: 'leaving',
-    value: function leaving(callback) {
-      return this;
-    }
-    /**
-     * Trigger client event on the channel.
-     */
-
-  }, {
-    key: 'whisper',
-    value: function whisper(eventName, data) {
-      return this;
-    }
-  }]);
-  return NullPresenceChannel;
-}(NullChannel);
-
-/**
- * This class creates a connector to Pusher.
- */
-var PusherConnector = function (_Connector) {
-    inherits(PusherConnector, _Connector);
-
-    function PusherConnector() {
-        classCallCheck(this, PusherConnector);
-
-        /**
-         * All of the subscribed channel names.
-         */
-        var _this = possibleConstructorReturn(this, (PusherConnector.__proto__ || Object.getPrototypeOf(PusherConnector)).apply(this, arguments));
-
-        _this.channels = {};
-        return _this;
-    }
-    /**
-     * Create a fresh Pusher connection.
-     */
-
-
-    createClass(PusherConnector, [{
-        key: 'connect',
-        value: function connect() {
-            if (typeof this.options.client !== 'undefined') {
-                this.pusher = this.options.client;
-            } else {
-                this.pusher = new Pusher(this.options.key, this.options);
-            }
-        }
-        /**
-         * Listen for an event on a channel instance.
-         */
-
-    }, {
-        key: 'listen',
-        value: function listen(name, event, callback) {
-            return this.channel(name).listen(event, callback);
-        }
-        /**
-         * Get a channel instance by name.
-         */
-
-    }, {
-        key: 'channel',
-        value: function channel(name) {
-            if (!this.channels[name]) {
-                this.channels[name] = new PusherChannel(this.pusher, name, this.options);
-            }
-            return this.channels[name];
-        }
-        /**
-         * Get a private channel instance by name.
-         */
-
-    }, {
-        key: 'privateChannel',
-        value: function privateChannel(name) {
-            if (!this.channels['private-' + name]) {
-                this.channels['private-' + name] = new PusherPrivateChannel(this.pusher, 'private-' + name, this.options);
-            }
-            return this.channels['private-' + name];
-        }
-        /**
-         * Get a presence channel instance by name.
-         */
-
-    }, {
-        key: 'presenceChannel',
-        value: function presenceChannel(name) {
-            if (!this.channels['presence-' + name]) {
-                this.channels['presence-' + name] = new PusherPresenceChannel(this.pusher, 'presence-' + name, this.options);
-            }
-            return this.channels['presence-' + name];
-        }
-        /**
-         * Leave the given channel, as well as its private and presence variants.
-         */
-
-    }, {
-        key: 'leave',
-        value: function leave(name) {
-            var _this2 = this;
-
-            var channels = [name, 'private-' + name, 'presence-' + name];
-            channels.forEach(function (name, index) {
-                _this2.leaveChannel(name);
-            });
-        }
-        /**
-         * Leave the given channel.
-         */
-
-    }, {
-        key: 'leaveChannel',
-        value: function leaveChannel(name) {
-            if (this.channels[name]) {
-                this.channels[name].unsubscribe();
-                delete this.channels[name];
-            }
-        }
-        /**
-         * Get the socket ID for the connection.
-         */
-
-    }, {
-        key: 'socketId',
-        value: function socketId() {
-            return this.pusher.connection.socket_id;
-        }
-        /**
-         * Disconnect Pusher connection.
-         */
-
-    }, {
-        key: 'disconnect',
-        value: function disconnect() {
-            this.pusher.disconnect();
-        }
-    }]);
-    return PusherConnector;
-}(Connector);
-
-/**
- * This class creates a connnector to a Socket.io server.
- */
-var SocketIoConnector = function (_Connector) {
-    inherits(SocketIoConnector, _Connector);
-
-    function SocketIoConnector() {
-        classCallCheck(this, SocketIoConnector);
-
-        /**
-         * All of the subscribed channel names.
-         */
-        var _this = possibleConstructorReturn(this, (SocketIoConnector.__proto__ || Object.getPrototypeOf(SocketIoConnector)).apply(this, arguments));
-
-        _this.channels = {};
-        return _this;
-    }
-    /**
-     * Create a fresh Socket.io connection.
-     */
-
-
-    createClass(SocketIoConnector, [{
-        key: 'connect',
-        value: function connect() {
-            var io = this.getSocketIO();
-            this.socket = io(this.options.host, this.options);
-            return this.socket;
-        }
-        /**
-         * Get socket.io module from global scope or options.
-         */
-
-    }, {
-        key: 'getSocketIO',
-        value: function getSocketIO() {
-            if (typeof io !== 'undefined') {
-                return io;
-            }
-            if (typeof this.options.client !== 'undefined') {
-                return this.options.client;
-            }
-            throw new Error('Socket.io client not found. Should be globally available or passed via options.client');
-        }
-        /**
-         * Listen for an event on a channel instance.
-         */
-
-    }, {
-        key: 'listen',
-        value: function listen(name, event, callback) {
-            return this.channel(name).listen(event, callback);
-        }
-        /**
-         * Get a channel instance by name.
-         */
-
-    }, {
-        key: 'channel',
-        value: function channel(name) {
-            if (!this.channels[name]) {
-                this.channels[name] = new SocketIoChannel(this.socket, name, this.options);
-            }
-            return this.channels[name];
-        }
-        /**
-         * Get a private channel instance by name.
-         */
-
-    }, {
-        key: 'privateChannel',
-        value: function privateChannel(name) {
-            if (!this.channels['private-' + name]) {
-                this.channels['private-' + name] = new SocketIoPrivateChannel(this.socket, 'private-' + name, this.options);
-            }
-            return this.channels['private-' + name];
-        }
-        /**
-         * Get a presence channel instance by name.
-         */
-
-    }, {
-        key: 'presenceChannel',
-        value: function presenceChannel(name) {
-            if (!this.channels['presence-' + name]) {
-                this.channels['presence-' + name] = new SocketIoPresenceChannel(this.socket, 'presence-' + name, this.options);
-            }
-            return this.channels['presence-' + name];
-        }
-        /**
-         * Leave the given channel, as well as its private and presence variants.
-         */
-
-    }, {
-        key: 'leave',
-        value: function leave(name) {
-            var _this2 = this;
-
-            var channels = [name, 'private-' + name, 'presence-' + name];
-            channels.forEach(function (name) {
-                _this2.leaveChannel(name);
-            });
-        }
-        /**
-         * Leave the given channel.
-         */
-
-    }, {
-        key: 'leaveChannel',
-        value: function leaveChannel(name) {
-            if (this.channels[name]) {
-                this.channels[name].unsubscribe();
-                delete this.channels[name];
-            }
-        }
-        /**
-         * Get the socket ID for the connection.
-         */
-
-    }, {
-        key: 'socketId',
-        value: function socketId() {
-            return this.socket.id;
-        }
-        /**
-         * Disconnect Socketio connection.
-         */
-
-    }, {
-        key: 'disconnect',
-        value: function disconnect() {
-            this.socket.disconnect();
-        }
-    }]);
-    return SocketIoConnector;
-}(Connector);
-
-/**
- * This class creates a null connector.
- */
-var NullConnector = function (_Connector) {
-  inherits(NullConnector, _Connector);
-
-  function NullConnector() {
-    classCallCheck(this, NullConnector);
-
-    /**
-     * All of the subscribed channel names.
-     */
-    var _this = possibleConstructorReturn(this, (NullConnector.__proto__ || Object.getPrototypeOf(NullConnector)).apply(this, arguments));
-
-    _this.channels = {};
-    return _this;
-  }
-  /**
-   * Create a fresh connection.
-   */
-
-
-  createClass(NullConnector, [{
-    key: 'connect',
-    value: function connect() {}
-    //
-
-    /**
-     * Listen for an event on a channel instance.
-     */
-
-  }, {
-    key: 'listen',
-    value: function listen(name, event, callback) {
-      return new NullChannel();
-    }
-    /**
-     * Get a channel instance by name.
-     */
-
-  }, {
-    key: 'channel',
-    value: function channel(name) {
-      return new NullChannel();
-    }
-    /**
-     * Get a private channel instance by name.
-     */
-
-  }, {
-    key: 'privateChannel',
-    value: function privateChannel(name) {
-      return new NullPrivateChannel();
-    }
-    /**
-     * Get a presence channel instance by name.
-     */
-
-  }, {
-    key: 'presenceChannel',
-    value: function presenceChannel(name) {
-      return new NullPresenceChannel();
-    }
-    /**
-     * Leave the given channel, as well as its private and presence variants.
-     */
-
-  }, {
-    key: 'leave',
-    value: function leave(name) {}
-    //
-
-    /**
-     * Leave the given channel.
-     */
-
-  }, {
-    key: 'leaveChannel',
-    value: function leaveChannel(name) {}
-    //
-
-    /**
-     * Get the socket ID for the connection.
-     */
-
-  }, {
-    key: 'socketId',
-    value: function socketId() {
-      return 'fake-socket-id';
-    }
-    /**
-     * Disconnect the connection.
-     */
-
-  }, {
-    key: 'disconnect',
-    value: function disconnect() {
-      //
-    }
-  }]);
-  return NullConnector;
-}(Connector);
-
-/**
- * This class is the primary API for interacting with broadcasting.
- */
-
-var Echo = function () {
-    /**
-     * Create a new class instance.
-     */
-    function Echo(options) {
-        classCallCheck(this, Echo);
-
-        this.options = options;
-        this.connect();
-        this.registerInterceptors();
-    }
-    /**
-     * Get a channel instance by name.
-     */
-
-
-    createClass(Echo, [{
-        key: 'channel',
-        value: function channel(_channel) {
-            return this.connector.channel(_channel);
-        }
-        /**
-         * Create a new connection.
-         */
-
-    }, {
-        key: 'connect',
-        value: function connect() {
-            if (this.options.broadcaster == 'pusher') {
-                this.connector = new PusherConnector(this.options);
-            } else if (this.options.broadcaster == 'socket.io') {
-                this.connector = new SocketIoConnector(this.options);
-            } else if (this.options.broadcaster == 'null') {
-                this.connector = new NullConnector(this.options);
-            }
-        }
-        /**
-         * Disconnect from the Echo server.
-         */
-
-    }, {
-        key: 'disconnect',
-        value: function disconnect() {
-            this.connector.disconnect();
-        }
-        /**
-         * Get a presence channel instance by name.
-         */
-
-    }, {
-        key: 'join',
-        value: function join(channel) {
-            return this.connector.presenceChannel(channel);
-        }
-        /**
-         * Leave the given channel, as well as its private and presence variants.
-         */
-
-    }, {
-        key: 'leave',
-        value: function leave(channel) {
-            this.connector.leave(channel);
-        }
-        /**
-         * Leave the given channel.
-         */
-
-    }, {
-        key: 'leaveChannel',
-        value: function leaveChannel(channel) {
-            this.connector.leaveChannel(channel);
-        }
-        /**
-         * Listen for an event on a channel instance.
-         */
-
-    }, {
-        key: 'listen',
-        value: function listen(channel, event, callback) {
-            return this.connector.listen(channel, event, callback);
-        }
-        /**
-         * Get a private channel instance by name.
-         */
-
-    }, {
-        key: 'private',
-        value: function _private(channel) {
-            return this.connector.privateChannel(channel);
-        }
-        /**
-         * Get the Socket ID for the connection.
-         */
-
-    }, {
-        key: 'socketId',
-        value: function socketId() {
-            return this.connector.socketId();
-        }
-        /**
-         * Register 3rd party request interceptiors. These are used to automatically
-         * send a connections socket id to a Laravel app with a X-Socket-Id header.
-         */
-
-    }, {
-        key: 'registerInterceptors',
-        value: function registerInterceptors() {
-            if (typeof Vue === 'function' && Vue.http) {
-                this.registerVueRequestInterceptor();
-            }
-            if (typeof axios === 'function') {
-                this.registerAxiosRequestInterceptor();
-            }
-            if (typeof jQuery === 'function') {
-                this.registerjQueryAjaxSetup();
-            }
-        }
-        /**
-         * Register a Vue HTTP interceptor to add the X-Socket-ID header.
-         */
-
-    }, {
-        key: 'registerVueRequestInterceptor',
-        value: function registerVueRequestInterceptor() {
-            var _this = this;
-
-            Vue.http.interceptors.push(function (request, next) {
-                if (_this.socketId()) {
-                    request.headers.set('X-Socket-ID', _this.socketId());
-                }
-                next();
-            });
-        }
-        /**
-         * Register an Axios HTTP interceptor to add the X-Socket-ID header.
-         */
-
-    }, {
-        key: 'registerAxiosRequestInterceptor',
-        value: function registerAxiosRequestInterceptor() {
-            var _this2 = this;
-
-            axios.interceptors.request.use(function (config) {
-                if (_this2.socketId()) {
-                    config.headers['X-Socket-Id'] = _this2.socketId();
-                }
-                return config;
-            });
-        }
-        /**
-         * Register jQuery AjaxSetup to add the X-Socket-ID header.
-         */
-
-    }, {
-        key: 'registerjQueryAjaxSetup',
-        value: function registerjQueryAjaxSetup() {
-            var _this3 = this;
-
-            if (typeof jQuery.ajax != 'undefined') {
-                jQuery.ajaxSetup({
-                    beforeSend: function beforeSend(xhr) {
-                        if (_this3.socketId()) {
-                            xhr.setRequestHeader('X-Socket-Id', _this3.socketId());
-                        }
-                    }
-                });
-            }
-        }
-    }]);
-    return Echo;
-}();
-
-/* harmony default export */ __webpack_exports__["default"] = (Echo);
-
-
-/***/ }),
-
 /***/ "./node_modules/process/browser.js":
 /*!*****************************************!*\
   !*** ./node_modules/process/browser.js ***!
@@ -1824,6 +564,873 @@ module.exports = function(module) {
 
 /***/ }),
 
+/***/ "./resources/js/ac/add_person.js":
+/*!***************************************!*\
+  !*** ./resources/js/ac/add_person.js ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+window.events = [2, 3]; //где 2,3 - события запрещенного входа/выхода
+
+window.person = {
+  'f': null,
+  'i': null,
+  'o': null,
+  'birthday': null,
+  'address': null,
+  'phone': null
+};
+window.cards = [];
+window.divs = [];
+window.photos = [];
+
+window.setDiv = function (id) {
+  var index = window.divs.indexOf(id);
+
+  if (index === -1) {
+    window.divs.push(id);
+    document.getElementById("div".concat(id)).classList.add("checked");
+  } else {
+    window.divs.splice(index, 1);
+    document.getElementById("div".concat(id)).classList.remove("checked");
+  }
+};
+
+window.savePersonInfo = function () {
+  var checkValidity = true;
+
+  for (var k in person) {
+    var _elem = document.getElementById(k);
+
+    if (_elem.required && _elem.value === "") {
+      _elem.classList.add("no-data");
+
+      checkValidity = false;
+    }
+
+    if (_elem.value) {
+      person[k] = _elem.value;
+    } else {
+      person[k] = null;
+    }
+  }
+
+  var elem = document.getElementById("cards");
+
+  if (elem.value > 0) {
+    cards.push(elem.value);
+  }
+
+  if (!checkValidity) {
+    alert("\u0412\u0432\u0435\u0434\u0435\u043D\u044B \u043D\u0435 \u0432\u0441\u0435 \u0434\u0430\u043D\u043D\u044B\u0435"); //TODO перевод
+  } else {
+    axios.post("https://policam.ru/laravel" + "/persons/save", {
+      cards: JSON.stringify(cards),
+      divs: JSON.stringify(divs),
+      person: JSON.stringify(person),
+      photos: JSON.stringify(photos)
+    }).then(function (response) {
+      var person_id = response.data;
+
+      for (var _k in person) {
+        person[_k] = null;
+      }
+
+      cards = [];
+      alert("\u041F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044C \u2116".concat(person_id, " \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D")); //TODO перевод
+
+      clearPersonInfo();
+    }).catch(function (error) {
+      console.log(error);
+    });
+  }
+};
+
+window.clearPersonInfo = function () {
+  for (var k in person) {
+    document.getElementById(k).value = null;
+  }
+
+  photos = [];
+  document.getElementById("cards").value = 0;
+  document.getElementById("photo_bg").style.backgroundImage = 'url(/img/ac/s/0.jpg)';
+  document.getElementById("photo_del").hidden = true;
+
+  document.getElementById("photo_del").onclick = function () {
+    return false;
+  };
+};
+
+window.checkData = function (e) {
+  e.classList.remove("no-data");
+};
+
+/***/ }),
+
+/***/ "./resources/js/ac/classes.js":
+/*!************************************!*\
+  !*** ./resources/js/ac/classes.js ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+window.div = {
+  'name': null,
+  'organization_id': null
+}; //удалить из базы
+
+window.deleteDivision = function (div_id) {
+  if (!confirm("\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0435 \u0443\u0434\u0430\u043B\u0435\u043D\u0438\u0435.")) {
+    //TODO перевод
+    return;
+  }
+
+  axios.post("https://policam.ru/laravel" + "/divisions/delete", {
+    'div_id': div_id
+  }).then(function (response) {
+    if (response.data > 0) {
+      alert("\u0423\u0441\u043F\u0435\u0448\u043D\u043E\u0435 \u0443\u0434\u0430\u043B\u0435\u043D\u0438\u0435"); //TODO перевод
+
+      location.reload();
+    } else {
+      alert("\u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u0430\u044F \u043E\u0448\u0438\u0431\u043A\u0430"); //TODO перевод
+    }
+  }).catch(function (error) {
+    console.log(error);
+  });
+}; //сохранить в базу
+
+
+window.saveDivision = function (org_id) {
+  var number = document.getElementById("number").value;
+  var letter = document.getElementById("letter").value;
+
+  if (!number || !letter) {
+    alert("\u0412\u0432\u0435\u0434\u0435\u043D\u044B \u043D\u0435 \u0432\u0441\u0435 \u0434\u0430\u043D\u043D\u044B\u0435"); //TODO перевод
+
+    return;
+  }
+
+  window.div.name = "".concat(number, " \"").concat(letter, "\"");
+  window.div.organization_id = org_id;
+  axios.post("https://policam.ru/laravel" + "/divisions/save", {
+    div: JSON.stringify(window.div)
+  }).then(function (response) {
+    alert("\u041A\u043B\u0430\u0441\u0441 ".concat(response.data.name, " \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D")); //TODO перевод
+
+    location.reload();
+  }).catch(function (error) {
+    console.log(error);
+  });
+};
+
+/***/ }),
+
+/***/ "./resources/js/ac/edit_persons.js":
+/*!*****************************************!*\
+  !*** ./resources/js/ac/edit_persons.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+window.events = [2, 3]; //где 2,3 - события запрещенного входа/выхода
+
+window.person = {
+  'f': null,
+  'i': null,
+  'o': null,
+  'birthday': null,
+  'address': null,
+  'phone': null
+};
+window.cards = [];
+window.divs = [];
+window.photos = [];
+window.divisions = [];
+window.persons = [];
+
+var AcObject = function AcObject(data) {
+  _classCallCheck(this, AcObject);
+
+  for (var k in data) {
+    this[k] = data[k];
+  }
+};
+
+var Division =
+/*#__PURE__*/
+function (_AcObject) {
+  _inherits(Division, _AcObject);
+
+  function Division() {
+    _classCallCheck(this, Division);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(Division).apply(this, arguments));
+  }
+
+  return Division;
+}(AcObject);
+
+var Person =
+/*#__PURE__*/
+function (_AcObject2) {
+  _inherits(Person, _AcObject2);
+
+  function Person() {
+    _classCallCheck(this, Person);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(Person).apply(this, arguments));
+  }
+
+  return Person;
+}(AcObject);
+
+window.showPersons = function (div_id) {
+  $(".divisions").hide();
+  $("#persons-div-".concat(div_id)).show();
+};
+
+window.showDivisions = function (div_id) {
+  $(".persons").hide();
+  $(".divisions").show();
+}; //обновление информации пользователя в БД
+
+
+window.updatePersonInfo = function () {
+  var checkValidity = true;
+
+  for (var k in person) {
+    var _elem = document.getElementById(k);
+
+    if (_elem.required && _elem.value === "") {
+      _elem.classList.add("no-data");
+
+      checkValidity = false;
+    }
+
+    if (_elem.value) {
+      person[k] = _elem.value;
+    } else {
+      person[k] = null;
+    }
+  }
+
+  var elem = document.getElementById("cards");
+
+  if (elem.value > 0) {
+    cards.push(elem.value);
+  }
+
+  if (!checkValidity) {
+    alert("\u0412\u0432\u0435\u0434\u0435\u043D\u044B \u043D\u0435 \u0432\u0441\u0435 \u0434\u0430\u043D\u043D\u044B\u0435"); //TODO перевод
+  } else {
+    axios.post("https://policam.ru/laravel" + "/persons/save", {
+      cards: JSON.stringify(cards),
+      divs: JSON.stringify(divs),
+      person: JSON.stringify(person),
+      photos: JSON.stringify(photos)
+    }).then(function (response) {
+      if (response.data > 0) {
+        alert("\u041F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044C \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D"); //TODO перевод
+      } else {
+        alert("\u041D\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E \u0438\u043B\u0438 \u0434\u0430\u043D\u043D\u044B\u0435 \u0441\u043E\u0432\u043F\u0430\u043B\u0438"); //TODO перевод
+      }
+
+      getCardsByPerson(person.id);
+    }).catch(function (error) {
+      console.log(error);
+    });
+  }
+}; //удаление пользователя из БД
+
+
+window.deletePerson = function () {
+  if (!confirm("\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0435 \u0443\u0434\u0430\u043B\u0435\u043D\u0438\u0435.")) {
+    //TODO перевод
+    return;
+  }
+
+  axios.post("https://policam.ru/laravel" + "/persons/delete", {
+    person_id: person.id
+  }).then(function (response) {
+    if (response.data > 0) {
+      var currentElement = document.getElementById("person".concat(person.id));
+      var parentElement = currentElement.parentElement; //родитель этого элемента
+
+      currentElement.remove(); //удаляем элемент
+
+      var lastElement = parentElement.lastElementChild;
+
+      if (lastElement !== null) {
+        lastElement.classList.add("tree-is-last"); //устанавливаем последний элемент в ветке
+      }
+
+      for (var k in person) {
+        var elem = document.getElementById(k);
+        elem.value = null;
+        elem.readOnly = true;
+        person[k] = null;
+      }
+
+      window.photos = [];
+      document.getElementById("photo_bg").style.backgroundImage = 'url(/img/ac/s/0.jpg)';
+      document.getElementById("photo").hidden = true;
+
+      document.getElementById("photo").onchange = function () {
+        return false;
+      };
+
+      document.getElementById("photo_del").onclick = function () {
+        return false;
+      };
+
+      document.getElementById("photo_del").hidden = true;
+      window.cards = [];
+      document.getElementById("cards").value = 0;
+      document.getElementById("person_cards").innerHTML = ""; //очистка списка привязанных карт
+
+      document.getElementById("unknown_cards").hidden = false; //отобразим меню с неизвестными картами
+
+      document.getElementById("cards").disabled = true; //но запретим редактирование
+
+      window.divs = [];
+
+      document.getElementById("save").onclick = function () {
+        return false;
+      };
+
+      document.getElementById("delete").onclick = function () {
+        return false;
+      };
+
+      alert("\u041F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044C \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0443\u0434\u0430\u043B\u0435\u043D"); //TODO перевод
+    } else {
+      alert("\u041F\u0443\u0441\u0442\u043E\u0439 \u043E\u0442\u0432\u0435\u0442 \u043E\u0442 \u0441\u0435\u0440\u0432\u0435\u0440\u0430"); //TODO перевод
+    }
+  }).catch(function (error) {
+    console.log(error);
+  });
+}; //получение данных пользователя из БД
+
+
+window.getPersonInfo = function (person_id) {
+  axios.get("https://policam.ru/laravel" + "/persons/get/".concat(person_id)).then(function (response) {
+    var data = response.data;
+
+    if (data) {
+      for (var k in data.person) {
+        var elem = document.getElementById(k);
+
+        if (elem == null) {
+          continue;
+        }
+
+        person[k] = data.person[k];
+        elem.value = data.person[k];
+        elem.readOnly = false;
+      }
+
+      var photo_id = 0;
+      window.photos = [];
+      document.getElementById("photo").value = null;
+
+      if (data.photos.length === 0) {
+        document.getElementById("photo").hidden = false;
+        document.getElementById("photo_del").hidden = true;
+
+        document.getElementById("photo_del").onclick = function () {
+          return false;
+        };
+      } else {
+        photo_id = data.photos[0].id;
+        photos.unshift(photo_id);
+        document.getElementById("photo").hidden = true;
+        document.getElementById("photo_del").hidden = false;
+        document.getElementById("photo_del").onclick = deletePhoto;
+      }
+
+      document.getElementById("photo_bg").style.backgroundImage = 'url(/img/ac/s/' + photo_id + '.jpg)';
+
+      document.getElementById("photo").onchange = function () {
+        handleFiles(this.files);
+      };
+
+      window.divs = [];
+
+      for (var _k in data.divs) {
+        divs.push(data.divs[_k].id);
+      }
+
+      document.getElementById("save").onclick = updatePersonInfo;
+      document.getElementById("delete").onclick = deletePerson;
+    } else {
+      alert("\u041F\u0443\u0441\u0442\u043E\u0439 \u043E\u0442\u0432\u0435\u0442 \u043E\u0442 \u0441\u0435\u0440\u0432\u0435\u0440\u0430"); //TODO перевод
+    }
+  }).catch(function (error) {
+    console.log(error);
+  });
+}; //получение списка карт (брелоков) от сервера
+
+
+window.getCardsByPerson = function (person_id) {
+  axios.get("https://policam.ru/laravel" + "/cards/get_list/".concat(person_id)).then(function (response) {
+    var data = response.data;
+    window.cards = [];
+    var person_cards = document.getElementById("person_cards");
+    person_cards.innerHTML = "";
+
+    if (data.length > 0) {
+      document.getElementById("unknown_cards").hidden = true; //спрячем неизвестные карты
+
+      document.getElementById("cards").disabled = true; //отключим меню неизвеснтых карт
+
+      for (var k in data) {
+        //добавим каждую карту в список привязанных
+        person_cards.innerHTML += "<div id=\"card".concat(data[k].id, "\">").concat(data[k].wiegand, " <button type=\"button\" onclick=\"delCard(").concat(data[k].id, ");\">\u041E\u0442\u0432\u044F\u0437\u0430\u0442\u044C</button><br /></div>");
+      }
+
+      var li = document.getElementById("person".concat(person.id)); //добавим пользователю метку наличия ключей
+
+      var a = li.querySelector(".person");
+      a.classList.remove("no-card");
+    } else {
+      document.getElementById("unknown_cards").hidden = false; //отобразим неизвестные карты
+
+      document.getElementById("cards").disabled = false; //включим меню неизвеснтых карт
+
+      getCards();
+    }
+  }).catch(function (error) {
+    console.log(error);
+  });
+}; //добавление карты в БД
+
+
+window.saveCard = function (card_id) {
+  axios.post("https://policam.ru/laravel" + "/cards/holder", {
+    card_id: card_id,
+    person_id: person.id
+  }).then(function (response) {
+    if (response.data > 0) {
+      getCardsByPerson(person.id);
+      alert("\u041A\u043B\u044E\u0447 \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D"); //TODO перевод
+    } else {
+      alert("\u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u0430\u044F \u043E\u0448\u0438\u0431\u043A\u0430"); //TODO перевод
+    }
+  }).catch(function (error) {
+    console.log(error);
+  });
+}; //удаление карты из БД
+
+
+window.delCard = function (card_id) {
+  if (!confirm("\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0435 \u0443\u0434\u0430\u043B\u0435\u043D\u0438\u0435.")) {
+    //TODO перевод
+    return;
+  }
+
+  axios.post("https://policam.ru/laravel" + "/cards/holder", {
+    card_id: card_id,
+    person_id: 0
+  }).then(function (response) {
+    if (response.data > 0) {
+      var card = document.getElementById("card".concat(card_id));
+      card.remove(); //удалим карту из списка привязанных
+
+      var cardsHtml = document.getElementById("person_cards").innerHTML;
+      cardsHtml = cardsHtml.trim ? cardsHtml.trim() : cardsHtml.replace(/^\s+/, "");
+
+      if (cardsHtml == "") {
+        //если список привязанных карт пуст, то отобразим и включим меню и запросим неизвеснтые карты
+        document.getElementById("unknown_cards").hidden = false;
+        document.getElementById("cards").disabled = false;
+        getCards();
+        var li = document.getElementById("person".concat(person.id)); //удалим у пользователя метку наличия ключей
+
+        var a = li.querySelector(".person");
+        a.classList.add("no-card");
+      }
+
+      alert("\u041A\u043B\u044E\u0447 \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u043E\u0442\u0432\u044F\u0437\u0430\u043D"); //TODO перевод
+    } else {
+      alert("\u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u0430\u044F \u043E\u0448\u0438\u0431\u043A\u0430"); //TODO перевод
+    }
+  }).catch(function (error) {
+    console.log(error);
+  });
+};
+
+/***/ }),
+
+/***/ "./resources/js/ac/main.js":
+/*!*********************************!*\
+  !*** ./resources/js/ac/main.js ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+//сохранить ошибку на сервере
+window.sendError = function (message) {
+  axios.post("https://policam.ru/laravel" + "/util/save_errors", {
+    error: message
+  }).catch(function (error) {
+    console.log(error);
+  });
+}; //получим список неизвестных карт (брелоков) из БД
+
+
+window.getCards = function (id) {
+  axios.get("https://policam.ru/laravel" + "/cards/get_list").then(function (response) {
+    var data = response.data;
+
+    if (data) {
+      var cards = document.getElementById("cards");
+
+      while (cards.length > 0) {
+        //удалить все элементы из меню карт
+        cards.remove(cards.length - 1);
+      }
+
+      if (data.length == 0) {
+        //если нет известных карт
+        addOption(cards, 0, trans('ac.missing'));
+      } else {
+        //иначе заполним меню картами
+        addOption(cards, 0, trans('ac.not_selected')); //первый пункт
+
+        data.forEach(function (c) {
+          addOption(cards, c.id, c.wiegand);
+        });
+      }
+
+      if (id) {
+        //если передавали id, то установим карту как текущую
+        cards.value = id;
+      }
+    } else {
+      alert("\u041F\u0443\u0441\u0442\u043E\u0439 \u043E\u0442\u0432\u0435\u0442 \u043E\u0442 \u0441\u0435\u0440\u0432\u0435\u0440\u0430"); //TODO перевод
+    }
+  }).catch(function (error) {
+    console.log(error);
+  });
+}; //добавление опций в select
+
+
+function addOption(elem, value, text) {
+  var option = document.createElement("option");
+  option.value = value;
+  option.text = text;
+  elem.add(option);
+} //загрузка фото
+
+
+window.handleFiles = function (files) {
+  var formData = new FormData();
+  formData.append("file", files[0]);
+  axios({
+    method: "post",
+    url: "https://policam.ru/laravel" + "/photos/save",
+    data: formData,
+    config: {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    }
+  }).then(function (response) {
+    var data = response.data;
+
+    if (data) {
+      if (data.error === "") {
+        document.getElementById("photo_bg").style.backgroundImage = 'url(/img/ac/s/' + data.id + '.jpg)';
+        photos.unshift(data.id);
+        document.getElementById("photo").hidden = true;
+        document.getElementById("photo_del").hidden = false;
+        document.getElementById("photo_del").onclick = deletePhoto;
+      } else {
+        document.getElementById("photo").value = null;
+        alert(data.error);
+      }
+    } else {
+      alert("\u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u0430\u044F \u043E\u0448\u0438\u0431\u043A\u0430"); //TODO перевод
+    }
+  }).catch(function (error) {
+    console.log(error);
+  });
+}; //удаление фото
+
+
+window.deletePhoto = function () {
+  if (!confirm("\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0435 \u0443\u0434\u0430\u043B\u0435\u043D\u0438\u0435.")) {
+    //TODO перевод
+    return;
+  }
+
+  axios.post("https://policam.ru/laravel" + "/photos/delete", {
+    photo_id: photos.shift()
+  }).then(function (response) {
+    if (response.data) {
+      document.getElementById("photo_bg").style.backgroundImage = 'url(/img/ac/s/0.jpg)';
+      document.getElementById("photo_del").hidden = true;
+
+      document.getElementById("photo_del").onclick = function () {
+        return false;
+      };
+
+      document.getElementById("photo").hidden = false;
+      document.getElementById("photo").value = null;
+    } else {
+      alert("\u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u0430\u044F \u043E\u0448\u0438\u0431\u043A\u0430"); //TODO перевод
+    }
+  }).catch(function (error) {
+    console.log(error);
+  });
+};
+
+/***/ }),
+
+/***/ "./resources/js/ac/observer.js":
+/*!*************************************!*\
+  !*** ./resources/js/ac/observer.js ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var events = [16, 17]; //где 16, 17 - вход/выход состоялся
+//получение данных пользователя из БД
+
+window.setPersonInfo = function (card_id) {
+  axios.get("https://policam.ru/laravel" + "/persons/get_by_card/".concat(card_id)).then(function (response) {
+    if (response.data) {
+      var data = response.data;
+
+      var _loop = function _loop(k) {
+        if (k === "divs") {
+          data.person[k].forEach(function (div) {
+            document.getElementById(k).innerHTML = div.name; //TODO списком
+          });
+        } else {
+          var elem = document.getElementById(k);
+
+          if (elem == null) {
+            return "continue";
+          }
+
+          elem.value = data.person[k];
+        }
+      };
+
+      for (var k in data.person) {
+        var _ret = _loop(k);
+
+        if (_ret === "continue") continue;
+      }
+
+      var photo_id = 0;
+      var photo = document.getElementById("photo_bg");
+
+      if (data.photos.length > 0) {
+        photo_id = data.photos[0].id;
+      }
+
+      photo.style.backgroundImage = 'url(/img/ac/s/' + photo_id + '.jpg)';
+    } else {
+      console.log("\u041F\u0443\u0441\u0442\u043E\u0439 \u043E\u0442\u0432\u0435\u0442 \u043E\u0442 \u0441\u0435\u0440\u0432\u0435\u0440\u0430"); //TODO перевод
+    }
+  }).catch(function (error) {
+    console.log(error);
+  }).then(function () {// always executed
+  });
+};
+
+window.getDivisions = function () {
+  axios.get("https://policam.ru/laravel" + "/divisions/get_list").then(function (response) {
+    var data = response.data;
+
+    if (data.length > 0) {
+      var divisions = "";
+      data.forEach(function (div) {
+        divisions += "<div id=\"div".concat(div.id, "\" class=\"menu-item\" onclick=\"getPersons(").concat(div.id, ");\">").concat(div.name, "</div>");
+      });
+      var menu = document.getElementById("menu");
+      menu.innerHTML = divisions;
+    } else {
+      alert("\u041F\u0443\u0441\u0442\u043E\u0439 \u043E\u0442\u0432\u0435\u0442 \u043E\u0442 \u0441\u0435\u0440\u0432\u0435\u0440\u0430"); //TODO перевод
+    }
+  }).catch(function (error) {
+    console.log(error);
+  }).then(function () {// always executed
+  });
+};
+
+window.getPersons = function (div_id) {
+  axios.get("https://policam.ru/laravel" + "/persons/get_list/".concat(div_id)).then(function (response) {
+    var data = response.data;
+    var persons = "<div id=\"menu-button-back\" class=\"menu-item\" onclick=\"getDivisions();\">\u041D\u0430\u0437\u0430\u0434</div>"; //TODO перевод
+
+    if (data.length > 0) {
+      data.forEach(function (person) {
+        persons += "<div id=\"person".concat(person.id, "\" class=\"menu-item\" onclick=\"openEntranceOptions(").concat(person.id, ", ").concat(div_id, ");\">").concat(person.f, " ").concat(person.i, "</div>");
+      });
+    }
+
+    document.getElementById("menu").innerHTML = persons;
+  }).catch(function (error) {
+    console.log(error);
+  });
+};
+
+window.openEntranceOptions = function (person_id, div_id) {
+  var options = "";
+
+  if (div_id === undefined) {
+    options += "<div id=\"menu-button-back\" class=\"menu-item\" onclick=\"getDivisions();\">\u041D\u0430\u0437\u0430\u0434</div>"; //TODO перевод
+  } else {
+    options += "<div id=\"menu-button-back\" class=\"menu-item\" onclick=\"getPersons(".concat(div_id, ");\">\u041D\u0430\u0437\u0430\u0434</div>"); //TODO перевод
+  }
+
+  options += "<div id=\"menu-button-forgot\" class=\"menu-item\" onclick=\"sendInfo(1, ".concat(person_id, ")\">\u0417\u0430\u0431\u044B\u043B</div>"); //TODO перевод
+
+  options += "<div id=\"menu-button-lost\" class=\"menu-item\" onclick=\"sendInfo(2, ".concat(person_id, ")\">\u041F\u043E\u0442\u0435\u0440\u044F\u043B</div>"); //TODO перевод
+
+  options += "<div id=\"menu-button-broke\" class=\"menu-item\" onclick=\"sendInfo(3, ".concat(person_id, ")\">\u0421\u043B\u043E\u043C\u0430\u043B</div>"); //TODO перевод
+
+  var menu = document.getElementById("menu");
+  menu.innerHTML = options;
+};
+
+window.sendInfo = function (type, person_id) {
+  var msg;
+
+  switch (type) {
+    case 1:
+      msg = "\u041D\u0430 \u0441\u0435\u0440\u0432\u0435\u0440 \u0431\u0443\u0434\u0435\u0442 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u0435."; //TODO перевод
+
+      if (!confirm(msg)) return;
+      break;
+
+    case 2:
+      msg = "\u041A\u0430\u0440\u0442\u0430 \u0431\u0443\u0434\u0435\u0442 \u0443\u0434\u0430\u043B\u0435\u043D\u0430, \u0430 \u043D\u0430 \u0441\u0435\u0440\u0432\u0435\u0440 \u0431\u0443\u0434\u0435\u0442 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u0435."; //TODO перевод
+
+      if (!confirm(msg)) return;
+      break;
+
+    case 3:
+      msg = "\u041A\u0430\u0440\u0442\u0430 \u0431\u0443\u0434\u0435\u0442 \u0443\u0434\u0430\u043B\u0435\u043D\u0430, \u0430 \u043D\u0430 \u0441\u0435\u0440\u0432\u0435\u0440 \u0431\u0443\u0434\u0435\u0442 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u0435."; //TODO перевод
+
+      if (!confirm(msg)) return;
+      break;
+  }
+
+  axios.post("https://policam.ru/laravel" + "/util/card_problem", {
+    type: type,
+    person_id: person_id
+  }).then(function (response) {
+    if (response.data) {
+      alert(response.data);
+    } else {
+      alert("\u041F\u0443\u0441\u0442\u043E\u0439 \u043E\u0442\u0432\u0435\u0442 \u043E\u0442 \u0441\u0435\u0440\u0432\u0435\u0440\u0430"); //TODO перевод
+    }
+  }).catch(function (error) {
+    console.log(error);
+  });
+};
+
+/***/ }),
+
+/***/ "./resources/js/ac/push.js":
+/*!*********************************!*\
+  !*** ./resources/js/ac/push.js ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// Initialize Firebase
+var config = {
+  apiKey: "{{ config('ac.fcm.api_key') }}",
+  authDomain: "{{ config('ac.fcm.auth_domain') }}",
+  databaseURL: "{{ config('ac.fcm.database_url') }}",
+  projectId: "{{ config('ac.fcm.project_id') }}",
+  storageBucket: "{{ config('ac.fcm.storage_bucket') }}",
+  messagingSenderId: "{{ config('ac.fcm.messaging_sender_id') }}"
+};
+firebase.initializeApp(config); // пользователь уже разрешил получение уведомлений
+// подписываем на уведомления если ещё не подписали
+
+if (Notification.permission === "granted") {
+  subscribe();
+}
+
+window.subscribe = function () {
+  var messaging = firebase.messaging();
+  messaging.usePublicVapidKey("{{ config('ac.fcm.public_vapid_key') }}"); // запрашиваем разрешение на получение уведомлений
+
+  messaging.requestPermission().then(function () {
+    // получаем ID устройства
+    messaging.getToken().then(function (currentToken) {
+      console.log("\u0422\u043E\u043A\u0435\u043D \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u043F\u043E\u043B\u0443\u0447\u0435\u043D"); //TODO перевод
+
+      if (currentToken) {
+        sendTokenToServer(currentToken);
+      } else {
+        console.warn("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043F\u043E\u043B\u0443\u0447\u0438\u0442\u044C \u0442\u043E\u043A\u0435\u043D."); //TODO перевод
+
+        setTokenSentToServer(false);
+      }
+    }).catch(function (err) {
+      console.warn("\u041F\u0440\u0438 \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u0438 \u0442\u043E\u043A\u0435\u043D\u0430 \u043F\u0440\u043E\u0438\u0437\u043E\u0448\u043B\u0430 \u043E\u0448\u0438\u0431\u043A\u0430.", err); //TODO перевод
+
+      setTokenSentToServer(false);
+    });
+  }).catch(function (err) {
+    console.warn("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043F\u043E\u043B\u0443\u0447\u0438\u0442\u044C \u0440\u0430\u0437\u0440\u0435\u0448\u0435\u043D\u0438\u0435 \u043D\u0430 \u043F\u043E\u043A\u0430\u0437 \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u0439.", err); //TODO перевод
+  });
+}; // отправка ID на сервер
+
+
+function sendTokenToServer(currentToken) {
+  if (!isTokenSentToServer(currentToken)) {
+    console.log("\u041E\u0442\u043F\u0440\u0430\u0432\u043A\u0430 \u0442\u043E\u043A\u0435\u043D\u0430 \u043D\u0430 \u0441\u0435\u0440\u0432\u0435\u0440..."); //TODO перевод
+
+    axios.post("https://policam.ru/laravel" + "/users/token", {
+      token: currentToken
+    }).then(function (response) {
+      console.log(response.data);
+    }).catch(function (error) {
+      console.log(error);
+    });
+    setTokenSentToServer(currentToken);
+  } else {
+    console.log("\u0422\u043E\u043A\u0435\u043D \u0443\u0436\u0435 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D \u043D\u0430 \u0441\u0435\u0440\u0432\u0435\u0440."); //TODO перевод
+  }
+} // используем localStorage для отметки того,
+// что пользователь уже подписался на уведомления
+
+
+function isTokenSentToServer(currentToken) {
+  return window.localStorage.getItem("sentFirebaseMessagingToken") == currentToken;
+}
+
+function setTokenSentToServer(currentToken) {
+  window.localStorage.setItem("sentFirebaseMessagingToken", currentToken ? currentToken : "");
+}
+
+/***/ }),
+
 /***/ "./resources/js/app.js":
 /*!*****************************!*\
   !*** ./resources/js/app.js ***!
@@ -1893,9 +1500,49 @@ axios.get("https://policam.ru/laravel" + '/controllers/get_list').then(function 
   console.log(error);
 });
 
-function SetControllerStatus(controller_id) {
+window.SetControllerStatus = function (controller_id) {
   console.log(controller_id);
-}
+};
+
+window.trans = function (key) {
+  var replace = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  var translation = key.split('.').reduce(function (t, i) {
+    return t[i] || null;
+  }, window.translations);
+
+  for (var placeholder in replace) {
+    translation = translation.replace(":".concat(placeholder), replace[placeholder]);
+  }
+
+  return translation;
+};
+
+window.trans_choice = function (key) {
+  var count = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+  var replace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  var translation = key.split('.').reduce(function (t, i) {
+    return t[i] || null;
+  }, window.translations).split('|');
+  translation = count > 1 ? translation[1] : translation[0];
+
+  for (var placeholder in replace) {
+    translation = translation.replace(":".concat(placeholder), replace[placeholder]);
+  }
+
+  return translation;
+};
+
+__webpack_require__(/*! ./ac/add_person */ "./resources/js/ac/add_person.js");
+
+__webpack_require__(/*! ./ac/classes */ "./resources/js/ac/classes.js");
+
+__webpack_require__(/*! ./ac/edit_persons */ "./resources/js/ac/edit_persons.js");
+
+__webpack_require__(/*! ./ac/main */ "./resources/js/ac/main.js");
+
+__webpack_require__(/*! ./ac/observer */ "./resources/js/ac/observer.js");
+
+__webpack_require__(/*! ./ac/push */ "./resources/js/ac/push.js");
 
 /***/ }),
 
