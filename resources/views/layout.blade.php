@@ -27,7 +27,7 @@
 <nav class="navbar navbar-expand-md navbar-light sticky-top bg-white ac-navbar">
     <div class="container-fluid">
         <a class="navbar-brand" href="{{ url('/') }}">
-            <img src="/laravel/img/logo-policam.png" alt="">
+            <img src="img/logo-policam.png" alt="">
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false"
