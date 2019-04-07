@@ -61,6 +61,7 @@ Route::group(['prefix' =>'divisions', 'as' => 'divisions.'], function() {
  */
 Route::group(['prefix' =>'persons', 'as' => 'persons.'], function() {
     Route::group(['middleware' => 'role:3'], function () {
+        Route::get('/{organization_id?}', 'PersonsController@index')->name('index');
         Route::get('add', 'PersonsController@add')->name('add');
         Route::get('edit', 'PersonsController@edit')->name('edit');
         Route::post('save/{person_id?}', 'PersonsController@save');

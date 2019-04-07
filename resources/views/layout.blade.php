@@ -43,10 +43,7 @@
                         <a class="nav-link" href="{{ route('/') }}">{{ __('ac.observation') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('persons.add') }}">{{ __('ac.adding') }}</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('persons.edit') }}">{{ __('ac.editing') }}</a>
+                        <a class="nav-link" href="{{ route('persons.index') }}">{{ __('Персонал') }}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('divisions.classes') }}">{{ __('ac.classes') }}</a>

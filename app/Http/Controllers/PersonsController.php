@@ -30,6 +30,46 @@ class PersonsController extends Controller
         $this->middleware('verified');
     }
 
+    public function index(Request $request, int $organization_id = null) {
+        if ($organization_id) {
+            $org = App\Organization::find($organization_id);
+        } else {
+            $org = $request->user()->organizations()->first();
+        }
+
+        if (! $org) {
+            return view('ac.error', ['error' => 'Огранизации отсутствуют']);
+        }
+
+        /* Подразделения */
+        $divs = $org
+            ->divisions()
+            ->orderByRaw('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
+            ->get()
+            ->load(['persons' => function ($query) {
+                $query->orderByRaw('f ASC, i ASC, o ASC')->get()->load('cards');
+            }]);
+
+        /* Карты */
+        $card_list = [];
+
+        $cards = App\Card::where('person_id', 0)->get();
+
+        if (!$cards) {
+            $card_list[] = __('ac.missing');
+        } else {
+            $card_list[] = __('ac.not_selected');
+            foreach ($cards as $card) {
+                $card_list[$card->id] = $card->wiegand;
+            }
+        }
+
+        $org_name = $org->name ?? __('ac.missing');
+
+        return view('ac.persons', compact(
+            'divs', 'card_list', 'org_name'
+        ));
+    }
     /**
      * Страница добавления человека
      *

@@ -934,6 +934,8 @@ var division = {
 };
 var divisions = [];
 
+window.openDivision = function () {};
+
 window.getDivisions = function () {
   axios.get("https://policam.ru/laravel" + "/divisions/get_list").then(function (response) {
     var data = response.data;

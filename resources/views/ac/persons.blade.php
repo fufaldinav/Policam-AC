@@ -9,7 +9,7 @@
                         @php($count = $div->persons()->get()->count())
                         <button type="button"
                                 class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
-                                onclick="checkedDiv({{ $div->id }})" {{ $count == 0 ? ' disabled' : '' }}>
+                                onclick="openDivision({{ $div->id }})" {{ $count == 0 ? ' disabled' : '' }}>
                             {{ $div->name }}
                             <span class="badge badge-primary badge-pill">{{ $count }}</span>
                         </button>

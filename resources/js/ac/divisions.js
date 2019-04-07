@@ -5,6 +5,10 @@ let division = {
 
 let divisions = [];
 
+window.openDivision = function() {
+
+}
+
 window.getDivisions = function () {
     axios.get(process.env.MIX_APP_URL + `/divisions/get_list`)
         .then(function (response) {
