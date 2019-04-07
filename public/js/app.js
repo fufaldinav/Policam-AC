@@ -677,7 +677,7 @@ window.sendInfo = function (type, person_id) {
       break;
   }
 
-  axios.post("http://127.0.0.1" + "/util/card_problem", {
+  axios.post("util/card_problem", {
     type: type,
     person_id: person_id
   }).then(function (response) {
@@ -693,7 +693,7 @@ window.sendInfo = function (type, person_id) {
 
 
 window.sendError = function (message) {
-  axios.post("http://127.0.0.1" + "/util/save_errors", {
+  axios.post("util/save_errors", {
     error: message
   }).catch(function (error) {
     console.log(error);
@@ -748,7 +748,7 @@ var trans_choice = function trans_choice(key) {
 var cards = []; //получим список неизвестных карт (брелоков) из БД
 
 window.getCards = function (id) {
-  axios.get("http://127.0.0.1" + "/cards/get_list").then(function (response) {
+  axios.get("cards/get_list").then(function (response) {
     var data = response.data;
 
     if (data) {
@@ -785,7 +785,7 @@ window.getCards = function (id) {
 
 
 window.getCardsByPerson = function (person_id) {
-  axios.get("http://127.0.0.1" + "/cards/get_list/".concat(person_id)).then(function (response) {
+  axios.get("cards/get_list/".concat(person_id)).then(function (response) {
     var data = response.data;
     cards = [];
     var person_cards = document.getElementById("person_cards");
@@ -819,7 +819,7 @@ window.getCardsByPerson = function (person_id) {
 
 
 window.saveCard = function (card_id) {
-  axios.post("http://127.0.0.1" + "/cards/holder", {
+  axios.post("cards/holder", {
     card_id: card_id,
     person_id: person.id
   }).then(function (response) {
@@ -841,7 +841,7 @@ window.delCard = function (card_id) {
     return;
   }
 
-  axios.post("http://127.0.0.1" + "/cards/holder", {
+  axios.post("cards/holder", {
     card_id: card_id,
     person_id: 0
   }).then(function (response) {
@@ -881,7 +881,7 @@ window.delCard = function (card_id) {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-axios.get("http://127.0.0.1" + '/controllers/get_list').then(function (response) {
+axios.get('controllers/get_list').then(function (response) {
   for (var k in response.data) {
     Echo.private("controller-events.".concat(response.data[k].id)).listen('EventReceived', function (e) {
       if (!events.includes(e.event)) {
@@ -937,7 +937,7 @@ var divisions = [];
 window.openDivision = function () {};
 
 window.getDivisions = function () {
-  axios.get("http://127.0.0.1" + "/divisions/get_list").then(function (response) {
+  axios.get("divisions/get_list").then(function (response) {
     var data = response.data;
 
     if (data.length > 0) {
@@ -969,7 +969,7 @@ window.saveDivision = function (org_id) {
 
   window.div.name = "".concat(number, " \"").concat(letter, "\"");
   window.div.organization_id = org_id;
-  axios.post("http://127.0.0.1" + "/divisions/save", {
+  axios.post("divisions/save", {
     div: JSON.stringify(window.div)
   }).then(function (response) {
     alert("\u041A\u043B\u0430\u0441\u0441 ".concat(response.data.name, " \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D")); //TODO перевод
@@ -987,7 +987,7 @@ window.deleteDivision = function (div_id) {
     return;
   }
 
-  axios.post("http://127.0.0.1" + "/divisions/delete", {
+  axios.post("divisions/delete", {
     'div_id': div_id
   }).then(function (response) {
     if (response.data > 0) {
@@ -1034,7 +1034,7 @@ var person = {
 var persons = [];
 
 window.setPersonInfo = function (card_id) {
-  axios.get("http://127.0.0.1" + "/persons/get_by_card/".concat(card_id)).then(function (response) {
+  axios.get("persons/get_by_card/".concat(card_id)).then(function (response) {
     if (response.data) {
       var data = response.data;
 
@@ -1078,7 +1078,7 @@ window.setPersonInfo = function (card_id) {
 };
 
 window.getPersons = function (div_id) {
-  axios.get("http://127.0.0.1" + "/persons/get_list/".concat(div_id)).then(function (response) {
+  axios.get("persons/get_list/".concat(div_id)).then(function (response) {
     var data = response.data;
     var persons = "<div id=\"menu-button-back\" class=\"menu-item\" onclick=\"getDivisions();\">\u041D\u0430\u0437\u0430\u0434</div>"; //TODO перевод
 
@@ -1122,7 +1122,7 @@ window.savePersonInfo = function () {
   if (!checkValidity) {
     alert("\u0412\u0432\u0435\u0434\u0435\u043D\u044B \u043D\u0435 \u0432\u0441\u0435 \u0434\u0430\u043D\u043D\u044B\u0435"); //TODO перевод
   } else {
-    axios.post("http://127.0.0.1" + "/persons/save", {
+    axios.post("persons/save", {
       cards: JSON.stringify(cards),
       divs: JSON.stringify(divs),
       person: JSON.stringify(person),
@@ -1188,7 +1188,7 @@ window.updatePersonInfo = function () {
   if (!checkValidity) {
     alert("\u0412\u0432\u0435\u0434\u0435\u043D\u044B \u043D\u0435 \u0432\u0441\u0435 \u0434\u0430\u043D\u043D\u044B\u0435"); //TODO перевод
   } else {
-    axios.post("http://127.0.0.1" + "/persons/save", {
+    axios.post("persons/save", {
       cards: JSON.stringify(cards),
       divs: JSON.stringify(divs),
       person: JSON.stringify(person),
@@ -1214,7 +1214,7 @@ window.deletePerson = function () {
     return;
   }
 
-  axios.post("http://127.0.0.1" + "/persons/delete", {
+  axios.post("persons/delete", {
     person_id: person.id
   }).then(function (response) {
     if (response.data > 0) {
@@ -1278,7 +1278,7 @@ window.deletePerson = function () {
 
 
 window.getPersonInfo = function (person_id) {
-  axios.get("http://127.0.0.1" + "/persons/get/".concat(person_id)).then(function (response) {
+  axios.get("persons/get/".concat(person_id)).then(function (response) {
     var data = response.data;
 
     if (data) {
@@ -1351,7 +1351,7 @@ window.handleFiles = function (files) {
   formData.append("file", files[0]);
   axios({
     method: "post",
-    url: "http://127.0.0.1" + "/photos/save",
+    url: "photos/save",
     data: formData,
     config: {
       headers: {
@@ -1387,7 +1387,7 @@ window.deletePhoto = function () {
     return;
   }
 
-  axios.post("http://127.0.0.1" + "/photos/delete", {
+  axios.post("photos/delete", {
     photo_id: photos.shift()
   }).then(function (response) {
     if (response.data) {
@@ -1464,7 +1464,7 @@ function sendTokenToServer(currentToken) {
   if (!isTokenSentToServer(currentToken)) {
     console.log("\u041E\u0442\u043F\u0440\u0430\u0432\u043A\u0430 \u0442\u043E\u043A\u0435\u043D\u0430 \u043D\u0430 \u0441\u0435\u0440\u0432\u0435\u0440..."); //TODO перевод
 
-    axios.post("http://127.0.0.1" + "/users/token", {
+    axios.post("users/token", {
       token: currentToken
     }).then(function (response) {
       console.log(response.data);
@@ -1595,7 +1595,7 @@ if (token) {
 
 window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
-  authEndpoint: "http://127.0.0.1" + '/broadcasting/auth',
+  authEndpoint: 'broadcasting/auth',
   broadcaster: 'pusher',
   key: "4b0f5261202dcbf80bd4",
   wsHost: window.location.hostname,

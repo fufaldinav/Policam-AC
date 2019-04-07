@@ -58,7 +58,7 @@ window.sendInfo = function (type, person_id) {
             if (!confirm(msg)) return;
             break;
     }
-    axios.post(process.env.MIX_APP_URL + `/util/card_problem`, {
+    axios.post(`util/card_problem`, {
         type: type,
         person_id: person_id
     })
@@ -76,7 +76,7 @@ window.sendInfo = function (type, person_id) {
 
 //сохранить ошибку на сервере
 window.sendError = function (message) {
-    axios.post(process.env.MIX_APP_URL + `/util/save_errors`, {
+    axios.post(`util/save_errors`, {
         error: message
     })
         .catch(function (error) {
