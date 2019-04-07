@@ -1,48 +1,70 @@
 @extends('layout')
 
 @section('content')
-<div id="main" class="main-grid-container">
-    <div id="menu">
-        @foreach ($divs as $div)
-        <div id="div{{ $div->id }}" class="menu-item" onclick="getPersons({{ $div->id }})">{{ $div->name }}</div>
-        @endforeach
+    <div class="row">
+        <div class="col-3">
+            @foreach ($divs as $div)
+                <div id="div{{ $div->id }}" class="menu-item"
+                     onclick="getPersons({{ $div->id }})">{{ $div->name }}</div>
+            @endforeach
+        </div>
+        <div class="col-9">
+            <div class="row">
+                <form>
+                    <div class="form-row">
+                        <div class="form-group col-6">
+                            <div id="photo" class="photo-bg"></div>
+                        </div>
+                        <div class="form-group col-6">
+                            <div class="form-group">
+                                <label for="f">{{ __('ac.f') }}</label>
+                                <input type="text" class="form-control" id="f" placeholder="{{ __('ac.f') }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="i">{{ __('ac.i') }}</label>
+                                <input type="text" class="form-control" id="i" placeholder="{{ __('ac.i') }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="o">{{ __('ac.o') }}</label>
+                                <input type="text" class="form-control" id="o" placeholder="{{ __('ac.o') }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-6">
+
+                        </div>
+                        <div class="form-group col-6">
+                            <label for="birthday">{{ __('ac.birthday') }}</label>
+                            <input type="date" class="form-control" id="birthday" value="2001-01-01"
+                                   placeholder="{{ __('ac.birthday') }}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="address">{{ __('ac.address') }}</label>
+                        <input type="text" class="form-control" id="address" placeholder="{{ __('ac.address') }}">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-6">
+                            <label for="phone">{{ __('ac.phone') }}</label>
+                            <input type="text" class="form-control" id="phone" placeholder="{{ __('ac.phone') }}">
+                        </div>
+                        <div class="form-group col-6">
+                            <label for="uid">{{ __('ac.uid') }}</label>
+                            <input type="text" class="form-control" id="uid" placeholder="{{ __('ac.uid') }}">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-6">
+
+                        </div>
+                        <div class="form-group col-6">
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <input id="type" name="type" type="text" hidden readonly/>
     </div>
-    <div id="info">
-        <div id="info-photo" class="info-item">
-            <div id="photo_bg" class="photo"></div>
-        </div>
-        <div id="info-f" class="info-item">
-            @lang('ac.f')<br />
-            <input id="f" name="f" size="30" type="text" readonly />
-        </div>
-        <div id="info-i" class="info-item">
-            @lang('ac.i')<br />
-            <input id="i" name="i" size="30" type="text" readonly />
-        </div>
-        <div id="info-o" class="info-item">
-            @lang('ac.o')<br />
-            <input id="o" name="o" size="30" type="text" readonly />
-        </div>
-        <div id="info-div" class="info-item">
-            <div id="divs"></div>
-        </div>
-        <div id="info-birthday" class="info-item">
-            @lang('ac.birthday')<br />
-            <input id="birthday" name="birthday" size="15" type="date" readonly />
-        </div>
-        <div id="info-address" class="info-item">
-            @lang('ac.address')<br />
-            <input id="address" name="address" size="60" type="text" readonly />
-        </div>
-        <div id="info-phone" class="info-item">
-            @lang('ac.phone')<br />
-            <input id="phone" name="phone" size="15" type="text" readonly />
-        </div>
-        <div id="info-uid" class="info-item">
-            @lang('ac.uid')<br />
-            <input id="id" name="id" size="15" type="text" readonly />
-        </div>
-    </div>
-    <input id="type" name="type" type="text" hidden readonly />
-</div>
 @endsection

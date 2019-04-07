@@ -621,6 +621,10 @@ function (_AcObject2) {
   return Person;
 }(AcObject);
 
+window.showNewEvent = function (event) {
+  $(".events").append("<p class=\"mb-1\"><small>".concat(event, "</small></p>"));
+};
+
 window.showPersons = function (div_id) {
   $(".divisions").hide();
   $("#persons-div-".concat(div_id)).show();
@@ -911,7 +915,8 @@ axios.get("https://policam.ru/laravel" + '/controllers/get_list').then(function 
   console.log(error);
 });
 
-window.SetControllerStatus = function (controller_id) {//console.log(controller_id);
+window.SetControllerStatus = function (controller_id) {
+  showNewEvent("\u041A\u043E\u043D\u0442\u0440\u043E\u043B\u043B\u0435\u0440 <mark>ID: ".concat(controller_id, "</mark> \u0432\u044B\u0448\u0435\u043B \u043D\u0430 \u0441\u0432\u044F\u0437\u044C."));
 };
 
 /***/ }),

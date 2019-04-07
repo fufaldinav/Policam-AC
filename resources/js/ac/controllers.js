@@ -32,5 +32,5 @@ axios.get(process.env.MIX_APP_URL + '/controllers/get_list')
     });
 
 window.SetControllerStatus = function (controller_id) {
-    //console.log(controller_id);
+    showNewEvent(`Контроллер <mark>ID: ${controller_id}</mark> вышел на связь.`)
 }

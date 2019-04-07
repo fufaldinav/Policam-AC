@@ -14,6 +14,10 @@ class Person extends AcObject {
 
 }
 
+window.showNewEvent = function (event) {
+    $(`.events`).append(`<p class="mb-1"><small>${event}</small></p>`);
+}
+
 window.showPersons = function (div_id) {
     $(`.divisions`).hide();
     $(`#persons-div-${div_id}`).show();

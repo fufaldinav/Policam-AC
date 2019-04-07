@@ -2,6 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -21,14 +22,71 @@
 
     <!-- Styles -->
     <link href="{{ env('APP_URL') }}{{ mix('css/app.css') }}" rel="stylesheet">
-    <link href="{{ env('APP_URL') }}{{ mix('css/style.css') }}" rel="stylesheet">
 </head>
 <body>
-<div id="container">
-    @include('layouts.header')
+<nav class="navbar navbar-expand-md navbar-light sticky-top bg-white ac-navbar">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{{ url('/') }}">
+            <img src="/laravel/img/logo-policam.png" alt="">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="{{ __('Toggle navigation') }}">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse bg-white" id="navbarSupportedContent">
+            <!-- Left Side Of Navbar -->
+            <ul class="navbar-nav mr-auto">
+                @auth
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('/') }}">{{ __('ac.observation') }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('persons.add') }}">{{ __('ac.adding') }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('persons.edit') }}">{{ __('ac.editing') }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('divisions.classes') }}">{{ __('ac.classes') }}</a>
+                    </li>
+                @endauth
+            </ul>
+
+            <!-- Right Side Of Navbar -->
+            <ul class="navbar-nav ml-auto">
+                <!-- Authentication Links -->
+                @guest
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('login') }}">{{ __('auth.login') }}</a>
+                    </li>
+                    @if (Route::has('register'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('register') }}">{{ __('auth.register') }}</a>
+                        </li>
+                    @endif
+                @else
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" href="{{ route('logout') }}"
+                           onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                            {{ __('auth.logout') }}
+                        </a>
+
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                              style="display: none;">
+                            @csrf
+                        </form>
+                    </li>
+                @endguest
+            </ul>
+        </div>
+    </div>
+</nav>
+<main>
     @yield('content')
-    @include('layouts.footer')
-</div>
+</main>
 <script>
     window.translations = {!! Cache::get('translations') !!};
 </script>
