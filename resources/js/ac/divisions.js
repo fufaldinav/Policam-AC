@@ -1,12 +1,31 @@
-let division = {
-    'name': null,
-    'organization_id': null
-};
+window.Division = function (data) {
+    let persons = [];
+    this.id = 0;
+    this.name = null;
+    this.organization_id = null;
+    this.type = 1;
 
-let divisions = [];
+    for (let k in data) {
+        if (this.hasOwnProperty(k)) {
+            this[k] = data[k];
+        }
+        if (k === 'persons') {
+            persons = data[k];
+        }
+    }
 
-window.openDivision = function() {
+    this.persons = function (id) {
+        if (id !== undefined) {
+            let i = persons.indexOf(id);
+            return persons[i];
+        }
+        return persons;
+    }
 
+    this.deletePerson = function (id) {
+        let i = persons.indexOf(id);
+        persons.splice(i, 1);
+    }
 }
 
 window.getDivisions = function () {

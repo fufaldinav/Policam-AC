@@ -75,7 +75,7 @@ class PersonsController extends Controller
 
     public function update(Request $request, $id)
     {
-        $person = $request->user()->persons()->where('person.id', $id)->first();
+        $person = $request->user()->persons()->where('persons.id', $id)->first();
 
         abort_if(! $person, 403);
 
@@ -101,7 +101,7 @@ class PersonsController extends Controller
 
     public function destroy(Request $request, int $id)
     {
-        $person = $request->user()->persons()->where('person.id', $id)->first();
+        $person = $request->user()->persons()->where('persons.id', $id)->first();
 
         abort_if(! $person, 403);
 

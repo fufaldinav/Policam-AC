@@ -31,10 +31,10 @@ window.Vue = require('vue');
 //     el: '#app'
 // });
 
-require('./ac/ac');
 require('./ac/cards');
 require('./ac/controllers');
 require('./ac/divisions');
 require('./ac/persons');
 require('./ac/photos');
 require('./ac/push');
+require('./ac/ac');

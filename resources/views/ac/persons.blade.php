@@ -1,40 +1,57 @@
 @extends('layout')
 
+@section('scripts')
+    window.translations = {!! Cache::get('translations') !!};
+    window.AcData = [];
+    divisions = window.AcData.divisions = [];
+    persons = window.AcData.persons = [];
+    @foreach ($divisions as $div)
+        div = divisions[{{ $div->id }}] = {!! $div->toJson() !!};
+        div.persons = [];
+        @foreach($div->persons as $person)
+            div.persons.push({{ $person->id }});
+            person = persons[{{ $person->id }}];
+            if (person === undefined) {
+                person = {!! $person->toJson() !!};
+                person.cards = {!! $person->cards->toJson() !!};
+                person.photos = {!! $person->photos->toJson() !!};
+                person.divisions = [];
+            }
+            persons[{{ $person->id }}] = person;
+            person.divisions.push({{ $div->id }});
+            delete person;
+        @endforeach
+        delete div;
+    @endforeach
+    delete divisions;
+    delete persons;
+@endsection
+
 @section('content')
     <div class="container-fluid">
         <div class="row">
-            <div class="d-none d-sm-block col-sm-3 col-xl-2 bg-white px-1 ac-menu">
-                <div class="list-group list-group-flush">
-                    @foreach ($divs as $div)
-                        @php($count = $div->persons()->get()->count())
-                        <button type="button"
-                                class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
-                                onclick="openDivision({{ $div->id }})" {{ $count == 0 ? ' disabled' : '' }}>
-                            {{ $div->name }}
-                            <span class="badge badge-primary badge-pill">{{ $count }}</span>
-                        </button>
-                    @endforeach
-                </div>
-            </div>
+            <div id="ac-list-group" class="d-none d-sm-block col-sm-3 col-xl-2 bg-white px-1 ac-menu"></div>
             <div class="col-12 col-sm-9 col-lg-6 col-xl-7">
                 <div class="row mt-4">
                     <div class="container-fluid">
-                        <form class="needs-validation" novalidate>
+                        <form id="form-person" class="needs-validation" novalidate>
                             <div class="form-row">
                                 <div class="form-group col-6">
-                                    <div id="photo" class="photo-bg">
+                                    <div class="photo-bg">
                                         <div class="photo-del" data-title="{{ __('ac.delete') }})" hidden>
-                                            <img src="/img/delete.png"/>
+                                            <button type="button" class="close" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
                                         </div>
                                     </div>
                                     <input type="file" class="form-control-file" id="photo"
-                                           onchange="handleFiles(this.files)"/>
+                                           onchange="handleFiles(this.files)" disabled>
                                 </div>
                                 <div class="form-group col-6">
                                     <div class="form-group">
                                         <label for="f">{{ __('ac.f') }}</label>
                                         <input type="text" class="form-control" id="f" placeholder="{{ __('ac.f') }}"
-                                               required>
+                                               disabled required>
                                         <div class="invalid-feedback">
                                             {{ __('Поле "Фамилия" является обязательным.') }}
                                         </div>
@@ -42,19 +59,19 @@
                                     <div class="form-group">
                                         <label for="i">{{ __('ac.i') }}</label>
                                         <input type="text" class="form-control" id="i" placeholder="{{ __('ac.i') }}"
-                                               required>
+                                               disabled required>
                                         <div class="invalid-feedback">
                                             {{ __('Поле "Имя" является обязательным.') }}
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="o">{{ __('ac.o') }}</label>
-                                        <input type="text" class="form-control" id="o" placeholder="{{ __('ac.o') }}">
+                                        <input type="text" class="form-control" id="o" placeholder="{{ __('ac.o') }}" disabled>
                                     </div>
                                     <div class="form-group">
                                         <label for="birthday">{{ __('ac.birthday') }}</label>
                                         <input type="date" class="form-control" id="birthday"
-                                               placeholder="{{ __('ac.birthday') }}" required>
+                                               placeholder="{{ __('ac.birthday') }}" required disabled>
                                         <div class="invalid-feedback">
                                             {{ __('Поле "Дата рождения" является обязательным.') }}
                                         </div>
@@ -64,17 +81,17 @@
                             <div class="form-group">
                                 <label for="address">{{ __('ac.address') }}</label>
                                 <input type="text" class="form-control" id="address"
-                                       placeholder="{{ __('ac.address') }}">
+                                       placeholder="{{ __('ac.address') }}" disabled>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-6">
                                     <label for="phone">{{ __('ac.phone') }}</label>
                                     <input type="text" class="form-control" id="phone"
-                                           placeholder="{{ __('ac.phone') }}">
+                                           placeholder="{{ __('ac.phone') }}" disabled>
                                 </div>
                                 <div class="form-group col-6">
                                     <label for="uid">{{ __('ac.uid') }}</label>
-                                    <input type="text" class="form-control" id="uid" placeholder="{{ __('ac.uid') }}">
+                                    <input type="text" class="form-control" id="uid" placeholder="{{ __('ac.uid') }}" disabled>
                                 </div>
                             </div>
                             <div class="form-row">
@@ -94,7 +111,7 @@
             <div class="d-none d-lg-block col-lg-3 bg-white ac-menu">
                 <div class="events"></div>
             </div>
-            <input id="type" name="type" type="text" hidden readonly/>
+            <input id="type" name="type" type="text" hidden readonly>
         </div>
     </div>
 @endsection

@@ -27,7 +27,7 @@
 <nav class="navbar navbar-expand-md navbar-light sticky-top bg-white ac-navbar">
     <div class="container-fluid">
         <a class="navbar-brand" href="{{ url('/') }}">
-            <img src="img/logo-policam.png" alt="">
+            <img src="/img/logo-policam.png" alt="">
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -43,7 +43,7 @@
                         <a class="nav-link" href="{{ route('/') }}">{{ __('ac.observation') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('persons.index') }}">{{ __('Персонал') }}</a>
+                        <a class="nav-link" href="{{ route('cp.persons') }}">{{ __('Персонал') }}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('divisions.classes') }}">{{ __('ac.classes') }}</a>
@@ -85,7 +85,7 @@
     @yield('content')
 </main>
 <script>
-    window.translations = {!! Cache::get('translations') !!};
+    @yield('scripts')
 </script>
 </body>
 </html>

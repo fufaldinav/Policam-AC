@@ -1,4 +1,14 @@
-let photos = [];
+window.Photo = function (data) {
+    this.id = 0;
+    this.hash = null;
+    this.person_id = 0;
+
+    for (let k in data) {
+        if (this.hasOwnProperty(k)) {
+            this[k] = data[k];
+        }
+    }
+}
 
 //загрузка фото
 window.handleFiles = function (files) {

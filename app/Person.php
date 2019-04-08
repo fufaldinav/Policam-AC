@@ -119,7 +119,7 @@ class Person extends Model
                 continue;
             }
 
-            $this->divisions()->attach($div->id);
+            $this->divisions()->syncWithoutDetaching($div->id);
         }
 
         return $this;
@@ -138,8 +138,8 @@ class Person extends Model
     {
         $tasker = new Tasker();
 
-        foreach ($cards as $card_id) {
-            $card = Card::find($card_id);
+        foreach ($cards as $card) {
+            $card = Card::find($card['id']);
 
             if (! $card) {
                 continue;
@@ -175,12 +175,14 @@ class Person extends Model
         }
 
         $tasker->send();
+
+        return $this;
     }
 
     public function attachPhotos(array $photos): self
     {
-        foreach ($photos as $photo_id) {
-            $photo = Photo::find($photo_id);
+        foreach ($photos as $photo) {
+            $photo = Photo::find($photo['id']);
 
             if (! $photo) {
                 continue;

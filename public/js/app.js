@@ -571,68 +571,189 @@ module.exports = function(module) {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+window.AcClass = function (data) {
+  this.form = document.forms.namedItem("form-person");
+  this.divisions = [];
+  this.persons = [];
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var AcObject = function AcObject(data) {
-  _classCallCheck(this, AcObject);
-
-  for (var k in data) {
-    this[k] = data[k];
+  if (data['divisions'] !== undefined) {
+    for (var k in data['divisions']) {
+      this.divisions[k] = new Division(data['divisions'][k]);
+    }
   }
+
+  if (data['persons'] !== undefined) {
+    for (var _k in data['persons']) {
+      this.persons[_k] = new Person(data['persons'][_k]);
+    }
+  }
+
+  this.listGroupDivisions = function (element) {
+    if (element !== undefined) {
+      var division_id = _getIdFromElement(element);
+
+      delete this.divisions[division_id].deletePerson(0);
+      delete this.persons[0];
+    }
+
+    _disableForm();
+
+    var menu = document.getElementById("ac-list-group");
+    var list = document.createElement("div");
+    list.classList.add("list-group", "list-group-flush");
+
+    for (var _k2 in this.divisions) {
+      var div = this.divisions[_k2];
+      var count = div.persons().length;
+      var button = document.createElement("button");
+      button.type = "button";
+      button.classList.add("list-group-item", "list-group-item-action", "d-flex", "justify-content-between", "align-items-center");
+      button.id = "ac-button-division-".concat(_k2);
+
+      button.onclick = function () {
+        window.Ac.listGroupPersons(this);
+      };
+
+      button.textContent = div.name;
+
+      if (count === 0) {
+        button.disabled = true;
+      }
+
+      var badge = document.createElement("span");
+      badge.classList.add("badge", "badge-primary", "badge-pill");
+      badge.textContent = count;
+      button.appendChild(badge);
+      list.appendChild(button);
+    }
+
+    menu.innerHTML = "";
+    menu.appendChild(list);
+  };
+
+  this.listGroupPersons = function (element) {
+    var division_id = _getIdFromElement(element);
+
+    var menu = document.getElementById("ac-list-group");
+    var list = document.createElement("div");
+    list.classList.add("list-group", "list-group-flush");
+    var buttonBack = document.createElement("button");
+    buttonBack.type = "button";
+    buttonBack.classList.add("list-group-item", "list-group-item-info");
+    buttonBack.id = "ac-button-back-".concat(division_id);
+
+    buttonBack.onclick = function () {
+      window.Ac.listGroupDivisions(this);
+    };
+
+    buttonBack.textContent = "Back";
+    list.appendChild(buttonBack);
+    var buttonAdd = buttonBack.cloneNode(true);
+    buttonAdd.classList.remove("list-group-item-info");
+    buttonAdd.classList.add("list-group-item-success");
+    buttonAdd.id = "ac-button-add-".concat(division_id);
+
+    buttonAdd.onclick = function () {
+      window.Ac.newPersonInForm(this);
+    };
+
+    buttonAdd.textContent = "Add";
+    list.appendChild(buttonAdd);
+    var persons = this.divisions[division_id].persons();
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+      for (var _iterator = persons[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        var id = _step.value;
+        var person = this.persons[id];
+        var button = buttonBack.cloneNode(true);
+        button.classList.remove("list-group-item-info");
+        button.classList.add("list-group-item-action");
+        button.id = "ac-button-person-".concat(id);
+
+        button.onclick = function () {
+          window.Ac.showPersonInForm(this);
+        };
+
+        button.textContent = "".concat(person.f, " ").concat(person.i);
+        list.appendChild(button);
+      }
+    } catch (err) {
+      _didIteratorError = true;
+      _iteratorError = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion && _iterator.return != null) {
+          _iterator.return();
+        }
+      } finally {
+        if (_didIteratorError) {
+          throw _iteratorError;
+        }
+      }
+    }
+
+    menu.innerHTML = "";
+    menu.appendChild(list);
+  };
+
+  this.showPersonInForm = function (element) {
+    var person_id = _getIdFromElement(element);
+
+    var person = this.persons[person_id];
+
+    _enableForm();
+
+    for (var i = 0; i < this.form.length; i++) {
+      if (person.hasOwnProperty(this.form[i].id)) {
+        this.form[i].value = person[this.form[i].id];
+      }
+    }
+  };
+
+  this.newPersonInForm = function (element) {
+    var division_id = _getIdFromElement(element);
+
+    _enableForm();
+
+    this.divisions[division_id].persons().push(0);
+    var person = this.persons[0] = new Person();
+    person.divisions().push(parseInt(division_id));
+  };
+
+  var _getIdFromElement = function (element) {
+    return element.id.split("-").pop();
+  }.bind(this);
+
+  var _enableForm = function () {
+    for (var i = 0; i < this.form.length; i++) {
+      this.form[i].value = null;
+
+      if (this.form[i].disabled) {
+        this.form[i].disabled = false;
+      }
+    }
+  }.bind(this);
+
+  var _disableForm = function () {
+    for (var i = 0; i < this.form.length; i++) {
+      this.form[i].value = null;
+
+      if (!this.form[i].disabled) {
+        this.form[i].disabled = true;
+      }
+    }
+  }.bind(this);
 };
 
-var Division =
-/*#__PURE__*/
-function (_AcObject) {
-  _inherits(Division, _AcObject);
-
-  function Division() {
-    _classCallCheck(this, Division);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(Division).apply(this, arguments));
-  }
-
-  return Division;
-}(AcObject);
-
-var Person =
-/*#__PURE__*/
-function (_AcObject2) {
-  _inherits(Person, _AcObject2);
-
-  function Person() {
-    _classCallCheck(this, Person);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(Person).apply(this, arguments));
-  }
-
-  return Person;
-}(AcObject);
+var Ac = window.Ac = new AcClass(window.AcData);
+delete window.AcData;
+Ac.listGroupDivisions();
 
 window.showNewEvent = function (event) {
   $(".events").append("<p class=\"mb-1\"><small>".concat(event, "</small></p>"));
-};
-
-window.showPersons = function (div_id) {
-  $(".divisions").hide();
-  $("#persons-div-".concat(div_id)).show();
-};
-
-window.showDivisions = function (div_id) {
-  $(".persons").hide();
-  $(".divisions").show();
 };
 
 window.openEntranceOptions = function (person_id, div_id) {
@@ -677,7 +798,7 @@ window.sendInfo = function (type, person_id) {
       break;
   }
 
-  axios.post("util/card_problem", {
+  axios.post("/util/card_problem", {
     type: type,
     person_id: person_id
   }).then(function (response) {
@@ -693,7 +814,7 @@ window.sendInfo = function (type, person_id) {
 
 
 window.sendError = function (message) {
-  axios.post("util/save_errors", {
+  axios.post("/util/save_errors", {
     error: message
   }).catch(function (error) {
     console.log(error);
@@ -745,10 +866,23 @@ var trans_choice = function trans_choice(key) {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-var cards = []; //получим список неизвестных карт (брелоков) из БД
+window.Card = function (data) {
+  this.id = 0;
+  this.wiegand = null;
+  this.last_conn = null;
+  this.controller_id = null;
+  this.person_id = 0;
+
+  for (var k in data) {
+    if (this.hasOwnProperty(k)) {
+      this[k] = data[k];
+    }
+  }
+}; //получим список неизвестных карт (брелоков) из БД
+
 
 window.getCards = function (id) {
-  axios.get("cards/get_list").then(function (response) {
+  axios.get("/cards/get_list").then(function (response) {
     var data = response.data;
 
     if (data) {
@@ -785,7 +919,7 @@ window.getCards = function (id) {
 
 
 window.getCardsByPerson = function (person_id) {
-  axios.get("cards/get_list/".concat(person_id)).then(function (response) {
+  axios.get("/cards/get_list/".concat(person_id)).then(function (response) {
     var data = response.data;
     cards = [];
     var person_cards = document.getElementById("person_cards");
@@ -819,7 +953,7 @@ window.getCardsByPerson = function (person_id) {
 
 
 window.saveCard = function (card_id) {
-  axios.post("cards/holder", {
+  axios.post("/cards/holder", {
     card_id: card_id,
     person_id: person.id
   }).then(function (response) {
@@ -841,7 +975,7 @@ window.delCard = function (card_id) {
     return;
   }
 
-  axios.post("cards/holder", {
+  axios.post("/cards/holder", {
     card_id: card_id,
     person_id: 0
   }).then(function (response) {
@@ -881,7 +1015,7 @@ window.delCard = function (card_id) {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-axios.get('controllers/get_list').then(function (response) {
+axios.get("/controllers/get_list").then(function (response) {
   for (var k in response.data) {
     Echo.private("controller-events.".concat(response.data[k].id)).listen('EventReceived', function (e) {
       if (!events.includes(e.event)) {
@@ -928,25 +1062,49 @@ window.SetControllerStatus = function (controller_id) {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-var division = {
-  'name': null,
-  'organization_id': null
-};
-var divisions = [];
+window.Division = function (data) {
+  var persons = [];
+  this.id = 0;
+  this.name = null;
+  this.organization_id = null;
+  this.type = 1;
 
-window.openDivision = function () {};
+  for (var k in data) {
+    if (this.hasOwnProperty(k)) {
+      this[k] = data[k];
+    }
+
+    if (k === 'persons') {
+      persons = data[k];
+    }
+  }
+
+  this.persons = function (id) {
+    if (id !== undefined) {
+      var i = persons.indexOf(id);
+      return persons[i];
+    }
+
+    return persons;
+  };
+
+  this.deletePerson = function (id) {
+    var i = persons.indexOf(id);
+    persons.splice(i, 1);
+  };
+};
 
 window.getDivisions = function () {
-  axios.get("divisions/get_list").then(function (response) {
+  axios.get("/divisions/get_list").then(function (response) {
     var data = response.data;
 
     if (data.length > 0) {
-      var _divisions = "";
+      var divisions = "";
       data.forEach(function (div) {
-        _divisions += "<div id=\"div".concat(div.id, "\" class=\"menu-item\" onclick=\"getPersons(").concat(div.id, ");\">").concat(div.name, "</div>");
+        divisions += "<div id=\"div".concat(div.id, "\" class=\"menu-item\" onclick=\"getPersons(").concat(div.id, ");\">").concat(div.name, "</div>");
       });
       var menu = document.getElementById("menu");
-      menu.innerHTML = _divisions;
+      menu.innerHTML = divisions;
     } else {
       alert("\u041F\u0443\u0441\u0442\u043E\u0439 \u043E\u0442\u0432\u0435\u0442 \u043E\u0442 \u0441\u0435\u0440\u0432\u0435\u0440\u0430"); //TODO перевод
     }
@@ -969,7 +1127,7 @@ window.saveDivision = function (org_id) {
 
   window.div.name = "".concat(number, " \"").concat(letter, "\"");
   window.div.organization_id = org_id;
-  axios.post("divisions/save", {
+  axios.post("/divisions/save", {
     div: JSON.stringify(window.div)
   }).then(function (response) {
     alert("\u041A\u043B\u0430\u0441\u0441 ".concat(response.data.name, " \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D")); //TODO перевод
@@ -987,7 +1145,7 @@ window.deleteDivision = function (div_id) {
     return;
   }
 
-  axios.post("divisions/delete", {
+  axios.post("/divisions/delete", {
     'div_id': div_id
   }).then(function (response) {
     if (response.data > 0) {
@@ -1023,18 +1181,113 @@ window.setDiv = function (id) {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-var person = {
-  'f': null,
-  'i': null,
-  'o': null,
-  'birthday': null,
-  'address': null,
-  'phone': null
+window.Person = function (data) {
+  var cards = [];
+  var divisions = [];
+  var photos = [];
+  this.id = 0;
+  this.f = null;
+  this.i = null;
+  this.o = null;
+  this.type = 1;
+  this.birthday = null;
+  this.address = null;
+  this.phone = null;
+
+  for (var k in data) {
+    if (this.hasOwnProperty(k)) {
+      this[k] = data[k];
+    }
+
+    if (k === 'cards') {
+      for (var l in data[k]) {
+        cards[l] = new Card(data[k][l]);
+      }
+    }
+
+    if (k === 'divisions') {
+      divisions = data[k];
+    }
+
+    if (k === 'photos') {
+      for (var _l in data[k]) {
+        photos[_l] = new Photo(data[k][_l]);
+      }
+    }
+  }
+
+  this.cards = function (id) {
+    if (id !== undefined) {
+      var i = cards.indexOf(id);
+      return cards[i];
+    }
+
+    return cards;
+  };
+
+  this.divisions = function (id) {
+    if (id !== undefined) {
+      var i = divisions.indexOf(id);
+      return divisions[i];
+    }
+
+    return divisions;
+  };
+
+  this.photos = function (id) {
+    if (id !== undefined) {
+      var i = photos.indexOf(id);
+      return photos[i];
+    }
+
+    return photos;
+  };
+
+  this.save = function () {
+    axios.post("/api/persons", {
+      person: this,
+      divisions: this.divisions(),
+      cards: this.cards(),
+      photos: this.photos()
+    }).then(function (response) {
+      for (var _k in response.data) {
+        if (this.hasOwnProperty(_k)) {
+          this[_k] = data[_k];
+        }
+      }
+    }).catch(function (error) {
+      console.log(error);
+    });
+  };
+
+  this.update = function () {
+    axios.put("/api/persons/".concat(this.id), {
+      person: this,
+      divisions: this.divisions(),
+      cards: this.cards(),
+      photos: this.photos()
+    }).then(function (response) {
+      for (var _k2 in response.data) {
+        if (this.hasOwnProperty(_k2)) {
+          this[_k2] = data[_k2];
+        }
+      }
+    }).catch(function (error) {
+      console.log(error);
+    });
+  };
+
+  this.delete = function () {
+    axios.delete("/api/persons/".concat(this.id)).then(function (response) {
+      delete this;
+    }).catch(function (error) {
+      console.log(error);
+    });
+  };
 };
-var persons = [];
 
 window.setPersonInfo = function (card_id) {
-  axios.get("persons/get_by_card/".concat(card_id)).then(function (response) {
+  axios.get("/persons/get_by_card/".concat(card_id)).then(function (response) {
     if (response.data) {
       var data = response.data;
 
@@ -1078,7 +1331,7 @@ window.setPersonInfo = function (card_id) {
 };
 
 window.getPersons = function (div_id) {
-  axios.get("persons/get_list/".concat(div_id)).then(function (response) {
+  axios.get("/persons/get_list/".concat(div_id)).then(function (response) {
     var data = response.data;
     var persons = "<div id=\"menu-button-back\" class=\"menu-item\" onclick=\"getDivisions();\">\u041D\u0430\u0437\u0430\u0434</div>"; //TODO перевод
 
@@ -1122,7 +1375,7 @@ window.savePersonInfo = function () {
   if (!checkValidity) {
     alert("\u0412\u0432\u0435\u0434\u0435\u043D\u044B \u043D\u0435 \u0432\u0441\u0435 \u0434\u0430\u043D\u043D\u044B\u0435"); //TODO перевод
   } else {
-    axios.post("persons/save", {
+    axios.post("/persons/save", {
       cards: JSON.stringify(cards),
       divs: JSON.stringify(divs),
       person: JSON.stringify(person),
@@ -1130,8 +1383,8 @@ window.savePersonInfo = function () {
     }).then(function (response) {
       var person_id = response.data;
 
-      for (var _k in person) {
-        person[_k] = null;
+      for (var _k3 in person) {
+        person[_k3] = null;
       }
 
       cards = [];
@@ -1188,7 +1441,7 @@ window.updatePersonInfo = function () {
   if (!checkValidity) {
     alert("\u0412\u0432\u0435\u0434\u0435\u043D\u044B \u043D\u0435 \u0432\u0441\u0435 \u0434\u0430\u043D\u043D\u044B\u0435"); //TODO перевод
   } else {
-    axios.post("persons/save", {
+    axios.post("/persons/save", {
       cards: JSON.stringify(cards),
       divs: JSON.stringify(divs),
       person: JSON.stringify(person),
@@ -1214,7 +1467,7 @@ window.deletePerson = function () {
     return;
   }
 
-  axios.post("persons/delete", {
+  axios.post("/persons/delete", {
     person_id: person.id
   }).then(function (response) {
     if (response.data > 0) {
@@ -1278,7 +1531,7 @@ window.deletePerson = function () {
 
 
 window.getPersonInfo = function (person_id) {
-  axios.get("persons/get/".concat(person_id)).then(function (response) {
+  axios.get("/persons/get/".concat(person_id)).then(function (response) {
     var data = response.data;
 
     if (data) {
@@ -1321,8 +1574,8 @@ window.getPersonInfo = function (person_id) {
 
       window.divs = [];
 
-      for (var _k2 in data.divs) {
-        divs.push(data.divs[_k2].id);
+      for (var _k4 in data.divs) {
+        divs.push(data.divs[_k4].id);
       }
 
       document.getElementById("save").onclick = updatePersonInfo;
@@ -1344,14 +1597,25 @@ window.getPersonInfo = function (person_id) {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-var photos = []; //загрузка фото
+window.Photo = function (data) {
+  this.id = 0;
+  this.hash = null;
+  this.person_id = 0;
+
+  for (var k in data) {
+    if (this.hasOwnProperty(k)) {
+      this[k] = data[k];
+    }
+  }
+}; //загрузка фото
+
 
 window.handleFiles = function (files) {
   var formData = new FormData();
   formData.append("file", files[0]);
   axios({
     method: "post",
-    url: "photos/save",
+    url: "/photos/save",
     data: formData,
     config: {
       headers: {
@@ -1387,7 +1651,7 @@ window.deletePhoto = function () {
     return;
   }
 
-  axios.post("photos/delete", {
+  axios.post("/photos/delete", {
     photo_id: photos.shift()
   }).then(function (response) {
     if (response.data) {
@@ -1464,7 +1728,7 @@ function sendTokenToServer(currentToken) {
   if (!isTokenSentToServer(currentToken)) {
     console.log("\u041E\u0442\u043F\u0440\u0430\u0432\u043A\u0430 \u0442\u043E\u043A\u0435\u043D\u0430 \u043D\u0430 \u0441\u0435\u0440\u0432\u0435\u0440..."); //TODO перевод
 
-    axios.post("users/token", {
+    axios.post("/users/token", {
       token: currentToken
     }).then(function (response) {
       console.log(response.data);
@@ -1524,8 +1788,6 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 //     el: '#app'
 // });
 
-__webpack_require__(/*! ./ac/ac */ "./resources/js/ac/ac.js");
-
 __webpack_require__(/*! ./ac/cards */ "./resources/js/ac/cards.js");
 
 __webpack_require__(/*! ./ac/controllers */ "./resources/js/ac/controllers.js");
@@ -1537,6 +1799,8 @@ __webpack_require__(/*! ./ac/persons */ "./resources/js/ac/persons.js");
 __webpack_require__(/*! ./ac/photos */ "./resources/js/ac/photos.js");
 
 __webpack_require__(/*! ./ac/push */ "./resources/js/ac/push.js");
+
+__webpack_require__(/*! ./ac/ac */ "./resources/js/ac/ac.js");
 
 /***/ }),
 
@@ -1595,7 +1859,7 @@ if (token) {
 
 window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
-  authEndpoint: 'broadcasting/auth',
+  authEndpoint: '/broadcasting/auth',
   broadcaster: 'pusher',
   key: "4b0f5261202dcbf80bd4",
   wsHost: window.location.hostname,
