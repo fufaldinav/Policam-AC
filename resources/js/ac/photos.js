@@ -6,7 +6,7 @@ window.handleFiles = function (files) {
     formData.append(`file`, files[0]);
     axios({
         method: `post`,
-        url: `photos/save`,
+        url: `/photos/save`,
         data: formData,
         config: { headers: {'Content-Type': 'multipart/form-data' }}
     })
@@ -37,7 +37,7 @@ window.deletePhoto = function () {
     if (!confirm(`Подтвердите удаление.`)) { //TODO перевод
         return;
     }
-    axios.post(`photos/delete`, {
+    axios.post(`/photos/delete`, {
         photo_id: photos.shift()
     })
         .then(function (response) {

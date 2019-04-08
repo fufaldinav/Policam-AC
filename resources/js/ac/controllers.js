@@ -1,4 +1,4 @@
-axios.get('controllers/get_list')
+axios.get(`/controllers/get_list`)
     .then(function (response) {
         for (let k in response.data) {
             Echo.private(`controller-events.${response.data[k].id}`)

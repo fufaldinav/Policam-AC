@@ -10,7 +10,7 @@ let person = {
 let persons = [];
 
 window.setPersonInfo = function (card_id) {
-    axios.get(`persons/get_by_card/${card_id}`)
+    axios.get(`/persons/get_by_card/${card_id}`)
         .then(function (response) {
             if (response.data) {
                 let data = response.data;
@@ -47,7 +47,7 @@ window.setPersonInfo = function (card_id) {
 }
 
 window.getPersons = function (div_id) {
-    axios.get(`persons/get_list/${div_id}`)
+    axios.get(`/persons/get_list/${div_id}`)
         .then(function (response) {
             let data = response.data;
             let persons = `<div id="menu-button-back" class="menu-item" onclick="getDivisions();">Назад</div>`; //TODO перевод
@@ -87,7 +87,7 @@ window.savePersonInfo = function () {
     if (!checkValidity) {
         alert(`Введены не все данные`); //TODO перевод
     } else {
-        axios.post(`persons/save`, {
+        axios.post(`/persons/save`, {
             cards: JSON.stringify(cards),
             divs: JSON.stringify(divs),
             person: JSON.stringify(person),
@@ -146,7 +146,7 @@ window.updatePersonInfo = function () {
     if (!checkValidity) {
         alert(`Введены не все данные`); //TODO перевод
     } else {
-        axios.post(`persons/save`,
+        axios.post(`/persons/save`,
             {
                 cards: JSON.stringify(cards),
                 divs: JSON.stringify(divs),
@@ -172,7 +172,7 @@ window.deletePerson = function () {
     if (!confirm(`Подтвердите удаление.`)) { //TODO перевод
         return;
     }
-    axios.post(`persons/delete`, {
+    axios.post(`/persons/delete`, {
         person_id: person.id
     })
         .then(function (response) {
@@ -229,7 +229,7 @@ window.deletePerson = function () {
 
 //получение данных пользователя из БД
 window.getPersonInfo = function (person_id) {
-    axios.get(`persons/get/${person_id}`)
+    axios.get(`/persons/get/${person_id}`)
         .then(function (response) {
             let data = response.data;
             if (data) {

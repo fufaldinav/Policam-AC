@@ -41,7 +41,7 @@ window.subscribe = function () {
 function sendTokenToServer(currentToken) {
     if (!isTokenSentToServer(currentToken)) {
         console.log(`Отправка токена на сервер...`); //TODO перевод
-        axios.post(`users/token`, {
+        axios.post(`/users/token`, {
                 token: currentToken
             })
             .then(function (response) {

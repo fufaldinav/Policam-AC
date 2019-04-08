@@ -2,7 +2,7 @@ let cards = [];
 
 //получим список неизвестных карт (брелоков) из БД
 window.getCards = function (id) {
-    axios.get(`cards/get_list`)
+    axios.get(`/cards/get_list`)
         .then(function (response) {
             let data = response.data;
             if (data) {
@@ -32,7 +32,7 @@ window.getCards = function (id) {
 
 //получение списка карт (брелоков) от сервера
 window.getCardsByPerson = function (person_id) {
-    axios.get(`cards/get_list/${person_id}`)
+    axios.get(`/cards/get_list/${person_id}`)
         .then(function (response) {
             let data = response.data;
             cards = [];
@@ -60,7 +60,7 @@ window.getCardsByPerson = function (person_id) {
 
 //добавление карты в БД
 window.saveCard = function (card_id) {
-    axios.post(`cards/holder`, {
+    axios.post(`/cards/holder`, {
         card_id: card_id,
         person_id: person.id
     })
@@ -82,7 +82,7 @@ window.delCard = function (card_id) {
     if (!confirm(`Подтвердите удаление.`)) { //TODO перевод
         return;
     }
-    axios.post(`cards/holder`, {
+    axios.post(`/cards/holder`, {
         card_id: card_id,
         person_id: 0
     })

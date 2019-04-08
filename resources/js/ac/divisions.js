@@ -10,7 +10,7 @@ window.openDivision = function() {
 }
 
 window.getDivisions = function () {
-    axios.get(`divisions/get_list`)
+    axios.get(`/divisions/get_list`)
         .then(function (response) {
             let data = response.data;
             if (data.length > 0) {
@@ -42,7 +42,7 @@ window.saveDivision = function (org_id) {
     }
     window.div.name = `${number} "${letter}"`;
     window.div.organization_id = org_id;
-    axios.post(`divisions/save`, {
+    axios.post(`/divisions/save`, {
         div: JSON.stringify(window.div)
     })
         .then(function (response) {
@@ -59,7 +59,7 @@ window.deleteDivision = function (div_id) {
     if (!confirm(`Подтвердите удаление.`)) { //TODO перевод
         return;
     }
-    axios.post(`divisions/delete`, {
+    axios.post(`/divisions/delete`, {
         'div_id': div_id
     })
         .then(function (response) {

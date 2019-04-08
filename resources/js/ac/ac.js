@@ -6,26 +6,8 @@ class AcObject {
     }
 }
 
-class Division extends AcObject {
-
-}
-
-class Person extends AcObject {
-
-}
-
 window.showNewEvent = function (event) {
     $(`.events`).append(`<p class="mb-1"><small>${event}</small></p>`);
-}
-
-window.showPersons = function (div_id) {
-    $(`.divisions`).hide();
-    $(`#persons-div-${div_id}`).show();
-}
-
-window.showDivisions = function (div_id) {
-    $(`.persons`).hide();
-    $(`.divisions`).show();
 }
 
 window.openEntranceOptions = function (person_id, div_id) {
@@ -58,7 +40,7 @@ window.sendInfo = function (type, person_id) {
             if (!confirm(msg)) return;
             break;
     }
-    axios.post(`util/card_problem`, {
+    axios.post(`/util/card_problem`, {
         type: type,
         person_id: person_id
     })
@@ -76,7 +58,7 @@ window.sendInfo = function (type, person_id) {
 
 //сохранить ошибку на сервере
 window.sendError = function (message) {
-    axios.post(`util/save_errors`, {
+    axios.post(`/util/save_errors`, {
         error: message
     })
         .catch(function (error) {
@@ -92,8 +74,7 @@ function addOption(elem, value, text) {
     elem.add(option);
 }
 
-let trans = function (key, replace = {})
-{
+let trans = function (key, replace = {}) {
     let translation = key.split('.').reduce((t, i) => t[i] || null, window.translations);
 
     for (let placeholder in replace) {
@@ -103,8 +84,7 @@ let trans = function (key, replace = {})
     return translation;
 }
 
-let trans_choice = function (key, count = 1, replace = {})
-{
+let trans_choice = function (key, count = 1, replace = {}) {
     let translation = key.split('.').reduce((t, i) => t[i] || null, window.translations).split('|');
 
     translation = count > 1 ? translation[1] : translation[0];
