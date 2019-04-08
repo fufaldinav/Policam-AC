@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Policam\Ac\Tasker;
 use Illuminate\Database\Eloquent\Model;
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
@@ -59,7 +60,7 @@ class Person extends Model
      * @var array
      */
     protected $hidden = [
-        'cards', 'controllers', 'divisions', 'photos', 'users',
+//        'cards', 'controllers', 'divisions', 'photos', 'users', //TODO check
     ];
 
     /**
@@ -107,5 +108,120 @@ class Person extends Model
     public function users()
     {
         return $this->belongsToMany('App\User');
+    }
+
+    public function attachDivisions(array $divisions): self
+    {
+        foreach ($divisions as $div_id) {
+            $div = Division::find($div_id);
+
+            if (! $div) {
+                continue;
+            }
+
+            $this->divisions()->attach($div->id);
+        }
+
+        return $this;
+    }
+
+    public function detachDivisions(): self
+    {
+        foreach ($this->divisions as $div) {
+            $this->divisions()->detach($div->id);
+        }
+
+        return $this;
+    }
+
+    public function attachCards(array $cards): self
+    {
+        $tasker = new Tasker();
+
+        foreach ($cards as $card_id) {
+            $card = Card::find($card_id);
+
+            if (! $card) {
+                continue;
+            }
+
+            $this->cards()->save($card);
+
+            $tasker->addCards([$card->wiegand]);
+
+            foreach ($this->controllers as $ctrl) {
+                $tasker->add($ctrl->id);
+            }
+        }
+
+        $tasker->send();
+
+        return $this;
+    }
+
+    public function detachCards(): self
+    {
+        $tasker = new Tasker();
+
+        foreach ($this->cards as $card) {
+            $card->person_id = 0;
+            $card->save();
+
+            $tasker->delCards([$card->wiegand]);
+
+            foreach ($this->controllers as $ctrl) {
+                $tasker->add($ctrl->id);
+            }
+        }
+
+        $tasker->send();
+    }
+
+    public function attachPhotos(array $photos): self
+    {
+        foreach ($photos as $photo_id) {
+            $photo = Photo::find($photo_id);
+
+            if (! $photo) {
+                continue;
+            }
+
+            $this->photos()->save($photo);
+        }
+
+        return $this;
+    }
+
+    public function detachPhotos(): self
+    {
+        foreach ($this->photos as $photo) {
+            $photo->delete(); //TODO удаление файла
+        }
+
+        return $this;
+    }
+
+    public function attachSubscribers(array $subs): self
+    {
+        foreach ($subs as $user_id) {
+            $user = User::find($user_id);
+
+            if (! $user) {
+                continue;
+            }
+
+            $this->users()->attach($user->id);
+        }
+
+        return $this;
+    }
+
+    public function detachSubscribers(): self
+    {
+        foreach ($this->users as $sub) {
+            $this->users()->detach($sub->id);
+        }
+
+        return $this;
     }
 }
