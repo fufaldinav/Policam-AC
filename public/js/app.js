@@ -572,7 +572,13 @@ module.exports = function(module) {
 /***/ (function(module, exports) {
 
 window.AcClass = function (data) {
-  this.form = document.forms.namedItem("form-person");
+  var d = document;
+  var selectedPerson = null;
+  var selectedDivision = null;
+  var form = d.forms.namedItem("form-person");
+  var menu = d.getElementById("ac-list-group");
+  var buttonSave = d.getElementById("ac-button-save");
+  var buttonDelete = d.getElementById("ac-button-delete");
   this.divisions = [];
   this.persons = [];
 
@@ -598,14 +604,13 @@ window.AcClass = function (data) {
 
     _disableForm();
 
-    var menu = document.getElementById("ac-list-group");
-    var list = document.createElement("div");
+    var list = d.createElement("div");
     list.classList.add("list-group", "list-group-flush");
 
     for (var _k2 in this.divisions) {
       var div = this.divisions[_k2];
       var count = div.persons().length;
-      var button = document.createElement("button");
+      var button = d.createElement("button");
       button.type = "button";
       button.classList.add("list-group-item", "list-group-item-action", "d-flex", "justify-content-between", "align-items-center");
       button.id = "ac-button-division-".concat(_k2);
@@ -620,7 +625,7 @@ window.AcClass = function (data) {
         button.disabled = true;
       }
 
-      var badge = document.createElement("span");
+      var badge = d.createElement("span");
       badge.classList.add("badge", "badge-primary", "badge-pill");
       badge.textContent = count;
       button.appendChild(badge);
@@ -634,10 +639,9 @@ window.AcClass = function (data) {
   this.listGroupPersons = function (element) {
     var division_id = _getIdFromElement(element);
 
-    var menu = document.getElementById("ac-list-group");
-    var list = document.createElement("div");
+    var list = d.createElement("div");
     list.classList.add("list-group", "list-group-flush");
-    var buttonBack = document.createElement("button");
+    var buttonBack = d.createElement("button");
     buttonBack.type = "button";
     buttonBack.classList.add("list-group-item", "list-group-item-info");
     buttonBack.id = "ac-button-back-".concat(division_id);
@@ -700,27 +704,88 @@ window.AcClass = function (data) {
   };
 
   this.showPersonInForm = function (element) {
-    var person_id = _getIdFromElement(element);
-
-    var person = this.persons[person_id];
-
     _enableForm();
 
-    for (var i = 0; i < this.form.length; i++) {
-      if (person.hasOwnProperty(this.form[i].id)) {
-        this.form[i].value = person[this.form[i].id];
+    buttonSave.onclick = function () {
+      window.Ac.updatePerson();
+    };
+
+    buttonSave.textContent = "Update";
+    buttonDelete.classList.remove("btn-secondary");
+    buttonDelete.classList.add("btn-danger");
+
+    buttonDelete.onclick = function () {
+      window.Ac.deletePerson();
+    };
+
+    buttonDelete.textContent = "Delete";
+
+    var person_id = _getIdFromElement(element);
+
+    selectedPerson = this.persons[person_id];
+
+    for (var i = 0; i < form.length; i++) {
+      if (selectedPerson.hasOwnProperty(form[i].id)) {
+        form[i].value = selectedPerson[form[i].id];
       }
     }
   };
 
   this.newPersonInForm = function (element) {
-    var division_id = _getIdFromElement(element);
-
     _enableForm();
 
+    buttonSave.onclick = function () {
+      window.Ac.savePerson();
+    };
+
+    buttonSave.textContent = "Save";
+    buttonDelete.classList.remove("btn-danger");
+    buttonDelete.classList.add("btn-secondary");
+
+    buttonDelete.onclick = function () {
+      window.Ac.clearPerson();
+    };
+
+    buttonDelete.textContent = "Cancel";
+
+    var division_id = _getIdFromElement(element);
+
     this.divisions[division_id].persons().push(0);
-    var person = this.persons[0] = new Person();
-    person.divisions().push(parseInt(division_id));
+    selectedPerson = this.persons[0] = new Person();
+    selectedPerson.divisions().push(parseInt(division_id));
+  };
+
+  this.savePerson = function () {
+    for (var i = 0; i < form.length; i++) {
+      if (selectedPerson.hasOwnProperty(form[i].id)) {
+        selectedPerson[form[i].id] = form[i].value;
+      }
+    }
+
+    selectedPerson.save();
+    console.log("save");
+  };
+
+  this.clearPerson = function () {
+    _disableForm();
+
+    console.log("clear");
+  };
+
+  this.updatePerson = function () {
+    for (var i = 0; i < form.length; i++) {
+      if (selectedPerson.hasOwnProperty(form[i].id)) {
+        selectedPerson[form[i].id] = form[i].value;
+      }
+    }
+
+    selectedPerson.update();
+    console.log("update");
+  };
+
+  this.deletePerson = function () {
+    selectedPerson.delete();
+    console.log("delete");
   };
 
   var _getIdFromElement = function (element) {
@@ -728,23 +793,25 @@ window.AcClass = function (data) {
   }.bind(this);
 
   var _enableForm = function () {
-    for (var i = 0; i < this.form.length; i++) {
-      this.form[i].value = null;
+    for (var i = 0; i < form.length; i++) {
+      form[i].value = null;
 
-      if (this.form[i].disabled) {
-        this.form[i].disabled = false;
+      if (form[i].disabled) {
+        form[i].disabled = false;
       }
     }
   }.bind(this);
 
   var _disableForm = function () {
-    for (var i = 0; i < this.form.length; i++) {
-      this.form[i].value = null;
+    for (var i = 0; i < form.length; i++) {
+      form[i].value = null;
 
-      if (!this.form[i].disabled) {
-        this.form[i].disabled = true;
+      if (!form[i].disabled) {
+        form[i].disabled = true;
       }
     }
+
+    selectedPerson = null;
   }.bind(this);
 };
 
@@ -1284,308 +1351,6 @@ window.Person = function (data) {
       console.log(error);
     });
   };
-};
-
-window.setPersonInfo = function (card_id) {
-  axios.get("/persons/get_by_card/".concat(card_id)).then(function (response) {
-    if (response.data) {
-      var data = response.data;
-
-      var _loop = function _loop(k) {
-        if (k === "divs") {
-          data.person[k].forEach(function (div) {
-            document.getElementById(k).innerHTML = div.name; //TODO списком
-          });
-        } else {
-          var elem = document.getElementById(k);
-
-          if (elem == null) {
-            return "continue";
-          }
-
-          elem.value = data.person[k];
-        }
-      };
-
-      for (var k in data.person) {
-        var _ret = _loop(k);
-
-        if (_ret === "continue") continue;
-      }
-
-      var photo_id = 0;
-      var photo = document.getElementById("photo_bg");
-
-      if (data.photos.length > 0) {
-        photo_id = data.photos[0].id;
-      }
-
-      photo.style.backgroundImage = 'url(/img/ac/s/' + photo_id + '.jpg)';
-    } else {
-      console.log("\u041F\u0443\u0441\u0442\u043E\u0439 \u043E\u0442\u0432\u0435\u0442 \u043E\u0442 \u0441\u0435\u0440\u0432\u0435\u0440\u0430"); //TODO перевод
-    }
-  }).catch(function (error) {
-    console.log(error);
-  }).then(function () {// always executed
-  });
-};
-
-window.getPersons = function (div_id) {
-  axios.get("/persons/get_list/".concat(div_id)).then(function (response) {
-    var data = response.data;
-    var persons = "<div id=\"menu-button-back\" class=\"menu-item\" onclick=\"getDivisions();\">\u041D\u0430\u0437\u0430\u0434</div>"; //TODO перевод
-
-    if (data.length > 0) {
-      data.forEach(function (person) {
-        persons += "<div id=\"person".concat(person.id, "\" class=\"menu-item\" onclick=\"openEntranceOptions(").concat(person.id, ", ").concat(div_id, ");\">").concat(person.f, " ").concat(person.i, "</div>");
-      });
-    }
-
-    document.getElementById("menu").innerHTML = persons;
-  }).catch(function (error) {
-    console.log(error);
-  });
-};
-
-window.savePersonInfo = function () {
-  var checkValidity = true;
-
-  for (var k in person) {
-    var _elem = document.getElementById(k);
-
-    if (_elem.required && _elem.value === "") {
-      _elem.classList.add("no-data");
-
-      checkValidity = false;
-    }
-
-    if (_elem.value) {
-      person[k] = _elem.value;
-    } else {
-      person[k] = null;
-    }
-  }
-
-  var elem = document.getElementById("cards");
-
-  if (elem.value > 0) {
-    cards.push(elem.value);
-  }
-
-  if (!checkValidity) {
-    alert("\u0412\u0432\u0435\u0434\u0435\u043D\u044B \u043D\u0435 \u0432\u0441\u0435 \u0434\u0430\u043D\u043D\u044B\u0435"); //TODO перевод
-  } else {
-    axios.post("/persons/save", {
-      cards: JSON.stringify(cards),
-      divs: JSON.stringify(divs),
-      person: JSON.stringify(person),
-      photos: JSON.stringify(photos)
-    }).then(function (response) {
-      var person_id = response.data;
-
-      for (var _k3 in person) {
-        person[_k3] = null;
-      }
-
-      cards = [];
-      alert("\u041F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044C \u2116".concat(person_id, " \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D")); //TODO перевод
-
-      clearPersonInfo();
-    }).catch(function (error) {
-      console.log(error);
-    });
-  }
-};
-
-window.clearPersonInfo = function () {
-  for (var k in person) {
-    document.getElementById(k).value = null;
-  }
-
-  photos = [];
-  document.getElementById("cards").value = 0;
-  document.getElementById("photo_bg").style.backgroundImage = 'url(/img/ac/s/0.jpg)';
-  document.getElementById("photo_del").hidden = true;
-
-  document.getElementById("photo_del").onclick = function () {
-    return false;
-  };
-}; //обновление информации пользователя в БД
-
-
-window.updatePersonInfo = function () {
-  var checkValidity = true;
-
-  for (var k in person) {
-    var _elem2 = document.getElementById(k);
-
-    if (_elem2.required && _elem2.value === "") {
-      _elem2.classList.add("no-data");
-
-      checkValidity = false;
-    }
-
-    if (_elem2.value) {
-      person[k] = _elem2.value;
-    } else {
-      person[k] = null;
-    }
-  }
-
-  var elem = document.getElementById("cards");
-
-  if (elem.value > 0) {
-    cards.push(elem.value);
-  }
-
-  if (!checkValidity) {
-    alert("\u0412\u0432\u0435\u0434\u0435\u043D\u044B \u043D\u0435 \u0432\u0441\u0435 \u0434\u0430\u043D\u043D\u044B\u0435"); //TODO перевод
-  } else {
-    axios.post("/persons/save", {
-      cards: JSON.stringify(cards),
-      divs: JSON.stringify(divs),
-      person: JSON.stringify(person),
-      photos: JSON.stringify(photos)
-    }).then(function (response) {
-      if (response.data > 0) {
-        alert("\u041F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044C \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D"); //TODO перевод
-      } else {
-        alert("\u041D\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E \u0438\u043B\u0438 \u0434\u0430\u043D\u043D\u044B\u0435 \u0441\u043E\u0432\u043F\u0430\u043B\u0438"); //TODO перевод
-      }
-
-      getCardsByPerson(person.id);
-    }).catch(function (error) {
-      console.log(error);
-    });
-  }
-}; //удаление пользователя из БД
-
-
-window.deletePerson = function () {
-  if (!confirm("\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0435 \u0443\u0434\u0430\u043B\u0435\u043D\u0438\u0435.")) {
-    //TODO перевод
-    return;
-  }
-
-  axios.post("/persons/delete", {
-    person_id: person.id
-  }).then(function (response) {
-    if (response.data > 0) {
-      var currentElement = document.getElementById("person".concat(person.id));
-      var parentElement = currentElement.parentElement; //родитель этого элемента
-
-      currentElement.remove(); //удаляем элемент
-
-      var lastElement = parentElement.lastElementChild;
-
-      if (lastElement !== null) {
-        lastElement.classList.add("tree-is-last"); //устанавливаем последний элемент в ветке
-      }
-
-      for (var k in person) {
-        var elem = document.getElementById(k);
-        elem.value = null;
-        elem.readOnly = true;
-        person[k] = null;
-      }
-
-      photos = [];
-      document.getElementById("photo_bg").style.backgroundImage = 'url(/img/ac/s/0.jpg)';
-      document.getElementById("photo").hidden = true;
-
-      document.getElementById("photo").onchange = function () {
-        return false;
-      };
-
-      document.getElementById("photo_del").onclick = function () {
-        return false;
-      };
-
-      document.getElementById("photo_del").hidden = true;
-      cards = [];
-      document.getElementById("cards").value = 0;
-      document.getElementById("person_cards").innerHTML = ""; //очистка списка привязанных карт
-
-      document.getElementById("unknown_cards").hidden = false; //отобразим меню с неизвестными картами
-
-      document.getElementById("cards").disabled = true; //но запретим редактирование
-
-      window.divs = [];
-
-      document.getElementById("save").onclick = function () {
-        return false;
-      };
-
-      document.getElementById("delete").onclick = function () {
-        return false;
-      };
-
-      alert("\u041F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044C \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0443\u0434\u0430\u043B\u0435\u043D"); //TODO перевод
-    } else {
-      alert("\u041F\u0443\u0441\u0442\u043E\u0439 \u043E\u0442\u0432\u0435\u0442 \u043E\u0442 \u0441\u0435\u0440\u0432\u0435\u0440\u0430"); //TODO перевод
-    }
-  }).catch(function (error) {
-    console.log(error);
-  });
-}; //получение данных пользователя из БД
-
-
-window.getPersonInfo = function (person_id) {
-  axios.get("/persons/get/".concat(person_id)).then(function (response) {
-    var data = response.data;
-
-    if (data) {
-      for (var k in data.person) {
-        var elem = document.getElementById(k);
-
-        if (elem == null) {
-          continue;
-        }
-
-        person[k] = data.person[k];
-        elem.value = data.person[k];
-        elem.readOnly = false;
-      }
-
-      var photo_id = 0;
-      window.photos = [];
-      document.getElementById("photo").value = null;
-
-      if (data.photos.length === 0) {
-        document.getElementById("photo").hidden = false;
-        document.getElementById("photo_del").hidden = true;
-
-        document.getElementById("photo_del").onclick = function () {
-          return false;
-        };
-      } else {
-        photo_id = data.photos[0].id;
-        photos.unshift(photo_id);
-        document.getElementById("photo").hidden = true;
-        document.getElementById("photo_del").hidden = false;
-        document.getElementById("photo_del").onclick = deletePhoto;
-      }
-
-      document.getElementById("photo_bg").style.backgroundImage = 'url(/img/ac/s/' + photo_id + '.jpg)';
-
-      document.getElementById("photo").onchange = function () {
-        handleFiles(this.files);
-      };
-
-      window.divs = [];
-
-      for (var _k4 in data.divs) {
-        divs.push(data.divs[_k4].id);
-      }
-
-      document.getElementById("save").onclick = updatePersonInfo;
-      document.getElementById("delete").onclick = deletePerson;
-    } else {
-      alert("\u041F\u0443\u0441\u0442\u043E\u0439 \u043E\u0442\u0432\u0435\u0442 \u043E\u0442 \u0441\u0435\u0440\u0432\u0435\u0440\u0430"); //TODO перевод
-    }
-  }).catch(function (error) {
-    console.log(error);
-  });
 };
 
 /***/ }),

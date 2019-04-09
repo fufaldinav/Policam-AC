@@ -107,6 +107,6 @@ class PersonsController extends Controller
 
         $person->detachDivisions()->detachCards()->detachPhotos()->detachSubscribers();
 
-        return $person->delete();
+        return (int)$person->delete();
     }
 }

@@ -1,7 +1,15 @@
 window.AcClass = function (data) {
-    this.form = document.forms.namedItem(`form-person`);
+    let d = document;
+    let selectedPerson = null;
+    let selectedDivision = null;
+    let form = d.forms.namedItem(`form-person`);
+    let menu = d.getElementById(`ac-list-group`);
+    let buttonSave = d.getElementById(`ac-button-save`);
+    let buttonDelete = d.getElementById(`ac-button-delete`);
+
     this.divisions = [];
     this.persons = [];
+
     if (data['divisions'] !== undefined) {
         for (let k in data['divisions']) {
             this.divisions[k] = new Division(data['divisions'][k]);
@@ -22,15 +30,14 @@ window.AcClass = function (data) {
 
         _disableForm();
 
-        let menu = document.getElementById(`ac-list-group`);
-        let list = document.createElement(`div`);
+        let list = d.createElement(`div`);
         list.classList.add(`list-group`, `list-group-flush`);
 
         for (let k in this.divisions) {
             let div = this.divisions[k];
             let count = div.persons().length;
 
-            let button = document.createElement(`button`);
+            let button = d.createElement(`button`);
             button.type = `button`;
             button.classList.add(`list-group-item`, `list-group-item-action`, `d-flex`, `justify-content-between`, `align-items-center`);
             button.id = `ac-button-division-${k}`;
@@ -42,7 +49,7 @@ window.AcClass = function (data) {
                 button.disabled = true;
             }
 
-            let badge = document.createElement(`span`);
+            let badge = d.createElement(`span`);
             badge.classList.add(`badge`, `badge-primary`, `badge-pill`);
             badge.textContent = count;
 
@@ -57,11 +64,10 @@ window.AcClass = function (data) {
     this.listGroupPersons = function (element) {
         let division_id = _getIdFromElement(element);
 
-        let menu = document.getElementById(`ac-list-group`);
-        let list = document.createElement(`div`);
+        let list = d.createElement(`div`);
         list.classList.add(`list-group`, `list-group-flush`);
 
-        let buttonBack = document.createElement(`button`);
+        let buttonBack = d.createElement(`button`);
         buttonBack.type = `button`;
         buttonBack.classList.add(`list-group-item`, `list-group-item-info`);
         buttonBack.id = `ac-button-back-${division_id}`;
@@ -104,22 +110,79 @@ window.AcClass = function (data) {
     }
 
     this.showPersonInForm = function (element) {
-        let person_id = _getIdFromElement(element);
-        let person = this.persons[person_id];
         _enableForm();
-        for (let i = 0; i < this.form.length; i++) {
-            if (person.hasOwnProperty(this.form[i].id)) {
-                this.form[i].value = person[this.form[i].id];
+
+        buttonSave.onclick = function () {
+            window.Ac.updatePerson();
+        }
+        buttonSave.textContent = `Update`;
+
+        buttonDelete.classList.remove(`btn-secondary`);
+        buttonDelete.classList.add(`btn-danger`);
+        buttonDelete.onclick = function () {
+            window.Ac.deletePerson();
+        }
+        buttonDelete.textContent = `Delete`;
+
+        let person_id = _getIdFromElement(element);
+        selectedPerson = this.persons[person_id];
+        for (let i = 0; i < form.length; i++) {
+            if (selectedPerson.hasOwnProperty(form[i].id)) {
+                form[i].value = selectedPerson[form[i].id];
             }
         }
     }
 
     this.newPersonInForm = function (element) {
-        let division_id = _getIdFromElement(element);
         _enableForm();
+
+        buttonSave.onclick = function () {
+            window.Ac.savePerson();
+        }
+        buttonSave.textContent = `Save`;
+
+        buttonDelete.classList.remove(`btn-danger`);
+        buttonDelete.classList.add(`btn-secondary`);
+        buttonDelete.onclick = function () {
+            window.Ac.clearPerson();
+        }
+        buttonDelete.textContent = `Cancel`;
+
+        let division_id = _getIdFromElement(element);
+
         this.divisions[division_id].persons().push(0);
-        let person = this.persons[0] = new Person();
-        person.divisions().push(parseInt(division_id));
+        selectedPerson = this.persons[0] = new Person();
+        selectedPerson.divisions().push(parseInt(division_id));
+    }
+
+    this.savePerson = function () {
+        for (let i = 0; i < form.length; i++) {
+            if (selectedPerson.hasOwnProperty(form[i].id)) {
+                selectedPerson[form[i].id] = form[i].value;
+            }
+        }
+        selectedPerson.save();
+        console.log(`save`);
+    }
+
+    this.clearPerson = function () {
+        _disableForm();
+        console.log(`clear`);
+    }
+
+    this.updatePerson = function () {
+        for (let i = 0; i < form.length; i++) {
+            if (selectedPerson.hasOwnProperty(form[i].id)) {
+                selectedPerson[form[i].id] = form[i].value;
+            }
+        }
+        selectedPerson.update();
+        console.log(`update`);
+    }
+
+    this.deletePerson = function () {
+        selectedPerson.delete();
+        console.log(`delete`);
     }
 
     let _getIdFromElement = function (element) {
@@ -127,21 +190,22 @@ window.AcClass = function (data) {
     }.bind(this);
 
     let _enableForm = function () {
-        for (let i = 0; i < this.form.length; i++) {
-            this.form[i].value = null;
-            if (this.form[i].disabled) {
-                this.form[i].disabled = false;
+        for (let i = 0; i < form.length; i++) {
+            form[i].value = null;
+            if (form[i].disabled) {
+                form[i].disabled = false;
             }
         }
     }.bind(this);
 
     let _disableForm = function () {
-        for (let i = 0; i < this.form.length; i++) {
-            this.form[i].value = null;
-            if (!this.form[i].disabled) {
-                this.form[i].disabled = true;
+        for (let i = 0; i < form.length; i++) {
+            form[i].value = null;
+            if (!form[i].disabled) {
+                form[i].disabled = true;
             }
         }
+        selectedPerson = null;
     }.bind(this);
 }
 

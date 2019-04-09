@@ -96,11 +96,11 @@
                             </div>
                             <div class="form-row">
                                 <div class="form-group">
-                                    <button type="button" class="btn btn-primary" onclick="savePersonInfo();">
+                                    <button id="ac-button-save" type="button" class="btn btn-primary" onclick="window.Ac.savePerson();">
                                         {{ __('ac.save') }}
                                     </button>
-                                    <button type="button" class="btn btn-secondary" onclick="clearPersonInfo();">
-                                        {{ __('ac.clear') }}
+                                    <button id="ac-button-delete" type="button" class="btn btn-secondary" onclick="window.Ac.clearPerson();">
+                                        {{ __('Cancel') }}
                                     </button>
                                 </div>
                             </div>
