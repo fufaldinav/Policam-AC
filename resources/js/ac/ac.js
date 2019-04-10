@@ -1,9 +1,13 @@
 window.AcClass = function (data) {
+    if (data === undefined) {
+        return;
+    }
+
     let d = document;
     let selectedPerson = null;
     let selectedDivision = null;
     let form = d.forms.namedItem(`form-person`);
-    let menu = d.getElementById(`ac-list-group`);
+    let menu = d.getElementById(`ac-menu-left`);
     let buttonSave = d.getElementById(`ac-button-save`);
     let buttonDelete = d.getElementById(`ac-button-delete`);
 
@@ -21,7 +25,28 @@ window.AcClass = function (data) {
         }
     }
 
+    this.alert = function (text, type) {
+        if (type === undefined) {
+            type = `info`;
+        }
+
+        let alert = d.createElement(`div`);
+        alert.classList.add(`alert`, `alert-${type}`, `alert-dismissible`, `fade`, `show`, `ac-alert`);
+        alert.role = `alert`;
+        alert.textContent = text;
+
+        d.body.appendChild(alert);
+
+        function close() {
+            $(alert).alert(`close`);
+        }
+
+        setTimeout(close, 5000);
+    }
+
     this.listGroupDivisions = function (element) {
+        selectedDivision = null;
+
         if (element !== undefined) {
             let division_id = _getIdFromElement(element);
             delete this.divisions[division_id].deletePerson(0);
@@ -31,6 +56,7 @@ window.AcClass = function (data) {
         _disableForm();
 
         let list = d.createElement(`div`);
+        list.id = `ac-list-divisions`;
         list.classList.add(`list-group`, `list-group-flush`);
 
         for (let k in this.divisions) {
@@ -63,8 +89,10 @@ window.AcClass = function (data) {
 
     this.listGroupPersons = function (element) {
         let division_id = _getIdFromElement(element);
+        selectedDivision = Ac.divisions[division_id];
 
         let list = d.createElement(`div`);
+        list.id = `ac-list-persons`;
         list.classList.add(`list-group`, `list-group-flush`);
 
         let buttonBack = d.createElement(`button`);
@@ -161,13 +189,37 @@ window.AcClass = function (data) {
                 selectedPerson[form[i].id] = form[i].value;
             }
         }
-        selectedPerson.save();
-        console.log(`save`);
+        selectedPerson.save().then(data => {
+            delete this.persons[0];
+            selectedDivision.deletePerson(0);
+
+            let person = this.persons[data.id] = new Person(data);
+
+            for (let k in data.divisions) {
+                let div = data.divisions[k];
+                this.divisions[div.id].addPerson(person.id);
+            }
+
+            let list = d.getElementById(`ac-list-persons`);
+
+            let button = d.createElement(`button`);
+            button.type = `button`;
+            button.classList.add(`list-group-item`, `list-group-item-action`);
+            button.id = `ac-button-person-${person.id}`;
+            button.onclick = function () {
+                window.Ac.showPersonInForm(this);
+            };
+            button.textContent = `${person.f} ${person.i}`;
+
+            list.appendChild(button);
+
+            this.alert(`${person.f} ${person.i} сохранен успешно`, `success`);
+        });
     }
 
     this.clearPerson = function () {
         _disableForm();
-        console.log(`clear`);
+        this.alert(`Форма очищена`);
     }
 
     this.updatePerson = function () {
@@ -176,13 +228,32 @@ window.AcClass = function (data) {
                 selectedPerson[form[i].id] = form[i].value;
             }
         }
-        selectedPerson.update();
-        console.log(`update`);
+        selectedPerson.update().then(person => {
+            for (let k in person.divisions) {
+                let div = person.divisions[k];
+                this.divisions[div.id].addPerson(person.id);
+            }
+
+            let button = d.getElementById(`ac-button-person-${person.id}`);
+            button.textContent = `${person.f} ${person.i}`;
+
+            this.alert(`${person.f} ${person.i} обновлен успешно`, `success`);
+        });
     }
 
     this.deletePerson = function () {
-        selectedPerson.delete();
-        console.log(`delete`);
+        selectedPerson.delete().then(id => {
+            let person = this.persons[id];
+
+            delete this.persons[id];
+            selectedDivision.deletePerson(id);
+
+            let button = d.getElementById(`ac-button-person-${id}`);
+            button.parentElement.removeChild(button);
+
+            _disableForm();
+            this.alert(`${person.f} ${person.i} удален успешно`);
+        });
     }
 
     let _getIdFromElement = function (element) {
@@ -192,7 +263,7 @@ window.AcClass = function (data) {
     let _enableForm = function () {
         for (let i = 0; i < form.length; i++) {
             form[i].value = null;
-            if (form[i].disabled) {
+            if (form[i].disabled && form[i].id !== `id`) {
                 form[i].disabled = false;
             }
         }
@@ -211,74 +282,13 @@ window.AcClass = function (data) {
 
 let Ac = window.Ac = new AcClass(window.AcData);
 delete window.AcData;
-Ac.listGroupDivisions();
+
+if (window.location.pathname === `/cp/persons`) {
+    Ac.listGroupDivisions();
+}
 
 window.showNewEvent = function (event) {
     $(`.events`).append(`<p class="mb-1"><small>${event}</small></p>`);
-}
-
-window.openEntranceOptions = function (person_id, div_id) {
-    let options = ``;
-    if (div_id === undefined) {
-        options += `<div id="menu-button-back" class="menu-item" onclick="getDivisions();">Назад</div>`; //TODO перевод
-    } else {
-        options += `<div id="menu-button-back" class="menu-item" onclick="getPersons(${div_id});">Назад</div>`; //TODO перевод
-    }
-    options += `<div id="menu-button-forgot" class="menu-item" onclick="sendInfo(1, ${person_id})">Забыл</div>`; //TODO перевод
-    options += `<div id="menu-button-lost" class="menu-item" onclick="sendInfo(2, ${person_id})">Потерял</div>`; //TODO перевод
-    options += `<div id="menu-button-broke" class="menu-item" onclick="sendInfo(3, ${person_id})">Сломал</div>`; //TODO перевод
-    let menu = document.getElementById(`menu`);
-    menu.innerHTML = options;
-}
-
-window.sendInfo = function (type, person_id) {
-    let msg;
-    switch (type) {
-        case 1:
-            msg = `На сервер будет отправлено уведомление.`; //TODO перевод
-            if (!confirm(msg)) return;
-            break;
-        case 2:
-            msg = `Карта будет удалена, а на сервер будет отправлено уведомление.`; //TODO перевод
-            if (!confirm(msg)) return;
-            break;
-        case 3:
-            msg = `Карта будет удалена, а на сервер будет отправлено уведомление.`; //TODO перевод
-            if (!confirm(msg)) return;
-            break;
-    }
-    axios.post(`/util/card_problem`, {
-        type: type,
-        person_id: person_id
-    })
-        .then(function (response) {
-            if (response.data) {
-                alert(response.data);
-            } else {
-                alert(`Пустой ответ от сервера`); //TODO перевод
-            }
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
-}
-
-//сохранить ошибку на сервере
-window.sendError = function (message) {
-    axios.post(`/util/save_errors`, {
-        error: message
-    })
-        .catch(function (error) {
-            console.log(error);
-        });
-}
-
-//добавление опций в select
-function addOption(elem, value, text) {
-    let option = document.createElement(`option`);
-    option.value = value;
-    option.text = text;
-    elem.add(option);
 }
 
 let trans = function (key, replace = {}) {

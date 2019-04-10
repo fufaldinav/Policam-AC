@@ -30,7 +30,7 @@
 @section('content')
     <div class="container-fluid">
         <div class="row">
-            <div id="ac-list-group" class="d-none d-sm-block col-sm-3 col-xl-2 bg-white px-1 ac-menu"></div>
+            <div id="ac-menu-left" class="d-none d-sm-block col-sm-3 col-xl-2 bg-white px-0 ac-menu"></div>
             <div class="col-12 col-sm-9 col-lg-6 col-xl-7">
                 <div class="row mt-4">
                     <div class="container-fluid">
@@ -90,8 +90,8 @@
                                            placeholder="{{ __('ac.phone') }}" disabled>
                                 </div>
                                 <div class="form-group col-6">
-                                    <label for="uid">{{ __('ac.uid') }}</label>
-                                    <input type="text" class="form-control" id="uid" placeholder="{{ __('ac.uid') }}" disabled>
+                                    <label for="id">{{ __('ac.uid') }}</label>
+                                    <input type="text" class="form-control" id="id" placeholder="{{ __('ac.uid') }}" disabled>
                                 </div>
                             </div>
                             <div class="form-row">
@@ -108,7 +108,7 @@
                     </div>
                 </div>
             </div>
-            <div class="d-none d-lg-block col-lg-3 bg-white ac-menu">
+            <div id="ac-menu-right" class="d-none d-lg-block col-lg-3 bg-white ac-menu">
                 <div class="events"></div>
             </div>
             <input id="type" name="type" type="text" hidden readonly>

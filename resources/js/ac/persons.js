@@ -55,26 +55,23 @@ window.Person = function (data) {
     }
 
     this.save = function () {
-        axios.post(`/api/persons`, {
+        return axios.post(`/api/persons`, {
             person: this,
             divisions: this.divisions(),
             cards: this.cards(),
             photos: this.photos()
         })
             .then(function (response) {
-                for (let k in response.data) {
-                    if (this.hasOwnProperty(k)) {
-                        this[k] = data[k];
-                    }
-                }
+                return response.data;
             })
             .catch(function (error) {
-                console.log(error);
+                Ac.alert(error, `danger`);
+                return null;
             })
     }
 
     this.update = function () {
-        axios.put(`/api/persons/${this.id}`, {
+        return axios.put(`/api/persons/${this.id}`, {
             person: this,
             divisions: this.divisions(),
             cards: this.cards(),
@@ -86,19 +83,22 @@ window.Person = function (data) {
                         this[k] = data[k];
                     }
                 }
+                return response.data;
             })
             .catch(function (error) {
-                console.log(error);
+                Ac.alert(error, `danger`);
+                return null;
             })
     }
 
     this.delete = function () {
-        axios.delete(`/api/persons/${this.id}`)
+        return axios.delete(`/api/persons/${this.id}`)
             .then(function (response) {
-                delete this;
+                return response.data;
             })
             .catch(function (error) {
-                console.log(error);
+                Ac.alert(error, `danger`);
+                return null;
             })
     }
 }

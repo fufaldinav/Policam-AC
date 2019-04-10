@@ -85,7 +85,7 @@ class PersonsController extends Controller
             ->attachCards($request->input('cards'))
             ->attachPhotos($request->input('photos'));
 
-        return response()->json($person);
+        return response()->json($person->load('divisions'));
     }
 
     public function store(Request $request)
@@ -96,10 +96,10 @@ class PersonsController extends Controller
             ->attachCards($request->input('cards'))
             ->attachPhotos($request->input('photos'));
 
-        return response()->json($person);
+        return response()->json($person->load('divisions'));
     }
 
-    public function destroy(Request $request, int $id)
+    public function destroy(Request $request, int $id): ?int
     {
         $person = $request->user()->persons()->where('persons.id', $id)->first();
 
@@ -107,6 +107,10 @@ class PersonsController extends Controller
 
         $person->detachDivisions()->detachCards()->detachPhotos()->detachSubscribers();
 
-        return (int)$person->delete();
+        if ($person->delete()) {
+            return $id;
+        }
+
+        return null;
     }
 }

@@ -1,12 +1,26 @@
-
 // Fonts
 @import url('https://fonts.googleapis.com/css?family=Nunito');
-
 // Variables
 @import 'variables';
-
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(61, 177, 255, 0.63);
+    box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+::-webkit-scrollbar-thumb:window-inactive {
+    background: rgba(61, 177, 255, 0.23);
+}
 
 .navbar-brand img {
     height: 39px;
@@ -24,6 +38,30 @@
     overflow-y: auto;
 }
 
+#ac-menu-left {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+#ac-menu-right {
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.ac-alert {
+    position: fixed;
+    bottom: 5px;
+    left: 2%;
+    width: 96%;
+    -webkit-transition: all 2s;
+    transition: all 2s;
+}
+
+@media (min-width: 768px) {
+    .ac-alert {
+        left: 20%;
+        width: 60%;
+    }
+}
+
 .photo-bg {
     height: 100%;
     max-height: 320px;
@@ -34,10 +72,12 @@
     background-position-x: 50%;
     background-position-y: 50%;
 }
+
 .photo-bg {
     position: relative;
     background-image: url('/img/ac/s/0.jpg');
 }
+
 .photo-del {
     height: 16px;
     width: 16px;
@@ -45,9 +85,11 @@
     top: 0;
     right: 0;
 }
+
 .photo-del:hover {
     cursor: pointer;
 }
+
 .photo-del:hover::after {
     content: attr(data-title);
     position: absolute;

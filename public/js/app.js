@@ -572,11 +572,15 @@ module.exports = function(module) {
 /***/ (function(module, exports) {
 
 window.AcClass = function (data) {
+  if (data === undefined) {
+    return;
+  }
+
   var d = document;
   var selectedPerson = null;
   var selectedDivision = null;
   var form = d.forms.namedItem("form-person");
-  var menu = d.getElementById("ac-list-group");
+  var menu = d.getElementById("ac-menu-left");
   var buttonSave = d.getElementById("ac-button-save");
   var buttonDelete = d.getElementById("ac-button-delete");
   this.divisions = [];
@@ -594,7 +598,27 @@ window.AcClass = function (data) {
     }
   }
 
+  this.alert = function (text, type) {
+    if (type === undefined) {
+      type = "info";
+    }
+
+    var alert = d.createElement("div");
+    alert.classList.add("alert", "alert-".concat(type), "alert-dismissible", "fade", "show", "ac-alert");
+    alert.role = "alert";
+    alert.textContent = text;
+    d.body.appendChild(alert);
+
+    function close() {
+      $(alert).alert("close");
+    }
+
+    setTimeout(close, 5000);
+  };
+
   this.listGroupDivisions = function (element) {
+    selectedDivision = null;
+
     if (element !== undefined) {
       var division_id = _getIdFromElement(element);
 
@@ -605,6 +629,7 @@ window.AcClass = function (data) {
     _disableForm();
 
     var list = d.createElement("div");
+    list.id = "ac-list-divisions";
     list.classList.add("list-group", "list-group-flush");
 
     for (var _k2 in this.divisions) {
@@ -639,7 +664,9 @@ window.AcClass = function (data) {
   this.listGroupPersons = function (element) {
     var division_id = _getIdFromElement(element);
 
+    selectedDivision = Ac.divisions[division_id];
     var list = d.createElement("div");
+    list.id = "ac-list-persons";
     list.classList.add("list-group", "list-group-flush");
     var buttonBack = d.createElement("button");
     buttonBack.type = "button";
@@ -756,36 +783,85 @@ window.AcClass = function (data) {
   };
 
   this.savePerson = function () {
+    var _this = this;
+
     for (var i = 0; i < form.length; i++) {
       if (selectedPerson.hasOwnProperty(form[i].id)) {
         selectedPerson[form[i].id] = form[i].value;
       }
     }
 
-    selectedPerson.save();
-    console.log("save");
+    selectedPerson.save().then(function (data) {
+      delete _this.persons[0];
+      selectedDivision.deletePerson(0);
+      var person = _this.persons[data.id] = new Person(data);
+
+      for (var _k3 in data.divisions) {
+        var div = data.divisions[_k3];
+
+        _this.divisions[div.id].addPerson(person.id);
+      }
+
+      var list = d.getElementById("ac-list-persons");
+      var button = d.createElement("button");
+      button.type = "button";
+      button.classList.add("list-group-item", "list-group-item-action");
+      button.id = "ac-button-person-".concat(person.id);
+
+      button.onclick = function () {
+        window.Ac.showPersonInForm(this);
+      };
+
+      button.textContent = "".concat(person.f, " ").concat(person.i);
+      list.appendChild(button);
+
+      _this.alert("".concat(person.f, " ").concat(person.i, " \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D \u0443\u0441\u043F\u0435\u0448\u043D\u043E"), "success");
+    });
   };
 
   this.clearPerson = function () {
     _disableForm();
 
-    console.log("clear");
+    this.alert("\u0424\u043E\u0440\u043C\u0430 \u043E\u0447\u0438\u0449\u0435\u043D\u0430");
   };
 
   this.updatePerson = function () {
+    var _this2 = this;
+
     for (var i = 0; i < form.length; i++) {
       if (selectedPerson.hasOwnProperty(form[i].id)) {
         selectedPerson[form[i].id] = form[i].value;
       }
     }
 
-    selectedPerson.update();
-    console.log("update");
+    selectedPerson.update().then(function (person) {
+      for (var _k4 in person.divisions) {
+        var div = person.divisions[_k4];
+
+        _this2.divisions[div.id].addPerson(person.id);
+      }
+
+      var button = d.getElementById("ac-button-person-".concat(person.id));
+      button.textContent = "".concat(person.f, " ").concat(person.i);
+
+      _this2.alert("".concat(person.f, " ").concat(person.i, " \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D \u0443\u0441\u043F\u0435\u0448\u043D\u043E"), "success");
+    });
   };
 
   this.deletePerson = function () {
-    selectedPerson.delete();
-    console.log("delete");
+    var _this3 = this;
+
+    selectedPerson.delete().then(function (id) {
+      var person = _this3.persons[id];
+      delete _this3.persons[id];
+      selectedDivision.deletePerson(id);
+      var button = d.getElementById("ac-button-person-".concat(id));
+      button.parentElement.removeChild(button);
+
+      _disableForm();
+
+      _this3.alert("".concat(person.f, " ").concat(person.i, " \u0443\u0434\u0430\u043B\u0435\u043D \u0443\u0441\u043F\u0435\u0448\u043D\u043E"));
+    });
   };
 
   var _getIdFromElement = function (element) {
@@ -796,7 +872,7 @@ window.AcClass = function (data) {
     for (var i = 0; i < form.length; i++) {
       form[i].value = null;
 
-      if (form[i].disabled) {
+      if (form[i].disabled && form[i].id !== "id") {
         form[i].disabled = false;
       }
     }
@@ -817,84 +893,14 @@ window.AcClass = function (data) {
 
 var Ac = window.Ac = new AcClass(window.AcData);
 delete window.AcData;
-Ac.listGroupDivisions();
+
+if (window.location.pathname === "/cp/persons") {
+  Ac.listGroupDivisions();
+}
 
 window.showNewEvent = function (event) {
   $(".events").append("<p class=\"mb-1\"><small>".concat(event, "</small></p>"));
 };
-
-window.openEntranceOptions = function (person_id, div_id) {
-  var options = "";
-
-  if (div_id === undefined) {
-    options += "<div id=\"menu-button-back\" class=\"menu-item\" onclick=\"getDivisions();\">\u041D\u0430\u0437\u0430\u0434</div>"; //TODO перевод
-  } else {
-    options += "<div id=\"menu-button-back\" class=\"menu-item\" onclick=\"getPersons(".concat(div_id, ");\">\u041D\u0430\u0437\u0430\u0434</div>"); //TODO перевод
-  }
-
-  options += "<div id=\"menu-button-forgot\" class=\"menu-item\" onclick=\"sendInfo(1, ".concat(person_id, ")\">\u0417\u0430\u0431\u044B\u043B</div>"); //TODO перевод
-
-  options += "<div id=\"menu-button-lost\" class=\"menu-item\" onclick=\"sendInfo(2, ".concat(person_id, ")\">\u041F\u043E\u0442\u0435\u0440\u044F\u043B</div>"); //TODO перевод
-
-  options += "<div id=\"menu-button-broke\" class=\"menu-item\" onclick=\"sendInfo(3, ".concat(person_id, ")\">\u0421\u043B\u043E\u043C\u0430\u043B</div>"); //TODO перевод
-
-  var menu = document.getElementById("menu");
-  menu.innerHTML = options;
-};
-
-window.sendInfo = function (type, person_id) {
-  var msg;
-
-  switch (type) {
-    case 1:
-      msg = "\u041D\u0430 \u0441\u0435\u0440\u0432\u0435\u0440 \u0431\u0443\u0434\u0435\u0442 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u0435."; //TODO перевод
-
-      if (!confirm(msg)) return;
-      break;
-
-    case 2:
-      msg = "\u041A\u0430\u0440\u0442\u0430 \u0431\u0443\u0434\u0435\u0442 \u0443\u0434\u0430\u043B\u0435\u043D\u0430, \u0430 \u043D\u0430 \u0441\u0435\u0440\u0432\u0435\u0440 \u0431\u0443\u0434\u0435\u0442 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u0435."; //TODO перевод
-
-      if (!confirm(msg)) return;
-      break;
-
-    case 3:
-      msg = "\u041A\u0430\u0440\u0442\u0430 \u0431\u0443\u0434\u0435\u0442 \u0443\u0434\u0430\u043B\u0435\u043D\u0430, \u0430 \u043D\u0430 \u0441\u0435\u0440\u0432\u0435\u0440 \u0431\u0443\u0434\u0435\u0442 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u0435."; //TODO перевод
-
-      if (!confirm(msg)) return;
-      break;
-  }
-
-  axios.post("/util/card_problem", {
-    type: type,
-    person_id: person_id
-  }).then(function (response) {
-    if (response.data) {
-      alert(response.data);
-    } else {
-      alert("\u041F\u0443\u0441\u0442\u043E\u0439 \u043E\u0442\u0432\u0435\u0442 \u043E\u0442 \u0441\u0435\u0440\u0432\u0435\u0440\u0430"); //TODO перевод
-    }
-  }).catch(function (error) {
-    console.log(error);
-  });
-}; //сохранить ошибку на сервере
-
-
-window.sendError = function (message) {
-  axios.post("/util/save_errors", {
-    error: message
-  }).catch(function (error) {
-    console.log(error);
-  });
-}; //добавление опций в select
-
-
-function addOption(elem, value, text) {
-  var option = document.createElement("option");
-  option.value = value;
-  option.text = text;
-  elem.add(option);
-}
 
 var trans = function trans(key) {
   var replace = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
@@ -1155,88 +1161,16 @@ window.Division = function (data) {
     return persons;
   };
 
-  this.deletePerson = function (id) {
-    var i = persons.indexOf(id);
-    persons.splice(i, 1);
+  this.addPerson = function (id) {
+    if (persons.indexOf(id) === -1) {
+      persons.push(id);
+    }
   };
-};
 
-window.getDivisions = function () {
-  axios.get("/divisions/get_list").then(function (response) {
-    var data = response.data;
-
-    if (data.length > 0) {
-      var divisions = "";
-      data.forEach(function (div) {
-        divisions += "<div id=\"div".concat(div.id, "\" class=\"menu-item\" onclick=\"getPersons(").concat(div.id, ");\">").concat(div.name, "</div>");
-      });
-      var menu = document.getElementById("menu");
-      menu.innerHTML = divisions;
-    } else {
-      alert("\u041F\u0443\u0441\u0442\u043E\u0439 \u043E\u0442\u0432\u0435\u0442 \u043E\u0442 \u0441\u0435\u0440\u0432\u0435\u0440\u0430"); //TODO перевод
-    }
-  }).catch(function (error) {
-    console.log(error);
-  }).then(function () {// always executed
-  });
-}; //сохранить в базу
-
-
-window.saveDivision = function (org_id) {
-  var number = document.getElementById("number").value;
-  var letter = document.getElementById("letter").value;
-
-  if (!number || !letter) {
-    alert("\u0412\u0432\u0435\u0434\u0435\u043D\u044B \u043D\u0435 \u0432\u0441\u0435 \u0434\u0430\u043D\u043D\u044B\u0435"); //TODO перевод
-
-    return;
-  }
-
-  window.div.name = "".concat(number, " \"").concat(letter, "\"");
-  window.div.organization_id = org_id;
-  axios.post("/divisions/save", {
-    div: JSON.stringify(window.div)
-  }).then(function (response) {
-    alert("\u041A\u043B\u0430\u0441\u0441 ".concat(response.data.name, " \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D")); //TODO перевод
-
-    location.reload();
-  }).catch(function (error) {
-    console.log(error);
-  });
-}; //удалить из базы
-
-
-window.deleteDivision = function (div_id) {
-  if (!confirm("\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0435 \u0443\u0434\u0430\u043B\u0435\u043D\u0438\u0435.")) {
-    //TODO перевод
-    return;
-  }
-
-  axios.post("/divisions/delete", {
-    'div_id': div_id
-  }).then(function (response) {
-    if (response.data > 0) {
-      alert("\u0423\u0441\u043F\u0435\u0448\u043D\u043E\u0435 \u0443\u0434\u0430\u043B\u0435\u043D\u0438\u0435"); //TODO перевод
-
-      location.reload();
-    } else {
-      alert("\u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u0430\u044F \u043E\u0448\u0438\u0431\u043A\u0430"); //TODO перевод
-    }
-  }).catch(function (error) {
-    console.log(error);
-  });
-};
-
-window.setDiv = function (id) {
-  var index = window.divs.indexOf(id);
-
-  if (index === -1) {
-    window.divs.push(id);
-    document.getElementById("div".concat(id)).classList.add("checked");
-  } else {
-    window.divs.splice(index, 1);
-    document.getElementById("div".concat(id)).classList.remove("checked");
-  }
+  this.deletePerson = function (id) {
+    var index = persons.indexOf(id);
+    persons.splice(index, 1);
+  };
 };
 
 /***/ }),
@@ -1311,7 +1245,21 @@ window.Person = function (data) {
   };
 
   this.save = function () {
-    axios.post("/api/persons", {
+    return axios.post("/api/persons", {
+      person: this,
+      divisions: this.divisions(),
+      cards: this.cards(),
+      photos: this.photos()
+    }).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      Ac.alert(error, "danger");
+      return null;
+    });
+  };
+
+  this.update = function () {
+    return axios.put("/api/persons/".concat(this.id), {
       person: this,
       divisions: this.divisions(),
       cards: this.cards(),
@@ -1322,33 +1270,20 @@ window.Person = function (data) {
           this[_k] = data[_k];
         }
       }
-    }).catch(function (error) {
-      console.log(error);
-    });
-  };
 
-  this.update = function () {
-    axios.put("/api/persons/".concat(this.id), {
-      person: this,
-      divisions: this.divisions(),
-      cards: this.cards(),
-      photos: this.photos()
-    }).then(function (response) {
-      for (var _k2 in response.data) {
-        if (this.hasOwnProperty(_k2)) {
-          this[_k2] = data[_k2];
-        }
-      }
+      return response.data;
     }).catch(function (error) {
-      console.log(error);
+      Ac.alert(error, "danger");
+      return null;
     });
   };
 
   this.delete = function () {
-    axios.delete("/api/persons/".concat(this.id)).then(function (response) {
-      delete this;
+    return axios.delete("/api/persons/".concat(this.id)).then(function (response) {
+      return response.data;
     }).catch(function (error) {
-      console.log(error);
+      Ac.alert(error, "danger");
+      return null;
     });
   };
 };
@@ -1448,12 +1383,12 @@ window.deletePhoto = function () {
 
 // Initialize Firebase
 var config = {
-  apiKey: "AIzaSyDI_-AwpqcTclSXCyXgYJzvaTNC-dky9iY",
-  authDomain: "policam-ac.firebaseapp.com",
-  databaseURL: "https://policam-ac.firebaseio.com",
-  projectId: "policam-ac",
-  storageBucket: "policam-ac.appspot.com",
-  messagingSenderId: "1005476478589"
+  apiKey: Object({"MIX_APP_URL":"http://192.168.1.8","MIX_PUSHER_APP_CLUSTER":"eu","MIX_PUSHER_APP_KEY":"4b0f5261202dcbf80bd4","MIX_WS_PORT":"6002","NODE_ENV":"development"}).MIX_FCM_API_KEY,
+  authDomain: Object({"MIX_APP_URL":"http://192.168.1.8","MIX_PUSHER_APP_CLUSTER":"eu","MIX_PUSHER_APP_KEY":"4b0f5261202dcbf80bd4","MIX_WS_PORT":"6002","NODE_ENV":"development"}).MIX_FCM_AUTH_DOMAIN,
+  databaseURL: Object({"MIX_APP_URL":"http://192.168.1.8","MIX_PUSHER_APP_CLUSTER":"eu","MIX_PUSHER_APP_KEY":"4b0f5261202dcbf80bd4","MIX_WS_PORT":"6002","NODE_ENV":"development"}).MIX_FCM_DB_URL,
+  projectId: Object({"MIX_APP_URL":"http://192.168.1.8","MIX_PUSHER_APP_CLUSTER":"eu","MIX_PUSHER_APP_KEY":"4b0f5261202dcbf80bd4","MIX_WS_PORT":"6002","NODE_ENV":"development"}).MIX_FCM_PROJECT_ID,
+  storageBucket: Object({"MIX_APP_URL":"http://192.168.1.8","MIX_PUSHER_APP_CLUSTER":"eu","MIX_PUSHER_APP_KEY":"4b0f5261202dcbf80bd4","MIX_WS_PORT":"6002","NODE_ENV":"development"}).MIX_FCM_STORAGE_BUCKET,
+  messagingSenderId: Object({"MIX_APP_URL":"http://192.168.1.8","MIX_PUSHER_APP_CLUSTER":"eu","MIX_PUSHER_APP_KEY":"4b0f5261202dcbf80bd4","MIX_WS_PORT":"6002","NODE_ENV":"development"}).MIX_FCM_SENDER_ID
 };
 firebase.initializeApp(config); // пользователь уже разрешил получение уведомлений
 // подписываем на уведомления если ещё не подписали
@@ -1464,7 +1399,7 @@ if (Notification.permission === "granted") {
 
 window.subscribe = function () {
   var messaging = firebase.messaging();
-  messaging.usePublicVapidKey("BPKQjI8lJAE9pymLNyKm5fsJSsu-7vXlPZivaRvR52lxGWgsxF2TN5s_iaIKQ1LWNZPh0S8arKNOXfq9nAAB3Yg"); // запрашиваем разрешение на получение уведомлений
+  messaging.usePublicVapidKey(Object({"MIX_APP_URL":"http://192.168.1.8","MIX_PUSHER_APP_CLUSTER":"eu","MIX_PUSHER_APP_KEY":"4b0f5261202dcbf80bd4","MIX_WS_PORT":"6002","NODE_ENV":"development"}).MIX_FCM_PUBLIC_VAPID_KEY); // запрашиваем разрешение на получение уведомлений
 
   messaging.requestPermission().then(function () {
     // получаем ID устройства
