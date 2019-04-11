@@ -31,10 +31,11 @@ window.Vue = require('vue');
 //     el: '#app'
 // });
 
-require('./ac/cards');
-require('./ac/controllers');
-require('./ac/divisions');
-require('./ac/persons');
-require('./ac/photos');
-require('./ac/push');
-require('./ac/ac');
+import Ac from './ac/ac';
+
+window.Ac = new Ac(window.AcData);
+delete window.AcData;
+
+if (window.location.pathname === `/cp/persons`) {
+    window.Ac.listGroupDivisions();
+}

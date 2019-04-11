@@ -1,4 +1,6 @@
-window.AcClass = function (data) {
+import {Division, Person} from "./classes";
+
+export default function (data) {
     if (data === undefined) {
         return;
     }
@@ -61,25 +63,9 @@ window.AcClass = function (data) {
 
         for (let k in this.divisions) {
             let div = this.divisions[k];
-            let count = div.persons().length;
 
-            let button = d.createElement(`button`);
-            button.type = `button`;
-            button.classList.add(`list-group-item`, `list-group-item-action`, `d-flex`, `justify-content-between`, `align-items-center`);
-            button.id = `ac-button-division-${k}`;
-            button.onclick = function () {
-                window.Ac.listGroupPersons(this);
-            };
-            button.textContent = div.name;
-            if (count === 0) {
-                button.disabled = true;
-            }
+            let button = _createButton(div);
 
-            let badge = d.createElement(`span`);
-            badge.classList.add(`badge`, `badge-primary`, `badge-pill`);
-            badge.textContent = count;
-
-            button.appendChild(badge);
             list.appendChild(button);
         }
 
@@ -95,25 +81,11 @@ window.AcClass = function (data) {
         list.id = `ac-list-persons`;
         list.classList.add(`list-group`, `list-group-flush`);
 
-        let buttonBack = d.createElement(`button`);
-        buttonBack.type = `button`;
-        buttonBack.classList.add(`list-group-item`, `list-group-item-info`);
-        buttonBack.id = `ac-button-back-${division_id}`;
-        buttonBack.onclick = function () {
-            window.Ac.listGroupDivisions(this);
-        };
-        buttonBack.textContent = `Back`;
+        let buttonBack = _createButton(`back`);
 
         list.appendChild(buttonBack);
 
-        let buttonAdd = buttonBack.cloneNode(true);
-        buttonAdd.classList.remove(`list-group-item-info`);
-        buttonAdd.classList.add(`list-group-item-success`);
-        buttonAdd.id = `ac-button-add-${division_id}`;
-        buttonAdd.onclick = function () {
-            window.Ac.newPersonInForm(this);
-        };
-        buttonAdd.textContent = `Add`;
+        let buttonAdd = _createButton(`add`);
 
         list.appendChild(buttonAdd);
 
@@ -121,14 +93,7 @@ window.AcClass = function (data) {
         for (let id of persons) {
             let person = this.persons[id];
 
-            let button = buttonBack.cloneNode(true);
-            button.classList.remove(`list-group-item-info`);
-            button.classList.add(`list-group-item-action`);
-            button.id = `ac-button-person-${id}`;
-            button.onclick = function () {
-                window.Ac.showPersonInForm(this);
-            };
-            button.textContent = `${person.f} ${person.i}`;
+            let button = _createButton(person);
 
             list.appendChild(button);
         }
@@ -202,14 +167,7 @@ window.AcClass = function (data) {
 
             let list = d.getElementById(`ac-list-persons`);
 
-            let button = d.createElement(`button`);
-            button.type = `button`;
-            button.classList.add(`list-group-item`, `list-group-item-action`);
-            button.id = `ac-button-person-${person.id}`;
-            button.onclick = function () {
-                window.Ac.showPersonInForm(this);
-            };
-            button.textContent = `${person.f} ${person.i}`;
+            let button = _createButton(person);
 
             list.appendChild(button);
 
@@ -278,13 +236,56 @@ window.AcClass = function (data) {
         }
         selectedPerson = null;
     }.bind(this);
-}
 
-let Ac = window.Ac = new AcClass(window.AcData);
-delete window.AcData;
+    let _createButton = function (object) {
+        let button = d.createElement(`button`);
+        button.type = `button`;
+        button.classList.add(`list-group-item`);
 
-if (window.location.pathname === `/cp/persons`) {
-    Ac.listGroupDivisions();
+        if (object === `add`) {
+            button.classList.add(`list-group-item-success`);
+            button.id = `ac-button-add-${selectedDivision.id}`;
+            button.onclick = function () {
+                window.Ac.newPersonInForm(this);
+            };
+            button.textContent = `Add`;
+        } else if (object === `back`) {
+            button.classList.add(`list-group-item-info`);
+            button.id = `ac-button-back-${selectedDivision.id}`;
+            button.onclick = function () {
+                window.Ac.listGroupDivisions(this);
+            };
+            button.textContent = `Back`;
+        } else if (object.constructor.name === `Division`) {
+            button.classList.add(`list-group-item-action`, `d-flex`, `justify-content-between`, `align-items-center`);
+            button.id = `ac-button-division-${object.id}`;
+            button.onclick = function () {
+                window.Ac.listGroupPersons(this);
+            };
+            button.textContent = object.name;
+
+            let count = object.persons().length;
+
+            if (count === 0) {
+                button.disabled = true;
+            }
+
+            let badge = d.createElement(`span`);
+            badge.classList.add(`badge`, `badge-primary`, `badge-pill`);
+            badge.textContent = `${count}`;
+
+            button.appendChild(badge);
+        } else if (object.constructor.name === `Person`) {
+            button.classList.add(`list-group-item-action`);
+            button.id = `ac-button-person-${object.id}`;
+            button.onclick = function () {
+                window.Ac.showPersonInForm(this);
+            };
+            button.textContent = `${object.f} ${object.i}`;
+        }
+
+        return button;
+    }.bind(this);
 }
 
 window.showNewEvent = function (event) {
@@ -301,7 +302,7 @@ let trans = function (key, replace = {}) {
     return translation;
 }
 
-let trans_choice = function (key, count = 1, replace = {}) {
+let transChoice = function (key, count = 1, replace = {}) {
     let translation = key.split('.').reduce((t, i) => t[i] || null, window.translations).split('|');
 
     translation = count > 1 ? translation[1] : translation[0];
