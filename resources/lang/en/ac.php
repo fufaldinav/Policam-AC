@@ -30,4 +30,5 @@ return [
     'registered' => 'Registered',
     'and' => 'and',
     'card_deleted' => 'card deleted',
+    'required' => 'The field ":field" is required!',
 ];

@@ -1,6 +1,6 @@
 <template>
-    <button type="button" class="list-group-item list-group-item-action" @click="123">
-        {{ person.f }} {{ person.i }}
+    <button type="button" class="list-group-item list-group-item-action" @click="selectPerson">
+        <slot></slot>
     </button>
 </template>
 
@@ -9,6 +9,11 @@
         name: "AcButtonPerson",
         props: {
             person: Object
+        },
+        methods: {
+            selectPerson: function () {
+                console.log(this.person.id);
+            }
         }
     }
 </script>

@@ -6,6 +6,26 @@
 
 require('./bootstrap');
 
+/**
+ * Echo exposes an expressive API for subscribing to channels and listening
+ * for events that are broadcast by Laravel. Echo and event broadcasting
+ * allows your team to easily build robust real-time web applications.
+ */
+
+// import Echo from 'laravel-echo'
+
+window.Pusher = require('pusher-js');
+
+// window.Echo = new Echo({
+//     authEndpoint : '/broadcasting/auth',
+//     broadcaster: 'pusher',
+//     key: process.env.MIX_PUSHER_APP_KEY,
+//     wsHost: window.location.hostname,
+//     wsPort: process.env.MIX_WS_PORT,
+//     wssPort: process.env.MIX_WS_PORT,
+//     disableStats: true,
+// });
+
 window.Vue = require('vue');
 
 /**
@@ -20,9 +40,7 @@ window.Vue = require('vue');
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
 /**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
+ * Блок локализации
  */
 
 import VueInternationalization from 'vue-i18n';
@@ -40,6 +58,7 @@ const i18n = new VueInternationalization({
 
 import {Division, Person} from "./ac/classes";
 import AcMenuLeft from "./ac/components/AcMenuLeft";
+import AcMenuRight from "./ac/components/AcMenuRight";
 import AcFormPerson from "./ac/components/AcFormPerson";
 
 window.Ac = new Vue({
@@ -47,6 +66,7 @@ window.Ac = new Vue({
     i18n,
     components: {
         AcMenuLeft,
+        AcMenuRight,
         AcFormPerson
     },
     data: {
@@ -76,12 +96,3 @@ window.Ac = new Vue({
         delete window.AcData;
     }
 });
-
-// import Ac from './ac/ac';
-
-// window.Ac = new Ac(window.AcData);
-// delete window.AcData;
-//
-// if (window.location.pathname === `/cp/persons`) {
-//     window.Ac.listGroupDivisions();
-// }

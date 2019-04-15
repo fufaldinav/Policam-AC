@@ -29,7 +29,8 @@ export default {
             "entrance_wo_card": "Entrance w/o card",
             "registered": "Registered",
             "and": "and",
-            "card_deleted": "card deleted"
+            "card_deleted": "card deleted",
+            "required": "The field \"{field}\" is required!"
         }
     },
     "ru": {
@@ -66,7 +67,8 @@ export default {
             "entrance_wo_card": "Вход без карты",
             "registered": "Событие зарегистрировано",
             "and": "и",
-            "card_deleted": "карта удалена"
+            "card_deleted": "карта удалена",
+            "required": "Поле \"{field}\" является обязательным!"
         }
     }
 }
