@@ -12,10 +12,10 @@
             div.persons.push({{ $person->id }});
             person = persons[{{ $person->id }}];
             if (person === undefined) {
-                person = {!! $person->toJson() !!};
-                person.cards = {!! $person->cards->toJson() !!};
-                person.photos = {!! $person->photos->toJson() !!};
-                person.divisions = [];
+            person = {!! $person->toJson() !!};
+            person.cards = {!! $person->cards->toJson() !!};
+            person.photos = {!! $person->photos->toJson() !!};
+            person.divisions = [];
             }
             persons[{{ $person->id }}] = person;
             person.divisions.push({{ $div->id }});
@@ -30,7 +30,8 @@
 @section('content')
     <div class="container-fluid">
         <div class="row">
-            <div id="ac-menu-left" class="d-none d-sm-block col-sm-3 col-xl-2 bg-white px-0 ac-menu"></div>
+            <ac-menu-left :current-division="currentDivision" :divisions="divisions" :persons="persons"
+                          @ac-division-changed="setCurrentDivision"></ac-menu-left>
             <div class="col-12 col-sm-9 col-lg-6 col-xl-7">
                 <div class="row mt-4">
                     <div class="container-fluid">
@@ -66,7 +67,8 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="o">{{ __('ac.o') }}</label>
-                                        <input type="text" class="form-control" id="o" placeholder="{{ __('ac.o') }}" disabled>
+                                        <input type="text" class="form-control" id="o" placeholder="{{ __('ac.o') }}"
+                                               disabled>
                                     </div>
                                     <div class="form-group">
                                         <label for="birthday">{{ __('ac.birthday') }}</label>
@@ -91,15 +93,18 @@
                                 </div>
                                 <div id="ac-menu-card" class="form-group col-6">
                                     <label for="card">{{ __('ac.card') }}</label>
-                                    <input type="text" class="form-control" id="card" placeholder="{{ __('ac.card') }}" disabled>
+                                    <input type="text" class="form-control" id="card" placeholder="{{ __('ac.card') }}"
+                                           disabled>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group">
-                                    <button id="ac-button-save" type="button" class="btn btn-primary" onclick="window.Ac.savePerson();">
+                                    <button id="ac-button-save" type="button" class="btn btn-primary"
+                                            onclick="window.Ac.savePerson();">
                                         {{ __('ac.save') }}
                                     </button>
-                                    <button id="ac-button-delete" type="button" class="btn btn-secondary" onclick="window.Ac.clearPerson();">
+                                    <button id="ac-button-delete" type="button" class="btn btn-secondary"
+                                            onclick="window.Ac.clearPerson();">
                                         {{ __('ac.cancel') }}
                                     </button>
                                 </div>
