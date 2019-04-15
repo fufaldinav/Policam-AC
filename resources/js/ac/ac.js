@@ -1,4 +1,5 @@
 import {Division, Person} from "./classes";
+import {trans} from "./translator";
 
 export default function (data) {
     if (data === undefined) {
@@ -10,6 +11,7 @@ export default function (data) {
     let selectedDivision = null;
     let form = d.forms.namedItem(`form-person`);
     let menu = d.getElementById(`ac-menu-left`);
+    let cardMenu = d.getElementById(`ac-menu-card`);
     let buttonSave = d.getElementById(`ac-button-save`);
     let buttonDelete = d.getElementById(`ac-button-delete`);
 
@@ -108,14 +110,14 @@ export default function (data) {
         buttonSave.onclick = function () {
             window.Ac.updatePerson();
         }
-        buttonSave.textContent = `Update`;
+        buttonSave.textContent = trans(`ac.update`);
 
         buttonDelete.classList.remove(`btn-secondary`);
         buttonDelete.classList.add(`btn-danger`);
         buttonDelete.onclick = function () {
             window.Ac.deletePerson();
         }
-        buttonDelete.textContent = `Delete`;
+        buttonDelete.textContent = trans(`ac.delete`);
 
         let person_id = _getIdFromElement(element);
         selectedPerson = this.persons[person_id];
@@ -132,36 +134,49 @@ export default function (data) {
         buttonSave.onclick = function () {
             window.Ac.savePerson();
         }
-        buttonSave.textContent = `Save`;
+        buttonSave.textContent = trans(`ac.save`);
 
         buttonDelete.classList.remove(`btn-danger`);
         buttonDelete.classList.add(`btn-secondary`);
         buttonDelete.onclick = function () {
             window.Ac.clearPerson();
         }
-        buttonDelete.textContent = `Cancel`;
+        buttonDelete.textContent = trans(`ac.cancel`);
 
         let division_id = _getIdFromElement(element);
 
         this.divisions[division_id].persons().push(0);
         selectedPerson = this.persons[0] = new Person();
-        selectedPerson.divisions().push(parseInt(division_id));
+        selectedPerson.addDivision(division_id);
+
+        let select = _createSelect(selectedPerson.getCards());
+        let input = d.getElementById(`card`);
+        cardMenu.removeChild(input);
+        cardMenu.appendChild(select);
     }
 
     this.savePerson = function () {
+        if (form.checkValidity() === false) {
+            form.classList.add('was-validated');
+            return;
+        }
+
         for (let i = 0; i < form.length; i++) {
             if (selectedPerson.hasOwnProperty(form[i].id)) {
                 selectedPerson[form[i].id] = form[i].value;
             }
         }
-        selectedPerson.save().then(data => {
+
+        selectedPerson.save().then(person => {
+            form.classList.remove('was-validated');
+
+            this.persons[person.id] = person;
+
             delete this.persons[0];
             selectedDivision.deletePerson(0);
 
-            let person = this.persons[data.id] = new Person(data);
-
-            for (let k in data.divisions) {
-                let div = data.divisions[k];
+            for (let k in person.divisions) {
+                let div = person.divisions[k];
                 this.divisions[div.id].addPerson(person.id);
             }
 
@@ -181,12 +196,20 @@ export default function (data) {
     }
 
     this.updatePerson = function () {
+        if (form.checkValidity() === false) {
+            form.classList.add('was-validated');
+            return;
+        }
+
         for (let i = 0; i < form.length; i++) {
             if (selectedPerson.hasOwnProperty(form[i].id)) {
                 selectedPerson[form[i].id] = form[i].value;
             }
         }
+
         selectedPerson.update().then(person => {
+            form.classList.remove('was-validated');
+
             for (let k in person.divisions) {
                 let div = person.divisions[k];
                 this.divisions[div.id].addPerson(person.id);
@@ -219,6 +242,8 @@ export default function (data) {
     }.bind(this);
 
     let _enableForm = function () {
+        form.classList.remove('was-validated');
+
         for (let i = 0; i < form.length; i++) {
             form[i].value = null;
             if (form[i].disabled && form[i].id !== `id`) {
@@ -228,6 +253,8 @@ export default function (data) {
     }.bind(this);
 
     let _disableForm = function () {
+        form.classList.remove('was-validated');
+
         for (let i = 0; i < form.length; i++) {
             form[i].value = null;
             if (!form[i].disabled) {
@@ -248,14 +275,14 @@ export default function (data) {
             button.onclick = function () {
                 window.Ac.newPersonInForm(this);
             };
-            button.textContent = `Add`;
+            button.textContent = trans(`ac.add`);
         } else if (object === `back`) {
             button.classList.add(`list-group-item-info`);
             button.id = `ac-button-back-${selectedDivision.id}`;
             button.onclick = function () {
                 window.Ac.listGroupDivisions(this);
             };
-            button.textContent = `Back`;
+            button.textContent = trans(`ac.back`);
         } else if (object.constructor.name === `Division`) {
             button.classList.add(`list-group-item-action`, `d-flex`, `justify-content-between`, `align-items-center`);
             button.id = `ac-button-division-${object.id}`;
@@ -286,30 +313,26 @@ export default function (data) {
 
         return button;
     }.bind(this);
+
+    let _createSelect = function (objects) {
+        let select = d.createElement(`select`);
+        select.classList.add(`custom-select`);
+
+        let option = d.createElement(`option`);
+        option.textContent = trans(`ac.not_selected`);
+        select.appendChild(option);
+
+        for (let k in objects) {
+            let card = option.cloneNode();
+            card.value = objects[k].id;
+            card.textContent = `${objects[k].wiegand}`;
+            select.appendChild(card);
+        }
+
+        return select;
+    }.bind(this);
 }
 
 window.showNewEvent = function (event) {
     $(`.events`).append(`<p class="mb-1"><small>${event}</small></p>`);
-}
-
-let trans = function (key, replace = {}) {
-    let translation = key.split('.').reduce((t, i) => t[i] || null, window.translations);
-
-    for (let placeholder in replace) {
-        translation = translation.replace(`:${placeholder}`, replace[placeholder]);
-    }
-
-    return translation;
-}
-
-let transChoice = function (key, count = 1, replace = {}) {
-    let translation = key.split('.').reduce((t, i) => t[i] || null, window.translations).split('|');
-
-    translation = count > 1 ? translation[1] : translation[0];
-
-    for (let placeholder in replace) {
-        translation = translation.replace(`:${placeholder}`, replace[placeholder]);
-    }
-
-    return translation;
 }

@@ -89,9 +89,9 @@
                                     <input type="text" class="form-control" id="phone"
                                            placeholder="{{ __('ac.phone') }}" disabled>
                                 </div>
-                                <div class="form-group col-6">
-                                    <label for="id">{{ __('ac.uid') }}</label>
-                                    <input type="text" class="form-control" id="id" placeholder="{{ __('ac.uid') }}" disabled>
+                                <div id="ac-menu-card" class="form-group col-6">
+                                    <label for="card">{{ __('ac.card') }}</label>
+                                    <input type="text" class="form-control" id="card" placeholder="{{ __('ac.card') }}" disabled>
                                 </div>
                             </div>
                             <div class="form-row">
@@ -100,7 +100,7 @@
                                         {{ __('ac.save') }}
                                     </button>
                                     <button id="ac-button-delete" type="button" class="btn btn-secondary" onclick="window.Ac.clearPerson();">
-                                        {{ __('Cancel') }}
+                                        {{ __('ac.cancel') }}
                                     </button>
                                 </div>
                             </div>

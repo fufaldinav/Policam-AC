@@ -32,7 +32,7 @@ export function Person(data) {
         }
     }
 
-    this.cards = function (id) {
+    this.getCards = function (id) {
         if (id !== undefined) {
             let i = cards.indexOf(id);
             return cards[i];
@@ -40,7 +40,7 @@ export function Person(data) {
         return cards;
     }
 
-    this.divisions = function (id) {
+    this.getDivisions = function (id) {
         if (id !== undefined) {
             let i = divisions.indexOf(id);
             return divisions[i];
@@ -48,7 +48,7 @@ export function Person(data) {
         return divisions;
     }
 
-    this.photos = function (id) {
+    this.getPhotos = function (id) {
         if (id !== undefined) {
             let i = photos.indexOf(id);
             return photos[i];
@@ -56,15 +56,26 @@ export function Person(data) {
         return photos;
     }
 
+    this.addDivision = function(id) {
+        divisions.push(parseInt(id));
+    }
+
     this.save = function () {
+        let self = this;
         return axios.post(`/api/persons`, {
-            person: this,
-            divisions: this.divisions(),
-            cards: this.cards(),
-            photos: this.photos()
+            person: self,
+            divisions: divisions,
+            cards: cards,
+            photos: photos
         })
             .then(function (response) {
-                return response.data;
+                let data = response.data;
+                for (let k in data) {
+                    if (self.hasOwnProperty(k)) {
+                        self[k] = data[k];
+                    }
+                }
+                return self;
             })
             .catch(function (error) {
                 Ac.alert(error, `danger`);
@@ -73,19 +84,21 @@ export function Person(data) {
     }
 
     this.update = function () {
-        return axios.put(`/api/persons/${this.id}`, {
-            person: this,
-            divisions: this.divisions(),
-            cards: this.cards(),
-            photos: this.photos()
+        let self = this;
+        return axios.put(`/api/persons/${self.id}`, {
+            person: self,
+            divisions: divisions,
+            cards: cards,
+            photos: photos
         })
             .then(function (response) {
-                for (let k in response.data) {
-                    if (this.hasOwnProperty(k)) {
-                        this[k] = data[k];
+                let data = response.data;
+                for (let k in data) {
+                    if (self.hasOwnProperty(k)) {
+                        self[k] = data[k];
                     }
                 }
-                return response.data;
+                return self;
             })
             .catch(function (error) {
                 Ac.alert(error, `danger`);
@@ -94,7 +107,8 @@ export function Person(data) {
     }
 
     this.delete = function () {
-        return axios.delete(`/api/persons/${this.id}`)
+        let self = this;
+        return axios.delete(`/api/persons/${self.id}`)
             .then(function (response) {
                 return response.data;
             })
