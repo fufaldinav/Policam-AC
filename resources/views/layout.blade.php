@@ -47,7 +47,7 @@
                             <a class="nav-link" href="{{ route('cp.persons') }}">{{ __('Персонал') }}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('divisions.classes') }}">{{ __('ac.classes') }}</a>
+                            <a class="nav-link" href="{{ route('cp.classes') }}">{{ __('ac.classes') }}</a>
                         </li>
                     @endauth
                 </ul>

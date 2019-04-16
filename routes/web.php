@@ -23,6 +23,10 @@ Route::group(['prefix' => 'api', 'as' => 'api.'], function () {
         Route::resource('persons', 'PersonsController',
             ['except' => ['create', 'edit']]);
     });
+    Route::group(['middleware' => 'role:3'], function () {
+        Route::resource('divisions', 'DivisionsController',
+            ['except' => ['create', 'edit']]);
+    });
 });
 /*
  * Auth
@@ -51,6 +55,7 @@ Route::group(['prefix' => 'controllers', 'as' => 'controllers.'], function () {
  */
 Route::group(['prefix' => 'cp', 'as' => 'cp.'], function () {
     Route::get('/', 'UsersController@index')->name('index');
+    Route::get('/classes/{organization_id?}', 'DivisionsController@classes')->name('classes')->middleware('role:3');
     Route::get('/persons/{organization_id?}', 'PersonsController@page')->name('persons')->middleware('role:3');
 
 });
@@ -58,17 +63,6 @@ Route::group(['prefix' => 'cp', 'as' => 'cp.'], function () {
  * Development
  */
 Route::get('dev', 'DevController@index');
-/*
- * Divisions
- */
-Route::group(['prefix' => 'divisions', 'as' => 'divisions.'], function () {
-    Route::group(['middleware' => 'role:3'], function () {
-        Route::get('classes', 'DivisionsController@classes')->name('classes');
-        Route::post('save', 'DivisionsController@save');
-        Route::post('delete', 'DivisionsController@delete');
-    });
-    Route::get('get_list', 'DivisionsController@getList');
-});
 /*
  * Photos
  */

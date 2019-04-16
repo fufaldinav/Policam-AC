@@ -57,11 +57,11 @@ class PersonsController extends Controller
 
     public function index(Request $request)
     {
-        $person = $request->user()->persons()->get();
+        $persons = $request->user()->persons()->get();
 
-        abort_if(! $person, 403);
+        abort_if(! $persons, 403);
 
-        return response()->json($person);
+        return response()->json($persons);
     }
 
     public function show(Request $request, $id)

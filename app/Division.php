@@ -43,7 +43,7 @@ class Division extends Model
      * @var array
      */
     protected $hidden = [
-        'organization', 'persons',
+//        'organization', 'persons',
     ];
 
     /**
