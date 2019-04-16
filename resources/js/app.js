@@ -12,9 +12,9 @@ require('./bootstrap');
  * allows your team to easily build robust real-time web applications.
  */
 
-// import Echo from 'laravel-echo'
-
 window.Pusher = require('pusher-js');
+
+// import Echo from 'laravel-echo'
 
 // window.Echo = new Echo({
 //     authEndpoint : '/broadcasting/auth',
@@ -27,6 +27,9 @@ window.Pusher = require('pusher-js');
 // });
 
 window.Vue = require('vue');
+
+const Vuex = require('vuex');
+Vue.use(Vuex);
 
 /**
  * The following block of code may be used to automatically register your
@@ -61,8 +64,67 @@ import AcMenuLeft from "./ac/components/AcMenuLeft";
 import AcMenuRight from "./ac/components/AcMenuRight";
 import AcFormPerson from "./ac/components/AcFormPerson";
 
+const store = new Vuex.Store({
+    state: {
+        divisions: {},
+        persons: {},
+        loading: true
+    },
+    actions: {
+        async loadDivisions({commit}) {
+            window.axios.get('/api/divisions')
+                .then(function (response) {
+                    let divisions = response.data;
+                    for (let k in divisions) {
+                        for (let l in divisions[k].persons) {
+                            commit('addPerson', divisions[k].persons[l]);
+                        }
+                        commit('addDivision', divisions[k]);
+                    }
+                    commit('changeLoadingState', false);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+    },
+    mutations: {
+        addDivision(state, division) {
+            state.divisions[division.id] = new Division(division);
+        },
+        addPerson(state, person) {
+            state.persons[person.id] = new Person(person);
+        },
+        updatePerson(state, person) {
+            state.persons[person.id] = person;
+        },
+        changeLoadingState(state, loading) {
+            state.loading = loading;
+        }
+    },
+    getters: {
+        personsCount: state => id => {
+            return state.divisions[id].persons().length;
+        },
+        divisions: state => {
+            return state.divisions;
+        },
+        persons: state => {
+            return state.persons;
+        },
+        division: state => id => {
+            return state.divisions[id];
+        },
+        person: state => id => {
+            return state.persons[id];
+        }
+    },
+    modules: {}
+});
+
 window.Ac = new Vue({
     el: '#ac',
+    store,
     i18n,
     components: {
         AcMenuLeft,
@@ -70,29 +132,15 @@ window.Ac = new Vue({
         AcFormPerson
     },
     data: {
-        currentDivision: null,
-        divisions: {},
-        persons: {}
+        currentDivision: null
+    },
+    computed: Vuex.mapState(['loading']),
+    created() {
+        store.dispatch('loadDivisions');
     },
     methods: {
-      setCurrentDivision: function (id) {
-          this.currentDivision = id;
-      }
-    },
-    created: function () {
-        let data = window.AcData;
-
-        if (data['divisions'] !== undefined) {
-            for (let k in data['divisions']) {
-                this.divisions[k] = new Division(data['divisions'][k]);
-            }
+        setCurrentDivision(id) {
+            this.currentDivision = id;
         }
-        if (data['persons'] !== undefined) {
-            for (let k in data['persons']) {
-                this.persons[k] = new Person(data['persons'][k]);
-            }
-        }
-
-        delete window.AcData;
     }
 });

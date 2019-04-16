@@ -41,18 +41,7 @@ class PersonsController extends Controller
             }
         }
 
-        /* Подразделения */
-        $divisions = $org
-            ->divisions()
-            ->orderByRaw('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
-            ->get()
-            ->load(['persons' => function ($query) {
-                $query->orderByRaw('f ASC, i ASC, o ASC')->get()->load(['cards', 'photos']);
-            }]);
-
-        $org_name = $org->name;
-
-        return view('ac.persons', compact('divisions', 'org_name'));
+        return view('ac.persons');
     }
 
     public function index(Request $request)

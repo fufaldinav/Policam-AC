@@ -10,7 +10,9 @@ export function Division(data) {
             this[k] = data[k];
         }
         if (k === 'persons') {
-            persons = data[k];
+            for (let person of data[k]) {
+                persons.push(person);
+            }
         }
     }
 

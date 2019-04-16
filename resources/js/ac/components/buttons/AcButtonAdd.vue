@@ -1,6 +1,6 @@
 <template>
     <button type="button" class="list-group-item list-group-item-success">
-        Add
+        {{ $t('ac.add') }}
     </button>
 </template>
 
