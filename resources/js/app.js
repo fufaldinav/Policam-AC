@@ -64,10 +64,53 @@ import AcMenuLeft from "./ac/components/AcMenuLeft";
 import AcMenuRight from "./ac/components/AcMenuRight";
 import AcFormPerson from "./ac/components/AcFormPerson";
 
+const divisions = {
+    namespaced: true,
+    state: {
+        collection: {},
+        selected: null
+    },
+    mutations: {
+        add(state, division) {
+            Vue.set(state.collection, division.id, new Division(division));
+        },
+        setSelected(state, division) {
+            if (division === undefined) {
+                state.selected = null;
+            } else {
+                state.selected = division;
+            }
+        }
+    }
+}
+
+const persons = {
+    namespaced: true,
+    state: {
+        collection: {},
+        selected: new Person({})
+    },
+    mutations: {
+        add(state, person) {
+            Vue.set(state.collection, person.id, new Person(person));
+        },
+        setSelected(state, person) {
+            if (person === undefined) {
+                state.selected = new Person({});
+            } else {
+                state.selected = person;
+            }
+        }
+    },
+    getters: {
+        personsCount: state => id => {
+            return state.divisions[id].persons().length;
+        }
+    }
+}
+
 const store = new Vuex.Store({
     state: {
-        divisions: {},
-        persons: {},
         loading: true
     },
     actions: {
@@ -75,11 +118,11 @@ const store = new Vuex.Store({
             window.axios.get('/api/divisions')
                 .then(function (response) {
                     let divisions = response.data;
-                    for (let k in divisions) {
-                        for (let l in divisions[k].persons) {
-                            commit('addPerson', divisions[k].persons[l]);
+                    for (let division of divisions) {
+                        for (let person of division.persons) {
+                            commit('persons/add', person);
                         }
-                        commit('addDivision', divisions[k]);
+                        commit('divisions/add', division);
                     }
                     commit('changeLoadingState', false);
                 })
@@ -89,37 +132,14 @@ const store = new Vuex.Store({
         }
     },
     mutations: {
-        addDivision(state, division) {
-            state.divisions[division.id] = new Division(division);
-        },
-        addPerson(state, person) {
-            state.persons[person.id] = new Person(person);
-        },
-        updatePerson(state, person) {
-            state.persons[person.id] = person;
-        },
         changeLoadingState(state, loading) {
             state.loading = loading;
         }
     },
-    getters: {
-        personsCount: state => id => {
-            return state.divisions[id].persons().length;
-        },
-        divisions: state => {
-            return state.divisions;
-        },
-        persons: state => {
-            return state.persons;
-        },
-        division: state => id => {
-            return state.divisions[id];
-        },
-        person: state => id => {
-            return state.persons[id];
-        }
-    },
-    modules: {}
+    modules: {
+        divisions: divisions,
+        persons: persons
+    }
 });
 
 window.Ac = new Vue({
@@ -131,16 +151,12 @@ window.Ac = new Vue({
         AcMenuRight,
         AcFormPerson
     },
-    data: {
-        currentDivision: null
-    },
-    computed: Vuex.mapState(['loading']),
+    computed: Vuex.mapState({
+        loading: state => state.loading,
+        divisions: state => state.divisions.collection,
+        persons: state => state.persons.collection
+    }),
     created() {
         store.dispatch('loadDivisions');
-    },
-    methods: {
-        setCurrentDivision(id) {
-            this.currentDivision = id;
-        }
     }
 });

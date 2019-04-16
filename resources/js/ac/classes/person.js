@@ -1,10 +1,7 @@
 import {Card, Photo} from './';
 
 export function Person(data) {
-    let cards = [];
-    let divisions = [];
-    let photos = [];
-    this.id = 0;
+    this.id = null;
     this.f = null;
     this.i = null;
     this.o = null;
@@ -13,51 +10,35 @@ export function Person(data) {
     this.address = null;
     this.phone = null;
 
+    this.cards = [];
+    this.divisions = [];
+    this.photos = [];
+
+    if (data['cards'] !== undefined) {
+        for (let card of data['cards']) {
+            this.cards.push(new Card(card));
+        }
+        delete data['cards'];
+    }
+
+    if (data['divisions'] !== undefined) {
+        for (let division of data['divisions']) {
+            this.divisions.push(division.id);
+        }
+        delete data['divisions'];
+    }
+
+    if (data['photos'] !== undefined) {
+        for (let photo of data['photos']) {
+            this.photos.push(new Photo(photo));
+        }
+        delete data['photos'];
+    }
+
     for (let k in data) {
         if (this.hasOwnProperty(k)) {
             this[k] = data[k];
         }
-        if (k === 'cards') {
-            for (let l in data[k]) {
-                cards[l] = new Card(data[k][l]);
-            }
-        }
-        if (k === 'divisions') {
-            divisions = data[k];
-        }
-        if (k === 'photos') {
-            for (let l in data[k]) {
-                photos[l] = new Photo(data[k][l]);
-            }
-        }
-    }
-
-    this.getCards = function (id) {
-        if (id !== undefined) {
-            let i = cards.indexOf(id);
-            return cards[i];
-        }
-        return cards;
-    }
-
-    this.getDivisions = function (id) {
-        if (id !== undefined) {
-            let i = divisions.indexOf(id);
-            return divisions[i];
-        }
-        return divisions;
-    }
-
-    this.getPhotos = function (id) {
-        if (id !== undefined) {
-            let i = photos.indexOf(id);
-            return photos[i];
-        }
-        return photos;
-    }
-
-    this.addDivision = function(id) {
-        divisions.push(parseInt(id));
     }
 
     this.save = function () {

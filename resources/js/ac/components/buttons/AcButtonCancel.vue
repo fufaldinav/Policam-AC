@@ -1,12 +1,17 @@
 <template>
-    <button type="button" class="btn btn-secondary" @click="$emit('ac-form-cancel')">
+    <button type="button" class="btn btn-secondary" @click="unsetSelectedPerson">
         {{ $t('ac.cancel') }}
     </button>
 </template>
 
 <script>
     export default {
-        name: "AcButtonCancel"
+        name: "AcButtonCancel",
+        methods: {
+            unsetSelectedPerson() {
+                this.$store.commit('persons/setSelected');
+            }
+        }
     }
 </script>
 

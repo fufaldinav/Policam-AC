@@ -21,10 +21,15 @@ module.exports = __webpack_require__(/*! regenerator-runtime */ "./node_modules/
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _buttons_AcButtonSave__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./buttons/AcButtonSave */ "./resources/js/ac/components/buttons/AcButtonSave.vue");
-/* harmony import */ var _buttons_AcButtonCancel__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./buttons/AcButtonCancel */ "./resources/js/ac/components/buttons/AcButtonCancel.vue");
-/* harmony import */ var _buttons_AcButtonUpdate__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./buttons/AcButtonUpdate */ "./resources/js/ac/components/buttons/AcButtonUpdate.vue");
-/* harmony import */ var _buttons_AcButtonRemove__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./buttons/AcButtonRemove */ "./resources/js/ac/components/buttons/AcButtonRemove.vue");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _buttons_AcButtonSave__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./buttons/AcButtonSave */ "./resources/js/ac/components/buttons/AcButtonSave.vue");
+/* harmony import */ var _buttons_AcButtonCancel__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./buttons/AcButtonCancel */ "./resources/js/ac/components/buttons/AcButtonCancel.vue");
+/* harmony import */ var _buttons_AcButtonUpdate__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./buttons/AcButtonUpdate */ "./resources/js/ac/components/buttons/AcButtonUpdate.vue");
+/* harmony import */ var _buttons_AcButtonRemove__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./buttons/AcButtonRemove */ "./resources/js/ac/components/buttons/AcButtonRemove.vue");
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -92,6 +97,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 
 
 
@@ -99,14 +105,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "AcFormPerson",
   components: {
-    AcButtonRemove: _buttons_AcButtonRemove__WEBPACK_IMPORTED_MODULE_3__["default"],
-    AcButtonUpdate: _buttons_AcButtonUpdate__WEBPACK_IMPORTED_MODULE_2__["default"],
-    AcButtonCancel: _buttons_AcButtonCancel__WEBPACK_IMPORTED_MODULE_1__["default"],
-    AcButtonSave: _buttons_AcButtonSave__WEBPACK_IMPORTED_MODULE_0__["default"]
+    AcButtonRemove: _buttons_AcButtonRemove__WEBPACK_IMPORTED_MODULE_4__["default"],
+    AcButtonUpdate: _buttons_AcButtonUpdate__WEBPACK_IMPORTED_MODULE_3__["default"],
+    AcButtonCancel: _buttons_AcButtonCancel__WEBPACK_IMPORTED_MODULE_2__["default"],
+    AcButtonSave: _buttons_AcButtonSave__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
-  props: {
-    person: Object
-  },
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])({
+    selectedPerson: function selectedPerson(state) {
+      return state.persons.selected;
+    }
+  })),
   methods: {
     save: function save() {},
     update: function update() {},
@@ -163,15 +171,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     AcButtonPerson: _buttons_AcButtonPerson__WEBPACK_IMPORTED_MODULE_3__["default"],
     AcButtonDivision: _buttons_AcButtonDivision__WEBPACK_IMPORTED_MODULE_4__["default"]
   },
-  props: {
-    currentDivision: Number
-  },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])(['divisions', 'persons'])),
-  methods: {
-    setCurrentDivision: function setCurrentDivision(id) {
-      this.$emit('ac-division-changed', id);
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])({
+    divisions: function divisions(state) {
+      return state.divisions.collection;
+    },
+    selectedDivision: function selectedDivision(state) {
+      return state.divisions.selected;
+    },
+    persons: function persons(state) {
+      return state.persons.collection;
     }
-  }
+  }))
 });
 
 /***/ }),
@@ -206,14 +216,24 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _classes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../classes */ "./resources/js/ac/classes/index.js");
 //
 //
 //
 //
 //
 //
+
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "AcButtonAdd"
+  name: "AcButtonAdd",
+  methods: {
+    selectPerson: function selectPerson() {
+      var person = new _classes__WEBPACK_IMPORTED_MODULE_0__["Person"]({
+        id: 0
+      });
+      this.$store.commit('persons/setSelected', person);
+    }
+  }
 });
 
 /***/ }),
@@ -234,7 +254,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "AcButtonBack"
+  name: "AcButtonBack",
+  methods: {
+    selectDivision: function selectDivision() {
+      this.$store.commit('divisions/setSelected');
+      this.$store.commit('persons/setSelected');
+    }
+  }
 });
 
 /***/ }),
@@ -255,7 +281,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "AcButtonCancel"
+  name: "AcButtonCancel",
+  methods: {
+    unsetSelectedPerson: function unsetSelectedPerson() {
+      this.$store.commit('persons/setSelected');
+    }
+  }
 });
 
 /***/ }),
@@ -285,7 +316,12 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     count: function count() {
-      return this.division.persons().length;
+      return this.division.persons.length;
+    }
+  },
+  methods: {
+    selectDivision: function selectDivision() {
+      this.$store.commit('divisions/setSelected', this.division);
     }
   }
 });
@@ -312,19 +348,9 @@ __webpack_require__.r(__webpack_exports__);
   props: {
     person: Object
   },
-  computed: {
-    getPerson: function getPerson() {
-      return this.$store.getters.person(this.person.id);
-    },
-    fullName: function fullName() {
-      return this.getPerson.f;
-    }
-  },
   methods: {
     selectPerson: function selectPerson() {
-      this.$set(this.person, 'f', "123");
-      this.$store.commit('updatePerson', this.person);
-      console.log(this.person.id);
+      this.$store.commit('persons/setSelected', this.person);
     }
   }
 });
@@ -3452,7 +3478,7 @@ var render = function() {
           _vm._v(" "),
           _c("input", {
             staticClass: "form-control-file",
-            attrs: { type: "file", disabled: "" },
+            attrs: { type: "file", disabled: _vm.selectedPerson.id === null },
             on: {
               change: function($event) {
                 return _vm.handleFiles(this.files)
@@ -3468,13 +3494,30 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.selectedPerson.f,
+                  expression: "selectedPerson.f"
+                }
+              ],
               staticClass: "form-control",
               attrs: {
                 type: "text",
                 id: "f",
                 placeholder: _vm.$t("ac.f"),
-                disabled: "",
+                disabled: _vm.selectedPerson.id === null,
                 required: ""
+              },
+              domProps: { value: _vm.selectedPerson.f },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.selectedPerson, "f", $event.target.value)
+                }
               }
             }),
             _vm._v(" "),
@@ -3493,13 +3536,30 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.selectedPerson.i,
+                  expression: "selectedPerson.i"
+                }
+              ],
               staticClass: "form-control",
               attrs: {
                 type: "text",
                 id: "i",
                 placeholder: _vm.$t("ac.i"),
-                disabled: "",
+                disabled: _vm.selectedPerson.id === null,
                 required: ""
+              },
+              domProps: { value: _vm.selectedPerson.i },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.selectedPerson, "i", $event.target.value)
+                }
               }
             }),
             _vm._v(" "),
@@ -3518,12 +3578,29 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.selectedPerson.o,
+                  expression: "selectedPerson.o"
+                }
+              ],
               staticClass: "form-control",
               attrs: {
                 type: "text",
                 id: "o",
                 placeholder: _vm.$t("ac.o"),
-                disabled: ""
+                disabled: _vm.selectedPerson.id === null
+              },
+              domProps: { value: _vm.selectedPerson.o },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.selectedPerson, "o", $event.target.value)
+                }
               }
             })
           ]),
@@ -3534,13 +3611,30 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.selectedPerson.birthday,
+                  expression: "selectedPerson.birthday"
+                }
+              ],
               staticClass: "form-control",
               attrs: {
                 type: "date",
                 id: "birthday",
                 placeholder: _vm.$t("ac.birthday"),
                 required: "",
-                disabled: ""
+                disabled: _vm.selectedPerson.id === null
+              },
+              domProps: { value: _vm.selectedPerson.birthday },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.selectedPerson, "birthday", $event.target.value)
+                }
               }
             }),
             _vm._v(" "),
@@ -3563,12 +3657,29 @@ var render = function() {
         ]),
         _vm._v(" "),
         _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.selectedPerson.address,
+              expression: "selectedPerson.address"
+            }
+          ],
           staticClass: "form-control",
           attrs: {
             type: "text",
             id: "address",
             placeholder: _vm.$t("ac.address"),
-            disabled: ""
+            disabled: _vm.selectedPerson.id === null
+          },
+          domProps: { value: _vm.selectedPerson.address },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.selectedPerson, "address", $event.target.value)
+            }
           }
         })
       ]),
@@ -3580,12 +3691,29 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.selectedPerson.phone,
+                expression: "selectedPerson.phone"
+              }
+            ],
             staticClass: "form-control",
             attrs: {
               type: "text",
               id: "phone",
               placeholder: _vm.$t("ac.phone"),
-              disabled: ""
+              disabled: _vm.selectedPerson.id === null
+            },
+            domProps: { value: _vm.selectedPerson.phone },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.selectedPerson, "phone", $event.target.value)
+              }
             }
           })
         ]),
@@ -3604,7 +3732,7 @@ var render = function() {
                 type: "text",
                 id: "card",
                 placeholder: _vm.$t("ac.card"),
-                disabled: ""
+                disabled: _vm.selectedPerson.id === null
               }
             })
           ]
@@ -3616,13 +3744,21 @@ var render = function() {
           "div",
           { staticClass: "form-group" },
           [
-            _c("ac-button-save", { on: { "ac-form-save": _vm.save } }),
+            _vm.selectedPerson.id === 0
+              ? _c("ac-button-save", { on: { click: _vm.save } })
+              : _vm._e(),
             _vm._v(" "),
-            _c("ac-button-update", { on: { "ac-form-update": _vm.update } }),
+            _vm.selectedPerson.id === 0
+              ? _c("ac-button-cancel", { on: { click: _vm.cancel } })
+              : _vm._e(),
             _vm._v(" "),
-            _c("ac-button-cancel", { on: { "ac-form-cancel": _vm.cancel } }),
+            _vm.selectedPerson.id > 0
+              ? _c("ac-button-update", { on: { click: _vm.update } })
+              : _vm._e(),
             _vm._v(" "),
-            _c("ac-button-remove", { on: { "ac-form-remove": _vm.remove } })
+            _vm.selectedPerson.id > 0
+              ? _c("ac-button-remove", { on: { click: _vm.remove } })
+              : _vm._e()
           ],
           1
         )
@@ -3672,15 +3808,14 @@ var render = function() {
       staticClass: "d-none d-sm-block col-sm-3 col-xl-2 bg-white px-0 ac-menu"
     },
     [
-      _vm.currentDivision === null
+      _vm.selectedDivision === null
         ? _c(
             "div",
             { staticClass: "list-group list-group-flush" },
             _vm._l(_vm.divisions, function(division, id) {
               return _c("ac-button-division", {
                 key: id,
-                attrs: { division: division },
-                on: { "ac-division-changed": _vm.setCurrentDivision }
+                attrs: { division: division }
               })
             }),
             1
@@ -3689,19 +3824,14 @@ var render = function() {
             "div",
             { staticClass: "list-group list-group-flush" },
             [
-              _c("ac-button-back", {
-                on: { "ac-division-changed": _vm.setCurrentDivision }
-              }),
+              _c("ac-button-back"),
               _vm._v(" "),
               _c("ac-button-add"),
               _vm._v(" "),
-              _vm._l(_vm.divisions[_vm.currentDivision].persons(), function(
-                person,
-                id
-              ) {
+              _vm._l(_vm.selectedDivision.persons, function(id) {
                 return _c("ac-button-person", {
                   key: id,
-                  attrs: { person: person }
+                  attrs: { person: _vm.persons[id] }
                 })
               })
             ],
@@ -3774,7 +3904,8 @@ var render = function() {
     "button",
     {
       staticClass: "list-group-item list-group-item-success",
-      attrs: { type: "button" }
+      attrs: { type: "button" },
+      on: { click: _vm.selectPerson }
     },
     [_vm._v("\n    " + _vm._s(_vm.$t("ac.add")) + "\n")]
   )
@@ -3806,11 +3937,7 @@ var render = function() {
     {
       staticClass: "list-group-item list-group-item-info",
       attrs: { type: "button" },
-      on: {
-        click: function($event) {
-          return _vm.$emit("ac-division-changed", null)
-        }
-      }
+      on: { click: _vm.selectDivision }
     },
     [_vm._v("\n    " + _vm._s(_vm.$t("ac.back")) + "\n")]
   )
@@ -3842,11 +3969,7 @@ var render = function() {
     {
       staticClass: "btn btn-secondary",
       attrs: { type: "button" },
-      on: {
-        click: function($event) {
-          return _vm.$emit("ac-form-cancel")
-        }
-      }
+      on: { click: _vm.unsetSelectedPerson }
     },
     [_vm._v("\n    " + _vm._s(_vm.$t("ac.cancel")) + "\n")]
   )
@@ -3879,11 +4002,7 @@ var render = function() {
       staticClass:
         "list-group-item list-group-item-action d-flex justify-content-between align-items-center",
       attrs: { type: "button", disabled: _vm.count == 0 },
-      on: {
-        click: function($event) {
-          return _vm.$emit("ac-division-changed", _vm.division.id)
-        }
-      }
+      on: { click: _vm.selectDivision }
     },
     [
       _vm._v("\n    " + _vm._s(_vm.division.name) + "\n    "),
@@ -3922,7 +4041,11 @@ var render = function() {
       attrs: { type: "button" },
       on: { click: _vm.selectPerson }
     },
-    [_vm._v("\n    " + _vm._s(_vm.getPerson.f) + "\n")]
+    [
+      _vm._v(
+        "\n    " + _vm._s(_vm.person.f) + " " + _vm._s(_vm.person.i) + "\n"
+      )
+    ]
   )
 }
 var staticRenderFns = []
@@ -5267,63 +5390,45 @@ function Card(data) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Division", function() { return Division; });
 function Division(data) {
-  var persons = [];
   this.id = 0;
   this.name = null;
   this.organization_id = null;
   this.type = 1;
+  this.persons = [];
+
+  if (data['persons'] !== undefined) {
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+      for (var _iterator = data['persons'][Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        var person = _step.value;
+        this.persons.push(person.id);
+      }
+    } catch (err) {
+      _didIteratorError = true;
+      _iteratorError = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion && _iterator.return != null) {
+          _iterator.return();
+        }
+      } finally {
+        if (_didIteratorError) {
+          throw _iteratorError;
+        }
+      }
+    }
+
+    delete data['persons'];
+  }
 
   for (var k in data) {
     if (this.hasOwnProperty(k)) {
       this[k] = data[k];
     }
-
-    if (k === 'persons') {
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
-
-      try {
-        for (var _iterator = data[k][Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var person = _step.value;
-          persons.push(person);
-        }
-      } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return != null) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
-      }
-    }
   }
-
-  this.persons = function (id) {
-    if (id !== undefined) {
-      var i = persons.indexOf(id);
-      return persons[i];
-    }
-
-    return persons;
-  };
-
-  this.addPerson = function (id) {
-    if (persons.indexOf(id) === -1) {
-      persons.push(id);
-    }
-  };
-
-  this.deletePerson = function (id) {
-    var index = persons.indexOf(id);
-    persons.splice(index, 1);
-  };
 }
 
 /***/ }),
@@ -5369,10 +5474,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var ___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ */ "./resources/js/ac/classes/index.js");
 
 function Person(data) {
-  var cards = [];
-  var divisions = [];
-  var photos = [];
-  this.id = 0;
+  this.id = null;
   this.f = null;
   this.i = null;
   this.o = null;
@@ -5380,59 +5482,99 @@ function Person(data) {
   this.birthday = null;
   this.address = null;
   this.phone = null;
+  this.cards = [];
+  this.divisions = [];
+  this.photos = [];
+
+  if (data['cards'] !== undefined) {
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+      for (var _iterator = data['cards'][Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        var card = _step.value;
+        this.cards.push(new ___WEBPACK_IMPORTED_MODULE_0__["Card"](card));
+      }
+    } catch (err) {
+      _didIteratorError = true;
+      _iteratorError = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion && _iterator.return != null) {
+          _iterator.return();
+        }
+      } finally {
+        if (_didIteratorError) {
+          throw _iteratorError;
+        }
+      }
+    }
+
+    delete data['cards'];
+  }
+
+  if (data['divisions'] !== undefined) {
+    var _iteratorNormalCompletion2 = true;
+    var _didIteratorError2 = false;
+    var _iteratorError2 = undefined;
+
+    try {
+      for (var _iterator2 = data['divisions'][Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+        var division = _step2.value;
+        this.divisions.push(division.id);
+      }
+    } catch (err) {
+      _didIteratorError2 = true;
+      _iteratorError2 = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
+          _iterator2.return();
+        }
+      } finally {
+        if (_didIteratorError2) {
+          throw _iteratorError2;
+        }
+      }
+    }
+
+    delete data['divisions'];
+  }
+
+  if (data['photos'] !== undefined) {
+    var _iteratorNormalCompletion3 = true;
+    var _didIteratorError3 = false;
+    var _iteratorError3 = undefined;
+
+    try {
+      for (var _iterator3 = data['photos'][Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+        var photo = _step3.value;
+        this.photos.push(new ___WEBPACK_IMPORTED_MODULE_0__["Photo"](photo));
+      }
+    } catch (err) {
+      _didIteratorError3 = true;
+      _iteratorError3 = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion3 && _iterator3.return != null) {
+          _iterator3.return();
+        }
+      } finally {
+        if (_didIteratorError3) {
+          throw _iteratorError3;
+        }
+      }
+    }
+
+    delete data['photos'];
+  }
 
   for (var k in data) {
     if (this.hasOwnProperty(k)) {
       this[k] = data[k];
     }
-
-    if (k === 'cards') {
-      for (var l in data[k]) {
-        cards[l] = new ___WEBPACK_IMPORTED_MODULE_0__["Card"](data[k][l]);
-      }
-    }
-
-    if (k === 'divisions') {
-      divisions = data[k];
-    }
-
-    if (k === 'photos') {
-      for (var _l in data[k]) {
-        photos[_l] = new ___WEBPACK_IMPORTED_MODULE_0__["Photo"](data[k][_l]);
-      }
-    }
   }
-
-  this.getCards = function (id) {
-    if (id !== undefined) {
-      var i = cards.indexOf(id);
-      return cards[i];
-    }
-
-    return cards;
-  };
-
-  this.getDivisions = function (id) {
-    if (id !== undefined) {
-      var i = divisions.indexOf(id);
-      return divisions[i];
-    }
-
-    return divisions;
-  };
-
-  this.getPhotos = function (id) {
-    if (id !== undefined) {
-      var i = photos.indexOf(id);
-      return photos[i];
-    }
-
-    return photos;
-  };
-
-  this.addDivision = function (id) {
-    divisions.push(parseInt(id));
-  };
 
   this.save = function () {
     var self = this;
@@ -6354,10 +6496,53 @@ var i18n = new vue_i18n__WEBPACK_IMPORTED_MODULE_1__["default"]({
 
 
 
+var divisions = {
+  namespaced: true,
+  state: {
+    collection: {},
+    selected: null
+  },
+  mutations: {
+    add: function add(state, division) {
+      Vue.set(state.collection, division.id, new _ac_classes__WEBPACK_IMPORTED_MODULE_3__["Division"](division));
+    },
+    setSelected: function setSelected(state, division) {
+      if (division === undefined) {
+        state.selected = null;
+      } else {
+        state.selected = division;
+      }
+    }
+  }
+};
+var persons = {
+  namespaced: true,
+  state: {
+    collection: {},
+    selected: new _ac_classes__WEBPACK_IMPORTED_MODULE_3__["Person"]({})
+  },
+  mutations: {
+    add: function add(state, person) {
+      Vue.set(state.collection, person.id, new _ac_classes__WEBPACK_IMPORTED_MODULE_3__["Person"](person));
+    },
+    setSelected: function setSelected(state, person) {
+      if (person === undefined) {
+        state.selected = new _ac_classes__WEBPACK_IMPORTED_MODULE_3__["Person"]({});
+      } else {
+        state.selected = person;
+      }
+    }
+  },
+  getters: {
+    personsCount: function personsCount(state) {
+      return function (id) {
+        return state.divisions[id].persons().length;
+      };
+    }
+  }
+};
 var store = new Vuex.Store({
   state: {
-    divisions: {},
-    persons: {},
     loading: true
   },
   actions: {
@@ -6373,13 +6558,52 @@ var store = new Vuex.Store({
                 commit = _ref.commit;
                 window.axios.get('/api/divisions').then(function (response) {
                   var divisions = response.data;
+                  var _iteratorNormalCompletion = true;
+                  var _didIteratorError = false;
+                  var _iteratorError = undefined;
 
-                  for (var k in divisions) {
-                    for (var l in divisions[k].persons) {
-                      commit('addPerson', divisions[k].persons[l]);
+                  try {
+                    for (var _iterator = divisions[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                      var division = _step.value;
+                      var _iteratorNormalCompletion2 = true;
+                      var _didIteratorError2 = false;
+                      var _iteratorError2 = undefined;
+
+                      try {
+                        for (var _iterator2 = division.persons[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                          var person = _step2.value;
+                          commit('persons/add', person);
+                        }
+                      } catch (err) {
+                        _didIteratorError2 = true;
+                        _iteratorError2 = err;
+                      } finally {
+                        try {
+                          if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
+                            _iterator2.return();
+                          }
+                        } finally {
+                          if (_didIteratorError2) {
+                            throw _iteratorError2;
+                          }
+                        }
+                      }
+
+                      commit('divisions/add', division);
                     }
-
-                    commit('addDivision', divisions[k]);
+                  } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                  } finally {
+                    try {
+                      if (!_iteratorNormalCompletion && _iterator.return != null) {
+                        _iterator.return();
+                      }
+                    } finally {
+                      if (_didIteratorError) {
+                        throw _iteratorError;
+                      }
+                    }
                   }
 
                   commit('changeLoadingState', false);
@@ -6403,43 +6627,14 @@ var store = new Vuex.Store({
     }()
   },
   mutations: {
-    addDivision: function addDivision(state, division) {
-      state.divisions[division.id] = new _ac_classes__WEBPACK_IMPORTED_MODULE_3__["Division"](division);
-    },
-    addPerson: function addPerson(state, person) {
-      state.persons[person.id] = new _ac_classes__WEBPACK_IMPORTED_MODULE_3__["Person"](person);
-    },
-    updatePerson: function updatePerson(state, person) {
-      state.persons[person.id] = person;
-    },
     changeLoadingState: function changeLoadingState(state, loading) {
       state.loading = loading;
     }
   },
-  getters: {
-    personsCount: function personsCount(state) {
-      return function (id) {
-        return state.divisions[id].persons().length;
-      };
-    },
-    divisions: function divisions(state) {
-      return state.divisions;
-    },
-    persons: function persons(state) {
-      return state.persons;
-    },
-    division: function division(state) {
-      return function (id) {
-        return state.divisions[id];
-      };
-    },
-    person: function person(state) {
-      return function (id) {
-        return state.persons[id];
-      };
-    }
-  },
-  modules: {}
+  modules: {
+    divisions: divisions,
+    persons: persons
+  }
 });
 window.Ac = new Vue({
   el: '#ac',
@@ -6450,17 +6645,19 @@ window.Ac = new Vue({
     AcMenuRight: _ac_components_AcMenuRight__WEBPACK_IMPORTED_MODULE_5__["default"],
     AcFormPerson: _ac_components_AcFormPerson__WEBPACK_IMPORTED_MODULE_6__["default"]
   },
-  data: {
-    currentDivision: null
-  },
-  computed: Vuex.mapState(['loading']),
+  computed: Vuex.mapState({
+    loading: function loading(state) {
+      return state.loading;
+    },
+    divisions: function divisions(state) {
+      return state.divisions.collection;
+    },
+    persons: function persons(state) {
+      return state.persons.collection;
+    }
+  }),
   created: function created() {
     store.dispatch('loadDivisions');
-  },
-  methods: {
-    setCurrentDivision: function setCurrentDivision(id) {
-      this.currentDivision = id;
-    }
   }
 });
 

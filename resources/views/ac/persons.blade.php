@@ -3,7 +3,7 @@
 @section('content')
     <div class="container-fluid">
         <div class="row">
-            <ac-menu-left :current-division="currentDivision" @ac-division-changed="setCurrentDivision"></ac-menu-left>
+            <ac-menu-left></ac-menu-left>
             <div class="col-12 col-sm-9 col-lg-6 col-xl-7">
                 <div class="row mt-4">
                     <div class="container-fluid">

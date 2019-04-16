@@ -65,7 +65,7 @@ class DivisionsController extends Controller
 
     public function index(Request $request)
     {
-        $divisions = $request->user()->divisions()->get()->load('persons');
+        $divisions = $request->user()->divisions()->get()->load(['persons.cards', 'persons.photos']);
 
         abort_if(! $divisions, 403);
 
