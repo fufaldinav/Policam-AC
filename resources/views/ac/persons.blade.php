@@ -1,7 +1,6 @@
 @extends('layout')
 
 @section('scripts')
-    window.translations = {!! Cache::get('translations') !!};
     window.AcData = [];
     divisions = window.AcData.divisions = [];
     persons = window.AcData.persons = [];
