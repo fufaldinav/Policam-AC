@@ -1,5 +1,9 @@
 <template>
-    <button type="button" class="btn btn-secondary" @click="unsetSelectedPerson">
+    <button
+        type="button"
+        class="btn btn-secondary"
+        @click="unsetSelectedPerson"
+    >
         {{ $t('ac.cancel') }}
     </button>
 </template>
@@ -14,7 +18,3 @@
         }
     }
 </script>
-
-<style scoped>
-
-</style>

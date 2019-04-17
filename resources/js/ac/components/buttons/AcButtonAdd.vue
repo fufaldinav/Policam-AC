@@ -1,5 +1,9 @@
 <template>
-    <button type="button" class="list-group-item list-group-item-success" @click="selectPerson">
+    <button
+        type="button"
+        class="list-group-item list-group-item-success"
+        @click="selectPerson"
+    >
         {{ $t('ac.add') }}
     </button>
 </template>
@@ -18,7 +22,3 @@
         }
     }
 </script>
-
-<style scoped>
-
-</style>

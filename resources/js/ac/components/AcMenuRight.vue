@@ -1,5 +1,8 @@
 <template>
-    <div id="ac-menu-right" class="d-none d-lg-block col-lg-3 bg-white ac-menu">
+    <div
+        id="ac-menu-right"
+        class="d-none d-lg-block col-lg-3 bg-white ac-menu"
+    >
         <div class="events"></div>
     </div>
 </template>
@@ -9,7 +12,3 @@
         name: "AcMenuRight"
     }
 </script>
-
-<style scoped>
-
-</style>

@@ -1,5 +1,9 @@
 <template>
-    <button type="button" class="btn btn-danger" @click="removePerson">
+    <button
+        type="button"
+        class="btn btn-danger"
+        @click="removePerson"
+    >
         {{ $t('ac.delete') }}
     </button>
 </template>
@@ -14,7 +18,3 @@
         }
     }
 </script>
-
-<style scoped>
-
-</style>

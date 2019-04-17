@@ -1,14 +1,30 @@
 <template>
     <div class="d-none d-sm-block col-sm-3 col-xl-2 bg-white px-0 ac-menu">
-        <div class="list-group list-group-flush" v-if="selectedDivision === null">
-            <ac-button-division v-for="(division, id) in divisions" :division="division" :key="id">
+        <div
+            v-if="selectedDivision === null"
+            key="list-divisions"
+            class="list-group list-group-flush"
+        >
+            <ac-button-division
+                v-for="(division, id) in divisions"
+                :key="id"
+                :division="division"
+            >
             </ac-button-division>
         </div>
-        <div class="list-group list-group-flush" v-else>
+        <div
+            v-else
+            key="list-persons"
+            class="list-group list-group-flush"
+        >
             <ac-button-back></ac-button-back>
             <ac-button-add></ac-button-add>
-            <ac-button-person v-for="id in selectedDivision.persons" :person="persons[id]"
-                              :key="id"></ac-button-person>
+            <ac-button-person
+                v-for="id in selectedDivision.persons"
+                :key="id"
+                :person="persons[id]"
+            >
+            </ac-button-person>
         </div>
     </div>
 </template>

@@ -1,5 +1,9 @@
 <template>
-    <button type="button" class="list-group-item list-group-item-info"  @click="unselectDivisionAndPerson">
+    <button
+        type="button"
+        class="list-group-item list-group-item-info"
+        @click="unselectDivisionAndPerson"
+    >
         {{ $t('ac.back') }}
     </button>
 </template>
@@ -15,7 +19,3 @@
         }
     }
 </script>
-
-<style scoped>
-
-</style>

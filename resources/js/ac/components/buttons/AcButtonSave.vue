@@ -1,5 +1,9 @@
 <template>
-    <button type="button" class="btn btn-primary" @click="savePerson">
+    <button
+        type="button"
+        class="btn btn-primary"
+        @click="savePerson"
+    >
         {{ $t('ac.save') }}
     </button>
 </template>
@@ -14,7 +18,3 @@
         }
     }
 </script>
-
-<style scoped>
-
-</style>

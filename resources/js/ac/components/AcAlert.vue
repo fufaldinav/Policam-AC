@@ -1,6 +1,11 @@
 <template>
     <transition name="fade">
-        <div class="alert alert-dismissible fade show ac-alert" :class="type" role="alert" v-if="message">
+        <div
+            v-if="message"
+            class="alert alert-dismissible fade show ac-alert"
+            :class="type"
+            role="alert"
+        >
             {{ message }}
         </div>
     </transition>

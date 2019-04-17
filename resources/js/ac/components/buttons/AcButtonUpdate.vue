@@ -1,5 +1,9 @@
 <template>
-    <button type="button" class="btn btn-primary" @click="updatePerson">
+    <button
+        type="button"
+        class="btn btn-primary"
+        @click="updatePerson"
+    >
         {{ $t('ac.update') }}
     </button>
 </template>
@@ -14,7 +18,3 @@
         }
     }
 </script>
-
-<style scoped>
-
-</style>

@@ -18,7 +18,7 @@ mix.js('resources/js/app.js', 'public/js')
     ])
     .scripts([
         'resources/js/ac/notification.js',
-        'resources/js/ac/tree.js',
+        'resources/js/ac/push.js',
     ], 'public/js/scripts.js')
     .sass('resources/sass/app.scss', 'public/css')
     .styles([

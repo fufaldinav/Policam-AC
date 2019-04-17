@@ -1,5 +1,9 @@
 <template>
-    <button type="button" class="list-group-item list-group-item-action" @click="selectPerson">
+    <button
+        type="button"
+        class="list-group-item list-group-item-action"
+        @click="selectPerson"
+    >
         {{ person.f }} {{ person.i }}
     </button>
 </template>
@@ -19,7 +23,3 @@
         }
     }
 </script>
-
-<style scoped>
-
-</style>
