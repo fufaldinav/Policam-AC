@@ -91,6 +91,7 @@
             @yield('content')
         </main>
     </div>
+    <ac-alert :message="alertMessage" :type="alertType"></ac-alert>
 </div>
 <script>
     @yield('scripts')

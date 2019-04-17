@@ -11,7 +11,8 @@
         name: "AcButtonAdd",
         methods: {
             selectPerson: function () {
-                let person = new Person({id: 0});
+                let division = this.$store.state.divisions.selected;
+                let person = new Person({id: 0, divisions: [division.id]});
                 this.$store.commit('persons/setSelected', person);
             }
         }

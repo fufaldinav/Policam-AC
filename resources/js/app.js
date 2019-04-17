@@ -63,6 +63,7 @@ import {Division, Person} from "./ac/classes";
 import AcMenuLeft from "./ac/components/AcMenuLeft";
 import AcMenuRight from "./ac/components/AcMenuRight";
 import AcFormPerson from "./ac/components/AcFormPerson";
+import AcAlert from "./ac/components/AcAlert";
 
 const divisions = {
     namespaced: true,
@@ -104,7 +105,7 @@ const persons = {
         add(state, person) {
             Vue.set(state.collection, person.id, new Person(person));
         },
-        save(state, person) {
+        update(state, person) {
             Vue.set(state.collection, person.id, person);
         },
         remove(state, person) {
@@ -126,25 +127,73 @@ const persons = {
                 commit('add', person);
             }
         },
-        update({state, commit}, person) {
-            if (person === undefined) {
-                person = state.selected;
-            }
-            for (let division of person.divisions) {
-                commit('divisions/addPerson', {divisionId: division, personId: person.id}, {root: true});
-            }
-            commit('update', person);
-            commit('setSelected');
+        async saveSelected({state, commit}) {
+            window.axios.post('/api/persons', {
+                person: state.selected
+            }).then(function (response) {
+                let person = response.data;
+                let divisions = [];
+
+                for (let division of person.divisions) {
+                    let id = division.id;
+                    divisions.push(id);
+                    commit('divisions/addPerson', {divisionId: id, personId: person.id}, {root: true});
+                }
+
+                person.divisions = divisions;
+
+                commit('add', person);
+                commit('setSelected');
+
+                window.Ac.alert(person.f + ' ' + person.i + ' ' + i18n.t('ac.saved') + ' ' + i18n.t('ac.successful'));
+            }).catch(function (error) {
+                console.log(error);
+                window.Ac.alert(error, 'danger');
+            });
         },
-        remove({state, commit}, person) {
-            if (person === undefined) {
-                person = state.selected;
-            }
-            for (let division of person.divisions) {
-                commit('divisions/removePerson', {divisionId: division, personId: person.id}, {root: true});
-            }
-            commit('remove', person);
-            commit('setSelected');
+        async updateSelected({state, commit}) {
+            window.axios.put('/api/persons/' + state.selected.id, {
+                person: state.selected
+            }).then(function (response) {
+                let person = response.data;
+                let divisions = [];
+
+                for (let division of person.divisions) {
+                    let id = division.id;
+                    divisions.push(id);
+                    commit('divisions/addPerson', {divisionId: id, personId: person.id}, {root: true});
+                }
+
+                person.divisions = divisions;
+
+                commit('update', new Person(person));
+                commit('setSelected');
+
+                window.Ac.alert(person.f + ' ' + person.i + ' ' + i18n.t('ac.updated') + ' ' + i18n.t('ac.successful'));
+            }).catch(function (error) {
+                console.log(error);
+                window.Ac.alert(error, 'danger');
+            });
+        },
+        async removeSelected({state, commit}) {
+            axios.delete('/api/persons/' + state.selected.id).then(function (response) {
+                let id = response.data;
+                let person = state.collection[id];
+
+                for (let division of person.divisions) {
+                    commit('divisions/removePerson', {divisionId: division, personId: person.id}, {root: true});
+                }
+
+                let fullName = person.f + ' ' + person.i;
+
+                commit('remove', person);
+                commit('setSelected');
+
+                window.Ac.alert(fullName + ' ' + i18n.t('ac.deleted') + ' ' + i18n.t('ac.successful'));
+            }).catch(function (error) {
+                console.log(error);
+                window.Ac.alert(error, 'danger');
+            });
         }
     }
 }
@@ -155,21 +204,19 @@ const store = new Vuex.Store({
     },
     actions: {
         async loadDivisions({commit, dispatch}) {
-            window.axios.get('/api/divisions')
-                .then(function (response) {
-                    let divisions = response.data;
-                    for (let division of divisions) {
-                        for (let person of division.persons) {
-                            person.divisions = [division.id];
-                            dispatch('persons/add', person);
-                        }
-                        commit('divisions/add', division);
+            window.axios.get('/api/divisions').then(function (response) {
+                for (let division of response.data) {
+                    for (let person of division.persons) {
+                        person.divisions = [division.id];
+                        dispatch('persons/add', person);
                     }
-                    commit('changeLoadingState', false);
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+                    commit('divisions/add', division);
+                }
+                commit('changeLoadingState', false);
+            }).catch(function (error) {
+                console.log(error);
+                setTimeout(dispatch.loadDivisions, 2000); //TODO перезапуск при ошибке
+            });
         }
     },
     mutations: {
@@ -187,17 +234,34 @@ window.Ac = new Vue({
     el: '#ac',
     store,
     i18n,
-    components: {
-        AcMenuLeft,
-        AcMenuRight,
-        AcFormPerson
+    components: {AcMenuLeft, AcMenuRight, AcFormPerson, AcAlert},
+    data: {
+        alertMessage: null,
+        alertType: null
     },
     computed: Vuex.mapState({
         loading: state => state.loading,
-        divisions: state => state.divisions.collection,
-        persons: state => state.persons.collection
+        divisions: state => state.divisions.collection, //TODO delete
+        persons: state => state.persons.collection //TODO delete
     }),
     created() {
         store.dispatch('loadDivisions');
+    },
+    methods: {
+        alert(message, type) {
+            if (type === undefined) {
+                type = 'alert-info';
+            } else {
+                type = 'alert-' + type;
+            }
+
+            this.alertMessage = message;
+            this.alertType = type;
+
+            setTimeout(this.closeAlert, 5000);
+        },
+        closeAlert() {
+            this.alertMessage = null;
+        }
     }
 });

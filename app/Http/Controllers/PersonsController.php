@@ -33,10 +33,10 @@ class PersonsController extends Controller
     {
         if ($organization_id) {
             $org = $request->user()->organizations()->where('organization_id', $organization_id)->first();
-            abort_if(! $org, 403);
+            abort_if(!$org, 403);
         } else {
             $org = $request->user()->organizations()->first();
-            if (! $org) {
+            if (!$org) {
                 return view('ac.error', ['error' => 'Огранизации отсутствуют']);
             }
         }
@@ -48,7 +48,7 @@ class PersonsController extends Controller
     {
         $persons = $request->user()->persons()->get();
 
-        abort_if(! $persons, 403);
+        abort_if(!$persons, 403);
 
         return response()->json($persons);
     }
@@ -57,42 +57,54 @@ class PersonsController extends Controller
     {
         $person = $request->user()->persons()->where('persons.id', $id)->first()->load(['photos', 'cards']);
 
-        abort_if(! $person, 403);
+        abort_if(!$person, 403);
 
         return response()->json($person);
     }
 
     public function update(Request $request, $id)
     {
-        $person = $request->user()->persons()->where('persons.id', $id)->first();
+        $updatedPerson = $request->user()->persons()->where('persons.id', $id)->first();
 
-        abort_if(! $person, 403);
+        abort_if(!$updatedPerson, 403);
 
-        $person->update($request->input('person'));
+        $person = $request->input('person');
 
-        $person->attachDivisions($request->input('divisions'))
-            ->attachCards($request->input('cards'))
-            ->attachPhotos($request->input('photos'));
+        $cards = $person['cards'];
+        $divisions = $person['divisions'];
+        $photos = $person['photos'];
 
-        return response()->json($person->load('divisions'));
+        $updatedPerson->update($request->input('person'));
+
+        $updatedPerson->attachDivisions($divisions)
+            ->attachCards($cards)
+            ->attachPhotos($photos);
+
+        return response()->json($updatedPerson->load(['cards', 'divisions', 'photos']));
     }
 
     public function store(Request $request)
     {
-        $person = App\Person::create($request->input('person'));
+        $person = $request->input('person');
 
-        $person->attachDivisions($request->input('divisions'))
-            ->attachCards($request->input('cards'))
-            ->attachPhotos($request->input('photos'));
+        $cards = $person['cards'];
+        $divisions = $person['divisions'];
+        $photos = $person['photos'];
 
-        return response()->json($person->load('divisions'));
+        $person = App\Person::create($person);
+
+        $person->attachDivisions($divisions)
+            ->attachCards($cards)
+            ->attachPhotos($photos);
+
+        return response()->json($person->load(['cards', 'divisions', 'photos']));
     }
 
     public function destroy(Request $request, int $id): ?int
     {
         $person = $request->user()->persons()->where('persons.id', $id)->first();
 
-        abort_if(! $person, 403);
+        abort_if(!$person, 403);
 
         $person->detachDivisions()->detachCards()->detachPhotos()->detachSubscribers();
 

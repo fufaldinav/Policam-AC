@@ -9,7 +9,7 @@
         name: "AcButtonRemove",
         methods: {
             removePerson() {
-                this.$store.dispatch('persons/remove');
+                this.$store.dispatch('persons/removeSelected');
             }
         }
     }

@@ -35,4 +35,8 @@ return [
     'and' => 'и',
     'card_deleted' => 'карта удалена',
     'required' => 'Поле ":field" является обязательным!',
+    'successful' => 'успешно',
+    'saved' => 'сохранен',
+    'updated' => 'сохранен',
+    'deleted' => 'удален',
 ];

@@ -31,4 +31,8 @@ return [
     'and' => 'and',
     'card_deleted' => 'card deleted',
     'required' => 'The field ":field" is required!',
+    'successful' => 'successful',
+    'saved' => 'saved',
+    'updated' => 'updated',
+    'deleted' => 'deleted',
 ];

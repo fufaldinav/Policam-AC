@@ -30,7 +30,11 @@ export default {
             "registered": "Registered",
             "and": "and",
             "card_deleted": "card deleted",
-            "required": "The field \"{field}\" is required!"
+            "required": "The field \"{field}\" is required!",
+            "successful": "successful",
+            "saved": "saved",
+            "updated": "updated",
+            "deleted": "deleted"
         }
     },
     "ru": {
@@ -68,7 +72,11 @@ export default {
             "registered": "Событие зарегистрировано",
             "and": "и",
             "card_deleted": "карта удалена",
-            "required": "Поле \"{field}\" является обязательным!"
+            "required": "Поле \"{field}\" является обязательным!",
+            "successful": "успешно",
+            "saved": "сохранен",
+            "updated": "сохранен",
+            "deleted": "удален"
         }
     }
 }

@@ -9,7 +9,7 @@
         name: "AcButtonSave",
         methods: {
             savePerson() {
-                this.$store.dispatch('persons/add');
+                this.$store.dispatch('persons/saveSelected');
             }
         }
     }

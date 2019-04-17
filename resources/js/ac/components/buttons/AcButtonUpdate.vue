@@ -9,7 +9,7 @@
         name: "AcButtonUpdate",
         methods: {
             updatePerson() {
-                this.$store.dispatch('persons/update');
+                this.$store.dispatch('persons/updateSelected');
             }
         }
     }
