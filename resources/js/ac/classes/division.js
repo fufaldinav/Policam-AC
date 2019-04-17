@@ -6,11 +6,11 @@ export function Division(data) {
 
     this.persons = [];
 
-    if (data['persons'] !== undefined) {
-        for (let person of data['persons']) {
+    if (data.persons !== undefined) {
+        for (let person of data.persons) {
             this.persons.push(person.id);
         }
-        delete data['persons'];
+        delete data.persons;
     }
 
     for (let k in data) {

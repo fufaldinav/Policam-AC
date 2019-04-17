@@ -9,30 +9,23 @@ export function Person(data) {
     this.birthday = null;
     this.address = null;
     this.phone = null;
+    this.divisions = [];
 
     this.cards = [];
-    this.divisions = [];
     this.photos = [];
 
-    if (data['cards'] !== undefined) {
-        for (let card of data['cards']) {
+    if (data.cards !== undefined) {
+        for (let card of data.cards) {
             this.cards.push(new Card(card));
         }
-        delete data['cards'];
+        delete data.cards;
     }
 
-    if (data['divisions'] !== undefined) {
-        for (let division of data['divisions']) {
-            this.divisions.push(division.id);
-        }
-        delete data['divisions'];
-    }
-
-    if (data['photos'] !== undefined) {
-        for (let photo of data['photos']) {
+    if (data.photos !== undefined) {
+        for (let photo of data.photos) {
             this.photos.push(new Photo(photo));
         }
-        delete data['photos'];
+        delete data.photos;
     }
 
     for (let k in data) {

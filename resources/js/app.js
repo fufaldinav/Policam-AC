@@ -74,6 +74,16 @@ const divisions = {
         add(state, division) {
             Vue.set(state.collection, division.id, new Division(division));
         },
+        addPerson(state, relation) {
+            let index = state.collection[relation.divisionId].persons.indexOf(relation.personId);
+            if (index === -1) {
+                state.collection[relation.divisionId].persons.push(relation.personId);
+            }
+        },
+        removePerson(state, relation) {
+            let index = state.collection[relation.divisionId].persons.indexOf(relation.personId);
+            state.collection[relation.divisionId].persons.splice(index, 1);
+        },
         setSelected(state, division) {
             if (division === undefined) {
                 state.selected = null;
@@ -94,6 +104,12 @@ const persons = {
         add(state, person) {
             Vue.set(state.collection, person.id, new Person(person));
         },
+        save(state, person) {
+            Vue.set(state.collection, person.id, person);
+        },
+        remove(state, person) {
+            Vue.delete(state.collection, person.id);
+        },
         setSelected(state, person) {
             if (person === undefined) {
                 state.selected = new Person({});
@@ -102,9 +118,33 @@ const persons = {
             }
         }
     },
-    getters: {
-        personsCount: state => id => {
-            return state.divisions[id].persons().length;
+    actions: {
+        add({state, commit}, person) {
+            if (state.collection.hasOwnProperty(person.id)) {
+                state.collection[person.id].divisions = [...state.collection[person.id].divisions, ...person.divisions];
+            } else {
+                commit('add', person);
+            }
+        },
+        update({state, commit}, person) {
+            if (person === undefined) {
+                person = state.selected;
+            }
+            for (let division of person.divisions) {
+                commit('divisions/addPerson', {divisionId: division, personId: person.id}, {root: true});
+            }
+            commit('update', person);
+            commit('setSelected');
+        },
+        remove({state, commit}, person) {
+            if (person === undefined) {
+                person = state.selected;
+            }
+            for (let division of person.divisions) {
+                commit('divisions/removePerson', {divisionId: division, personId: person.id}, {root: true});
+            }
+            commit('remove', person);
+            commit('setSelected');
         }
     }
 }
@@ -114,13 +154,14 @@ const store = new Vuex.Store({
         loading: true
     },
     actions: {
-        async loadDivisions({commit}) {
+        async loadDivisions({commit, dispatch}) {
             window.axios.get('/api/divisions')
                 .then(function (response) {
                     let divisions = response.data;
                     for (let division of divisions) {
                         for (let person of division.persons) {
-                            commit('persons/add', person);
+                            person.divisions = [division.id];
+                            dispatch('persons/add', person);
                         }
                         commit('divisions/add', division);
                     }

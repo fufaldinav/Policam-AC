@@ -56,10 +56,10 @@
         </div>
         <div class="form-row">
             <div class="form-group">
-                <ac-button-save v-if="selectedPerson.id === 0" @click="save"></ac-button-save>
-                <ac-button-cancel v-if="selectedPerson.id === 0" @click="cancel"></ac-button-cancel>
-                <ac-button-update v-if="selectedPerson.id > 0" @click="update"></ac-button-update>
-                <ac-button-remove v-if="selectedPerson.id > 0" @click="remove"></ac-button-remove>
+                <ac-button-save v-if="selectedPerson.id === 0"></ac-button-save>
+                <ac-button-cancel v-if="selectedPerson.id === 0"></ac-button-cancel>
+                <ac-button-update v-if="selectedPerson.id > 0"></ac-button-update>
+                <ac-button-remove v-if="selectedPerson.id > 0"></ac-button-remove>
             </div>
         </div>
     </form>
@@ -79,20 +79,6 @@
             ...mapState({
                 selectedPerson: state => state.persons.selected
             })
-        },
-        methods: {
-            save: function () {
-
-            },
-            update: function () {
-
-            },
-            cancel: function () {
-
-            },
-            remove: function () {
-
-            }
         }
     }
 </script>

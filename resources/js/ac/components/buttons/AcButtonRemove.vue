@@ -1,12 +1,17 @@
 <template>
-    <button type="button" class="btn btn-danger" @click="$emit('ac-form-remove')">
+    <button type="button" class="btn btn-danger" @click="removePerson">
         {{ $t('ac.delete') }}
     </button>
 </template>
 
 <script>
     export default {
-        name: "AcButtonRemove"
+        name: "AcButtonRemove",
+        methods: {
+            removePerson() {
+                this.$store.dispatch('persons/remove');
+            }
+        }
     }
 </script>
 

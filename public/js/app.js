@@ -114,13 +114,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     selectedPerson: function selectedPerson(state) {
       return state.persons.selected;
     }
-  })),
-  methods: {
-    save: function save() {},
-    update: function update() {},
-    cancel: function cancel() {},
-    remove: function remove() {}
-  }
+  }))
 });
 
 /***/ }),
@@ -256,7 +250,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "AcButtonBack",
   methods: {
-    selectDivision: function selectDivision() {
+    unselectDivisionAndPerson: function unselectDivisionAndPerson() {
       this.$store.commit('divisions/setSelected');
       this.$store.commit('persons/setSelected');
     }
@@ -337,12 +331,14 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _classes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../classes */ "./resources/js/ac/classes/index.js");
 //
 //
 //
 //
 //
 //
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "AcButtonPerson",
   props: {
@@ -350,7 +346,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     selectPerson: function selectPerson() {
-      this.$store.commit('persons/setSelected', this.person);
+      this.$store.commit('persons/setSelected', new _classes__WEBPACK_IMPORTED_MODULE_0__["Person"](this.person));
     }
   }
 });
@@ -373,7 +369,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "AcButtonRemove"
+  name: "AcButtonRemove",
+  methods: {
+    removePerson: function removePerson() {
+      this.$store.dispatch('persons/remove');
+    }
+  }
 });
 
 /***/ }),
@@ -394,7 +395,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "AcButtonSave"
+  name: "AcButtonSave",
+  methods: {
+    savePerson: function savePerson() {
+      this.$store.dispatch('persons/add');
+    }
+  }
 });
 
 /***/ }),
@@ -415,7 +421,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "AcButtonUpdate"
+  name: "AcButtonUpdate",
+  methods: {
+    updatePerson: function updatePerson() {
+      this.$store.dispatch('persons/update');
+    }
+  }
 });
 
 /***/ }),
@@ -3744,21 +3755,13 @@ var render = function() {
           "div",
           { staticClass: "form-group" },
           [
-            _vm.selectedPerson.id === 0
-              ? _c("ac-button-save", { on: { click: _vm.save } })
-              : _vm._e(),
+            _vm.selectedPerson.id === 0 ? _c("ac-button-save") : _vm._e(),
             _vm._v(" "),
-            _vm.selectedPerson.id === 0
-              ? _c("ac-button-cancel", { on: { click: _vm.cancel } })
-              : _vm._e(),
+            _vm.selectedPerson.id === 0 ? _c("ac-button-cancel") : _vm._e(),
             _vm._v(" "),
-            _vm.selectedPerson.id > 0
-              ? _c("ac-button-update", { on: { click: _vm.update } })
-              : _vm._e(),
+            _vm.selectedPerson.id > 0 ? _c("ac-button-update") : _vm._e(),
             _vm._v(" "),
-            _vm.selectedPerson.id > 0
-              ? _c("ac-button-remove", { on: { click: _vm.remove } })
-              : _vm._e()
+            _vm.selectedPerson.id > 0 ? _c("ac-button-remove") : _vm._e()
           ],
           1
         )
@@ -3937,7 +3940,7 @@ var render = function() {
     {
       staticClass: "list-group-item list-group-item-info",
       attrs: { type: "button" },
-      on: { click: _vm.selectDivision }
+      on: { click: _vm.unselectDivisionAndPerson }
     },
     [_vm._v("\n    " + _vm._s(_vm.$t("ac.back")) + "\n")]
   )
@@ -4075,11 +4078,7 @@ var render = function() {
     {
       staticClass: "btn btn-danger",
       attrs: { type: "button" },
-      on: {
-        click: function($event) {
-          return _vm.$emit("ac-form-remove")
-        }
-      }
+      on: { click: _vm.removePerson }
     },
     [_vm._v("\n    " + _vm._s(_vm.$t("ac.delete")) + "\n")]
   )
@@ -4111,11 +4110,7 @@ var render = function() {
     {
       staticClass: "btn btn-primary",
       attrs: { type: "button" },
-      on: {
-        click: function($event) {
-          return _vm.$emit("ac-form-save")
-        }
-      }
+      on: { click: _vm.savePerson }
     },
     [_vm._v("\n    " + _vm._s(_vm.$t("ac.save")) + "\n")]
   )
@@ -4147,11 +4142,7 @@ var render = function() {
     {
       staticClass: "btn btn-primary",
       attrs: { type: "button" },
-      on: {
-        click: function($event) {
-          return _vm.$emit("ac-form-update")
-        }
-      }
+      on: { click: _vm.updatePerson }
     },
     [_vm._v("\n    " + _vm._s(_vm.$t("ac.update")) + "\n")]
   )
@@ -5396,13 +5387,13 @@ function Division(data) {
   this.type = 1;
   this.persons = [];
 
-  if (data['persons'] !== undefined) {
+  if (data.persons !== undefined) {
     var _iteratorNormalCompletion = true;
     var _didIteratorError = false;
     var _iteratorError = undefined;
 
     try {
-      for (var _iterator = data['persons'][Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      for (var _iterator = data.persons[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
         var person = _step.value;
         this.persons.push(person.id);
       }
@@ -5421,7 +5412,7 @@ function Division(data) {
       }
     }
 
-    delete data['persons'];
+    delete data.persons;
   }
 
   for (var k in data) {
@@ -5482,17 +5473,17 @@ function Person(data) {
   this.birthday = null;
   this.address = null;
   this.phone = null;
-  this.cards = [];
   this.divisions = [];
+  this.cards = [];
   this.photos = [];
 
-  if (data['cards'] !== undefined) {
+  if (data.cards !== undefined) {
     var _iteratorNormalCompletion = true;
     var _didIteratorError = false;
     var _iteratorError = undefined;
 
     try {
-      for (var _iterator = data['cards'][Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      for (var _iterator = data.cards[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
         var card = _step.value;
         this.cards.push(new ___WEBPACK_IMPORTED_MODULE_0__["Card"](card));
       }
@@ -5511,18 +5502,18 @@ function Person(data) {
       }
     }
 
-    delete data['cards'];
+    delete data.cards;
   }
 
-  if (data['divisions'] !== undefined) {
+  if (data.photos !== undefined) {
     var _iteratorNormalCompletion2 = true;
     var _didIteratorError2 = false;
     var _iteratorError2 = undefined;
 
     try {
-      for (var _iterator2 = data['divisions'][Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-        var division = _step2.value;
-        this.divisions.push(division.id);
+      for (var _iterator2 = data.photos[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+        var photo = _step2.value;
+        this.photos.push(new ___WEBPACK_IMPORTED_MODULE_0__["Photo"](photo));
       }
     } catch (err) {
       _didIteratorError2 = true;
@@ -5539,35 +5530,7 @@ function Person(data) {
       }
     }
 
-    delete data['divisions'];
-  }
-
-  if (data['photos'] !== undefined) {
-    var _iteratorNormalCompletion3 = true;
-    var _didIteratorError3 = false;
-    var _iteratorError3 = undefined;
-
-    try {
-      for (var _iterator3 = data['photos'][Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-        var photo = _step3.value;
-        this.photos.push(new ___WEBPACK_IMPORTED_MODULE_0__["Photo"](photo));
-      }
-    } catch (err) {
-      _didIteratorError3 = true;
-      _iteratorError3 = err;
-    } finally {
-      try {
-        if (!_iteratorNormalCompletion3 && _iterator3.return != null) {
-          _iterator3.return();
-        }
-      } finally {
-        if (_didIteratorError3) {
-          throw _iteratorError3;
-        }
-      }
-    }
-
-    delete data['photos'];
+    delete data.photos;
   }
 
   for (var k in data) {
@@ -6441,6 +6404,14 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -6506,6 +6477,17 @@ var divisions = {
     add: function add(state, division) {
       Vue.set(state.collection, division.id, new _ac_classes__WEBPACK_IMPORTED_MODULE_3__["Division"](division));
     },
+    addPerson: function addPerson(state, relation) {
+      var index = state.collection[relation.divisionId].persons.indexOf(relation.personId);
+
+      if (index === -1) {
+        state.collection[relation.divisionId].persons.push(relation.personId);
+      }
+    },
+    removePerson: function removePerson(state, relation) {
+      var index = state.collection[relation.divisionId].persons.indexOf(relation.personId);
+      state.collection[relation.divisionId].persons.splice(index, 1);
+    },
     setSelected: function setSelected(state, division) {
       if (division === undefined) {
         state.selected = null;
@@ -6525,6 +6507,12 @@ var persons = {
     add: function add(state, person) {
       Vue.set(state.collection, person.id, new _ac_classes__WEBPACK_IMPORTED_MODULE_3__["Person"](person));
     },
+    save: function save(state, person) {
+      Vue.set(state.collection, person.id, person);
+    },
+    remove: function remove(state, person) {
+      Vue.delete(state.collection, person.id);
+    },
     setSelected: function setSelected(state, person) {
       if (person === undefined) {
         state.selected = new _ac_classes__WEBPACK_IMPORTED_MODULE_3__["Person"]({});
@@ -6533,11 +6521,96 @@ var persons = {
       }
     }
   },
-  getters: {
-    personsCount: function personsCount(state) {
-      return function (id) {
-        return state.divisions[id].persons().length;
-      };
+  actions: {
+    add: function add(_ref, person) {
+      var state = _ref.state,
+          commit = _ref.commit;
+
+      if (state.collection.hasOwnProperty(person.id)) {
+        state.collection[person.id].divisions = [].concat(_toConsumableArray(state.collection[person.id].divisions), _toConsumableArray(person.divisions));
+      } else {
+        commit('add', person);
+      }
+    },
+    update: function update(_ref2, person) {
+      var state = _ref2.state,
+          commit = _ref2.commit;
+
+      if (person === undefined) {
+        person = state.selected;
+      }
+
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = person.divisions[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var division = _step.value;
+          commit('divisions/addPerson', {
+            divisionId: division,
+            personId: person.id
+          }, {
+            root: true
+          });
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return != null) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      commit('update', person);
+      commit('setSelected');
+    },
+    remove: function remove(_ref3, person) {
+      var state = _ref3.state,
+          commit = _ref3.commit;
+
+      if (person === undefined) {
+        person = state.selected;
+      }
+
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
+
+      try {
+        for (var _iterator2 = person.divisions[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var division = _step2.value;
+          commit('divisions/removePerson', {
+            divisionId: division,
+            personId: person.id
+          }, {
+            root: true
+          });
+        }
+      } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
+            _iterator2.return();
+          }
+        } finally {
+          if (_didIteratorError2) {
+            throw _iteratorError2;
+          }
+        }
+      }
+
+      commit('remove', person);
+      commit('setSelected');
     }
   }
 };
@@ -6549,42 +6622,43 @@ var store = new Vuex.Store({
     loadDivisions: function () {
       var _loadDivisions = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(_ref) {
-        var commit;
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(_ref4) {
+        var commit, dispatch;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                commit = _ref.commit;
+                commit = _ref4.commit, dispatch = _ref4.dispatch;
                 window.axios.get('/api/divisions').then(function (response) {
                   var divisions = response.data;
-                  var _iteratorNormalCompletion = true;
-                  var _didIteratorError = false;
-                  var _iteratorError = undefined;
+                  var _iteratorNormalCompletion3 = true;
+                  var _didIteratorError3 = false;
+                  var _iteratorError3 = undefined;
 
                   try {
-                    for (var _iterator = divisions[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                      var division = _step.value;
-                      var _iteratorNormalCompletion2 = true;
-                      var _didIteratorError2 = false;
-                      var _iteratorError2 = undefined;
+                    for (var _iterator3 = divisions[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                      var division = _step3.value;
+                      var _iteratorNormalCompletion4 = true;
+                      var _didIteratorError4 = false;
+                      var _iteratorError4 = undefined;
 
                       try {
-                        for (var _iterator2 = division.persons[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                          var person = _step2.value;
-                          commit('persons/add', person);
+                        for (var _iterator4 = division.persons[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                          var person = _step4.value;
+                          person.divisions = [division.id];
+                          dispatch('persons/add', person);
                         }
                       } catch (err) {
-                        _didIteratorError2 = true;
-                        _iteratorError2 = err;
+                        _didIteratorError4 = true;
+                        _iteratorError4 = err;
                       } finally {
                         try {
-                          if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
-                            _iterator2.return();
+                          if (!_iteratorNormalCompletion4 && _iterator4.return != null) {
+                            _iterator4.return();
                           }
                         } finally {
-                          if (_didIteratorError2) {
-                            throw _iteratorError2;
+                          if (_didIteratorError4) {
+                            throw _iteratorError4;
                           }
                         }
                       }
@@ -6592,16 +6666,16 @@ var store = new Vuex.Store({
                       commit('divisions/add', division);
                     }
                   } catch (err) {
-                    _didIteratorError = true;
-                    _iteratorError = err;
+                    _didIteratorError3 = true;
+                    _iteratorError3 = err;
                   } finally {
                     try {
-                      if (!_iteratorNormalCompletion && _iterator.return != null) {
-                        _iterator.return();
+                      if (!_iteratorNormalCompletion3 && _iterator3.return != null) {
+                        _iterator3.return();
                       }
                     } finally {
-                      if (_didIteratorError) {
-                        throw _iteratorError;
+                      if (_didIteratorError3) {
+                        throw _iteratorError3;
                       }
                     }
                   }

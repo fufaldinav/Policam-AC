@@ -1,5 +1,5 @@
 <template>
-    <button type="button" class="list-group-item list-group-item-info"  @click="selectDivision">
+    <button type="button" class="list-group-item list-group-item-info"  @click="unselectDivisionAndPerson">
         {{ $t('ac.back') }}
     </button>
 </template>
@@ -8,7 +8,7 @@
     export default {
         name: "AcButtonBack",
         methods: {
-            selectDivision() {
+            unselectDivisionAndPerson() {
                 this.$store.commit('divisions/setSelected');
                 this.$store.commit('persons/setSelected');
             }

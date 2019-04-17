@@ -5,6 +5,8 @@
 </template>
 
 <script>
+    import {Person} from '../../classes';
+
     export default {
         name: "AcButtonPerson",
         props: {
@@ -12,7 +14,7 @@
         },
         methods: {
             selectPerson: function () {
-                this.$store.commit('persons/setSelected', this.person);
+                this.$store.commit('persons/setSelected', new Person(this.person));
             }
         }
     }
