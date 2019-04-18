@@ -30,7 +30,7 @@
             <button
                 type="button"
                 class="btn btn-sm btn-danger"
-                @click="removePhoto"
+                @click="removeUploadedPhoto"
             >
                 {{ $t('ac.delete') }}
             </button>
@@ -55,7 +55,7 @@
                 return {id: 0, hash: 0};
             },
             url() {
-                return '/photos/' + this.photo.hash;
+                return '/photos/thumbnails/' + this.photo.hash + '.jpg';
             }
         },
         methods: {
@@ -80,8 +80,22 @@
                     window.Ac.alert(error, 'danger');
                 })
             },
-            removePhoto() {
-                this.$store.commit('persons/removePhoto', this.photo);
+            removeUploadedPhoto() {
+                if (this.photo.person_id === null) {
+                    let self = this;
+                    window.axios.delete('/api/photos/' + this.photo.id).then(function (response) {
+                        if (response.data > 0) {
+                            self.$store.commit('persons/removePhoto', self.photo);
+                        } else {
+                            window.Ac.alert('Unknown error', 'danger');
+                        }
+                    }).catch(function (error) {
+                        window.Ac.alert(error, 'danger');
+                        console.log(error);
+                    })
+                } else {
+                    this.$store.commit('persons/removePhoto', this.photo);
+                }
             }
         }
     }

@@ -787,7 +787,7 @@ __webpack_require__.r(__webpack_exports__);
       };
     },
     url: function url() {
-      return '/photos/' + this.photo.hash;
+      return '/photos/thumbnails/' + this.photo.hash + '.jpg';
     }
   },
   methods: {
@@ -812,8 +812,22 @@ __webpack_require__.r(__webpack_exports__);
         window.Ac.alert(error, 'danger');
       });
     },
-    removePhoto: function removePhoto() {
-      this.$store.commit('persons/removePhoto', this.photo);
+    removeUploadedPhoto: function removeUploadedPhoto() {
+      if (this.photo.person_id === null) {
+        var self = this;
+        window.axios.delete('/api/photos/' + this.photo.id).then(function (response) {
+          if (response.data > 0) {
+            self.$store.commit('persons/removePhoto', self.photo);
+          } else {
+            window.Ac.alert('Unknown error', 'danger');
+          }
+        }).catch(function (error) {
+          window.Ac.alert(error, 'danger');
+          console.log(error);
+        });
+      } else {
+        this.$store.commit('persons/removePhoto', this.photo);
+      }
     }
   }
 });
@@ -5550,7 +5564,7 @@ var render = function() {
                 {
                   staticClass: "btn btn-sm btn-danger",
                   attrs: { type: "button" },
-                  on: { click: _vm.removePhoto }
+                  on: { click: _vm.removeUploadedPhoto }
                 },
                 [
                   _vm._v(
@@ -6970,7 +6984,7 @@ __webpack_require__.r(__webpack_exports__);
 function Photo(data) {
   this.id = 0;
   this.hash = null;
-  this.person_id = 0;
+  this.person_id = null;
 
   for (var k in data) {
     if (this.hasOwnProperty(k)) {
