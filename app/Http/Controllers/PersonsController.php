@@ -106,7 +106,10 @@ class PersonsController extends Controller
 
         abort_if(!$person, 403);
 
-        $person->detachDivisions()->detachCards()->detachPhotos()->detachSubscribers();
+        $person->detachDivisions()
+            ->detachCards()
+            ->detachPhotos()
+            ->detachSubscribers();
 
         if ($person->delete()) {
             return $id;

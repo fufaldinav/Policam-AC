@@ -1,6 +1,6 @@
 import Vue from "vue";
 import i18n from '../../../vue-i18n';
-import {Person} from "../../classes";
+import {Card, Person} from "../../classes";
 
 const state = {
     collection: {},
@@ -30,6 +30,10 @@ const mutations = {
         } else {
             state.selected = person;
         }
+    },
+
+    addCard(state, card) {
+        state.selected.cards.push(new Card(card));
     }
 }
 

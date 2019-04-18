@@ -48,6 +48,110 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/AcFormCards.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/ac/components/AcFormCards.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "AcFormCards",
+  computed: {
+    selectedPersonCards: function selectedPersonCards() {
+      return this.$store.state.persons.selected.cards;
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/AcFormLastCard.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/ac/components/AcFormLastCard.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "AcFormLastCard",
+  computed: {
+    lastFreeCard: function lastFreeCard() {
+      return this.$store.state.cards.last;
+    },
+    noLastFreeCard: function noLastFreeCard() {
+      return this.lastFreeCard.wiegand === '000000000000';
+    },
+    cardCode: function cardCode() {
+      var wiegand = this.lastFreeCard.wiegand;
+      return ('0000000000' + parseInt(wiegand, 16)).slice(-10);
+    }
+  },
+  methods: {
+    addCardToPerson: function addCardToPerson() {
+      this.$store.commit('persons/addCard', this.lastFreeCard);
+      this.$store.commit('cards/setLast', {
+        id: 0,
+        wiegand: '000000000000'
+      });
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/AcFormPerson.vue?vue&type=script&lang=js&":
 /*!**************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/ac/components/AcFormPerson.vue?vue&type=script&lang=js& ***!
@@ -57,10 +161,12 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _buttons_AcButtonSave__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./buttons/AcButtonSave */ "./resources/js/ac/components/buttons/AcButtonSave.vue");
-/* harmony import */ var _buttons_AcButtonCancel__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./buttons/AcButtonCancel */ "./resources/js/ac/components/buttons/AcButtonCancel.vue");
-/* harmony import */ var _buttons_AcButtonUpdate__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./buttons/AcButtonUpdate */ "./resources/js/ac/components/buttons/AcButtonUpdate.vue");
-/* harmony import */ var _buttons_AcButtonRemove__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./buttons/AcButtonRemove */ "./resources/js/ac/components/buttons/AcButtonRemove.vue");
+/* harmony import */ var _AcFormCards__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AcFormCards */ "./resources/js/ac/components/AcFormCards.vue");
+/* harmony import */ var _AcFormLastCard__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AcFormLastCard */ "./resources/js/ac/components/AcFormLastCard.vue");
+/* harmony import */ var _buttons_AcButtonSave__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./buttons/AcButtonSave */ "./resources/js/ac/components/buttons/AcButtonSave.vue");
+/* harmony import */ var _buttons_AcButtonCancel__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./buttons/AcButtonCancel */ "./resources/js/ac/components/buttons/AcButtonCancel.vue");
+/* harmony import */ var _buttons_AcButtonUpdate__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./buttons/AcButtonUpdate */ "./resources/js/ac/components/buttons/AcButtonUpdate.vue");
+/* harmony import */ var _buttons_AcButtonRemove__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./buttons/AcButtonRemove */ "./resources/js/ac/components/buttons/AcButtonRemove.vue");
 //
 //
 //
@@ -211,6 +317,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+
+
 
 
 
@@ -218,10 +332,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "AcFormPerson",
   components: {
-    AcButtonRemove: _buttons_AcButtonRemove__WEBPACK_IMPORTED_MODULE_3__["default"],
-    AcButtonUpdate: _buttons_AcButtonUpdate__WEBPACK_IMPORTED_MODULE_2__["default"],
-    AcButtonCancel: _buttons_AcButtonCancel__WEBPACK_IMPORTED_MODULE_1__["default"],
-    AcButtonSave: _buttons_AcButtonSave__WEBPACK_IMPORTED_MODULE_0__["default"]
+    AcFormCards: _AcFormCards__WEBPACK_IMPORTED_MODULE_0__["default"],
+    AcFormLastCard: _AcFormLastCard__WEBPACK_IMPORTED_MODULE_1__["default"],
+    AcButtonRemove: _buttons_AcButtonRemove__WEBPACK_IMPORTED_MODULE_5__["default"],
+    AcButtonUpdate: _buttons_AcButtonUpdate__WEBPACK_IMPORTED_MODULE_4__["default"],
+    AcButtonCancel: _buttons_AcButtonCancel__WEBPACK_IMPORTED_MODULE_3__["default"],
+    AcButtonSave: _buttons_AcButtonSave__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
   computed: {
     selectedPerson: function selectedPerson() {
@@ -493,11 +609,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "AcButtonPerson",
   props: {
     person: Object
+  },
+  computed: {
+    noCards: function noCards() {
+      return this.person.cards.length === 0;
+    }
   },
   methods: {
     selectPerson: function selectPerson() {
@@ -4303,6 +4427,140 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/AcFormCards.vue?vue&type=template&id=a3214e3a&scoped=true&":
+/*!*****************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/ac/components/AcFormCards.vue?vue&type=template&id=a3214e3a&scoped=true& ***!
+  \*****************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm.selectedPersonCards.length > 0
+    ? _c("div", [
+        _c("label", { attrs: { for: "cards" } }, [
+          _vm._v(
+            "\n        " +
+              _vm._s(_vm.$tc("ac.cards", _vm.selectedPersonCards.length)) +
+              "\n    "
+          )
+        ]),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.selectedPersonCards,
+              expression: "selectedPersonCards"
+            }
+          ],
+          staticClass: "form-control",
+          attrs: {
+            id: "cards",
+            type: "text",
+            placeholder: _vm.$tc("ac.cards", _vm.selectedPersonCards.length)
+          },
+          domProps: { value: _vm.selectedPersonCards },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.selectedPersonCards = $event.target.value
+            }
+          }
+        })
+      ])
+    : _vm._e()
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/AcFormLastCard.vue?vue&type=template&id=95997614&scoped=true&":
+/*!********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/ac/components/AcFormLastCard.vue?vue&type=template&id=95997614&scoped=true& ***!
+  \********************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "form-row" }, [
+      _c("label", { attrs: { for: "freeCards" } }, [
+        _vm._v("\n            " + _vm._s(_vm.$t("ac.last_card")) + "\n        ")
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-row" }, [
+      _c("div", { staticClass: "col-10" }, [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.cardCode,
+              expression: "cardCode"
+            }
+          ],
+          staticClass: "form-control form-control-plaintext",
+          attrs: {
+            id: "freeCards",
+            type: "text",
+            placeholder: _vm.$t("ac.last_card"),
+            disabled: ""
+          },
+          domProps: { value: _vm.cardCode },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.cardCode = $event.target.value
+            }
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-2" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn",
+            class: [_vm.noLastFreeCard ? "btn-secondary" : "btn-primary"],
+            attrs: { type: "button", disabled: _vm.noLastFreeCard },
+            on: { click: _vm.addCardToPerson }
+          },
+          [_vm._v("\n                +\n            ")]
+        )
+      ])
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/AcFormPerson.vue?vue&type=template&id=2350fff6&":
 /*!******************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/ac/components/AcFormPerson.vue?vue&type=template&id=2350fff6& ***!
@@ -4597,30 +4855,59 @@ var render = function() {
           })
         ]),
         _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "form-group col-6", attrs: { id: "ac-menu-card" } },
-          [
-            _c("label", { attrs: { for: "card" } }, [
-              _vm._v(
-                "\n                " +
-                  _vm._s(_vm.$t("ac.card")) +
-                  "\n            "
-              )
-            ]),
-            _vm._v(" "),
-            _c("input", {
-              staticClass: "form-control",
-              attrs: {
-                id: "card",
-                type: "text",
-                placeholder: _vm.$t("ac.card"),
-                disabled: _vm.selectedPerson.id === null
+        _c("div", { staticClass: "form-group col-6" }, [
+          _c("label", { attrs: { for: "uid" } }, [
+            _vm._v(
+              "\n                " + _vm._s(_vm.$t("ac.uid")) + "\n            "
+            )
+          ]),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.selectedPerson.id,
+                expression: "selectedPerson.id"
               }
-            })
-          ]
-        )
+            ],
+            staticClass: "form-control",
+            attrs: {
+              id: "uid",
+              type: "text",
+              placeholder: _vm.$t("ac.uid"),
+              disabled: ""
+            },
+            domProps: { value: _vm.selectedPerson.id },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.selectedPerson, "id", $event.target.value)
+              }
+            }
+          })
+        ])
       ]),
+      _vm._v(" "),
+      _vm.selectedPerson.id !== null
+        ? _c("div", { staticClass: "form-row" }, [
+            _c(
+              "div",
+              { staticClass: "form-group col-6" },
+              [_c("ac-form-cards")],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "form-group col-6" },
+              [_c("ac-form-last-card")],
+              1
+            )
+          ])
+        : _vm._e(),
       _vm._v(" "),
       _c("div", { staticClass: "form-row" }, [
         _c(
@@ -4884,9 +5171,14 @@ var render = function() {
     },
     [
       _vm._v("\n    " + _vm._s(_vm.division.name) + "\n    "),
-      _c("span", { staticClass: "badge badge-primary badge-pill" }, [
-        _vm._v("\n        " + _vm._s(_vm.count) + "\n    ")
-      ])
+      _c(
+        "span",
+        {
+          staticClass: "badge badge-pill",
+          class: [_vm.count ? "badge-primary" : "badge-warning"]
+        },
+        [_vm._v("\n        " + _vm._s(_vm.count) + "\n    ")]
+      )
     ]
   )
 }
@@ -4915,14 +5207,25 @@ var render = function() {
   return _c(
     "button",
     {
-      staticClass: "list-group-item list-group-item-action",
+      staticClass:
+        "list-group-item list-group-item-action d-flex justify-content-between align-items-center",
       attrs: { type: "button" },
       on: { click: _vm.selectPerson }
     },
     [
       _vm._v(
-        "\n    " + _vm._s(_vm.person.f) + " " + _vm._s(_vm.person.i) + "\n"
-      )
+        "\n    " + _vm._s(_vm.person.f) + " " + _vm._s(_vm.person.i) + "\n    "
+      ),
+      _vm.noCards
+        ? _c(
+            "span",
+            {
+              staticClass: "badge badge-pill",
+              class: { "badge-danger": _vm.noCards }
+            },
+            [_vm._v("\n        !\n    ")]
+          )
+        : _vm._e()
     ]
   )
 }
@@ -6524,6 +6827,144 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/ac/components/AcFormCards.vue":
+/*!****************************************************!*\
+  !*** ./resources/js/ac/components/AcFormCards.vue ***!
+  \****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _AcFormCards_vue_vue_type_template_id_a3214e3a_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AcFormCards.vue?vue&type=template&id=a3214e3a&scoped=true& */ "./resources/js/ac/components/AcFormCards.vue?vue&type=template&id=a3214e3a&scoped=true&");
+/* harmony import */ var _AcFormCards_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AcFormCards.vue?vue&type=script&lang=js& */ "./resources/js/ac/components/AcFormCards.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _AcFormCards_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _AcFormCards_vue_vue_type_template_id_a3214e3a_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _AcFormCards_vue_vue_type_template_id_a3214e3a_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "a3214e3a",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/ac/components/AcFormCards.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/ac/components/AcFormCards.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************!*\
+  !*** ./resources/js/ac/components/AcFormCards.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormCards_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./AcFormCards.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/AcFormCards.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormCards_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/ac/components/AcFormCards.vue?vue&type=template&id=a3214e3a&scoped=true&":
+/*!***********************************************************************************************!*\
+  !*** ./resources/js/ac/components/AcFormCards.vue?vue&type=template&id=a3214e3a&scoped=true& ***!
+  \***********************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormCards_vue_vue_type_template_id_a3214e3a_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./AcFormCards.vue?vue&type=template&id=a3214e3a&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/AcFormCards.vue?vue&type=template&id=a3214e3a&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormCards_vue_vue_type_template_id_a3214e3a_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormCards_vue_vue_type_template_id_a3214e3a_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/ac/components/AcFormLastCard.vue":
+/*!*******************************************************!*\
+  !*** ./resources/js/ac/components/AcFormLastCard.vue ***!
+  \*******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _AcFormLastCard_vue_vue_type_template_id_95997614_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AcFormLastCard.vue?vue&type=template&id=95997614&scoped=true& */ "./resources/js/ac/components/AcFormLastCard.vue?vue&type=template&id=95997614&scoped=true&");
+/* harmony import */ var _AcFormLastCard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AcFormLastCard.vue?vue&type=script&lang=js& */ "./resources/js/ac/components/AcFormLastCard.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _AcFormLastCard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _AcFormLastCard_vue_vue_type_template_id_95997614_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _AcFormLastCard_vue_vue_type_template_id_95997614_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "95997614",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/ac/components/AcFormLastCard.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/ac/components/AcFormLastCard.vue?vue&type=script&lang=js&":
+/*!********************************************************************************!*\
+  !*** ./resources/js/ac/components/AcFormLastCard.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormLastCard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./AcFormLastCard.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/AcFormLastCard.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormLastCard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/ac/components/AcFormLastCard.vue?vue&type=template&id=95997614&scoped=true&":
+/*!**************************************************************************************************!*\
+  !*** ./resources/js/ac/components/AcFormLastCard.vue?vue&type=template&id=95997614&scoped=true& ***!
+  \**************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormLastCard_vue_vue_type_template_id_95997614_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./AcFormLastCard.vue?vue&type=template&id=95997614&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/AcFormLastCard.vue?vue&type=template&id=95997614&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormLastCard_vue_vue_type_template_id_95997614_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormLastCard_vue_vue_type_template_id_95997614_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/ac/components/AcFormPerson.vue":
 /*!*****************************************************!*\
   !*** ./resources/js/ac/components/AcFormPerson.vue ***!
@@ -7298,6 +7739,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_divisions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/divisions */ "./resources/js/ac/store/modules/divisions.js");
 /* harmony import */ var _modules_persons__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/persons */ "./resources/js/ac/store/modules/persons.js");
 /* harmony import */ var _modules_loader__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/loader */ "./resources/js/ac/store/modules/loader.js");
+/* harmony import */ var _modules_cards__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/cards */ "./resources/js/ac/store/modules/cards.js");
+
 
 
 
@@ -7307,10 +7750,46 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 /* harmony default export */ __webpack_exports__["default"] = (new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
   modules: {
     divisions: _modules_divisions__WEBPACK_IMPORTED_MODULE_2__["default"],
+    persons: _modules_persons__WEBPACK_IMPORTED_MODULE_3__["default"],
     loader: _modules_loader__WEBPACK_IMPORTED_MODULE_4__["default"],
-    persons: _modules_persons__WEBPACK_IMPORTED_MODULE_3__["default"]
+    cards: _modules_cards__WEBPACK_IMPORTED_MODULE_5__["default"]
   }
 }));
+
+/***/ }),
+
+/***/ "./resources/js/ac/store/modules/cards.js":
+/*!************************************************!*\
+  !*** ./resources/js/ac/store/modules/cards.js ***!
+  \************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+var state = {
+  last: {
+    id: 0,
+    wiegand: '000000000000'
+  }
+};
+var getters = {};
+var mutations = {
+  setLast: function setLast(state, card) {
+    state.last = {
+      id: card.id,
+      wiegand: card.wiegand
+    };
+  }
+};
+var actions = {};
+/* harmony default export */ __webpack_exports__["default"] = ({
+  namespaced: true,
+  state: state,
+  getters: getters,
+  mutations: mutations,
+  actions: actions
+});
 
 /***/ }),
 
@@ -7542,6 +8021,9 @@ var mutations = {
     } else {
       state.selected = person;
     }
+  },
+  addCard: function addCard(state, card) {
+    state.selected.cards.push(new _classes__WEBPACK_IMPORTED_MODULE_3__["Card"](card));
   }
 };
 var actions = {
@@ -7778,15 +8260,16 @@ var actions = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _vue_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./vue-i18n */ "./resources/js/vue-i18n.js");
-/* harmony import */ var _ac_store__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ac/store */ "./resources/js/ac/store/index.js");
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
-/* harmony import */ var _ac_components_AcMenuLeft__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ac/components/AcMenuLeft */ "./resources/js/ac/components/AcMenuLeft.vue");
-/* harmony import */ var _ac_components_AcMenuRight__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ac/components/AcMenuRight */ "./resources/js/ac/components/AcMenuRight.vue");
-/* harmony import */ var _ac_components_AcFormPerson__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./ac/components/AcFormPerson */ "./resources/js/ac/components/AcFormPerson.vue");
-/* harmony import */ var _ac_components_AcAlert__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./ac/components/AcAlert */ "./resources/js/ac/components/AcAlert.vue");
+/* harmony import */ var laravel_echo__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! laravel-echo */ "./node_modules/laravel-echo/dist/echo.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _vue_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./vue-i18n */ "./resources/js/vue-i18n.js");
+/* harmony import */ var _ac_store__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ac/store */ "./resources/js/ac/store/index.js");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _ac_components_AcMenuLeft__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ac/components/AcMenuLeft */ "./resources/js/ac/components/AcMenuLeft.vue");
+/* harmony import */ var _ac_components_AcMenuRight__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./ac/components/AcMenuRight */ "./resources/js/ac/components/AcMenuRight.vue");
+/* harmony import */ var _ac_components_AcFormPerson__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./ac/components/AcFormPerson */ "./resources/js/ac/components/AcFormPerson.vue");
+/* harmony import */ var _ac_components_AcAlert__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./ac/components/AcAlert */ "./resources/js/ac/components/AcAlert.vue");
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -7804,16 +8287,17 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
  */
 
 
-window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js"); // import Echo from 'laravel-echo'
-// window.Echo = new Echo({
-//     authEndpoint : '/broadcasting/auth',
-//     broadcaster: 'pusher',
-//     key: process.env.MIX_PUSHER_APP_KEY,
-//     wsHost: window.location.hostname,
-//     wsPort: process.env.MIX_WS_PORT,
-//     wssPort: process.env.MIX_WS_PORT,
-//     disableStats: true,
-// });
+window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
+
+window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
+  authEndpoint: '/broadcasting/auth',
+  broadcaster: 'pusher',
+  key: "4b0f5261202dcbf80bd4",
+  wsHost: window.location.hostname,
+  wsPort: "6002",
+  wssPort: "6002",
+  disableStats: true
+});
 
 
 
@@ -7822,22 +8306,21 @@ window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/d
 
 
 
-
-window.Ac = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
+window.Ac = new vue__WEBPACK_IMPORTED_MODULE_1___default.a({
   el: '#ac',
-  store: _ac_store__WEBPACK_IMPORTED_MODULE_2__["default"],
-  i18n: _vue_i18n__WEBPACK_IMPORTED_MODULE_1__["default"],
+  store: _ac_store__WEBPACK_IMPORTED_MODULE_3__["default"],
+  i18n: _vue_i18n__WEBPACK_IMPORTED_MODULE_2__["default"],
   components: {
-    AcMenuLeft: _ac_components_AcMenuLeft__WEBPACK_IMPORTED_MODULE_4__["default"],
-    AcMenuRight: _ac_components_AcMenuRight__WEBPACK_IMPORTED_MODULE_5__["default"],
-    AcFormPerson: _ac_components_AcFormPerson__WEBPACK_IMPORTED_MODULE_6__["default"],
-    AcAlert: _ac_components_AcAlert__WEBPACK_IMPORTED_MODULE_7__["default"]
+    AcMenuLeft: _ac_components_AcMenuLeft__WEBPACK_IMPORTED_MODULE_5__["default"],
+    AcMenuRight: _ac_components_AcMenuRight__WEBPACK_IMPORTED_MODULE_6__["default"],
+    AcFormPerson: _ac_components_AcFormPerson__WEBPACK_IMPORTED_MODULE_7__["default"],
+    AcAlert: _ac_components_AcAlert__WEBPACK_IMPORTED_MODULE_8__["default"]
   },
   data: {
     alertMessage: null,
     alertType: null
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_3__["mapState"])({
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_4__["mapState"])({
     loading: function loading(state) {
       return state.loader.loading;
     },
@@ -7851,7 +8334,7 @@ window.Ac = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
 
   })),
   created: function created() {
-    _ac_store__WEBPACK_IMPORTED_MODULE_2__["default"].dispatch('loader/loadDivisions');
+    _ac_store__WEBPACK_IMPORTED_MODULE_3__["default"].dispatch('loader/loadDivisions');
   },
   methods: {
     alert: function alert(message, type) {
@@ -7945,7 +8428,8 @@ __webpack_require__.r(__webpack_exports__);
       "address": "Address",
       "phone": "Phone number",
       "uid": "UID",
-      "card": "Card",
+      "cards": "Card|Cards",
+      "last_card": "Last card",
       "save": "Save",
       "clear": "Clear",
       "delete": "Delete",
@@ -7983,7 +8467,8 @@ __webpack_require__.r(__webpack_exports__);
       "address": "Адрес",
       "phone": "Контактный телефон",
       "uid": "Уникальный номер",
-      "card": "Карта",
+      "cards": "Карта|Карты",
+      "last_card": "Последняя карта",
       "add": "Добавить",
       "back": "Назад",
       "save": "Сохранить",

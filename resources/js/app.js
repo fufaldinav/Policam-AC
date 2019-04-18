@@ -14,17 +14,17 @@ require('./bootstrap');
 
 window.Pusher = require('pusher-js');
 
-// import Echo from 'laravel-echo'
+import Echo from 'laravel-echo'
 
-// window.Echo = new Echo({
-//     authEndpoint : '/broadcasting/auth',
-//     broadcaster: 'pusher',
-//     key: process.env.MIX_PUSHER_APP_KEY,
-//     wsHost: window.location.hostname,
-//     wsPort: process.env.MIX_WS_PORT,
-//     wssPort: process.env.MIX_WS_PORT,
-//     disableStats: true,
-// });
+window.Echo = new Echo({
+    authEndpoint : '/broadcasting/auth',
+    broadcaster: 'pusher',
+    key: process.env.MIX_PUSHER_APP_KEY,
+    wsHost: window.location.hostname,
+    wsPort: process.env.MIX_WS_PORT,
+    wssPort: process.env.MIX_WS_PORT,
+    disableStats: true,
+});
 
 import Vue from 'vue';
 import i18n from './vue-i18n';

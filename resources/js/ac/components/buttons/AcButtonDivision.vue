@@ -6,7 +6,7 @@
         @click="selectDivision"
     >
         {{ division.name }}
-        <span class="badge badge-primary badge-pill">
+        <span class="badge badge-pill" :class="[count ? 'badge-primary' : 'badge-warning']">
             {{ count }}
         </span>
     </button>

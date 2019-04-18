@@ -121,20 +121,26 @@
                     :disabled="selectedPerson.id === null"
                 >
             </div>
-            <div
-                id="ac-menu-card"
-                class="form-group col-6"
-            >
-                <label for="card">
-                    {{ $t('ac.card') }}
+            <div class="form-group col-6">
+                <label for="uid">
+                    {{ $t('ac.uid') }}
                 </label>
                 <input
-                    id="card"
+                    id="uid"
+                    v-model="selectedPerson.id"
                     type="text"
                     class="form-control"
-                    :placeholder="$t('ac.card')"
-                    :disabled="selectedPerson.id === null"
+                    :placeholder="$t('ac.uid')"
+                    disabled
                 >
+            </div>
+        </div>
+        <div v-if="selectedPerson.id !== null" class="form-row">
+            <div class="form-group col-6">
+                <ac-form-cards></ac-form-cards>
+            </div>
+            <div class="form-group col-6">
+                <ac-form-last-card></ac-form-last-card>
             </div>
         </div>
         <div class="form-row">
@@ -149,6 +155,8 @@
 </template>
 
 <script>
+    import AcFormCards from "./AcFormCards";
+    import AcFormLastCard from "./AcFormLastCard";
     import AcButtonSave from "./buttons/AcButtonSave";
     import AcButtonCancel from "./buttons/AcButtonCancel";
     import AcButtonUpdate from "./buttons/AcButtonUpdate";
@@ -156,7 +164,7 @@
 
     export default {
         name: "AcFormPerson",
-        components: {AcButtonRemove, AcButtonUpdate, AcButtonCancel, AcButtonSave},
+        components: {AcFormCards, AcFormLastCard, AcButtonRemove, AcButtonUpdate, AcButtonCancel, AcButtonSave},
         computed: {
             selectedPerson() {
                 return this.$store.state.persons.selected;
