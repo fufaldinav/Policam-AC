@@ -6,9 +6,7 @@ const state = {
     selected: null
 }
 
-const getters = {
-
-}
+const getters = {}
 
 const mutations = {
     add(state, division) {
@@ -24,7 +22,9 @@ const mutations = {
 
     removePerson(state, relation) {
         let index = state.collection[relation.divisionId].persons.indexOf(relation.personId);
-        state.collection[relation.divisionId].persons.splice(index, 1);
+        if (index > -1) {
+            state.collection[relation.divisionId].persons.splice(index, 1);
+        }
     },
 
     setSelected(state, division) {
@@ -36,9 +36,7 @@ const mutations = {
     }
 }
 
-const actions = {
-
-}
+const actions = {}
 
 
 export default {

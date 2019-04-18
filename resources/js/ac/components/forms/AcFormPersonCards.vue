@@ -9,7 +9,6 @@
                     v-model="card.wiegand"
                     type="text"
                     class="form-control form-control-plaintext"
-                    :placeholder="$t('ac.card')"
                     disabled
                 >
             </div>

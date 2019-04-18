@@ -59,12 +59,19 @@ class Photo extends Model
         return $this->belongsTo('App\Person');
     }
 
-    public static function saveFile($file)
+    public static function saveFile($file): self
     {
         $file_hash = hash_file('md5', $file);
 
-        Storage::disk('photos')->put($file_hash. '.jpg', file_get_contents($file));
+        Storage::disk('photos')->put($file_hash, file_get_contents($file));
 
         return self::firstOrCreate(['hash' => $file_hash]);
+    }
+
+    public function deleteFile(): self
+    {
+        Storage::disk('photos')->delete($this->hash);
+
+        return $this;
     }
 }

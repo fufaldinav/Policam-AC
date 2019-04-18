@@ -24,8 +24,10 @@ Route::group(['prefix' => 'api', 'as' => 'api.'], function () {
             ['except' => ['create', 'edit']]);
     });
     Route::group(['middleware' => 'role:3'], function () {
-        Route::resource('divisions', 'DivisionsController',
-            ['except' => ['create', 'edit']]);
+        Route::resource('divisions', 'DivisionsController')->except(['create', 'edit']);
+    });
+    Route::group(['middleware' => 'role:3'], function () {
+        Route::resource('photos', 'PhotosController')->only(['store', 'destroy']);
     });
 });
 /*
@@ -63,13 +65,6 @@ Route::group(['prefix' => 'cp', 'as' => 'cp.'], function () {
  * Development
  */
 Route::get('dev', 'DevController@index');
-/*
- * Photos
- */
-Route::group(['prefix' => 'photos', 'as' => 'photos.', 'middleware' => 'role:3'], function () {
-    Route::post('save', 'PhotosController@save');
-    Route::post('delete', 'PhotosController@delete');
-});
 /*
  * Server
  */

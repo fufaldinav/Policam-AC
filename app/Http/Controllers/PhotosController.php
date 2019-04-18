@@ -37,7 +37,7 @@ class PhotosController extends Controller
      *
      * @return
      */
-    public function save(Request $request)
+    public function store(Request $request)
     {
         $file = $request->file('file')->getRealPath();
 
@@ -50,26 +50,27 @@ class PhotosController extends Controller
      * Удаляет фотографию
      *
      * @param Request $request
+     * @param int $id
      *
      * @return int
      * @throws \Exception
      */
-    public function delete(Request $request): int
+    public function destroy(Request $request, int $id): int
     {
-        $id = $request->input('photo_id');
-
         $photo = App\Photo::find($id);
 
         abort_if(! $photo, 404);
 
         if ($photo->person_id === null) {
-            return (new Photo())->remove($id);
+            $photo->deleteFile();
+            return (int)$photo->delete();
         }
 
         $person = $request->user()->persons()->where('persons.id', $photo->person_id)->first();
 
         abort_if(! $person, 403);
 
-        return (new Photo())->remove($id);
+        $photo->deleteFile();
+        return (int)$photo->delete();
     }
 }

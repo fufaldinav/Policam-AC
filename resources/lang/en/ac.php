@@ -36,4 +36,6 @@ return [
     'saved' => 'saved',
     'updated' => 'updated',
     'deleted' => 'deleted',
+    'press_' => 'Press',
+    '_to_upload' => 'to upload photo',
 ];

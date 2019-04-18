@@ -571,12 +571,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
 
 
 
@@ -599,27 +593,6 @@ __webpack_require__.r(__webpack_exports__);
     selectedPerson: function selectedPerson() {
       return this.$store.state.persons.selected;
     }
-  },
-  methods: {
-    uploadPhoto: function uploadPhoto(files) {
-      var formData = new FormData();
-      formData.append('file', files[0]);
-      var self = this;
-      window.axios({
-        method: 'post',
-        url: '/photos/save',
-        data: formData,
-        config: {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        }
-      }).then(function (response) {
-        self.$store.commit('persons/addPhoto', response.data);
-      }).catch(function (error) {
-        console.log(error);
-      });
-    }
   }
 });
 
@@ -634,7 +607,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
 //
 //
 //
@@ -777,20 +749,71 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "AcFormPersonPhoto",
   computed: {
+    selectedPerson: function selectedPerson() {
+      return this.$store.state.persons.selected;
+    },
     photo: function photo() {
       var person = this.$store.state.persons.selected;
 
       if (person.photos.length > 0) {
-        return person.photos[0].hash;
+        return person.photos[0];
       }
 
-      return 0;
+      return {
+        id: 0,
+        hash: 0
+      };
     },
     url: function url() {
-      return '/photos/' + this.photo + '.jpg';
+      return '/photos/' + this.photo.hash;
+    }
+  },
+  methods: {
+    uploadPhoto: function uploadPhoto(files) {
+      var formData = new FormData();
+      if (files.length === 0) return;
+      formData.append('file', files[0]);
+      var self = this;
+      window.axios({
+        method: 'post',
+        url: '/api/photos',
+        data: formData,
+        config: {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+      }).then(function (response) {
+        self.$store.commit('persons/addPhoto', response.data);
+      }).catch(function (error) {
+        console.log(error);
+        window.Ac.alert(error, 'danger');
+      });
+    },
+    removePhoto: function removePhoto() {
+      this.$store.commit('persons/removePhoto', this.photo);
     }
   }
 });
@@ -828,7 +851,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, "\n.ac-person-photo-container[data-v-71914406] {\n    position: relative;\n}\n.ac-person-photo[data-v-71914406] {\n    max-height: 320px;\n    background-repeat: no-repeat;\n    background-size: cover;\n    background-position-x: 50%;\n    background-position-y: 50%;\n}\n.ac-person-photo-remove[data-v-71914406] {\n    position: absolute;\n    left: 50%;\n    bottom: -10px;\n    margin-right: -50%;\n    -webkit-transform: translate(-50%, -50%);\n            transform: translate(-50%, -50%)\n}\n", ""]);
+exports.push([module.i, "\n.ac-person-photo[data-v-71914406] {\n    max-height: 320px;\n}\n.ac-person-photo-upload[data-v-71914406] {\n    opacity: 0;\n}\n.ac-person-photo-content[data-v-71914406] {\n    position: absolute;\n    top: 0;\n    left: 0;\n}\n", ""]);
 
 // exports
 
@@ -4956,22 +4979,11 @@ var render = function() {
       _c("div", { staticClass: "form-row" }, [
         _c(
           "div",
-          { staticClass: "form-group col-6" },
-          [
-            _c("ac-form-person-photo"),
-            _vm._v(" "),
-            _vm.selectedPerson.id !== null
-              ? _c("input", {
-                  staticClass: "form-control-file",
-                  attrs: { type: "file" },
-                  on: {
-                    change: function($event) {
-                      return _vm.uploadPhoto($event.target.files)
-                    }
-                  }
-                })
-              : _vm._e()
-          ],
+          {
+            staticClass:
+              "form-group col-6 d-flex justify-content-center align-items-center"
+          },
+          [_c("ac-form-person-photo")],
           1
         ),
         _vm._v(" "),
@@ -5350,11 +5362,7 @@ var render = function() {
                       }
                     ],
                     staticClass: "form-control form-control-plaintext",
-                    attrs: {
-                      type: "text",
-                      placeholder: _vm.$t("ac.card"),
-                      disabled: ""
-                    },
+                    attrs: { type: "text", disabled: "" },
                     domProps: { value: card.wiegand },
                     on: {
                       input: function($event) {
@@ -5486,27 +5494,77 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "ac-person-photo-container" }, [
-    _c("img", {
-      staticClass:
-        "img-fluid rounded shadow mx-auto d-block mx-2 ac-person-photo",
-      attrs: { src: _vm.url, alt: "" }
-    }),
-    _vm._v(" "),
-    _vm.photo !== 0
-      ? _c("div", { staticClass: "ac-person-photo-remove" }, [
-          _c(
-            "button",
-            { staticClass: "btn btn-sm btn-danger", attrs: { type: "button" } },
+  return _c(
+    "div",
+    { staticClass: "position-relative h-auto w-auto d-inline-block" },
+    [
+      _c("img", {
+        staticClass: "img-fluid rounded shadow ac-person-photo",
+        attrs: { src: _vm.url, alt: "" }
+      }),
+      _vm._v(" "),
+      _vm.selectedPerson.id !== null && _vm.photo.id === 0
+        ? _c(
+            "div",
+            {
+              staticClass:
+                "h-100 w-100 d-flex align-items-center ac-person-photo-content"
+            },
             [
-              _vm._v(
-                "\n            " + _vm._s(_vm.$t("ac.delete")) + "\n        "
+              _c("div", { staticClass: "w-100" }, [
+                _c("p", { staticClass: "h1 text-center" }, [
+                  _c("strong", [_vm._v(_vm._s(_vm.$t("ac.press_")))])
+                ]),
+                _vm._v(" "),
+                _c("p", { staticClass: "text-center" }, [
+                  _c("strong", [_vm._v(_vm._s(_vm.$t("ac._to_upload")))])
+                ])
+              ])
+            ]
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.selectedPerson.id !== null && _vm.photo.id === 0
+        ? _c("input", {
+            staticClass:
+              "h-100 w-100 ac-person-photo-content ac-person-photo-upload",
+            attrs: { type: "file", accept: "image/jpeg,image/png", title: "" },
+            on: {
+              change: function($event) {
+                return _vm.uploadPhoto($event.target.files)
+              }
+            }
+          })
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.photo.id > 0
+        ? _c(
+            "div",
+            {
+              staticClass:
+                "h-100 w-100 d-flex justify-content-end align-items-start p-1 ac-person-photo-content"
+            },
+            [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-sm btn-danger",
+                  attrs: { type: "button" },
+                  on: { click: _vm.removePhoto }
+                },
+                [
+                  _vm._v(
+                    "\n            " +
+                      _vm._s(_vm.$t("ac.delete")) +
+                      "\n        "
+                  )
+                ]
               )
             ]
           )
-        ])
-      : _vm._e()
-  ])
+        : _vm._e()
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -8094,7 +8152,10 @@ var mutations = {
   },
   removePerson: function removePerson(state, relation) {
     var index = state.collection[relation.divisionId].persons.indexOf(relation.personId);
-    state.collection[relation.divisionId].persons.splice(index, 1);
+
+    if (index > -1) {
+      state.collection[relation.divisionId].persons.splice(index, 1);
+    }
   },
   setSelected: function setSelected(state, division) {
     if (division === undefined) {
@@ -8296,14 +8357,20 @@ var mutations = {
   },
   removeCard: function removeCard(state, card) {
     var index = state.selected.cards.indexOf(card);
-    state.selected.cards.splice(index, 1);
+
+    if (index > -1) {
+      state.selected.cards.splice(index, 1);
+    }
   },
   addPhoto: function addPhoto(state, photo) {
     state.selected.photos.push(new _classes__WEBPACK_IMPORTED_MODULE_3__["Photo"](photo));
   },
   removePhoto: function removePhoto(state, photo) {
     var index = state.selected.photos.indexOf(photo);
-    state.selected.photos.splice(index, 1);
+
+    if (index > -1) {
+      state.selected.photos.splice(index, 1);
+    }
   }
 };
 var actions = {
@@ -8745,7 +8812,9 @@ __webpack_require__.r(__webpack_exports__);
       "successful": "successful",
       "saved": "saved",
       "updated": "updated",
-      "deleted": "deleted"
+      "deleted": "deleted",
+      "press_": "Press",
+      "_to_upload": "to upload photo"
     }
   },
   "ru": {
@@ -8788,7 +8857,9 @@ __webpack_require__.r(__webpack_exports__);
       "successful": "успешно",
       "saved": "сохранен",
       "updated": "сохранен",
-      "deleted": "удален"
+      "deleted": "удален",
+      "press_": "Нажмите,",
+      "_to_upload": "чтобы загрузить фотографию"
     }
   }
 });

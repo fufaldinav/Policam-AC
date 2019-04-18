@@ -4,14 +4,8 @@
         novalidate
     >
         <div class="form-row">
-            <div class="form-group col-6">
+            <div class="form-group col-6 d-flex justify-content-center align-items-center">
                 <ac-form-person-photo></ac-form-person-photo>
-                <input
-                    v-if="selectedPerson.id !== null"
-                    type="file"
-                    class="form-control-file"
-                    @change="uploadPhoto($event.target.files)"
-                >
             </div>
             <div class="form-group col-6">
                 <div class="form-group">
@@ -157,25 +151,6 @@
         computed: {
             selectedPerson() {
                 return this.$store.state.persons.selected;
-            }
-        },
-        methods: {
-            uploadPhoto(files) {
-                let formData = new FormData();
-                formData.append('file', files[0]);
-
-                let self = this;
-
-                window.axios({
-                    method: 'post',
-                    url: '/photos/save',
-                    data: formData,
-                    config: { headers: {'Content-Type': 'multipart/form-data' }}
-                }).then(function (response) {
-                    self.$store.commit('persons/addPhoto', response.data);
-                }).catch(function (error) {
-                    console.log(error);
-                })
             }
         }
     }

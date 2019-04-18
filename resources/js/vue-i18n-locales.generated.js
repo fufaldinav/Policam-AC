@@ -35,7 +35,9 @@ export default {
             "successful": "successful",
             "saved": "saved",
             "updated": "updated",
-            "deleted": "deleted"
+            "deleted": "deleted",
+            "press_": "Press",
+            "_to_upload": "to upload photo"
         }
     },
     "ru": {
@@ -78,7 +80,9 @@ export default {
             "successful": "успешно",
             "saved": "сохранен",
             "updated": "сохранен",
-            "deleted": "удален"
+            "deleted": "удален",
+            "press_": "Нажмите,",
+            "_to_upload": "чтобы загрузить фотографию"
         }
     }
 }
