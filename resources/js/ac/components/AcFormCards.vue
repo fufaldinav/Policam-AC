@@ -1,15 +1,28 @@
 <template>
-    <div v-if="selectedPersonCards.length > 0">
-        <label for="cards">
+    <div v-if="selectedPersonCards.length > 0" class="dropdown">
+        <label for="cardsMenu">
             {{ $tc('ac.cards', selectedPersonCards.length) }}
         </label>
-        <input
-            id="cards"
-            v-model="selectedPersonCards"
-            type="text"
-            class="form-control"
-            :placeholder="$tc('ac.cards', selectedPersonCards.length)"
-        >
+        <div v-for="card in selectedPersonCards" id="cardsMenu" class="form-row mb-2">
+            <div class="col-10">
+                <input
+                    v-model="card.wiegand"
+                    type="text"
+                    class="form-control form-control-plaintext"
+                    :placeholder="$t('ac.card')"
+                    disabled
+                >
+            </div>
+            <div class="col-2">
+                <button
+                    type="button"
+                    class="btn btn-danger"
+                    @click="detachCard(card)"
+                >
+                    X
+                </button>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -19,6 +32,11 @@
         computed: {
             selectedPersonCards() {
                 return this.$store.state.persons.selected.cards;
+            }
+        },
+        methods: {
+            detachCard(card) {
+                this.$store.commit('persons/removeCard', card);
             }
         }
     }

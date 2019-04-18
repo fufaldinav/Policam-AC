@@ -1,5 +1,5 @@
 <template>
-    <div class="d-none d-sm-block col-sm-3 col-xl-2 bg-white px-0 ac-menu">
+    <div class="d-none d-sm-block col-sm-3 col-xl-2 bg-white px-0 ac-menu ac-menu-left">
         <div
             v-if="selectedDivision === null"
             key="list-divisions"

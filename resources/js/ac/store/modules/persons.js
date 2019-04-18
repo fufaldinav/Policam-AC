@@ -34,6 +34,11 @@ const mutations = {
 
     addCard(state, card) {
         state.selected.cards.push(new Card(card));
+    },
+
+    removeCard(state, card) {
+        let index = state.selected.cards.indexOf(card);
+        state.selected.cards.splice(index, 1);
     }
 }
 

@@ -72,11 +72,29 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "AcFormCards",
   computed: {
     selectedPersonCards: function selectedPersonCards() {
       return this.$store.state.persons.selected.cards;
+    }
+  },
+  methods: {
+    detachCard: function detachCard(card) {
+      this.$store.commit('persons/removeCard', card);
     }
   }
 });
@@ -434,9 +452,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
-//
-//
 //
 //
 //
@@ -4443,41 +4458,72 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _vm.selectedPersonCards.length > 0
-    ? _c("div", [
-        _c("label", { attrs: { for: "cards" } }, [
-          _vm._v(
-            "\n        " +
-              _vm._s(_vm.$tc("ac.cards", _vm.selectedPersonCards.length)) +
-              "\n    "
-          )
-        ]),
-        _vm._v(" "),
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.selectedPersonCards,
-              expression: "selectedPersonCards"
-            }
-          ],
-          staticClass: "form-control",
-          attrs: {
-            id: "cards",
-            type: "text",
-            placeholder: _vm.$tc("ac.cards", _vm.selectedPersonCards.length)
-          },
-          domProps: { value: _vm.selectedPersonCards },
-          on: {
-            input: function($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.selectedPersonCards = $event.target.value
-            }
-          }
-        })
-      ])
+    ? _c(
+        "div",
+        { staticClass: "dropdown" },
+        [
+          _c("label", { attrs: { for: "cardsMenu" } }, [
+            _vm._v(
+              "\n        " +
+                _vm._s(_vm.$tc("ac.cards", _vm.selectedPersonCards.length)) +
+                "\n    "
+            )
+          ]),
+          _vm._v(" "),
+          _vm._l(_vm.selectedPersonCards, function(card) {
+            return _c(
+              "div",
+              { staticClass: "form-row mb-2", attrs: { id: "cardsMenu" } },
+              [
+                _c("div", { staticClass: "col-10" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: card.wiegand,
+                        expression: "card.wiegand"
+                      }
+                    ],
+                    staticClass: "form-control form-control-plaintext",
+                    attrs: {
+                      type: "text",
+                      placeholder: _vm.$t("ac.card"),
+                      disabled: ""
+                    },
+                    domProps: { value: card.wiegand },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(card, "wiegand", $event.target.value)
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-2" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-danger",
+                      attrs: { type: "button" },
+                      on: {
+                        click: function($event) {
+                          return _vm.detachCard(card)
+                        }
+                      }
+                    },
+                    [_vm._v("\n                X\n            ")]
+                  )
+                ])
+              ]
+            )
+          })
+        ],
+        2
+      )
     : _vm._e()
 }
 var staticRenderFns = []
@@ -4967,7 +5013,8 @@ var render = function() {
   return _c(
     "div",
     {
-      staticClass: "d-none d-sm-block col-sm-3 col-xl-2 bg-white px-0 ac-menu"
+      staticClass:
+        "d-none d-sm-block col-sm-3 col-xl-2 bg-white px-0 ac-menu ac-menu-left"
     },
     [
       _vm.selectedDivision === null
@@ -5037,8 +5084,7 @@ var staticRenderFns = [
     return _c(
       "div",
       {
-        staticClass: "d-none d-lg-block col-lg-3 bg-white ac-menu",
-        attrs: { id: "ac-menu-right" }
+        staticClass: "d-none d-lg-block col-lg-3 bg-white ac-menu ac-menu-right"
       },
       [_c("div", { staticClass: "events" })]
     )
@@ -7767,19 +7813,18 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _classes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../classes */ "./resources/js/ac/classes/index.js");
+
 var state = {
-  last: {
+  last: new _classes__WEBPACK_IMPORTED_MODULE_0__["Card"]({
     id: 0,
     wiegand: '000000000000'
-  }
+  })
 };
 var getters = {};
 var mutations = {
   setLast: function setLast(state, card) {
-    state.last = {
-      id: card.id,
-      wiegand: card.wiegand
-    };
+    state.last = new _classes__WEBPACK_IMPORTED_MODULE_0__["Card"](card);
   }
 };
 var actions = {};
@@ -8024,6 +8069,10 @@ var mutations = {
   },
   addCard: function addCard(state, card) {
     state.selected.cards.push(new _classes__WEBPACK_IMPORTED_MODULE_3__["Card"](card));
+  },
+  removeCard: function removeCard(state, card) {
+    var index = state.selected.cards.indexOf(card);
+    state.selected.cards.splice(index, 1);
   }
 };
 var actions = {
@@ -8335,6 +8384,24 @@ window.Ac = new vue__WEBPACK_IMPORTED_MODULE_1___default.a({
   })),
   created: function created() {
     _ac_store__WEBPACK_IMPORTED_MODULE_3__["default"].dispatch('loader/loadDivisions');
+  },
+  mounted: function mounted() {
+    axios.get('/controllers/get_list').then(function (response) {
+      for (var k in response.data) {
+        window.Echo.private("controller-events.".concat(response.data[k].id)).listen('EventReceived', function (e) {
+          if (e.event === 2 || e.event === 3) {
+            _ac_store__WEBPACK_IMPORTED_MODULE_3__["default"].commit('cards/setLast', e.card);
+            console.log(e);
+          } else if (e.event === 4 || e.event === 5) {
+            console.log(e);
+          }
+        }).listen('ControllerConnected', function (e) {
+          console.log(e.controller_id);
+        });
+      }
+    }).catch(function (error) {
+      console.log(error);
+    });
   },
   methods: {
     alert: function alert(message, type) {

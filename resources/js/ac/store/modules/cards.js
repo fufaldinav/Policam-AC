@@ -1,5 +1,7 @@
+import {Card} from '../../classes';
+
 const state = {
-    last: {id: 0, wiegand: '000000000000'}
+    last: new Card({id: 0, wiegand: '000000000000'})
 }
 
 const getters = {
@@ -8,7 +10,7 @@ const getters = {
 
 const mutations = {
     setLast(state, card) {
-        state.last = {id: card.id, wiegand: card.wiegand};
+        state.last = new Card(card);
     }
 }
 

@@ -38,12 +38,12 @@
     overflow-y: auto;
 }
 
-#ac-menu-left {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+.ac-menu-left {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-#ac-menu-right {
-    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.04);
+.ac-menu-right {
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .ac-alert {

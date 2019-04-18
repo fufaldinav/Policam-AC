@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Event;
+use App;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -18,11 +18,11 @@ class EventReceived implements ShouldBroadcastNow
     /**
      * Create a new event instance.
      *
-     * @param Event $event
+     * @param App\Event $event
      *
      * @return void
      */
-    public function __construct(Event $event)
+    public function __construct(App\Event $event)
     {
         $this->event = $event;
     }
@@ -44,9 +44,19 @@ class EventReceived implements ShouldBroadcastNow
      */
     public function broadcastWith()
     {
-        return [
-            'card_id' => $this->event->card_id,
-            'event' => $this->event->event,
-        ];
+        $event = $this->event;
+        $card = App\Card::find($event->card_id);
+
+        if ($event->event === 2 || $event->event === 3) {
+            return [
+                'card' => $card,
+                'event' => $event->event,
+            ];
+        } elseif ($event->event === 4 || $event->event === 5) {
+            return [
+                'person' => $card->person,
+                'event' => $event->event,
+            ];
+        }
     }
 }
