@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Storage;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -56,5 +57,14 @@ class Photo extends Model
     public function person()
     {
         return $this->belongsTo('App\Person');
+    }
+
+    public static function saveFile($file)
+    {
+        $file_hash = hash_file('md5', $file);
+
+        Storage::disk('photos')->put($file_hash. '.jpg', file_get_contents($file));
+
+        return self::firstOrCreate(['hash' => $file_hash]);
     }
 }

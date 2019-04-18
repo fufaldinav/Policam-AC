@@ -5,26 +5,12 @@
     >
         <div class="form-row">
             <div class="form-group col-6">
-                <div class="photo-bg">
-                    <div
-                        class="photo-del"
-                        :data-title="$t('ac.delete')"
-                        hidden
-                    >
-                        <button
-                            type="button"
-                            class="close"
-                            aria-label="Close"
-                        >
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                </div>
+                <ac-form-person-photo></ac-form-person-photo>
                 <input
+                    v-if="selectedPerson.id !== null"
                     type="file"
                     class="form-control-file"
-                    :disabled="selectedPerson.id === null"
-                    @change="handleFiles(this.files)"
+                    @change="uploadPhoto($event.target.files)"
                 >
             </div>
             <div class="form-group col-6">
@@ -155,19 +141,41 @@
 </template>
 
 <script>
-    import AcFormCards from "./AcFormCards";
-    import AcFormLastCard from "./AcFormLastCard";
-    import AcButtonSave from "./buttons/AcButtonSave";
-    import AcButtonCancel from "./buttons/AcButtonCancel";
-    import AcButtonUpdate from "./buttons/AcButtonUpdate";
-    import AcButtonRemove from "./buttons/AcButtonRemove";
+    import AcFormCards from './AcFormPersonCards';
+    import AcFormLastCard from './AcFormPersonLastCard';
+    import AcFormPersonPhoto from './AcFormPersonPhoto';
+    import AcButtonSave from '../buttons/AcButtonSave';
+    import AcButtonCancel from '../buttons/AcButtonCancel';
+    import AcButtonUpdate from '../buttons/AcButtonUpdate';
+    import AcButtonRemove from '../buttons/AcButtonRemove';
 
     export default {
         name: "AcFormPerson",
-        components: {AcFormCards, AcFormLastCard, AcButtonRemove, AcButtonUpdate, AcButtonCancel, AcButtonSave},
+        components: {
+            AcFormPersonPhoto,
+            AcFormCards, AcFormLastCard, AcButtonRemove, AcButtonUpdate, AcButtonCancel, AcButtonSave},
         computed: {
             selectedPerson() {
                 return this.$store.state.persons.selected;
+            }
+        },
+        methods: {
+            uploadPhoto(files) {
+                let formData = new FormData();
+                formData.append('file', files[0]);
+
+                let self = this;
+
+                window.axios({
+                    method: 'post',
+                    url: '/photos/save',
+                    data: formData,
+                    config: { headers: {'Content-Type': 'multipart/form-data' }}
+                }).then(function (response) {
+                    self.$store.commit('persons/addPhoto', response.data);
+                }).catch(function (error) {
+                    console.log(error);
+                })
             }
         }
     }

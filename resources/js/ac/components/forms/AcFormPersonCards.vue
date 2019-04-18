@@ -19,7 +19,7 @@
                     class="btn btn-danger"
                     @click="detachCard(card)"
                 >
-                    X
+                    &times;
                 </button>
             </div>
         </div>

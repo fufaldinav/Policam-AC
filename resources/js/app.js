@@ -34,7 +34,7 @@ import {mapState} from 'vuex';
 
 import AcMenuLeft from "./ac/components/AcMenuLeft";
 import AcMenuRight from "./ac/components/AcMenuRight";
-import AcFormPerson from "./ac/components/AcFormPerson";
+import AcFormPerson from "./ac/components/forms/AcFormPerson";
 import AcAlert from "./ac/components/AcAlert";
 
 window.Ac = new Vue({

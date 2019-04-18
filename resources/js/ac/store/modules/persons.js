@@ -1,6 +1,6 @@
 import Vue from "vue";
 import i18n from '../../../vue-i18n';
-import {Card, Person} from "../../classes";
+import {Card, Person, Photo} from "../../classes";
 
 const state = {
     collection: {},
@@ -39,7 +39,16 @@ const mutations = {
     removeCard(state, card) {
         let index = state.selected.cards.indexOf(card);
         state.selected.cards.splice(index, 1);
-    }
+    },
+
+    addPhoto(state, photo) {
+        state.selected.photos.push(new Photo(photo));
+    },
+
+    removePhoto(state, photo) {
+        let index = state.selected.photos.indexOf(photo);
+        state.selected.photos.splice(index, 1);
+    },
 }
 
 const actions = {

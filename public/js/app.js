@@ -48,324 +48,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/AcFormCards.vue?vue&type=script&lang=js&":
-/*!*************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/ac/components/AcFormCards.vue?vue&type=script&lang=js& ***!
-  \*************************************************************************************************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-/* harmony default export */ __webpack_exports__["default"] = ({
-  name: "AcFormCards",
-  computed: {
-    selectedPersonCards: function selectedPersonCards() {
-      return this.$store.state.persons.selected.cards;
-    }
-  },
-  methods: {
-    detachCard: function detachCard(card) {
-      this.$store.commit('persons/removeCard', card);
-    }
-  }
-});
-
-/***/ }),
-
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/AcFormLastCard.vue?vue&type=script&lang=js&":
-/*!****************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/ac/components/AcFormLastCard.vue?vue&type=script&lang=js& ***!
-  \****************************************************************************************************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-/* harmony default export */ __webpack_exports__["default"] = ({
-  name: "AcFormLastCard",
-  computed: {
-    lastFreeCard: function lastFreeCard() {
-      return this.$store.state.cards.last;
-    },
-    noLastFreeCard: function noLastFreeCard() {
-      return this.lastFreeCard.wiegand === '000000000000';
-    },
-    cardCode: function cardCode() {
-      var wiegand = this.lastFreeCard.wiegand;
-      return ('0000000000' + parseInt(wiegand, 16)).slice(-10);
-    }
-  },
-  methods: {
-    addCardToPerson: function addCardToPerson() {
-      this.$store.commit('persons/addCard', this.lastFreeCard);
-      this.$store.commit('cards/setLast', {
-        id: 0,
-        wiegand: '000000000000'
-      });
-    }
-  }
-});
-
-/***/ }),
-
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/AcFormPerson.vue?vue&type=script&lang=js&":
-/*!**************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/ac/components/AcFormPerson.vue?vue&type=script&lang=js& ***!
-  \**************************************************************************************************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _AcFormCards__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AcFormCards */ "./resources/js/ac/components/AcFormCards.vue");
-/* harmony import */ var _AcFormLastCard__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AcFormLastCard */ "./resources/js/ac/components/AcFormLastCard.vue");
-/* harmony import */ var _buttons_AcButtonSave__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./buttons/AcButtonSave */ "./resources/js/ac/components/buttons/AcButtonSave.vue");
-/* harmony import */ var _buttons_AcButtonCancel__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./buttons/AcButtonCancel */ "./resources/js/ac/components/buttons/AcButtonCancel.vue");
-/* harmony import */ var _buttons_AcButtonUpdate__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./buttons/AcButtonUpdate */ "./resources/js/ac/components/buttons/AcButtonUpdate.vue");
-/* harmony import */ var _buttons_AcButtonRemove__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./buttons/AcButtonRemove */ "./resources/js/ac/components/buttons/AcButtonRemove.vue");
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  name: "AcFormPerson",
-  components: {
-    AcFormCards: _AcFormCards__WEBPACK_IMPORTED_MODULE_0__["default"],
-    AcFormLastCard: _AcFormLastCard__WEBPACK_IMPORTED_MODULE_1__["default"],
-    AcButtonRemove: _buttons_AcButtonRemove__WEBPACK_IMPORTED_MODULE_5__["default"],
-    AcButtonUpdate: _buttons_AcButtonUpdate__WEBPACK_IMPORTED_MODULE_4__["default"],
-    AcButtonCancel: _buttons_AcButtonCancel__WEBPACK_IMPORTED_MODULE_3__["default"],
-    AcButtonSave: _buttons_AcButtonSave__WEBPACK_IMPORTED_MODULE_2__["default"]
-  },
-  computed: {
-    selectedPerson: function selectedPerson() {
-      return this.$store.state.persons.selected;
-    }
-  }
-});
-
-/***/ }),
-
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/AcMenuLeft.vue?vue&type=script&lang=js&":
 /*!************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/ac/components/AcMenuLeft.vue?vue&type=script&lang=js& ***!
@@ -737,6 +419,384 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/forms/AcFormPerson.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/ac/components/forms/AcFormPerson.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _AcFormPersonCards__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AcFormPersonCards */ "./resources/js/ac/components/forms/AcFormPersonCards.vue");
+/* harmony import */ var _AcFormPersonLastCard__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AcFormPersonLastCard */ "./resources/js/ac/components/forms/AcFormPersonLastCard.vue");
+/* harmony import */ var _AcFormPersonPhoto__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AcFormPersonPhoto */ "./resources/js/ac/components/forms/AcFormPersonPhoto.vue");
+/* harmony import */ var _buttons_AcButtonSave__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../buttons/AcButtonSave */ "./resources/js/ac/components/buttons/AcButtonSave.vue");
+/* harmony import */ var _buttons_AcButtonCancel__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../buttons/AcButtonCancel */ "./resources/js/ac/components/buttons/AcButtonCancel.vue");
+/* harmony import */ var _buttons_AcButtonUpdate__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../buttons/AcButtonUpdate */ "./resources/js/ac/components/buttons/AcButtonUpdate.vue");
+/* harmony import */ var _buttons_AcButtonRemove__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../buttons/AcButtonRemove */ "./resources/js/ac/components/buttons/AcButtonRemove.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "AcFormPerson",
+  components: {
+    AcFormPersonPhoto: _AcFormPersonPhoto__WEBPACK_IMPORTED_MODULE_2__["default"],
+    AcFormCards: _AcFormPersonCards__WEBPACK_IMPORTED_MODULE_0__["default"],
+    AcFormLastCard: _AcFormPersonLastCard__WEBPACK_IMPORTED_MODULE_1__["default"],
+    AcButtonRemove: _buttons_AcButtonRemove__WEBPACK_IMPORTED_MODULE_6__["default"],
+    AcButtonUpdate: _buttons_AcButtonUpdate__WEBPACK_IMPORTED_MODULE_5__["default"],
+    AcButtonCancel: _buttons_AcButtonCancel__WEBPACK_IMPORTED_MODULE_4__["default"],
+    AcButtonSave: _buttons_AcButtonSave__WEBPACK_IMPORTED_MODULE_3__["default"]
+  },
+  computed: {
+    selectedPerson: function selectedPerson() {
+      return this.$store.state.persons.selected;
+    }
+  },
+  methods: {
+    uploadPhoto: function uploadPhoto(files) {
+      var formData = new FormData();
+      formData.append('file', files[0]);
+      var self = this;
+      window.axios({
+        method: 'post',
+        url: '/photos/save',
+        data: formData,
+        config: {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+      }).then(function (response) {
+        self.$store.commit('persons/addPhoto', response.data);
+      }).catch(function (error) {
+        console.log(error);
+      });
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/forms/AcFormPersonCards.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/ac/components/forms/AcFormPersonCards.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "AcFormCards",
+  computed: {
+    selectedPersonCards: function selectedPersonCards() {
+      return this.$store.state.persons.selected.cards;
+    }
+  },
+  methods: {
+    detachCard: function detachCard(card) {
+      this.$store.commit('persons/removeCard', card);
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/forms/AcFormPersonLastCard.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/ac/components/forms/AcFormPersonLastCard.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "AcFormLastCard",
+  computed: {
+    lastFreeCard: function lastFreeCard() {
+      return this.$store.state.cards.last;
+    },
+    noLastFreeCard: function noLastFreeCard() {
+      return this.lastFreeCard.wiegand === '000000000000';
+    },
+    cardCode: function cardCode() {
+      var wiegand = this.lastFreeCard.wiegand;
+      return ('0000000000' + parseInt(wiegand, 16)).slice(-10);
+    }
+  },
+  methods: {
+    addCardToPerson: function addCardToPerson() {
+      this.$store.commit('persons/addCard', this.lastFreeCard);
+      this.$store.commit('cards/setLast', {
+        id: 0,
+        wiegand: '000000000000'
+      });
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/forms/AcFormPersonPhoto.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/ac/components/forms/AcFormPersonPhoto.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "AcFormPersonPhoto",
+  computed: {
+    photo: function photo() {
+      var person = this.$store.state.persons.selected;
+
+      if (person.photos.length > 0) {
+        return person.photos[0].hash;
+      }
+
+      return 0;
+    },
+    url: function url() {
+      return '/photos/' + this.photo + '.jpg';
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/AcAlert.vue?vue&type=style&index=0&id=061e6cc0&scoped=true&lang=css&":
 /*!****************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/ac/components/AcAlert.vue?vue&type=style&index=0&id=061e6cc0&scoped=true&lang=css& ***!
@@ -750,6 +810,25 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 // module
 exports.push([module.i, "\n.fade-enter-active[data-v-061e6cc0], .fade-leave-active[data-v-061e6cc0] {\n    transition: opacity 1s;\n}\n.fade-enter[data-v-061e6cc0], .fade-leave-to[data-v-061e6cc0] {\n    opacity: 0;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/forms/AcFormPersonPhoto.vue?vue&type=style&index=0&id=71914406&scoped=true&lang=css&":
+/*!********************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/ac/components/forms/AcFormPersonPhoto.vue?vue&type=style&index=0&id=71914406&scoped=true&lang=css& ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.ac-person-photo-container[data-v-71914406] {\n    position: relative;\n}\n.ac-person-photo[data-v-71914406] {\n    max-height: 320px;\n    background-repeat: no-repeat;\n    background-size: cover;\n    background-position-x: 50%;\n    background-position-y: 50%;\n}\n.ac-person-photo-remove[data-v-71914406] {\n    position: absolute;\n    left: 50%;\n    bottom: -10px;\n    margin-right: -50%;\n    -webkit-transform: translate(-50%, -50%);\n            transform: translate(-50%, -50%)\n}\n", ""]);
 
 // exports
 
@@ -2028,6 +2107,36 @@ options.transform = transform
 options.insertInto = undefined;
 
 var update = __webpack_require__(/*! ../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/forms/AcFormPersonPhoto.vue?vue&type=style&index=0&id=71914406&scoped=true&lang=css&":
+/*!************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/ac/components/forms/AcFormPersonPhoto.vue?vue&type=style&index=0&id=71914406&scoped=true&lang=css& ***!
+  \************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../../node_modules/css-loader??ref--6-1!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/src??ref--6-2!../../../../../node_modules/vue-loader/lib??vue-loader-options!./AcFormPersonPhoto.vue?vue&type=style&index=0&id=71914406&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/forms/AcFormPersonPhoto.vue?vue&type=style&index=0&id=71914406&scoped=true&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
 
 if(content.locals) module.exports = content.locals;
 
@@ -4442,559 +4551,6 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/AcFormCards.vue?vue&type=template&id=a3214e3a&scoped=true&":
-/*!*****************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/ac/components/AcFormCards.vue?vue&type=template&id=a3214e3a&scoped=true& ***!
-  \*****************************************************************************************************************************************************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _vm.selectedPersonCards.length > 0
-    ? _c(
-        "div",
-        { staticClass: "dropdown" },
-        [
-          _c("label", { attrs: { for: "cardsMenu" } }, [
-            _vm._v(
-              "\n        " +
-                _vm._s(_vm.$tc("ac.cards", _vm.selectedPersonCards.length)) +
-                "\n    "
-            )
-          ]),
-          _vm._v(" "),
-          _vm._l(_vm.selectedPersonCards, function(card) {
-            return _c(
-              "div",
-              { staticClass: "form-row mb-2", attrs: { id: "cardsMenu" } },
-              [
-                _c("div", { staticClass: "col-10" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: card.wiegand,
-                        expression: "card.wiegand"
-                      }
-                    ],
-                    staticClass: "form-control form-control-plaintext",
-                    attrs: {
-                      type: "text",
-                      placeholder: _vm.$t("ac.card"),
-                      disabled: ""
-                    },
-                    domProps: { value: card.wiegand },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(card, "wiegand", $event.target.value)
-                      }
-                    }
-                  })
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-2" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-danger",
-                      attrs: { type: "button" },
-                      on: {
-                        click: function($event) {
-                          return _vm.detachCard(card)
-                        }
-                      }
-                    },
-                    [_vm._v("\n                X\n            ")]
-                  )
-                ])
-              ]
-            )
-          })
-        ],
-        2
-      )
-    : _vm._e()
-}
-var staticRenderFns = []
-render._withStripped = true
-
-
-
-/***/ }),
-
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/AcFormLastCard.vue?vue&type=template&id=95997614&scoped=true&":
-/*!********************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/ac/components/AcFormLastCard.vue?vue&type=template&id=95997614&scoped=true& ***!
-  \********************************************************************************************************************************************************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("div", { staticClass: "form-row" }, [
-      _c("label", { attrs: { for: "freeCards" } }, [
-        _vm._v("\n            " + _vm._s(_vm.$t("ac.last_card")) + "\n        ")
-      ])
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "form-row" }, [
-      _c("div", { staticClass: "col-10" }, [
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.cardCode,
-              expression: "cardCode"
-            }
-          ],
-          staticClass: "form-control form-control-plaintext",
-          attrs: {
-            id: "freeCards",
-            type: "text",
-            placeholder: _vm.$t("ac.last_card"),
-            disabled: ""
-          },
-          domProps: { value: _vm.cardCode },
-          on: {
-            input: function($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.cardCode = $event.target.value
-            }
-          }
-        })
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-2" }, [
-        _c(
-          "button",
-          {
-            staticClass: "btn",
-            class: [_vm.noLastFreeCard ? "btn-secondary" : "btn-primary"],
-            attrs: { type: "button", disabled: _vm.noLastFreeCard },
-            on: { click: _vm.addCardToPerson }
-          },
-          [_vm._v("\n                +\n            ")]
-        )
-      ])
-    ])
-  ])
-}
-var staticRenderFns = []
-render._withStripped = true
-
-
-
-/***/ }),
-
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/AcFormPerson.vue?vue&type=template&id=2350fff6&":
-/*!******************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/ac/components/AcFormPerson.vue?vue&type=template&id=2350fff6& ***!
-  \******************************************************************************************************************************************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "form",
-    { staticClass: "needs-validation", attrs: { novalidate: "" } },
-    [
-      _c("div", { staticClass: "form-row" }, [
-        _c("div", { staticClass: "form-group col-6" }, [
-          _c("div", { staticClass: "photo-bg" }, [
-            _c(
-              "div",
-              {
-                staticClass: "photo-del",
-                attrs: { "data-title": _vm.$t("ac.delete"), hidden: "" }
-              },
-              [_vm._m(0)]
-            )
-          ]),
-          _vm._v(" "),
-          _c("input", {
-            staticClass: "form-control-file",
-            attrs: { type: "file", disabled: _vm.selectedPerson.id === null },
-            on: {
-              change: function($event) {
-                return _vm.handleFiles(this.files)
-              }
-            }
-          })
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form-group col-6" }, [
-          _c("div", { staticClass: "form-group" }, [
-            _c("label", { attrs: { for: "f" } }, [
-              _vm._v(
-                "\n                    " +
-                  _vm._s(_vm.$t("ac.f")) +
-                  "\n                "
-              )
-            ]),
-            _vm._v(" "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.selectedPerson.f,
-                  expression: "selectedPerson.f"
-                }
-              ],
-              staticClass: "form-control",
-              attrs: {
-                id: "f",
-                type: "text",
-                placeholder: _vm.$t("ac.f"),
-                disabled: _vm.selectedPerson.id === null,
-                required: ""
-              },
-              domProps: { value: _vm.selectedPerson.f },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(_vm.selectedPerson, "f", $event.target.value)
-                }
-              }
-            }),
-            _vm._v(" "),
-            _c("div", { staticClass: "invalid-feedback" }, [
-              _vm._v(
-                "\n                    " +
-                  _vm._s(_vm.$t("ac.required", { field: _vm.$t("ac.f") })) +
-                  "\n                "
-              )
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "form-group" }, [
-            _c("label", { attrs: { for: "i" } }, [
-              _vm._v(
-                "\n                    " +
-                  _vm._s(_vm.$t("ac.i")) +
-                  "\n                "
-              )
-            ]),
-            _vm._v(" "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.selectedPerson.i,
-                  expression: "selectedPerson.i"
-                }
-              ],
-              staticClass: "form-control",
-              attrs: {
-                id: "i",
-                type: "text",
-                placeholder: _vm.$t("ac.i"),
-                disabled: _vm.selectedPerson.id === null,
-                required: ""
-              },
-              domProps: { value: _vm.selectedPerson.i },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(_vm.selectedPerson, "i", $event.target.value)
-                }
-              }
-            }),
-            _vm._v(" "),
-            _c("div", { staticClass: "invalid-feedback" }, [
-              _vm._v(
-                "\n                    " +
-                  _vm._s(_vm.$t("ac.required", { field: _vm.$t("ac.i") })) +
-                  "\n                "
-              )
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "form-group" }, [
-            _c("label", { attrs: { for: "o" } }, [
-              _vm._v(
-                "\n                    " +
-                  _vm._s(_vm.$t("ac.o")) +
-                  "\n                "
-              )
-            ]),
-            _vm._v(" "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.selectedPerson.o,
-                  expression: "selectedPerson.o"
-                }
-              ],
-              staticClass: "form-control",
-              attrs: {
-                id: "o",
-                type: "text",
-                placeholder: _vm.$t("ac.o"),
-                disabled: _vm.selectedPerson.id === null
-              },
-              domProps: { value: _vm.selectedPerson.o },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(_vm.selectedPerson, "o", $event.target.value)
-                }
-              }
-            })
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "form-group" }, [
-            _c("label", { attrs: { for: "birthday" } }, [
-              _vm._v(
-                "\n                    " +
-                  _vm._s(_vm.$t("ac.birthday")) +
-                  "\n                "
-              )
-            ]),
-            _vm._v(" "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.selectedPerson.birthday,
-                  expression: "selectedPerson.birthday"
-                }
-              ],
-              staticClass: "form-control",
-              attrs: {
-                id: "birthday",
-                type: "date",
-                placeholder: _vm.$t("ac.birthday"),
-                disabled: _vm.selectedPerson.id === null,
-                required: ""
-              },
-              domProps: { value: _vm.selectedPerson.birthday },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(_vm.selectedPerson, "birthday", $event.target.value)
-                }
-              }
-            }),
-            _vm._v(" "),
-            _c("div", { staticClass: "invalid-feedback" }, [
-              _vm._v(
-                "\n                    " +
-                  _vm._s(
-                    _vm.$t("ac.required", { field: _vm.$t("ac.birthday") })
-                  ) +
-                  "\n                "
-              )
-            ])
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "form-group" }, [
-        _c("label", { attrs: { for: "address" } }, [
-          _vm._v("\n            " + _vm._s(_vm.$t("ac.address")) + "\n        ")
-        ]),
-        _vm._v(" "),
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.selectedPerson.address,
-              expression: "selectedPerson.address"
-            }
-          ],
-          staticClass: "form-control",
-          attrs: {
-            id: "address",
-            type: "text",
-            placeholder: _vm.$t("ac.address"),
-            disabled: _vm.selectedPerson.id === null
-          },
-          domProps: { value: _vm.selectedPerson.address },
-          on: {
-            input: function($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.$set(_vm.selectedPerson, "address", $event.target.value)
-            }
-          }
-        })
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "form-row" }, [
-        _c("div", { staticClass: "form-group col-6" }, [
-          _c("label", { attrs: { for: "phone" } }, [
-            _vm._v(
-              "\n                " +
-                _vm._s(_vm.$t("ac.phone")) +
-                "\n            "
-            )
-          ]),
-          _vm._v(" "),
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.selectedPerson.phone,
-                expression: "selectedPerson.phone"
-              }
-            ],
-            staticClass: "form-control",
-            attrs: {
-              id: "phone",
-              type: "text",
-              placeholder: _vm.$t("ac.phone"),
-              disabled: _vm.selectedPerson.id === null
-            },
-            domProps: { value: _vm.selectedPerson.phone },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.$set(_vm.selectedPerson, "phone", $event.target.value)
-              }
-            }
-          })
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form-group col-6" }, [
-          _c("label", { attrs: { for: "uid" } }, [
-            _vm._v(
-              "\n                " + _vm._s(_vm.$t("ac.uid")) + "\n            "
-            )
-          ]),
-          _vm._v(" "),
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.selectedPerson.id,
-                expression: "selectedPerson.id"
-              }
-            ],
-            staticClass: "form-control",
-            attrs: {
-              id: "uid",
-              type: "text",
-              placeholder: _vm.$t("ac.uid"),
-              disabled: ""
-            },
-            domProps: { value: _vm.selectedPerson.id },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.$set(_vm.selectedPerson, "id", $event.target.value)
-              }
-            }
-          })
-        ])
-      ]),
-      _vm._v(" "),
-      _vm.selectedPerson.id !== null
-        ? _c("div", { staticClass: "form-row" }, [
-            _c(
-              "div",
-              { staticClass: "form-group col-6" },
-              [_c("ac-form-cards")],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "form-group col-6" },
-              [_c("ac-form-last-card")],
-              1
-            )
-          ])
-        : _vm._e(),
-      _vm._v(" "),
-      _c("div", { staticClass: "form-row" }, [
-        _c(
-          "div",
-          { staticClass: "form-group" },
-          [
-            _vm.selectedPerson.id === 0 ? _c("ac-button-save") : _vm._e(),
-            _vm._v(" "),
-            _vm.selectedPerson.id === 0 ? _c("ac-button-cancel") : _vm._e(),
-            _vm._v(" "),
-            _vm.selectedPerson.id > 0 ? _c("ac-button-update") : _vm._e(),
-            _vm._v(" "),
-            _vm.selectedPerson.id > 0 ? _c("ac-button-remove") : _vm._e()
-          ],
-          1
-        )
-      ])
-    ]
-  )
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "button",
-      {
-        staticClass: "close",
-        attrs: { type: "button", "aria-label": "Close" }
-      },
-      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
-    )
-  }
-]
-render._withStripped = true
-
-
-
-/***/ }),
-
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/AcMenuLeft.vue?vue&type=template&id=9a49415c&":
 /*!****************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/ac/components/AcMenuLeft.vue?vue&type=template&id=9a49415c& ***!
@@ -5370,6 +4926,587 @@ var render = function() {
     },
     [_vm._v("\n    " + _vm._s(_vm.$t("ac.update")) + "\n")]
   )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/forms/AcFormPerson.vue?vue&type=template&id=441b1465&":
+/*!************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/ac/components/forms/AcFormPerson.vue?vue&type=template&id=441b1465& ***!
+  \************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "form",
+    { staticClass: "needs-validation", attrs: { novalidate: "" } },
+    [
+      _c("div", { staticClass: "form-row" }, [
+        _c(
+          "div",
+          { staticClass: "form-group col-6" },
+          [
+            _c("ac-form-person-photo"),
+            _vm._v(" "),
+            _vm.selectedPerson.id !== null
+              ? _c("input", {
+                  staticClass: "form-control-file",
+                  attrs: { type: "file" },
+                  on: {
+                    change: function($event) {
+                      return _vm.uploadPhoto($event.target.files)
+                    }
+                  }
+                })
+              : _vm._e()
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "form-group col-6" }, [
+          _c("div", { staticClass: "form-group" }, [
+            _c("label", { attrs: { for: "f" } }, [
+              _vm._v(
+                "\n                    " +
+                  _vm._s(_vm.$t("ac.f")) +
+                  "\n                "
+              )
+            ]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.selectedPerson.f,
+                  expression: "selectedPerson.f"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: {
+                id: "f",
+                type: "text",
+                placeholder: _vm.$t("ac.f"),
+                disabled: _vm.selectedPerson.id === null,
+                required: ""
+              },
+              domProps: { value: _vm.selectedPerson.f },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.selectedPerson, "f", $event.target.value)
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("div", { staticClass: "invalid-feedback" }, [
+              _vm._v(
+                "\n                    " +
+                  _vm._s(_vm.$t("ac.required", { field: _vm.$t("ac.f") })) +
+                  "\n                "
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group" }, [
+            _c("label", { attrs: { for: "i" } }, [
+              _vm._v(
+                "\n                    " +
+                  _vm._s(_vm.$t("ac.i")) +
+                  "\n                "
+              )
+            ]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.selectedPerson.i,
+                  expression: "selectedPerson.i"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: {
+                id: "i",
+                type: "text",
+                placeholder: _vm.$t("ac.i"),
+                disabled: _vm.selectedPerson.id === null,
+                required: ""
+              },
+              domProps: { value: _vm.selectedPerson.i },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.selectedPerson, "i", $event.target.value)
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("div", { staticClass: "invalid-feedback" }, [
+              _vm._v(
+                "\n                    " +
+                  _vm._s(_vm.$t("ac.required", { field: _vm.$t("ac.i") })) +
+                  "\n                "
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group" }, [
+            _c("label", { attrs: { for: "o" } }, [
+              _vm._v(
+                "\n                    " +
+                  _vm._s(_vm.$t("ac.o")) +
+                  "\n                "
+              )
+            ]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.selectedPerson.o,
+                  expression: "selectedPerson.o"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: {
+                id: "o",
+                type: "text",
+                placeholder: _vm.$t("ac.o"),
+                disabled: _vm.selectedPerson.id === null
+              },
+              domProps: { value: _vm.selectedPerson.o },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.selectedPerson, "o", $event.target.value)
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group" }, [
+            _c("label", { attrs: { for: "birthday" } }, [
+              _vm._v(
+                "\n                    " +
+                  _vm._s(_vm.$t("ac.birthday")) +
+                  "\n                "
+              )
+            ]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.selectedPerson.birthday,
+                  expression: "selectedPerson.birthday"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: {
+                id: "birthday",
+                type: "date",
+                placeholder: _vm.$t("ac.birthday"),
+                disabled: _vm.selectedPerson.id === null,
+                required: ""
+              },
+              domProps: { value: _vm.selectedPerson.birthday },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.selectedPerson, "birthday", $event.target.value)
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("div", { staticClass: "invalid-feedback" }, [
+              _vm._v(
+                "\n                    " +
+                  _vm._s(
+                    _vm.$t("ac.required", { field: _vm.$t("ac.birthday") })
+                  ) +
+                  "\n                "
+              )
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "form-group" }, [
+        _c("label", { attrs: { for: "address" } }, [
+          _vm._v("\n            " + _vm._s(_vm.$t("ac.address")) + "\n        ")
+        ]),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.selectedPerson.address,
+              expression: "selectedPerson.address"
+            }
+          ],
+          staticClass: "form-control",
+          attrs: {
+            id: "address",
+            type: "text",
+            placeholder: _vm.$t("ac.address"),
+            disabled: _vm.selectedPerson.id === null
+          },
+          domProps: { value: _vm.selectedPerson.address },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.selectedPerson, "address", $event.target.value)
+            }
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "form-row" }, [
+        _c("div", { staticClass: "form-group col-6" }, [
+          _c("label", { attrs: { for: "phone" } }, [
+            _vm._v(
+              "\n                " +
+                _vm._s(_vm.$t("ac.phone")) +
+                "\n            "
+            )
+          ]),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.selectedPerson.phone,
+                expression: "selectedPerson.phone"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: {
+              id: "phone",
+              type: "text",
+              placeholder: _vm.$t("ac.phone"),
+              disabled: _vm.selectedPerson.id === null
+            },
+            domProps: { value: _vm.selectedPerson.phone },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.selectedPerson, "phone", $event.target.value)
+              }
+            }
+          })
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "form-group col-6" }, [
+          _c("label", { attrs: { for: "uid" } }, [
+            _vm._v(
+              "\n                " + _vm._s(_vm.$t("ac.uid")) + "\n            "
+            )
+          ]),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.selectedPerson.id,
+                expression: "selectedPerson.id"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: {
+              id: "uid",
+              type: "text",
+              placeholder: _vm.$t("ac.uid"),
+              disabled: ""
+            },
+            domProps: { value: _vm.selectedPerson.id },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.selectedPerson, "id", $event.target.value)
+              }
+            }
+          })
+        ])
+      ]),
+      _vm._v(" "),
+      _vm.selectedPerson.id !== null
+        ? _c("div", { staticClass: "form-row" }, [
+            _c(
+              "div",
+              { staticClass: "form-group col-6" },
+              [_c("ac-form-cards")],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "form-group col-6" },
+              [_c("ac-form-last-card")],
+              1
+            )
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _c("div", { staticClass: "form-row" }, [
+        _c(
+          "div",
+          { staticClass: "form-group" },
+          [
+            _vm.selectedPerson.id === 0 ? _c("ac-button-save") : _vm._e(),
+            _vm._v(" "),
+            _vm.selectedPerson.id === 0 ? _c("ac-button-cancel") : _vm._e(),
+            _vm._v(" "),
+            _vm.selectedPerson.id > 0 ? _c("ac-button-update") : _vm._e(),
+            _vm._v(" "),
+            _vm.selectedPerson.id > 0 ? _c("ac-button-remove") : _vm._e()
+          ],
+          1
+        )
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/forms/AcFormPersonCards.vue?vue&type=template&id=2799f2a4&scoped=true&":
+/*!*****************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/ac/components/forms/AcFormPersonCards.vue?vue&type=template&id=2799f2a4&scoped=true& ***!
+  \*****************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm.selectedPersonCards.length > 0
+    ? _c(
+        "div",
+        { staticClass: "dropdown" },
+        [
+          _c("label", { attrs: { for: "cardsMenu" } }, [
+            _vm._v(
+              "\n        " +
+                _vm._s(_vm.$tc("ac.cards", _vm.selectedPersonCards.length)) +
+                "\n    "
+            )
+          ]),
+          _vm._v(" "),
+          _vm._l(_vm.selectedPersonCards, function(card) {
+            return _c(
+              "div",
+              { staticClass: "form-row mb-2", attrs: { id: "cardsMenu" } },
+              [
+                _c("div", { staticClass: "col-10" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: card.wiegand,
+                        expression: "card.wiegand"
+                      }
+                    ],
+                    staticClass: "form-control form-control-plaintext",
+                    attrs: {
+                      type: "text",
+                      placeholder: _vm.$t("ac.card"),
+                      disabled: ""
+                    },
+                    domProps: { value: card.wiegand },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(card, "wiegand", $event.target.value)
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-2" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-danger",
+                      attrs: { type: "button" },
+                      on: {
+                        click: function($event) {
+                          return _vm.detachCard(card)
+                        }
+                      }
+                    },
+                    [_vm._v("\n                ×\n            ")]
+                  )
+                ])
+              ]
+            )
+          })
+        ],
+        2
+      )
+    : _vm._e()
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/forms/AcFormPersonLastCard.vue?vue&type=template&id=4b90bf4b&scoped=true&":
+/*!********************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/ac/components/forms/AcFormPersonLastCard.vue?vue&type=template&id=4b90bf4b&scoped=true& ***!
+  \********************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "form-row" }, [
+      _c("label", { attrs: { for: "freeCards" } }, [
+        _vm._v("\n            " + _vm._s(_vm.$t("ac.last_card")) + "\n        ")
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-row" }, [
+      _c("div", { staticClass: "col-10" }, [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.cardCode,
+              expression: "cardCode"
+            }
+          ],
+          staticClass: "form-control form-control-plaintext",
+          attrs: {
+            id: "freeCards",
+            type: "text",
+            placeholder: _vm.$t("ac.last_card"),
+            disabled: ""
+          },
+          domProps: { value: _vm.cardCode },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.cardCode = $event.target.value
+            }
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-2" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn",
+            class: [_vm.noLastFreeCard ? "btn-secondary" : "btn-primary"],
+            attrs: { type: "button", disabled: _vm.noLastFreeCard },
+            on: { click: _vm.addCardToPerson }
+          },
+          [_vm._v("\n                +\n            ")]
+        )
+      ])
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/forms/AcFormPersonPhoto.vue?vue&type=template&id=71914406&scoped=true&":
+/*!*****************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/ac/components/forms/AcFormPersonPhoto.vue?vue&type=template&id=71914406&scoped=true& ***!
+  \*****************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "ac-person-photo-container" }, [
+    _c("img", {
+      staticClass:
+        "img-fluid rounded shadow mx-auto d-block mx-2 ac-person-photo",
+      attrs: { src: _vm.url, alt: "" }
+    }),
+    _vm._v(" "),
+    _vm.photo !== 0
+      ? _c("div", { staticClass: "ac-person-photo-remove" }, [
+          _c(
+            "button",
+            { staticClass: "btn btn-sm btn-danger", attrs: { type: "button" } },
+            [
+              _vm._v(
+                "\n            " + _vm._s(_vm.$t("ac.delete")) + "\n        "
+              )
+            ]
+          )
+        ])
+      : _vm._e()
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -6873,213 +7010,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/ac/components/AcFormCards.vue":
-/*!****************************************************!*\
-  !*** ./resources/js/ac/components/AcFormCards.vue ***!
-  \****************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _AcFormCards_vue_vue_type_template_id_a3214e3a_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AcFormCards.vue?vue&type=template&id=a3214e3a&scoped=true& */ "./resources/js/ac/components/AcFormCards.vue?vue&type=template&id=a3214e3a&scoped=true&");
-/* harmony import */ var _AcFormCards_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AcFormCards.vue?vue&type=script&lang=js& */ "./resources/js/ac/components/AcFormCards.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-
-
-
-
-
-/* normalize component */
-
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _AcFormCards_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _AcFormCards_vue_vue_type_template_id_a3214e3a_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _AcFormCards_vue_vue_type_template_id_a3214e3a_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
-  false,
-  null,
-  "a3214e3a",
-  null
-  
-)
-
-/* hot reload */
-if (false) { var api; }
-component.options.__file = "resources/js/ac/components/AcFormCards.vue"
-/* harmony default export */ __webpack_exports__["default"] = (component.exports);
-
-/***/ }),
-
-/***/ "./resources/js/ac/components/AcFormCards.vue?vue&type=script&lang=js&":
-/*!*****************************************************************************!*\
-  !*** ./resources/js/ac/components/AcFormCards.vue?vue&type=script&lang=js& ***!
-  \*****************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormCards_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./AcFormCards.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/AcFormCards.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormCards_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
-
-/***/ }),
-
-/***/ "./resources/js/ac/components/AcFormCards.vue?vue&type=template&id=a3214e3a&scoped=true&":
-/*!***********************************************************************************************!*\
-  !*** ./resources/js/ac/components/AcFormCards.vue?vue&type=template&id=a3214e3a&scoped=true& ***!
-  \***********************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormCards_vue_vue_type_template_id_a3214e3a_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./AcFormCards.vue?vue&type=template&id=a3214e3a&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/AcFormCards.vue?vue&type=template&id=a3214e3a&scoped=true&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormCards_vue_vue_type_template_id_a3214e3a_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormCards_vue_vue_type_template_id_a3214e3a_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
-
-
-
-/***/ }),
-
-/***/ "./resources/js/ac/components/AcFormLastCard.vue":
-/*!*******************************************************!*\
-  !*** ./resources/js/ac/components/AcFormLastCard.vue ***!
-  \*******************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _AcFormLastCard_vue_vue_type_template_id_95997614_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AcFormLastCard.vue?vue&type=template&id=95997614&scoped=true& */ "./resources/js/ac/components/AcFormLastCard.vue?vue&type=template&id=95997614&scoped=true&");
-/* harmony import */ var _AcFormLastCard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AcFormLastCard.vue?vue&type=script&lang=js& */ "./resources/js/ac/components/AcFormLastCard.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-
-
-
-
-
-/* normalize component */
-
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _AcFormLastCard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _AcFormLastCard_vue_vue_type_template_id_95997614_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _AcFormLastCard_vue_vue_type_template_id_95997614_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
-  false,
-  null,
-  "95997614",
-  null
-  
-)
-
-/* hot reload */
-if (false) { var api; }
-component.options.__file = "resources/js/ac/components/AcFormLastCard.vue"
-/* harmony default export */ __webpack_exports__["default"] = (component.exports);
-
-/***/ }),
-
-/***/ "./resources/js/ac/components/AcFormLastCard.vue?vue&type=script&lang=js&":
-/*!********************************************************************************!*\
-  !*** ./resources/js/ac/components/AcFormLastCard.vue?vue&type=script&lang=js& ***!
-  \********************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormLastCard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./AcFormLastCard.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/AcFormLastCard.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormLastCard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
-
-/***/ }),
-
-/***/ "./resources/js/ac/components/AcFormLastCard.vue?vue&type=template&id=95997614&scoped=true&":
-/*!**************************************************************************************************!*\
-  !*** ./resources/js/ac/components/AcFormLastCard.vue?vue&type=template&id=95997614&scoped=true& ***!
-  \**************************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormLastCard_vue_vue_type_template_id_95997614_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./AcFormLastCard.vue?vue&type=template&id=95997614&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/AcFormLastCard.vue?vue&type=template&id=95997614&scoped=true&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormLastCard_vue_vue_type_template_id_95997614_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormLastCard_vue_vue_type_template_id_95997614_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
-
-
-
-/***/ }),
-
-/***/ "./resources/js/ac/components/AcFormPerson.vue":
-/*!*****************************************************!*\
-  !*** ./resources/js/ac/components/AcFormPerson.vue ***!
-  \*****************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _AcFormPerson_vue_vue_type_template_id_2350fff6___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AcFormPerson.vue?vue&type=template&id=2350fff6& */ "./resources/js/ac/components/AcFormPerson.vue?vue&type=template&id=2350fff6&");
-/* harmony import */ var _AcFormPerson_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AcFormPerson.vue?vue&type=script&lang=js& */ "./resources/js/ac/components/AcFormPerson.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-
-
-
-
-
-/* normalize component */
-
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _AcFormPerson_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _AcFormPerson_vue_vue_type_template_id_2350fff6___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _AcFormPerson_vue_vue_type_template_id_2350fff6___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
-  false,
-  null,
-  null,
-  null
-  
-)
-
-/* hot reload */
-if (false) { var api; }
-component.options.__file = "resources/js/ac/components/AcFormPerson.vue"
-/* harmony default export */ __webpack_exports__["default"] = (component.exports);
-
-/***/ }),
-
-/***/ "./resources/js/ac/components/AcFormPerson.vue?vue&type=script&lang=js&":
-/*!******************************************************************************!*\
-  !*** ./resources/js/ac/components/AcFormPerson.vue?vue&type=script&lang=js& ***!
-  \******************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormPerson_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./AcFormPerson.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/AcFormPerson.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormPerson_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
-
-/***/ }),
-
-/***/ "./resources/js/ac/components/AcFormPerson.vue?vue&type=template&id=2350fff6&":
-/*!************************************************************************************!*\
-  !*** ./resources/js/ac/components/AcFormPerson.vue?vue&type=template&id=2350fff6& ***!
-  \************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormPerson_vue_vue_type_template_id_2350fff6___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./AcFormPerson.vue?vue&type=template&id=2350fff6& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/AcFormPerson.vue?vue&type=template&id=2350fff6&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormPerson_vue_vue_type_template_id_2350fff6___WEBPACK_IMPORTED_MODULE_0__["render"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormPerson_vue_vue_type_template_id_2350fff6___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
-
-
-
-/***/ }),
-
 /***/ "./resources/js/ac/components/AcMenuLeft.vue":
 /*!***************************************************!*\
   !*** ./resources/js/ac/components/AcMenuLeft.vue ***!
@@ -7770,6 +7700,300 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/ac/components/forms/AcFormPerson.vue":
+/*!***********************************************************!*\
+  !*** ./resources/js/ac/components/forms/AcFormPerson.vue ***!
+  \***********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _AcFormPerson_vue_vue_type_template_id_441b1465___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AcFormPerson.vue?vue&type=template&id=441b1465& */ "./resources/js/ac/components/forms/AcFormPerson.vue?vue&type=template&id=441b1465&");
+/* harmony import */ var _AcFormPerson_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AcFormPerson.vue?vue&type=script&lang=js& */ "./resources/js/ac/components/forms/AcFormPerson.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _AcFormPerson_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _AcFormPerson_vue_vue_type_template_id_441b1465___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _AcFormPerson_vue_vue_type_template_id_441b1465___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/ac/components/forms/AcFormPerson.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/ac/components/forms/AcFormPerson.vue?vue&type=script&lang=js&":
+/*!************************************************************************************!*\
+  !*** ./resources/js/ac/components/forms/AcFormPerson.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormPerson_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./AcFormPerson.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/forms/AcFormPerson.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormPerson_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/ac/components/forms/AcFormPerson.vue?vue&type=template&id=441b1465&":
+/*!******************************************************************************************!*\
+  !*** ./resources/js/ac/components/forms/AcFormPerson.vue?vue&type=template&id=441b1465& ***!
+  \******************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormPerson_vue_vue_type_template_id_441b1465___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./AcFormPerson.vue?vue&type=template&id=441b1465& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/forms/AcFormPerson.vue?vue&type=template&id=441b1465&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormPerson_vue_vue_type_template_id_441b1465___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormPerson_vue_vue_type_template_id_441b1465___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/ac/components/forms/AcFormPersonCards.vue":
+/*!****************************************************************!*\
+  !*** ./resources/js/ac/components/forms/AcFormPersonCards.vue ***!
+  \****************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _AcFormPersonCards_vue_vue_type_template_id_2799f2a4_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AcFormPersonCards.vue?vue&type=template&id=2799f2a4&scoped=true& */ "./resources/js/ac/components/forms/AcFormPersonCards.vue?vue&type=template&id=2799f2a4&scoped=true&");
+/* harmony import */ var _AcFormPersonCards_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AcFormPersonCards.vue?vue&type=script&lang=js& */ "./resources/js/ac/components/forms/AcFormPersonCards.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _AcFormPersonCards_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _AcFormPersonCards_vue_vue_type_template_id_2799f2a4_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _AcFormPersonCards_vue_vue_type_template_id_2799f2a4_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "2799f2a4",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/ac/components/forms/AcFormPersonCards.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/ac/components/forms/AcFormPersonCards.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************!*\
+  !*** ./resources/js/ac/components/forms/AcFormPersonCards.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormPersonCards_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./AcFormPersonCards.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/forms/AcFormPersonCards.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormPersonCards_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/ac/components/forms/AcFormPersonCards.vue?vue&type=template&id=2799f2a4&scoped=true&":
+/*!***********************************************************************************************************!*\
+  !*** ./resources/js/ac/components/forms/AcFormPersonCards.vue?vue&type=template&id=2799f2a4&scoped=true& ***!
+  \***********************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormPersonCards_vue_vue_type_template_id_2799f2a4_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./AcFormPersonCards.vue?vue&type=template&id=2799f2a4&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/forms/AcFormPersonCards.vue?vue&type=template&id=2799f2a4&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormPersonCards_vue_vue_type_template_id_2799f2a4_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormPersonCards_vue_vue_type_template_id_2799f2a4_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/ac/components/forms/AcFormPersonLastCard.vue":
+/*!*******************************************************************!*\
+  !*** ./resources/js/ac/components/forms/AcFormPersonLastCard.vue ***!
+  \*******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _AcFormPersonLastCard_vue_vue_type_template_id_4b90bf4b_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AcFormPersonLastCard.vue?vue&type=template&id=4b90bf4b&scoped=true& */ "./resources/js/ac/components/forms/AcFormPersonLastCard.vue?vue&type=template&id=4b90bf4b&scoped=true&");
+/* harmony import */ var _AcFormPersonLastCard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AcFormPersonLastCard.vue?vue&type=script&lang=js& */ "./resources/js/ac/components/forms/AcFormPersonLastCard.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _AcFormPersonLastCard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _AcFormPersonLastCard_vue_vue_type_template_id_4b90bf4b_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _AcFormPersonLastCard_vue_vue_type_template_id_4b90bf4b_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "4b90bf4b",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/ac/components/forms/AcFormPersonLastCard.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/ac/components/forms/AcFormPersonLastCard.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************!*\
+  !*** ./resources/js/ac/components/forms/AcFormPersonLastCard.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormPersonLastCard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./AcFormPersonLastCard.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/forms/AcFormPersonLastCard.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormPersonLastCard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/ac/components/forms/AcFormPersonLastCard.vue?vue&type=template&id=4b90bf4b&scoped=true&":
+/*!**************************************************************************************************************!*\
+  !*** ./resources/js/ac/components/forms/AcFormPersonLastCard.vue?vue&type=template&id=4b90bf4b&scoped=true& ***!
+  \**************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormPersonLastCard_vue_vue_type_template_id_4b90bf4b_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./AcFormPersonLastCard.vue?vue&type=template&id=4b90bf4b&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/forms/AcFormPersonLastCard.vue?vue&type=template&id=4b90bf4b&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormPersonLastCard_vue_vue_type_template_id_4b90bf4b_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormPersonLastCard_vue_vue_type_template_id_4b90bf4b_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/ac/components/forms/AcFormPersonPhoto.vue":
+/*!****************************************************************!*\
+  !*** ./resources/js/ac/components/forms/AcFormPersonPhoto.vue ***!
+  \****************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _AcFormPersonPhoto_vue_vue_type_template_id_71914406_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AcFormPersonPhoto.vue?vue&type=template&id=71914406&scoped=true& */ "./resources/js/ac/components/forms/AcFormPersonPhoto.vue?vue&type=template&id=71914406&scoped=true&");
+/* harmony import */ var _AcFormPersonPhoto_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AcFormPersonPhoto.vue?vue&type=script&lang=js& */ "./resources/js/ac/components/forms/AcFormPersonPhoto.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _AcFormPersonPhoto_vue_vue_type_style_index_0_id_71914406_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AcFormPersonPhoto.vue?vue&type=style&index=0&id=71914406&scoped=true&lang=css& */ "./resources/js/ac/components/forms/AcFormPersonPhoto.vue?vue&type=style&index=0&id=71914406&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _AcFormPersonPhoto_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _AcFormPersonPhoto_vue_vue_type_template_id_71914406_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _AcFormPersonPhoto_vue_vue_type_template_id_71914406_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "71914406",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/ac/components/forms/AcFormPersonPhoto.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/ac/components/forms/AcFormPersonPhoto.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************!*\
+  !*** ./resources/js/ac/components/forms/AcFormPersonPhoto.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormPersonPhoto_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./AcFormPersonPhoto.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/forms/AcFormPersonPhoto.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormPersonPhoto_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/ac/components/forms/AcFormPersonPhoto.vue?vue&type=style&index=0&id=71914406&scoped=true&lang=css&":
+/*!*************************************************************************************************************************!*\
+  !*** ./resources/js/ac/components/forms/AcFormPersonPhoto.vue?vue&type=style&index=0&id=71914406&scoped=true&lang=css& ***!
+  \*************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormPersonPhoto_vue_vue_type_style_index_0_id_71914406_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/style-loader!../../../../../node_modules/css-loader??ref--6-1!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/src??ref--6-2!../../../../../node_modules/vue-loader/lib??vue-loader-options!./AcFormPersonPhoto.vue?vue&type=style&index=0&id=71914406&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/forms/AcFormPersonPhoto.vue?vue&type=style&index=0&id=71914406&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormPersonPhoto_vue_vue_type_style_index_0_id_71914406_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormPersonPhoto_vue_vue_type_style_index_0_id_71914406_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormPersonPhoto_vue_vue_type_style_index_0_id_71914406_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormPersonPhoto_vue_vue_type_style_index_0_id_71914406_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormPersonPhoto_vue_vue_type_style_index_0_id_71914406_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/ac/components/forms/AcFormPersonPhoto.vue?vue&type=template&id=71914406&scoped=true&":
+/*!***********************************************************************************************************!*\
+  !*** ./resources/js/ac/components/forms/AcFormPersonPhoto.vue?vue&type=template&id=71914406&scoped=true& ***!
+  \***********************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormPersonPhoto_vue_vue_type_template_id_71914406_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./AcFormPersonPhoto.vue?vue&type=template&id=71914406&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/forms/AcFormPersonPhoto.vue?vue&type=template&id=71914406&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormPersonPhoto_vue_vue_type_template_id_71914406_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormPersonPhoto_vue_vue_type_template_id_71914406_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/ac/store/index.js":
 /*!****************************************!*\
   !*** ./resources/js/ac/store/index.js ***!
@@ -8073,6 +8297,13 @@ var mutations = {
   removeCard: function removeCard(state, card) {
     var index = state.selected.cards.indexOf(card);
     state.selected.cards.splice(index, 1);
+  },
+  addPhoto: function addPhoto(state, photo) {
+    state.selected.photos.push(new _classes__WEBPACK_IMPORTED_MODULE_3__["Photo"](photo));
+  },
+  removePhoto: function removePhoto(state, photo) {
+    var index = state.selected.photos.indexOf(photo);
+    state.selected.photos.splice(index, 1);
   }
 };
 var actions = {
@@ -8317,7 +8548,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 /* harmony import */ var _ac_components_AcMenuLeft__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ac/components/AcMenuLeft */ "./resources/js/ac/components/AcMenuLeft.vue");
 /* harmony import */ var _ac_components_AcMenuRight__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./ac/components/AcMenuRight */ "./resources/js/ac/components/AcMenuRight.vue");
-/* harmony import */ var _ac_components_AcFormPerson__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./ac/components/AcFormPerson */ "./resources/js/ac/components/AcFormPerson.vue");
+/* harmony import */ var _ac_components_forms_AcFormPerson__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./ac/components/forms/AcFormPerson */ "./resources/js/ac/components/forms/AcFormPerson.vue");
 /* harmony import */ var _ac_components_AcAlert__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./ac/components/AcAlert */ "./resources/js/ac/components/AcAlert.vue");
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
 
@@ -8362,7 +8593,7 @@ window.Ac = new vue__WEBPACK_IMPORTED_MODULE_1___default.a({
   components: {
     AcMenuLeft: _ac_components_AcMenuLeft__WEBPACK_IMPORTED_MODULE_5__["default"],
     AcMenuRight: _ac_components_AcMenuRight__WEBPACK_IMPORTED_MODULE_6__["default"],
-    AcFormPerson: _ac_components_AcFormPerson__WEBPACK_IMPORTED_MODULE_7__["default"],
+    AcFormPerson: _ac_components_forms_AcFormPerson__WEBPACK_IMPORTED_MODULE_7__["default"],
     AcAlert: _ac_components_AcAlert__WEBPACK_IMPORTED_MODULE_8__["default"]
   },
   data: {

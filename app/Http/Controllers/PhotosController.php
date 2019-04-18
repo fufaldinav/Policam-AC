@@ -39,11 +39,11 @@ class PhotosController extends Controller
      */
     public function save(Request $request)
     {
-        $file = $request->file('file');
+        $file = $request->file('file')->getRealPath();
 
-        return response()->json(
-            (new Photo())->save($file)
-        );
+        $photo = App\Photo::saveFile($file);
+
+        return response()->json($photo);
     }
 
     /**
