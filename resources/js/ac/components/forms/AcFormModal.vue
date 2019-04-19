@@ -41,21 +41,14 @@
                     >
                         {{ $t('ac.cancel') }}
                     </button>
-                    <ac-button-save
-                        v-if="buttonType === 'save'"
-                        @ac-person-save="savePerson"
-                    >
-                    </ac-button-save>
-                    <ac-button-update
-                        v-if="buttonType === 'update'"
-                        @ac-person-update="updatePerson"
-                    >
-                    </ac-button-update>
-                    <ac-button-remove
-                        v-if="buttonType === 'remove'"
-                        @ac-person-remove="removePerson"
-                    >
-                    </ac-button-remove>
+                    <ac-button-save-person v-if="this.$store.state.modal.acceptButton === 'savePerson'">
+                    </ac-button-save-person>
+                    <ac-button-update-person v-if="this.$store.state.modal.acceptButton === 'updatePerson'">
+                    </ac-button-update-person>
+                    <ac-button-remove-person v-if="this.$store.state.modal.acceptButton === 'removePerson'">
+                    </ac-button-remove-person>
+                    <ac-button-remove-card v-if="this.$store.state.modal.acceptButton === 'removeCard'">
+                    </ac-button-remove-card>
                 </div>
             </div>
         </div>
@@ -63,44 +56,39 @@
 </template>
 
 <script>
-    import AcButtonSave from '../buttons/AcButtonSave';
-    import AcButtonUpdate from '../buttons/AcButtonUpdate';
-    import AcButtonRemove from '../buttons/AcButtonRemove';
+    import AcButtonRemoveCard from '../buttons/AcButtonRemoveCard'
+    import AcButtonRemovePerson from '../buttons/AcButtonRemovePerson'
+    import AcButtonSavePerson from '../buttons/AcButtonSavePerson'
+    import AcButtonUpdatePerson from '../buttons/AcButtonUpdatePerson'
 
     export default {
         name: "AcFormModal",
 
-        components: {AcButtonSave, AcButtonRemove, AcButtonUpdate},
-
-        props: {
-            title: String,
-            message: String,
-            buttonType: String
+        components: {
+            AcButtonRemoveCard,
+            AcButtonRemovePerson,
+            AcButtonSavePerson,
+            AcButtonUpdatePerson
         },
 
-        data() {
-            return {}
+        computed: {
+            title() {
+                return this.$store.state.modal.title
+            },
+
+            message() {
+                return this.$store.state.modal.message
+            }
         },
 
-        methods: {
-            savePerson() {
-                this.$store.dispatch('persons/saveSelected');
-                $('#ac-form-modal').modal('hide');
-            },
-
-            updatePerson() {
-                this.$store.dispatch('persons/updateSelected');
-                $('#ac-form-modal').modal('hide');
-            },
-
-            removePerson() {
-                this.$store.dispatch('persons/removeSelected');
-                $('#ac-form-modal').modal('hide');
-            },
+        mounted() {
+            let self = this
+            $(this.$store.state.modal.id).on('show.bs.modal', function () {
+                self.$store.commit('modal/setShown')
+            })
+            $(this.$store.state.modal.id).on('hide.bs.modal', function () {
+                self.$store.commit('modal/setHidden')
+            })
         }
     }
 </script>
-
-<style scoped>
-
-</style>

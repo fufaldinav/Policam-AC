@@ -17,7 +17,7 @@
                         v-model="selectedPerson.f"
                         type="text"
                         class="form-control"
-                        :class="{ 'is-invalid': checkField(selectedPerson.f) }"
+                        :class="{ 'is-invalid': checkField('f') === false }"
                         :placeholder="$t('ac.f')"
                         :disabled="selectedPerson.id === null"
                         required
@@ -35,7 +35,7 @@
                         v-model="selectedPerson.i"
                         type="text"
                         class="form-control"
-                        :class="{ 'is-invalid': checkField(selectedPerson.i) }"
+                        :class="{ 'is-invalid': checkField('i') === false }"
                         :placeholder="$t('ac.i')"
                         :disabled="selectedPerson.id === null"
                         required
@@ -66,7 +66,7 @@
                         v-model="selectedPerson.birthday"
                         type="date"
                         class="form-control"
-                        :class="{ 'is-invalid': checkField(selectedPerson.birthday) }"
+                        :class="{ 'is-invalid': checkField('birthday') === false }"
                         :placeholder="$t('ac.birthday')"
                         :disabled="selectedPerson.id === null"
                         required
@@ -128,93 +128,75 @@
         </div>
         <div class="form-row">
             <div class="form-group">
-                <ac-button-save v-if="selectedPerson.id === 0" @ac-person-save="savePerson"></ac-button-save>
-                <ac-button-cancel v-if="selectedPerson.id === 0"></ac-button-cancel>
-                <ac-button-update v-if="selectedPerson.id > 0" @ac-person-update="updatePerson"></ac-button-update>
-                <ac-button-remove v-if="selectedPerson.id > 0" @ac-person-remove="removePerson"></ac-button-remove>
+                <ac-button-save-person
+                    v-if="selectedPerson.id === 0"
+                    :disabled="hasErrors"
+                >
+                </ac-button-save-person>
+                <ac-button-update-person
+                    v-if="selectedPerson.id > 0"
+                    :disabled="hasErrors"
+                >
+                </ac-button-update-person>
+                <ac-button-remove-person
+                    v-if="selectedPerson.id > 0"
+                >
+                </ac-button-remove-person>
+                <ac-button-cancel v-if="selectedPerson.id !== null"></ac-button-cancel>
             </div>
         </div>
-        <ac-form-modal
-            :title="modalTitle"
-            :message="modalMessage"
-            :button-type="modalButtonType"
-        >
-        </ac-form-modal>
+        <ac-form-modal></ac-form-modal>
     </form>
 </template>
 
 <script>
-    import AcFormCards from './AcFormPersonCards';
-    import AcFormLastCard from './AcFormPersonLastCard';
-    import AcFormPersonPhoto from './AcFormPersonPhoto';
-    import AcButtonSave from '../buttons/AcButtonSave';
-    import AcButtonCancel from '../buttons/AcButtonCancel';
-    import AcButtonUpdate from '../buttons/AcButtonUpdate';
-    import AcButtonRemove from '../buttons/AcButtonRemove';
-    import AcFormModal from "./AcFormModal";
+    import AcFormCards from './AcFormPersonCards'
+    import AcFormLastCard from './AcFormPersonLastCard'
+    import AcFormPersonPhoto from './AcFormPersonPhoto'
+    import AcButtonCancel from '../buttons/AcButtonCancel'
+    import AcButtonRemovePerson from '../buttons/AcButtonRemovePerson'
+    import AcButtonSavePerson from '../buttons/AcButtonSavePerson'
+    import AcButtonUpdatePerson from '../buttons/AcButtonUpdatePerson'
+    import AcFormModal from "./AcFormModal"
 
     export default {
         name: "AcFormPerson",
+
         data: function () {
             return {
-                errors: false,
-                modalTitle: null,
-                modalMessage: null,
-                modalButtonType: null
+                errors: {
+                    f: false,
+                    i: false,
+                    birthday: false
+                }
             }
         },
+
         components: {
             AcFormCards, AcFormLastCard, AcFormPersonPhoto,
-            AcButtonCancel, AcButtonSave, AcButtonUpdate, AcButtonRemove,
+            AcButtonCancel, AcButtonRemovePerson, AcButtonSavePerson, AcButtonUpdatePerson,
             AcFormModal
         },
 
         computed: {
             selectedPerson() {
-                return this.$store.state.persons.selected;
+                return this.$store.state.persons.selected
+            },
+
+            hasErrors() {
+                return this.errors.f || this.errors.i || this.errors.birthday
             }
         },
+
         methods: {
-            savePerson() {
-                this.modalTitle = 'Save';
-                this.modalMessage = 'Do you want save?';
-                this.modalButtonType = 'save';
-
-                if (this.errors) {
-                    return;
+            checkField(fieldName) {
+                if (this.selectedPerson.id !== null && (this.selectedPerson[fieldName] === null || this.selectedPerson[fieldName] === '')) {
+                    this.errors[fieldName] = true
+                    return false
                 }
 
-                $('#ac-form-modal').modal('show');
-            },
-
-            updatePerson() {
-                this.modalTitle = 'Update';
-                this.modalMessage = 'Do you want update?';
-                this.modalButtonType = 'update';
-
-                if (this.errors) {
-                    return;
-                }
-
-                $('#ac-form-modal').modal('show');
-            },
-
-            removePerson() {
-                this.modalTitle = 'Remove';
-                this.modalMessage = 'Do you want remove?';
-                this.modalButtonType = 'remove';
-
-                $('#ac-form-modal').modal('show');
-            },
-
-            checkField(field) {
-                if (this.selectedPerson.id !== null && (field === null || field === '')) {
-                    this.errors = true;
-                    return true;
-                }
-
-                this.errors = false;
-                return false;
+                this.errors[fieldName] = false
+                return true
             }
         }
     }

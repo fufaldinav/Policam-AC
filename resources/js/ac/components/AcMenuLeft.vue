@@ -38,7 +38,9 @@
 
     export default {
         name: "AcMenuLeft",
+
         components: {AcButtonAdd, AcButtonBack, AcButtonPerson, AcButtonDivision},
+
         computed: {
             ...mapState({
                 divisions: state => state.divisions.collection,

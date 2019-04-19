@@ -11,6 +11,7 @@
 <script>
     export default {
         name: "AcButtonCancel",
+
         methods: {
             unsetSelectedPerson() {
                 this.$store.commit('persons/setSelected');

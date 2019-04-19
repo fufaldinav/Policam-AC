@@ -14,10 +14,12 @@
 <script>
     export default {
         name: "AcAlert",
+
         props: {
             message: {
                 required: true
             },
+
             type: {
                 type: String
             }

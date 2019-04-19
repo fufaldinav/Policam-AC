@@ -16,14 +16,17 @@
 
     export default {
         name: "AcButtonPerson",
+
         props: {
             person: Object
         },
+
         computed: {
             noCards() {
                 return this.person.cards.length === 0;
             }
         },
+
         methods: {
             selectPerson: function () {
                 this.$store.commit('persons/setSelected', new Person(this.person));

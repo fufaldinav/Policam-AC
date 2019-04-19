@@ -39,4 +39,8 @@ return [
     'press_' => 'Press',
     '_to_upload' => 'to upload photo',
     'click_again_to_edit' => 'Click again to edit',
+    'do_you_really_want_to' => 'Do you really want to :action',
+    'saving' => 'Saving',
+    'updating' => 'Updating',
+    'deleting' => 'Deleting',
 ];

@@ -6,7 +6,10 @@
         @click="selectDivision"
     >
         {{ division.name }}
-        <span class="badge badge-pill" :class="[count ? 'badge-primary' : 'badge-warning']">
+        <span
+            class="badge badge-pill"
+            :class="[count ? 'badge-primary' : 'badge-warning']"
+        >
             {{ count }}
         </span>
     </button>
@@ -15,14 +18,17 @@
 <script>
     export default {
         name: "AcButtonDivision",
+
         props: {
             division: Object
         },
+
         computed: {
             count() {
                 return this.division.persons.length;
             }
         },
+
         methods: {
             selectDivision() {
                 this.$store.commit('divisions/setSelected', this.division);

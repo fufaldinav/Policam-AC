@@ -11,6 +11,7 @@
 <script>
     export default {
         name: "AcButtonBack",
+
         methods: {
             unselectDivisionAndPerson() {
                 this.$store.commit('divisions/setSelected');

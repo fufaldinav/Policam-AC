@@ -38,7 +38,11 @@ export default {
             "deleted": "deleted",
             "press_": "Press",
             "_to_upload": "to upload photo",
-            "click_again_to_edit": "Click again to edit"
+            "click_again_to_edit": "Click again to edit",
+            "do_you_really_want_to": "Do you really want to {action}",
+            "saving": "Saving",
+            "updating": "Updating",
+            "deleting": "Deleting"
         }
     },
     "ru": {
@@ -84,7 +88,11 @@ export default {
             "deleted": "удален",
             "press_": "Нажмите,",
             "_to_upload": "чтобы загрузить фотографию",
-            "click_again_to_edit": "Нажмите еще раз для редактирования"
+            "click_again_to_edit": "Нажмите еще раз для редактирования",
+            "do_you_really_want_to": "Вы действительно хотите {action}?",
+            "saving": "Сохранение",
+            "updating": "Сохранение",
+            "deleting": "Удаление"
         }
     }
 }

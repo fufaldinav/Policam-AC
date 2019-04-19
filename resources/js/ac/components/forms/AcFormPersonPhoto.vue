@@ -41,10 +41,12 @@
 <script>
     export default {
         name: "AcFormPersonPhoto",
+
         computed: {
             selectedPerson() {
                 return this.$store.state.persons.selected;
             },
+
             photo() {
                 let person = this.$store.state.persons.selected;
 
@@ -54,10 +56,12 @@
 
                 return {id: 0, hash: 0};
             },
+
             url() {
                 return '/photos/thumbnails/' + this.photo.hash + '.jpg';
             }
         },
+
         methods: {
             uploadPhoto(files) {
                 let formData = new FormData();
@@ -80,6 +84,7 @@
                     this.$root.alert(error, 'danger');
                 })
             },
+
             removeUploadedPhoto() {
                 if (this.photo.person_id === null) {
                     let self = this;

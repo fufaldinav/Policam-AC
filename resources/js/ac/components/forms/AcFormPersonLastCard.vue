@@ -6,7 +6,7 @@
             </label>
         </div>
         <div class="form-row">
-            <div class="col-10">
+            <div class="col-9 col-sm-10">
                 <input
                     id="freeCards"
                     v-model="cardCode"
@@ -21,7 +21,7 @@
                     @blur="leaveForm"
                 >
             </div>
-            <div class="col-2">
+            <div class="col-3 col-sm-2">
                 <button
                     type="button"
                     class="btn"

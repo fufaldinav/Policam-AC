@@ -13,6 +13,7 @@
 
     export default {
         name: "AcButtonAdd",
+
         methods: {
             selectPerson: function () {
                 let division = this.$store.state.divisions.selected;

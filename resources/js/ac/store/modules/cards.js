@@ -1,17 +1,23 @@
 import {Card} from '../../classes';
 
 const state = {
-    last: null
+    last: null,
+    removable: null
 }
 
 const getters = {}
 
 const mutations = {
     setLast(state, card) {
-        state.last = new Card(card);
+        state.last = new Card(card)
     },
+
     clearLast(state) {
-        state.last = null;
+        state.last = null
+    },
+
+    setRemovable(state, card) {
+        state.removable = card
     }
 }
 
