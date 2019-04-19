@@ -139,9 +139,9 @@ class Person extends Model
         $tasker = new Tasker();
 
         foreach ($cards as $card) {
-            $card = Card::find($card['id']);
+            $card = Card::firstOrCreate(['wiegand' => $card['wiegand']]);
 
-            if (! $card) {
+            if ($card->person_id > 0) {
                 continue;
             }
 
