@@ -128,12 +128,18 @@
         </div>
         <div class="form-row">
             <div class="form-group">
-                <ac-button-save v-if="selectedPerson.id === 0" @ac-save-person="savePerson"></ac-button-save>
+                <ac-button-save v-if="selectedPerson.id === 0" @ac-person-save="savePerson"></ac-button-save>
                 <ac-button-cancel v-if="selectedPerson.id === 0"></ac-button-cancel>
-                <ac-button-update v-if="selectedPerson.id > 0" @ac-update-person="updatePerson"></ac-button-update>
-                <ac-button-remove v-if="selectedPerson.id > 0"></ac-button-remove>
+                <ac-button-update v-if="selectedPerson.id > 0" @ac-person-update="updatePerson"></ac-button-update>
+                <ac-button-remove v-if="selectedPerson.id > 0" @ac-person-remove="removePerson"></ac-button-remove>
             </div>
         </div>
+        <ac-form-modal
+            :title="modalTitle"
+            :message="modalMessage"
+            :button-type="modalButtonType"
+        >
+        </ac-form-modal>
     </form>
 </template>
 
@@ -145,18 +151,24 @@
     import AcButtonCancel from '../buttons/AcButtonCancel';
     import AcButtonUpdate from '../buttons/AcButtonUpdate';
     import AcButtonRemove from '../buttons/AcButtonRemove';
+    import AcFormModal from "./AcFormModal";
 
     export default {
         name: "AcFormPerson",
         data: function () {
             return {
-                errors: false
+                errors: false,
+                modalTitle: null,
+                modalMessage: null,
+                modalButtonType: null
             }
         },
         components: {
-            AcFormPersonPhoto,
-            AcFormCards, AcFormLastCard, AcButtonRemove, AcButtonUpdate, AcButtonCancel, AcButtonSave
+            AcFormCards, AcFormLastCard, AcFormPersonPhoto,
+            AcButtonCancel, AcButtonSave, AcButtonUpdate, AcButtonRemove,
+            AcFormModal
         },
+
         computed: {
             selectedPerson() {
                 return this.$store.state.persons.selected;
@@ -164,17 +176,35 @@
         },
         methods: {
             savePerson() {
+                this.modalTitle = 'Save';
+                this.modalMessage = 'Do you want save?';
+                this.modalButtonType = 'save';
+
                 if (this.errors) {
                     return;
                 }
-                this.$store.dispatch('persons/saveSelected');
+
+                $('#ac-form-modal').modal('show');
             },
 
             updatePerson() {
+                this.modalTitle = 'Update';
+                this.modalMessage = 'Do you want update?';
+                this.modalButtonType = 'update';
+
                 if (this.errors) {
                     return;
                 }
-                this.$store.dispatch('persons/updateSelected');
+
+                $('#ac-form-modal').modal('show');
+            },
+
+            removePerson() {
+                this.modalTitle = 'Remove';
+                this.modalMessage = 'Do you want remove?';
+                this.modalButtonType = 'remove';
+
+                $('#ac-form-modal').modal('show');
             },
 
             checkField(field) {

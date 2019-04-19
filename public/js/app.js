@@ -349,12 +349,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "AcButtonRemove",
-  methods: {
-    removePerson: function removePerson() {
-      this.$store.dispatch('persons/removeSelected');
-    }
-  }
+  name: "AcButtonRemove"
 });
 
 /***/ }),
@@ -409,6 +404,118 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/forms/AcFormModal.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/ac/components/forms/AcFormModal.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _buttons_AcButtonSave__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../buttons/AcButtonSave */ "./resources/js/ac/components/buttons/AcButtonSave.vue");
+/* harmony import */ var _buttons_AcButtonUpdate__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../buttons/AcButtonUpdate */ "./resources/js/ac/components/buttons/AcButtonUpdate.vue");
+/* harmony import */ var _buttons_AcButtonRemove__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../buttons/AcButtonRemove */ "./resources/js/ac/components/buttons/AcButtonRemove.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "AcFormModal",
+  components: {
+    AcButtonSave: _buttons_AcButtonSave__WEBPACK_IMPORTED_MODULE_0__["default"],
+    AcButtonRemove: _buttons_AcButtonRemove__WEBPACK_IMPORTED_MODULE_2__["default"],
+    AcButtonUpdate: _buttons_AcButtonUpdate__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
+  props: {
+    title: String,
+    message: String,
+    buttonType: String
+  },
+  data: function data() {
+    return {};
+  },
+  methods: {
+    savePerson: function savePerson() {
+      this.$store.dispatch('persons/saveSelected');
+      $('#ac-form-modal').modal('hide');
+    },
+    updatePerson: function updatePerson() {
+      this.$store.dispatch('persons/updateSelected');
+      $('#ac-form-modal').modal('hide');
+    },
+    removePerson: function removePerson() {
+      this.$store.dispatch('persons/removeSelected');
+      $('#ac-form-modal').modal('hide');
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/forms/AcFormPerson.vue?vue&type=script&lang=js&":
 /*!********************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/ac/components/forms/AcFormPerson.vue?vue&type=script&lang=js& ***!
@@ -425,6 +532,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _buttons_AcButtonCancel__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../buttons/AcButtonCancel */ "./resources/js/ac/components/buttons/AcButtonCancel.vue");
 /* harmony import */ var _buttons_AcButtonUpdate__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../buttons/AcButtonUpdate */ "./resources/js/ac/components/buttons/AcButtonUpdate.vue");
 /* harmony import */ var _buttons_AcButtonRemove__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../buttons/AcButtonRemove */ "./resources/js/ac/components/buttons/AcButtonRemove.vue");
+/* harmony import */ var _AcFormModal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./AcFormModal */ "./resources/js/ac/components/forms/AcFormModal.vue");
 //
 //
 //
@@ -564,6 +672,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -575,17 +690,21 @@ __webpack_require__.r(__webpack_exports__);
   name: "AcFormPerson",
   data: function data() {
     return {
-      errors: false
+      errors: false,
+      modalTitle: null,
+      modalMessage: null,
+      modalButtonType: null
     };
   },
   components: {
-    AcFormPersonPhoto: _AcFormPersonPhoto__WEBPACK_IMPORTED_MODULE_2__["default"],
     AcFormCards: _AcFormPersonCards__WEBPACK_IMPORTED_MODULE_0__["default"],
     AcFormLastCard: _AcFormPersonLastCard__WEBPACK_IMPORTED_MODULE_1__["default"],
-    AcButtonRemove: _buttons_AcButtonRemove__WEBPACK_IMPORTED_MODULE_6__["default"],
-    AcButtonUpdate: _buttons_AcButtonUpdate__WEBPACK_IMPORTED_MODULE_5__["default"],
+    AcFormPersonPhoto: _AcFormPersonPhoto__WEBPACK_IMPORTED_MODULE_2__["default"],
     AcButtonCancel: _buttons_AcButtonCancel__WEBPACK_IMPORTED_MODULE_4__["default"],
-    AcButtonSave: _buttons_AcButtonSave__WEBPACK_IMPORTED_MODULE_3__["default"]
+    AcButtonSave: _buttons_AcButtonSave__WEBPACK_IMPORTED_MODULE_3__["default"],
+    AcButtonUpdate: _buttons_AcButtonUpdate__WEBPACK_IMPORTED_MODULE_5__["default"],
+    AcButtonRemove: _buttons_AcButtonRemove__WEBPACK_IMPORTED_MODULE_6__["default"],
+    AcFormModal: _AcFormModal__WEBPACK_IMPORTED_MODULE_7__["default"]
   },
   computed: {
     selectedPerson: function selectedPerson() {
@@ -594,18 +713,32 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     savePerson: function savePerson() {
+      this.modalTitle = 'Save';
+      this.modalMessage = 'Do you want save?';
+      this.modalButtonType = 'save';
+
       if (this.errors) {
         return;
       }
 
-      this.$store.dispatch('persons/saveSelected');
+      $('#ac-form-modal').modal('show');
     },
     updatePerson: function updatePerson() {
+      this.modalTitle = 'Update';
+      this.modalMessage = 'Do you want update?';
+      this.modalButtonType = 'update';
+
       if (this.errors) {
         return;
       }
 
-      this.$store.dispatch('persons/updateSelected');
+      $('#ac-form-modal').modal('show');
+    },
+    removePerson: function removePerson() {
+      this.modalTitle = 'Remove';
+      this.modalMessage = 'Do you want remove?';
+      this.modalButtonType = 'remove';
+      $('#ac-form-modal').modal('show');
     },
     checkField: function checkField(field) {
       if (this.selectedPerson.id !== null && (field === null || field === '')) {
@@ -883,7 +1016,7 @@ __webpack_require__.r(__webpack_exports__);
         self.$store.commit('persons/addPhoto', response.data);
       }).catch(function (error) {
         console.log(error);
-        window.Ac.alert(error, 'danger');
+        this.$root.alert(error, 'danger');
       });
     },
     removeUploadedPhoto: function removeUploadedPhoto() {
@@ -893,10 +1026,10 @@ __webpack_require__.r(__webpack_exports__);
           if (response.data > 0) {
             self.$store.commit('persons/removePhoto', self.photo);
           } else {
-            window.Ac.alert('Unknown error', 'danger');
+            this.$root.alert('Unknown error', 'danger');
           }
         }).catch(function (error) {
-          window.Ac.alert(error, 'danger');
+          this.$root.alert(error, 'danger');
           console.log(error);
         });
       } else {
@@ -4969,7 +5102,11 @@ var render = function() {
     {
       staticClass: "btn btn-danger",
       attrs: { type: "button" },
-      on: { click: _vm.removePerson }
+      on: {
+        click: function($event) {
+          return _vm.$emit("ac-person-remove")
+        }
+      }
     },
     [_vm._v("\n    " + _vm._s(_vm.$t("ac.delete")) + "\n")]
   )
@@ -5003,7 +5140,7 @@ var render = function() {
       attrs: { type: "button" },
       on: {
         click: function($event) {
-          return _vm.$emit("ac-save-person")
+          return _vm.$emit("ac-person-save")
         }
       }
     },
@@ -5039,7 +5176,7 @@ var render = function() {
       attrs: { type: "button" },
       on: {
         click: function($event) {
-          return _vm.$emit("ac-update-person")
+          return _vm.$emit("ac-person-update")
         }
       }
     },
@@ -5047,6 +5184,138 @@ var render = function() {
   )
 }
 var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/forms/AcFormModal.vue?vue&type=template&id=509c16cd&scoped=true&":
+/*!***********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/ac/components/forms/AcFormModal.vue?vue&type=template&id=509c16cd&scoped=true& ***!
+  \***********************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "modal fade",
+      attrs: {
+        id: "ac-form-modal",
+        tabindex: "-1",
+        role: "dialog",
+        "aria-labelledby": "ac-modal-label",
+        "aria-hidden": "true"
+      }
+    },
+    [
+      _c(
+        "div",
+        {
+          staticClass: "modal-dialog modal-dialog-centered",
+          attrs: { role: "document" }
+        },
+        [
+          _c("div", { staticClass: "modal-content" }, [
+            _c("div", { staticClass: "modal-header" }, [
+              _c(
+                "h5",
+                { staticClass: "modal-title", attrs: { id: "ac-modal-label" } },
+                [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(_vm.title) +
+                      "\n                "
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _vm._m(0)
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "modal-body" }, [
+              _vm._v(
+                "\n                " + _vm._s(_vm.message) + "\n            "
+              )
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "modal-footer" },
+              [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-secondary",
+                    attrs: { type: "button", "data-dismiss": "modal" }
+                  },
+                  [
+                    _vm._v(
+                      "\n                    " +
+                        _vm._s(_vm.$t("ac.cancel")) +
+                        "\n                "
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _vm.buttonType === "save"
+                  ? _c("ac-button-save", {
+                      on: { "ac-person-save": _vm.savePerson }
+                    })
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.buttonType === "update"
+                  ? _c("ac-button-update", {
+                      on: { "ac-person-update": _vm.updatePerson }
+                    })
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.buttonType === "remove"
+                  ? _c("ac-button-remove", {
+                      on: { "ac-person-remove": _vm.removePerson }
+                    })
+                  : _vm._e()
+              ],
+              1
+            )
+          ])
+        ]
+      )
+    ]
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "modal",
+          "aria-label": "Close"
+        }
+      },
+      [
+        _c("span", { attrs: { "aria-hidden": "true" } }, [
+          _vm._v("\n                        ×\n                    ")
+        ])
+      ]
+    )
+  }
+]
 render._withStripped = true
 
 
@@ -5400,7 +5669,7 @@ var render = function() {
           [
             _vm.selectedPerson.id === 0
               ? _c("ac-button-save", {
-                  on: { "ac-save-person": _vm.savePerson }
+                  on: { "ac-person-save": _vm.savePerson }
                 })
               : _vm._e(),
             _vm._v(" "),
@@ -5408,16 +5677,29 @@ var render = function() {
             _vm._v(" "),
             _vm.selectedPerson.id > 0
               ? _c("ac-button-update", {
-                  on: { "ac-update-person": _vm.updatePerson }
+                  on: { "ac-person-update": _vm.updatePerson }
                 })
               : _vm._e(),
             _vm._v(" "),
-            _vm.selectedPerson.id > 0 ? _c("ac-button-remove") : _vm._e()
+            _vm.selectedPerson.id > 0
+              ? _c("ac-button-remove", {
+                  on: { "ac-person-remove": _vm.removePerson }
+                })
+              : _vm._e()
           ],
           1
         )
-      ])
-    ]
+      ]),
+      _vm._v(" "),
+      _c("ac-form-modal", {
+        attrs: {
+          title: _vm.modalTitle,
+          message: _vm.modalMessage,
+          "button-type": _vm.modalButtonType
+        }
+      })
+    ],
+    1
   )
 }
 var staticRenderFns = []
@@ -7856,6 +8138,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/ac/components/forms/AcFormModal.vue":
+/*!**********************************************************!*\
+  !*** ./resources/js/ac/components/forms/AcFormModal.vue ***!
+  \**********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _AcFormModal_vue_vue_type_template_id_509c16cd_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AcFormModal.vue?vue&type=template&id=509c16cd&scoped=true& */ "./resources/js/ac/components/forms/AcFormModal.vue?vue&type=template&id=509c16cd&scoped=true&");
+/* harmony import */ var _AcFormModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AcFormModal.vue?vue&type=script&lang=js& */ "./resources/js/ac/components/forms/AcFormModal.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _AcFormModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _AcFormModal_vue_vue_type_template_id_509c16cd_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _AcFormModal_vue_vue_type_template_id_509c16cd_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "509c16cd",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/ac/components/forms/AcFormModal.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/ac/components/forms/AcFormModal.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************!*\
+  !*** ./resources/js/ac/components/forms/AcFormModal.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./AcFormModal.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/forms/AcFormModal.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/ac/components/forms/AcFormModal.vue?vue&type=template&id=509c16cd&scoped=true&":
+/*!*****************************************************************************************************!*\
+  !*** ./resources/js/ac/components/forms/AcFormModal.vue?vue&type=template&id=509c16cd&scoped=true& ***!
+  \*****************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormModal_vue_vue_type_template_id_509c16cd_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./AcFormModal.vue?vue&type=template&id=509c16cd&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/ac/components/forms/AcFormModal.vue?vue&type=template&id=509c16cd&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormModal_vue_vue_type_template_id_509c16cd_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AcFormModal_vue_vue_type_template_id_509c16cd_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/ac/components/forms/AcFormPerson.vue":
 /*!***********************************************************!*\
   !*** ./resources/js/ac/components/forms/AcFormPerson.vue ***!
@@ -8768,15 +9119,7 @@ window.Ac = new vue__WEBPACK_IMPORTED_MODULE_1___default.a({
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_4__["mapState"])({
     loading: function loading(state) {
       return state.loader.loading;
-    },
-    divisions: function divisions(state) {
-      return state.divisions.collection;
-    },
-    //TODO delete
-    persons: function persons(state) {
-      return state.persons.collection;
-    } //TODO delete
-
+    }
   })),
   created: function created() {
     _ac_store__WEBPACK_IMPORTED_MODULE_3__["default"].dispatch('loader/loadDivisions');
@@ -8787,15 +9130,16 @@ window.Ac = new vue__WEBPACK_IMPORTED_MODULE_1___default.a({
         window.Echo.private("controller-events.".concat(response.data[k].id)).listen('EventReceived', function (e) {
           if (e.event === 2 || e.event === 3) {
             _ac_store__WEBPACK_IMPORTED_MODULE_3__["default"].commit('cards/setLast', e.card);
-            console.log(e);
+            console.log(e); //TODO delete
           } else if (e.event === 4 || e.event === 5) {
-            console.log(e);
+            console.log(e); //TODO delete
           }
         }).listen('ControllerConnected', function (e) {
-          console.log(e.controller_id);
+          console.log(e.controller_id); //TODO delete
         });
       }
     }).catch(function (error) {
+      this.alert(error, 'danger');
       console.log(error);
     });
   },

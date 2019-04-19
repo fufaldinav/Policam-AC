@@ -2,7 +2,7 @@
     <button
         type="button"
         class="btn btn-danger"
-        @click="removePerson"
+        @click="$emit('ac-person-remove')"
     >
         {{ $t('ac.delete') }}
     </button>
@@ -10,11 +10,6 @@
 
 <script>
     export default {
-        name: "AcButtonRemove",
-        methods: {
-            removePerson() {
-                this.$store.dispatch('persons/removeSelected');
-            }
-        }
+        name: "AcButtonRemove"
     }
 </script>

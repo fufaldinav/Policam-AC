@@ -77,7 +77,7 @@
                     self.$store.commit('persons/addPhoto', response.data);
                 }).catch(function (error) {
                     console.log(error);
-                    window.Ac.alert(error, 'danger');
+                    this.$root.alert(error, 'danger');
                 })
             },
             removeUploadedPhoto() {
@@ -87,10 +87,10 @@
                         if (response.data > 0) {
                             self.$store.commit('persons/removePhoto', self.photo);
                         } else {
-                            window.Ac.alert('Unknown error', 'danger');
+                            this.$root.alert('Unknown error', 'danger');
                         }
                     }).catch(function (error) {
-                        window.Ac.alert(error, 'danger');
+                        this.$root.alert(error, 'danger');
                         console.log(error);
                     })
                 } else {

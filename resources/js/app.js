@@ -41,21 +41,24 @@ window.Ac = new Vue({
     el: '#ac',
     store,
     i18n,
+
     components: {AcMenuLeft, AcMenuRight, AcFormPerson, AcAlert},
+
     data: {
         alertMessage: null,
         alertType: null
     },
+
     computed: {
         ...mapState({
-            loading: state => state.loader.loading,
-            divisions: state => state.divisions.collection, //TODO delete
-            persons: state => state.persons.collection //TODO delete
+            loading: state => state.loader.loading
         })
     },
+
     created() {
         store.dispatch('loader/loadDivisions');
     },
+
     mounted() {
         axios.get('/controllers/get_list').then(function (response) {
             for (let k in response.data) {
@@ -63,16 +66,17 @@ window.Ac = new Vue({
                     .listen('EventReceived', (e) => {
                         if (e.event === 2 || e.event === 3) {
                             store.commit('cards/setLast', e.card);
-                            console.log(e);
+                            console.log(e); //TODO delete
                         } else if (e.event === 4 || e.event === 5) {
-                            console.log(e);
+                            console.log(e); //TODO delete
                         }
                     })
                     .listen('ControllerConnected', (e) => {
-                        console.log(e.controller_id);
+                        console.log(e.controller_id); //TODO delete
                     });
             }
         }).catch(function (error) {
+            this.alert(error, 'danger');
             console.log(error);
         });
     },
@@ -89,6 +93,7 @@ window.Ac = new Vue({
 
             setTimeout(this.closeAlert, 5000);
         },
+
         closeAlert() {
             this.alertMessage = null;
         }

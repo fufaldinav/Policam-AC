@@ -2,7 +2,7 @@
     <button
         type="button"
         class="btn btn-primary"
-        @click="$emit('ac-update-person')"
+        @click="$emit('ac-person-update')"
     >
         {{ $t('ac.update') }}
     </button>
