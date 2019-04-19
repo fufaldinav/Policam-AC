@@ -37,7 +37,8 @@ export default {
             "updated": "updated",
             "deleted": "deleted",
             "press_": "Press",
-            "_to_upload": "to upload photo"
+            "_to_upload": "to upload photo",
+            "click_again_to_edit": "Click again to edit"
         }
     },
     "ru": {
@@ -82,7 +83,8 @@ export default {
             "updated": "сохранен",
             "deleted": "удален",
             "press_": "Нажмите,",
-            "_to_upload": "чтобы загрузить фотографию"
+            "_to_upload": "чтобы загрузить фотографию",
+            "click_again_to_edit": "Нажмите еще раз для редактирования"
         }
     }
 }

@@ -6,9 +6,9 @@
         <div v-for="card in selectedPersonCards" id="cardsMenu" class="form-row mb-2">
             <div class="col-10">
                 <input
-                    v-model="card.wiegand"
                     type="text"
                     class="form-control form-control-plaintext"
+                    :value="cardCode(card.wiegand)"
                     disabled
                 >
             </div>
@@ -36,6 +36,9 @@
         methods: {
             detachCard(card) {
                 this.$store.commit('persons/removeCard', card);
+            },
+            cardCode(wiegand) {
+                return ('0000000000' + parseInt(wiegand, 16)).slice(-10);
             }
         }
     }

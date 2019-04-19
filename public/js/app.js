@@ -644,6 +644,9 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     detachCard: function detachCard(card) {
       this.$store.commit('persons/removeCard', card);
+    },
+    cardCode: function cardCode(wiegand) {
+      return ('0000000000' + parseInt(wiegand, 16)).slice(-10);
     }
   }
 });
@@ -692,27 +695,70 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "AcFormLastCard",
+  data: function data() {
+    return {
+      countClicked: 0
+    };
+  },
   computed: {
     lastFreeCard: function lastFreeCard() {
       return this.$store.state.cards.last;
     },
-    noLastFreeCard: function noLastFreeCard() {
-      return this.lastFreeCard.wiegand === '000000000000';
+    buttonIsDisabled: function buttonIsDisabled() {
+      return this.lastFreeCard === null;
     },
-    cardCode: function cardCode() {
-      var wiegand = this.lastFreeCard.wiegand;
-      return ('0000000000' + parseInt(wiegand, 16)).slice(-10);
+    formIfDisabled: function formIfDisabled() {
+      return this.countClicked < 2;
+    },
+    cardCode: {
+      get: function get() {
+        var wiegand = '000000000000';
+
+        if (this.lastFreeCard !== null) {
+          wiegand = this.lastFreeCard.wiegand;
+        }
+
+        return ('0000000000' + parseInt(wiegand, 16)).slice(-10);
+      },
+      set: function set(code) {
+        code = parseInt(code);
+        var wiegand = ('000000000000' + code.toString(16).toUpperCase()).slice(-12);
+        this.$store.commit('cards/setLast', {
+          wiegand: wiegand
+        });
+      }
     }
+  },
+  mounted: function mounted() {
+    $('.ac-input-card-code').tooltip({
+      title: this.$t('ac.click_again_to_edit')
+    });
   },
   methods: {
     addCardToPerson: function addCardToPerson() {
       this.$store.commit('persons/addCard', this.lastFreeCard);
-      this.$store.commit('cards/setLast', {
-        id: 0,
-        wiegand: '000000000000'
-      });
+      this.$store.commit('cards/clearLast');
+      this.countClicked = 0;
+    },
+    formClicked: function formClicked() {
+      this.countClicked++;
+
+      if (this.countClicked === 1) {
+        $('.ac-input-card-code').tooltip('show');
+      } else {
+        $('.ac-input-card-code').tooltip('hide');
+      }
+    },
+    leaveForm: function leaveForm() {
+      this.countClicked = 0;
+      $('.ac-input-card-code').tooltip('hide');
     }
   }
 });
@@ -5367,25 +5413,9 @@ var render = function() {
               [
                 _c("div", { staticClass: "col-10" }, [
                   _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: card.wiegand,
-                        expression: "card.wiegand"
-                      }
-                    ],
                     staticClass: "form-control form-control-plaintext",
                     attrs: { type: "text", disabled: "" },
-                    domProps: { value: card.wiegand },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(card, "wiegand", $event.target.value)
-                      }
-                    }
+                    domProps: { value: _vm.cardCode(card.wiegand) }
                   })
                 ]),
                 _vm._v(" "),
@@ -5452,15 +5482,20 @@ var render = function() {
               expression: "cardCode"
             }
           ],
-          staticClass: "form-control form-control-plaintext",
+          staticClass: "form-control form-control-plaintext ac-input-card-code",
           attrs: {
             id: "freeCards",
             type: "text",
+            "data-toggle": "tooltip",
+            "data-placement": "top",
+            "data-trigger": "manual",
             placeholder: _vm.$t("ac.last_card"),
-            disabled: ""
+            readonly: _vm.formIfDisabled
           },
           domProps: { value: _vm.cardCode },
           on: {
+            click: _vm.formClicked,
+            blur: _vm.leaveForm,
             input: function($event) {
               if ($event.target.composing) {
                 return
@@ -5476,8 +5511,8 @@ var render = function() {
           "button",
           {
             staticClass: "btn",
-            class: [_vm.noLastFreeCard ? "btn-secondary" : "btn-primary"],
-            attrs: { type: "button", disabled: _vm.noLastFreeCard },
+            class: [_vm.buttonIsDisabled ? "btn-secondary" : "btn-primary"],
+            attrs: { type: "button", disabled: _vm.buttonIsDisabled },
             on: { click: _vm.addCardToPerson }
           },
           [_vm._v("\n                +\n            ")]
@@ -8112,15 +8147,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _classes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../classes */ "./resources/js/ac/classes/index.js");
 
 var state = {
-  last: new _classes__WEBPACK_IMPORTED_MODULE_0__["Card"]({
-    id: 0,
-    wiegand: '000000000000'
-  })
+  last: null
 };
 var getters = {};
 var mutations = {
   setLast: function setLast(state, card) {
     state.last = new _classes__WEBPACK_IMPORTED_MODULE_0__["Card"](card);
+  },
+  clearLast: function clearLast(state) {
+    state.last = null;
   }
 };
 var actions = {};
@@ -8828,7 +8863,8 @@ __webpack_require__.r(__webpack_exports__);
       "updated": "updated",
       "deleted": "deleted",
       "press_": "Press",
-      "_to_upload": "to upload photo"
+      "_to_upload": "to upload photo",
+      "click_again_to_edit": "Click again to edit"
     }
   },
   "ru": {
@@ -8873,7 +8909,8 @@ __webpack_require__.r(__webpack_exports__);
       "updated": "сохранен",
       "deleted": "удален",
       "press_": "Нажмите,",
-      "_to_upload": "чтобы загрузить фотографию"
+      "_to_upload": "чтобы загрузить фотографию",
+      "click_again_to_edit": "Нажмите еще раз для редактирования"
     }
   }
 });

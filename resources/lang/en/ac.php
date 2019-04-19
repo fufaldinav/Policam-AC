@@ -38,4 +38,5 @@ return [
     'deleted' => 'deleted',
     'press_' => 'Press',
     '_to_upload' => 'to upload photo',
+    'click_again_to_edit' => 'Click again to edit',
 ];
