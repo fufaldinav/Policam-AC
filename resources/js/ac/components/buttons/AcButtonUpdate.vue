@@ -2,7 +2,7 @@
     <button
         type="button"
         class="btn btn-primary"
-        @click="updatePerson"
+        @click="$emit('ac-update-person')"
     >
         {{ $t('ac.update') }}
     </button>
@@ -10,11 +10,6 @@
 
 <script>
     export default {
-        name: "AcButtonUpdate",
-        methods: {
-            updatePerson() {
-                this.$store.dispatch('persons/updateSelected');
-            }
-        }
+        name: "AcButtonUpdate"
     }
 </script>

@@ -379,12 +379,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "AcButtonSave",
-  methods: {
-    savePerson: function savePerson() {
-      this.$store.dispatch('persons/saveSelected');
-    }
-  }
+  name: "AcButtonSave"
 });
 
 /***/ }),
@@ -409,12 +404,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "AcButtonUpdate",
-  methods: {
-    updatePerson: function updatePerson() {
-      this.$store.dispatch('persons/updateSelected');
-    }
-  }
+  name: "AcButtonUpdate"
 });
 
 /***/ }),
@@ -571,6 +561,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 
@@ -580,6 +573,11 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "AcFormPerson",
+  data: function data() {
+    return {
+      errors: false
+    };
+  },
   components: {
     AcFormPersonPhoto: _AcFormPersonPhoto__WEBPACK_IMPORTED_MODULE_2__["default"],
     AcFormCards: _AcFormPersonCards__WEBPACK_IMPORTED_MODULE_0__["default"],
@@ -592,6 +590,31 @@ __webpack_require__.r(__webpack_exports__);
   computed: {
     selectedPerson: function selectedPerson() {
       return this.$store.state.persons.selected;
+    }
+  },
+  methods: {
+    savePerson: function savePerson() {
+      if (this.errors) {
+        return;
+      }
+
+      this.$store.dispatch('persons/saveSelected');
+    },
+    updatePerson: function updatePerson() {
+      if (this.errors) {
+        return;
+      }
+
+      this.$store.dispatch('persons/updateSelected');
+    },
+    checkField: function checkField(field) {
+      if (this.selectedPerson.id !== null && (field === null || field === '')) {
+        this.errors = true;
+        return true;
+      }
+
+      this.errors = false;
+      return false;
     }
   }
 });
@@ -4978,7 +5001,11 @@ var render = function() {
     {
       staticClass: "btn btn-primary",
       attrs: { type: "button" },
-      on: { click: _vm.savePerson }
+      on: {
+        click: function($event) {
+          return _vm.$emit("ac-save-person")
+        }
+      }
     },
     [_vm._v("\n    " + _vm._s(_vm.$t("ac.save")) + "\n")]
   )
@@ -5010,7 +5037,11 @@ var render = function() {
     {
       staticClass: "btn btn-primary",
       attrs: { type: "button" },
-      on: { click: _vm.updatePerson }
+      on: {
+        click: function($event) {
+          return _vm.$emit("ac-update-person")
+        }
+      }
     },
     [_vm._v("\n    " + _vm._s(_vm.$t("ac.update")) + "\n")]
   )
@@ -5072,6 +5103,7 @@ var render = function() {
                 }
               ],
               staticClass: "form-control",
+              class: { "is-invalid": _vm.checkField(_vm.selectedPerson.f) },
               attrs: {
                 id: "f",
                 type: "text",
@@ -5118,6 +5150,7 @@ var render = function() {
                 }
               ],
               staticClass: "form-control",
+              class: { "is-invalid": _vm.checkField(_vm.selectedPerson.i) },
               attrs: {
                 id: "i",
                 type: "text",
@@ -5201,6 +5234,9 @@ var render = function() {
                 }
               ],
               staticClass: "form-control",
+              class: {
+                "is-invalid": _vm.checkField(_vm.selectedPerson.birthday)
+              },
               attrs: {
                 id: "birthday",
                 type: "date",
@@ -5362,11 +5398,19 @@ var render = function() {
           "div",
           { staticClass: "form-group" },
           [
-            _vm.selectedPerson.id === 0 ? _c("ac-button-save") : _vm._e(),
+            _vm.selectedPerson.id === 0
+              ? _c("ac-button-save", {
+                  on: { "ac-save-person": _vm.savePerson }
+                })
+              : _vm._e(),
             _vm._v(" "),
             _vm.selectedPerson.id === 0 ? _c("ac-button-cancel") : _vm._e(),
             _vm._v(" "),
-            _vm.selectedPerson.id > 0 ? _c("ac-button-update") : _vm._e(),
+            _vm.selectedPerson.id > 0
+              ? _c("ac-button-update", {
+                  on: { "ac-update-person": _vm.updatePerson }
+                })
+              : _vm._e(),
             _vm._v(" "),
             _vm.selectedPerson.id > 0 ? _c("ac-button-remove") : _vm._e()
           ],

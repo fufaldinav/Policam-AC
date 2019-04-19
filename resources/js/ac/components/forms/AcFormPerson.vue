@@ -17,6 +17,7 @@
                         v-model="selectedPerson.f"
                         type="text"
                         class="form-control"
+                        :class="{ 'is-invalid': checkField(selectedPerson.f) }"
                         :placeholder="$t('ac.f')"
                         :disabled="selectedPerson.id === null"
                         required
@@ -34,6 +35,7 @@
                         v-model="selectedPerson.i"
                         type="text"
                         class="form-control"
+                        :class="{ 'is-invalid': checkField(selectedPerson.i) }"
                         :placeholder="$t('ac.i')"
                         :disabled="selectedPerson.id === null"
                         required
@@ -64,6 +66,7 @@
                         v-model="selectedPerson.birthday"
                         type="date"
                         class="form-control"
+                        :class="{ 'is-invalid': checkField(selectedPerson.birthday) }"
                         :placeholder="$t('ac.birthday')"
                         :disabled="selectedPerson.id === null"
                         required
@@ -125,9 +128,9 @@
         </div>
         <div class="form-row">
             <div class="form-group">
-                <ac-button-save v-if="selectedPerson.id === 0"></ac-button-save>
+                <ac-button-save v-if="selectedPerson.id === 0" @ac-save-person="savePerson"></ac-button-save>
                 <ac-button-cancel v-if="selectedPerson.id === 0"></ac-button-cancel>
-                <ac-button-update v-if="selectedPerson.id > 0"></ac-button-update>
+                <ac-button-update v-if="selectedPerson.id > 0" @ac-update-person="updatePerson"></ac-button-update>
                 <ac-button-remove v-if="selectedPerson.id > 0"></ac-button-remove>
             </div>
         </div>
@@ -145,12 +148,43 @@
 
     export default {
         name: "AcFormPerson",
+        data: function () {
+            return {
+                errors: false
+            }
+        },
         components: {
             AcFormPersonPhoto,
-            AcFormCards, AcFormLastCard, AcButtonRemove, AcButtonUpdate, AcButtonCancel, AcButtonSave},
+            AcFormCards, AcFormLastCard, AcButtonRemove, AcButtonUpdate, AcButtonCancel, AcButtonSave
+        },
         computed: {
             selectedPerson() {
                 return this.$store.state.persons.selected;
+            }
+        },
+        methods: {
+            savePerson() {
+                if (this.errors) {
+                    return;
+                }
+                this.$store.dispatch('persons/saveSelected');
+            },
+
+            updatePerson() {
+                if (this.errors) {
+                    return;
+                }
+                this.$store.dispatch('persons/updateSelected');
+            },
+
+            checkField(field) {
+                if (this.selectedPerson.id !== null && (field === null || field === '')) {
+                    this.errors = true;
+                    return true;
+                }
+
+                this.errors = false;
+                return false;
             }
         }
     }

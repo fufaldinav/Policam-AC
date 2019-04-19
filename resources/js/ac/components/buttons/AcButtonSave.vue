@@ -2,7 +2,7 @@
     <button
         type="button"
         class="btn btn-primary"
-        @click="savePerson"
+        @click="$emit('ac-save-person')"
     >
         {{ $t('ac.save') }}
     </button>
@@ -10,11 +10,6 @@
 
 <script>
     export default {
-        name: "AcButtonSave",
-        methods: {
-            savePerson() {
-                this.$store.dispatch('persons/saveSelected');
-            }
-        }
+        name: "AcButtonSave"
     }
 </script>
