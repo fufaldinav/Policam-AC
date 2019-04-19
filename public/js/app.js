@@ -758,6 +758,11 @@ __webpack_require__.r(__webpack_exports__);
     },
     leaveForm: function leaveForm() {
       this.countClicked = 0;
+
+      if (this.cardCode === '0000000000') {
+        this.$store.commit('cards/clearLast');
+      }
+
       $('.ac-input-card-code').tooltip('hide');
     }
   }
