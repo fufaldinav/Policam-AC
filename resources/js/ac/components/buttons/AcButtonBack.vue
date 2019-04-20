@@ -14,8 +14,8 @@
 
         methods: {
             unselectDivisionAndPerson() {
-                this.$store.commit('divisions/setSelected');
-                this.$store.commit('persons/setSelected');
+                this.$store.commit('divisions/setSelected')
+                this.$store.commit('persons/setSelected')
             }
         }
     }

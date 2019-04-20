@@ -25,13 +25,13 @@
 
         computed: {
             count() {
-                return this.division.persons.length;
+                return this.division.persons.length
             }
         },
 
         methods: {
             selectDivision() {
-                this.$store.commit('divisions/setSelected', this.division);
+                this.$store.commit('divisions/setSelected', this.division)
             }
         }
     }

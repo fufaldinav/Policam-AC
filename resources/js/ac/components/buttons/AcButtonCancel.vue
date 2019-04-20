@@ -14,7 +14,8 @@
 
         methods: {
             unsetSelectedPerson() {
-                this.$store.commit('persons/setSelected');
+                this.$store.commit('persons/setSelected')
+                this.$store.commit('cp/showLeftMenu')
             }
         }
     }

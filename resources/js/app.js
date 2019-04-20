@@ -5,7 +5,7 @@
  */
 
 
-require('./bootstrap');
+require('./bootstrap')
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
@@ -13,7 +13,7 @@ require('./bootstrap');
  * allows your team to easily build robust real-time web applications.
  */
 
-window.Pusher = require('pusher-js');
+window.Pusher = require('pusher-js')
 
 import Echo from 'laravel-echo'
 
@@ -27,75 +27,62 @@ window.Echo = new Echo({
     disableStats: true,
 });
 
-import Vue from 'vue';
-import i18n from './vue-i18n';
-import store from './ac/store';
-import {mapState} from 'vuex';
+import Vue from 'vue'
+import i18n from './vue-i18n'
+import store from './ac/store'
 
-import AcMenuLeft from "./ac/components/AcMenuLeft";
-import AcMenuRight from "./ac/components/AcMenuRight";
-import AcFormPerson from "./ac/components/forms/AcFormPerson";
-import AcAlert from "./ac/components/AcAlert";
+import AcLayout from './ac/components/AcLayout'
+import AcNavBar from './ac/components/AcNavBar'
+import AcCpPersons from './ac/components/AcCpPersons'
+import AcAlert from './ac/components/AcAlert'
+
+import Vue2TouchEvents from 'vue2-touch-events'
+
+Vue.use(Vue2TouchEvents)
 
 window.Ac = new Vue({
     el: '#ac',
     store,
     i18n,
 
-    components: {AcMenuLeft, AcMenuRight, AcFormPerson, AcAlert},
+    components: {AcLayout, AcNavBar, AcCpPersons, AcAlert},
 
     data: {
         alertMessage: null,
         alertType: null
     },
 
-    computed: {
-        ...mapState({
-            loading: state => state.loader.loading
-        })
-    },
+    computed: {},
 
     created() {
-        store.dispatch('loader/loadDivisions');
+        window.addEventListener('resize', this.handleResize)
+        this.handleResize()
     },
 
-    mounted() {
-        axios.get('/controllers/get_list').then(function (response) {
-            for (let k in response.data) {
-                window.Echo.private(`controller-events.${response.data[k].id}`)
-                    .listen('EventReceived', (e) => {
-                        if (e.event === 2 || e.event === 3) {
-                            store.commit('cards/setLast', e.card);
-                            console.log(e); //TODO delete
-                        } else if (e.event === 4 || e.event === 5) {
-                            console.log(e); //TODO delete
-                        }
-                    })
-                    .listen('ControllerConnected', (e) => {
-                        console.log(e.controller_id); //TODO delete
-                    });
-            }
-        }).catch(function (error) {
-            this.alert(error, 'danger');
-            console.log(error);
-        });
+    destroyed() {
+        window.removeEventListener('resize', this.handleResize)
     },
+
     methods: {
         alert(message, type) {
             if (type === undefined) {
-                type = 'alert-info';
+                type = 'alert-info'
             } else {
-                type = 'alert-' + type;
+                type = 'alert-' + type
             }
 
-            this.alertMessage = message;
-            this.alertType = type;
+            this.alertMessage = message
+            this.alertType = type
 
-            setTimeout(this.closeAlert, 5000);
+            setTimeout(this.closeAlert, 5000)
         },
 
         closeAlert() {
-            this.alertMessage = null;
+            this.alertMessage = null
+        },
+
+        handleResize() {
+            store.dispatch('bp/handleResize', window.innerWidth)
         }
     }
 });

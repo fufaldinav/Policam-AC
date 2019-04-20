@@ -12,7 +12,7 @@
 </template>
 
 <script>
-    import {Person} from '../../classes';
+    import {Person} from '../../classes'
 
     export default {
         name: "AcButtonPerson",
@@ -23,13 +23,14 @@
 
         computed: {
             noCards() {
-                return this.person.cards.length === 0;
+                return this.person.cards.length === 0
             }
         },
 
         methods: {
-            selectPerson: function () {
-                this.$store.commit('persons/setSelected', new Person(this.person));
+            selectPerson () {
+                this.$store.commit('persons/setSelected', new Person(this.person))
+                this.$store.commit('cp/showForm')
             }
         }
     }

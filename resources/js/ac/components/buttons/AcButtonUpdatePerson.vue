@@ -26,6 +26,7 @@
                 if (this.$store.state.modal.shown) {
                     this.$store.dispatch('persons/updateSelected')
                     this.$store.dispatch('modal/close')
+                    this.$store.commit('cp/showLeftMenu')
                 } else {
                     this.$store.commit('modal/setTitle', this.$t('ac.updating'))
 

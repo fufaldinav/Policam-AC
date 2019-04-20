@@ -47,4 +47,5 @@ return [
     'saving' => 'Сохранение',
     'updating' => 'Сохранение',
     'deleting' => 'Удаление',
+    'personal' => 'Персонал',
 ];

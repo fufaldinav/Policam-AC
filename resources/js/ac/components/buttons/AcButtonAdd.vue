@@ -9,16 +9,17 @@
 </template>
 
 <script>
-    import {Person} from '../../classes';
+    import {Person} from '../../classes'
 
     export default {
         name: "AcButtonAdd",
 
         methods: {
-            selectPerson: function () {
-                let division = this.$store.state.divisions.selected;
-                let person = new Person({id: 0, divisions: [division.id]});
-                this.$store.commit('persons/setSelected', person);
+            selectPerson() {
+                let division = this.$store.state.divisions.selected
+                let person = new Person({id: 0, divisions: [division.id]})
+                this.$store.commit('persons/setSelected', person)
+                this.$store.commit('cp/showForm')
             }
         }
     }

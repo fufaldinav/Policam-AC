@@ -25,72 +25,63 @@
 </head>
 <body>
 <div id="ac">
-    <div v-if="loading">
-        loading...
-    </div>
-    <div v-else>
-        <nav class="navbar navbar-expand-md navbar-light sticky-top bg-white ac-navbar">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    <img src="/img/logo-policam.png" alt="">
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse"
-                        data-target="#navbarSupportedContent"
-                        aria-controls="navbarSupportedContent" aria-expanded="false"
-                        aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse bg-white" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
+    <ac-layout>
+        <template slot="header">
+            <ac-nav-bar>
+                <template slot="ac-logo">
+                    <a class="navbar-brand ml-3" href="{{ url('/') }}">
+                        <img src="/img/logo-policam.png" alt="">
+                    </a>
+                </template>
+                <template slot="ac-menu-button">
+                    <button class="navbar-toggler mr-3" type="button" data-toggle="collapse"
+                            data-target="#navbarSupportedContent"
+                            aria-controls="navbarSupportedContent" aria-expanded="false"
+                            aria-label="{{ __('Toggle navigation') }}">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </template>
+                <template slot="ac-nav-left-side">
+                    <div class="navbar-nav mr-auto">
                         @auth
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('/') }}">{{ __('ac.observation') }}</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('cp.persons') }}">{{ __('Персонал') }}</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('cp.classes') }}">{{ __('ac.classes') }}</a>
-                            </li>
+                            <a class="nav-item nav-link" href="{{ route('/') }}">{{ __('ac.observation') }}</a>
+                            <a class="nav-item nav-link"
+                               href="{{ route('cp.persons') }}">{{ __('ac.personal') }}</a>
+                            <a class="nav-item nav-link" href="{{ route('cp.classes') }}">{{ __('ac.classes') }}</a>
                         @endauth
-                    </ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ml-auto">
+                    </div>
+                </template>
+                <template slot="ac-nav-right-side">
+                    <div class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
                         @guest
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('auth.login') }}</a>
-                            </li>
+                            <a class="nav-item nav-link" href="{{ route('login') }}">{{ __('auth.login') }}</a>
                             @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('auth.register') }}</a>
-                                </li>
+                                <a class="nav-item nav-link"
+                                   href="{{ route('register') }}">{{ __('auth.register') }}</a>
                             @endif
                         @else
-                            <li class="nav-item dropdown">
-                                <a class="nav-link" href="{{ route('logout') }}"
-                                   onclick="event.preventDefault();
+                            <a class="nav-item nav-link" href="{{ route('logout') }}"
+                               onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                    {{ __('auth.logout') }}
-                                </a>
+                                {{ __('auth.logout') }}
+                            </a>
 
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                      style="display: none;">
-                                    @csrf
-                                </form>
-                            </li>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                  style="display: none;">
+                                @csrf
+                            </form>
                         @endguest
-                    </ul>
-                </div>
-            </div>
-        </nav>
-        <main>
+                    </div>
+                </template>
+            </ac-nav-bar>
+        </template>
+        <template slot="main">
             @yield('content')
-        </main>
-    </div>
+        </template>
+        <template slot="footer">
+        </template>
+    </ac-layout>
     <ac-alert :message="alertMessage" :type="alertType"></ac-alert>
 </div>
 <script>

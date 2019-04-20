@@ -43,4 +43,5 @@ return [
     'saving' => 'Saving',
     'updating' => 'Updating',
     'deleting' => 'Deleting',
+    'personal' => 'Personal',
 ];

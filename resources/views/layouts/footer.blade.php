@@ -1,13 +1,8 @@
-<div id="footer">
-    <div id="footer-container">
-        <div id="footer-left">
-            <!-- FOOTER LEFT -->
-        </div>
-        <div id="footer-content">
-            {{ __('ac.developed') }} <a href="http://policam.ru/">Policam.ru</a>
-        </div>
-        <div id="footer-right">
-            2019 {{ __('ac.year_short') }}
-        </div>
+<div class="d-flex fixed-bottom align-items-center px-2 bg-white ac-footer">
+    <div class="text-center flex-grow-1">
+        <small>{{ __('ac.developed') }} <a href="http://policam.ru/">Policam.ru</a></small>
+    </div>
+    <div>
+        <small>2019 {{ __('ac.year_short') }}</small>
     </div>
 </div>
