@@ -2,7 +2,6 @@
     <button
         type="button"
         class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
-        :disabled="count == 0"
         @click="selectDivision"
     >
         {{ division.name }}
@@ -16,6 +15,8 @@
 </template>
 
 <script>
+    import {Person} from '../../classes'
+
     export default {
         name: "AcButtonDivision",
 
@@ -31,7 +32,13 @@
 
         methods: {
             selectDivision() {
-                this.$store.commit('divisions/setSelected', this.division)
+                if (this.count === 0) {
+                    let person = new Person({id: 0, divisions: [this.division.id]})
+                    this.$store.commit('persons/setSelected', person)
+                    this.$store.commit('cp/showForm')
+                } else {
+                    this.$store.commit('divisions/setSelected', this.division)
+                }
             }
         }
     }

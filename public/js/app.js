@@ -457,6 +457,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _classes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../classes */ "./resources/js/ac/classes/index.js");
 //
 //
 //
@@ -473,7 +474,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "AcButtonDivision",
   props: {
@@ -486,7 +487,16 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     selectDivision: function selectDivision() {
-      this.$store.commit('divisions/setSelected', this.division);
+      if (this.count === 0) {
+        var person = new _classes__WEBPACK_IMPORTED_MODULE_0__["Person"]({
+          id: 0,
+          divisions: [this.division.id]
+        });
+        this.$store.commit('persons/setSelected', person);
+        this.$store.commit('cp/showForm');
+      } else {
+        this.$store.commit('divisions/setSelected', this.division);
+      }
     }
   }
 });
@@ -1320,16 +1330,18 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     removeUploadedPhoto: function removeUploadedPhoto() {
+      var _this = this;
+
       if (this.photo.person_id === null) {
-        var self = this;
         window.axios.delete('/api/photos/' + this.photo.id).then(function (response) {
           if (response.data > 0) {
-            self.$store.commit('persons/removePhoto', self.photo);
+            _this.$store.commit('persons/removePhoto', _this.photo);
           } else {
-            this.$root.alert('Unknown error', 'danger');
+            _this.$root.alert('Unknown error', 'danger');
           }
         }).catch(function (error) {
-          this.$root.alert(error, 'danger');
+          _this.$root.alert(error, 'danger');
+
           console.log(error);
         });
       } else {
@@ -5622,7 +5634,7 @@ var render = function() {
     {
       staticClass:
         "list-group-item list-group-item-action d-flex justify-content-between align-items-center",
-      attrs: { type: "button", disabled: _vm.count == 0 },
+      attrs: { type: "button" },
       on: { click: _vm.selectDivision }
     },
     [
@@ -8216,6 +8228,7 @@ function Person(data) {
   this.address = null;
   this.phone = null;
   this.divisions = [];
+  this.divisionsToDelete = [];
 
   for (var k in data) {
     if (this.hasOwnProperty(k)) {
@@ -8224,7 +8237,9 @@ function Person(data) {
   }
 
   this.cards = [];
+  this.cardsToDelete = [];
   this.photos = [];
+  this.photosToDelete = [];
 
   if (data.cards !== undefined) {
     var _iteratorNormalCompletion = true;
@@ -10292,6 +10307,10 @@ var mutations = {
     var index = state.selected.cards.indexOf(card);
 
     if (index > -1) {
+      if (state.selected.id > 0) {
+        state.selected.cardsToDelete.push(card);
+      }
+
       state.selected.cards.splice(index, 1);
     }
   },
@@ -10302,6 +10321,10 @@ var mutations = {
     var index = state.selected.photos.indexOf(photo);
 
     if (index > -1) {
+      if (state.selected.id > 0) {
+        state.selected.photosToDelete.push(photo);
+      }
+
       state.selected.photos.splice(index, 1);
     }
   }

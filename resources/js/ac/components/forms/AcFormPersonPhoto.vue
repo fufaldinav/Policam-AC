@@ -87,14 +87,13 @@
 
             removeUploadedPhoto() {
                 if (this.photo.person_id === null) {
-                    let self = this;
-                    window.axios.delete('/api/photos/' + this.photo.id).then(function (response) {
+                    window.axios.delete('/api/photos/' + this.photo.id).then(response => {
                         if (response.data > 0) {
-                            self.$store.commit('persons/removePhoto', self.photo);
+                            this.$store.commit('persons/removePhoto', this.photo);
                         } else {
                             this.$root.alert('Unknown error', 'danger');
                         }
-                    }).catch(function (error) {
+                    }).catch(error => {
                         this.$root.alert(error, 'danger');
                         console.log(error);
                     })

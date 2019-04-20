@@ -39,6 +39,9 @@ const mutations = {
     removeCard(state, card) {
         let index = state.selected.cards.indexOf(card);
         if (index > -1) {
+            if (state.selected.id > 0) {
+                state.selected.cardsToDelete.push(card);
+            }
             state.selected.cards.splice(index, 1);
         }
     },
@@ -50,6 +53,9 @@ const mutations = {
     removePhoto(state, photo) {
         let index = state.selected.photos.indexOf(photo);
         if (index > -1) {
+            if (state.selected.id > 0) {
+                state.selected.photosToDelete.push(photo);
+            }
             state.selected.photos.splice(index, 1);
         }
     },

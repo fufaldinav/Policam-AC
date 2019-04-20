@@ -125,7 +125,22 @@ class Person extends Model
         return $this;
     }
 
-    public function detachDivisions(): self
+    public function detachDivisions(array $divisions): self
+    {
+        foreach ($divisions as $div) {
+            $div = Division::find($div['id']);
+
+            if (! $div) {
+                continue;
+            }
+
+            $this->divisions()->detach($div->id);
+        }
+
+        return $this;
+    }
+
+    public function detachAllDivisions(): self
     {
         foreach ($this->divisions as $div) {
             $this->divisions()->detach($div->id);
@@ -159,7 +174,33 @@ class Person extends Model
         return $this;
     }
 
-    public function detachCards(): self
+    public function detachCards(array $cards): self
+    {
+        $tasker = new Tasker();
+
+        foreach ($cards as $card) {
+            $card = Card::find($card['id']);
+
+            if (! $card) {
+                continue;
+            }
+
+            $card->person_id = 0;
+            $card->save();
+
+            $tasker->delCards([$card->wiegand]);
+
+            foreach ($this->controllers as $ctrl) {
+                $tasker->add($ctrl->id);
+            }
+        }
+
+        $tasker->send();
+
+        return $this;
+    }
+
+    public function detachAllCards(): self
     {
         $tasker = new Tasker();
 
@@ -194,7 +235,22 @@ class Person extends Model
         return $this;
     }
 
-    public function detachPhotos(): self
+    public function detachPhotos(array $photos): self
+    {
+        foreach ($photos as $photo) {
+            $photo = Photo::find($photo['id']);
+
+            if (! $photo) {
+                continue;
+            }
+
+            $photo->delete(); //TODO удаление файла
+        }
+
+        return $this;
+    }
+
+    public function detachAllPhotos(): self
     {
         foreach ($this->photos as $photo) {
             $photo->delete(); //TODO удаление файла
@@ -218,7 +274,7 @@ class Person extends Model
         return $this;
     }
 
-    public function detachSubscribers(): self
+    public function detachAllSubscribers(): self
     {
         foreach ($this->users as $sub) {
             $this->users()->detach($sub->id);

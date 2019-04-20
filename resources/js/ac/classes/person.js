@@ -10,6 +10,7 @@ export function Person(data) {
     this.address = null;
     this.phone = null;
     this.divisions = [];
+    this.divisionsToDelete = [];
 
     for (let k in data) {
         if (this.hasOwnProperty(k)) {
@@ -18,7 +19,9 @@ export function Person(data) {
     }
 
     this.cards = [];
+    this.cardsToDelete = [];
     this.photos = [];
+    this.photosToDelete = [];
 
     if (data.cards !== undefined) {
         for (let card of data.cards) {
