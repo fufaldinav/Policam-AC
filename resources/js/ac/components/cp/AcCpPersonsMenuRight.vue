@@ -6,6 +6,6 @@
 
 <script>
     export default {
-        name: "AcMenuRight"
+        name: "AcCpPersonsMenuRight"
     }
 </script>

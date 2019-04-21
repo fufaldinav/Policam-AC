@@ -70,16 +70,14 @@
 
                 formData.append('file', files[0]);
 
-                let self = this;
-
                 window.axios({
                     method: 'post',
                     url: '/api/photos',
                     data: formData,
                     config: {headers: {'Content-Type': 'multipart/form-data'}}
-                }).then(function (response) {
-                    self.$store.commit('persons/addPhoto', response.data);
-                }).catch(function (error) {
+                }).then(response => {
+                    this.$store.commit('persons/addPhoto', response.data);
+                }).catch(error => {
                     console.log(error);
                     this.$root.alert(error, 'danger');
                 })

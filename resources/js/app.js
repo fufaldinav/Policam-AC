@@ -33,7 +33,8 @@ import store from './ac/store'
 
 import AcLayout from './ac/components/AcLayout'
 import AcNavBar from './ac/components/AcNavBar'
-import AcCpPersons from './ac/components/AcCpPersons'
+import AcObserver from './ac/components/observer/AcObserver'
+import AcCpPersons from './ac/components/cp/AcCpPersons'
 import AcAlert from './ac/components/AcAlert'
 
 import Vue2TouchEvents from 'vue2-touch-events'
@@ -45,7 +46,7 @@ window.Ac = new Vue({
     store,
     i18n,
 
-    components: {AcLayout, AcNavBar, AcCpPersons, AcAlert},
+    components: {AcLayout, AcNavBar, AcObserver, AcCpPersons, AcAlert},
 
     data: {
         alertMessage: null,
@@ -64,12 +65,8 @@ window.Ac = new Vue({
     },
 
     methods: {
-        alert(message, type) {
-            if (type === undefined) {
-                type = 'alert-info'
-            } else {
-                type = 'alert-' + type
-            }
+        alert(message, type = 'alert-info') {
+            type = 'alert-' + type
 
             this.alertMessage = message
             this.alertType = type

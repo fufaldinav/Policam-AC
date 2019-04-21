@@ -48,4 +48,7 @@ return [
     'updating' => 'Сохранение',
     'deleting' => 'Удаление',
     'personal' => 'Персонал',
+    'card_forgot' => 'Забыл карту',
+    'card_lost' => 'Потерял карту',
+    'card_broke' => 'Карта не работает',
 ];

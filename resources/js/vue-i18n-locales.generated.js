@@ -42,7 +42,11 @@ export default {
             "do_you_really_want_to": "Do you really want to {action}",
             "saving": "Saving",
             "updating": "Updating",
-            "deleting": "Deleting"
+            "deleting": "Deleting",
+            "personal": "Personal",
+            "card_forgot": "Forgot card",
+            "card_lost": "Lost card",
+            "card_broke": "Card is broken"
         }
     },
     "ru": {
@@ -92,7 +96,11 @@ export default {
             "do_you_really_want_to": "Вы действительно хотите {action}?",
             "saving": "Сохранение",
             "updating": "Сохранение",
-            "deleting": "Удаление"
+            "deleting": "Удаление",
+            "personal": "Персонал",
+            "card_forgot": "Забыл карту",
+            "card_lost": "Потерял карту",
+            "card_broke": "Карта не работает"
         }
     }
 }

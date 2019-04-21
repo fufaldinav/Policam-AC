@@ -7,9 +7,7 @@ const state = {
     selected: new Person({})
 }
 
-const getters = {
-
-}
+const getters = {}
 
 const mutations = {
     add(state, person) {
@@ -24,12 +22,8 @@ const mutations = {
         Vue.delete(state.collection, person.id);
     },
 
-    setSelected(state, person) {
-        if (person === undefined) {
-            state.selected = new Person({});
-        } else {
-            state.selected = person;
-        }
+    setSelected(state, person = new Person({})) {
+        state.selected = person;
     },
 
     addCard(state, card) {

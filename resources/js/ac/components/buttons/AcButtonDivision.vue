@@ -15,8 +15,6 @@
 </template>
 
 <script>
-    import {Person} from '../../classes'
-
     export default {
         name: "AcButtonDivision",
 
@@ -32,13 +30,7 @@
 
         methods: {
             selectDivision() {
-                if (this.count === 0) {
-                    let person = new Person({id: 0, divisions: [this.division.id]})
-                    this.$store.commit('persons/setSelected', person)
-                    this.$store.commit('cp/showForm')
-                } else {
-                    this.$store.commit('divisions/setSelected', this.division)
-                }
+                this.$store.commit('divisions/setSelected', this.division)
             }
         }
     }

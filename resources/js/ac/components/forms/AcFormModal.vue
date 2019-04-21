@@ -82,12 +82,11 @@
         },
 
         mounted() {
-            let self = this
-            $(this.$store.state.modal.id).on('show.bs.modal', function () {
-                self.$store.commit('modal/setShown')
+            $(this.$store.state.modal.id).on('show.bs.modal', () => {
+                this.$store.commit('modal/setShown')
             })
-            $(this.$store.state.modal.id).on('hide.bs.modal', function () {
-                self.$store.commit('modal/setHidden')
+            $(this.$store.state.modal.id).on('hide.bs.modal', () => {
+                this.$store.commit('modal/setHidden')
             })
         }
     }

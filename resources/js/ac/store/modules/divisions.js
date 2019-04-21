@@ -27,12 +27,8 @@ const mutations = {
         }
     },
 
-    setSelected(state, division) {
-        if (division === undefined) {
-            state.selected = null;
-        } else {
-            state.selected = division;
-        }
+    setSelected(state, division = null) {
+        state.selected = division;
     }
 }
 

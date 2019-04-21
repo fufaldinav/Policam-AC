@@ -13,7 +13,7 @@ const mutations = {
 }
 
 const actions = {
-    async loadDivisions({commit, dispatch}) {
+    async loadData({commit, dispatch}) {
         window.axios.get('/api/divisions').then(function (response) {
             for (let division of response.data) {
                 for (let person of division.persons) {
@@ -25,7 +25,7 @@ const actions = {
             commit('changeLoadingState', false);
         }).catch(function (error) {
             console.log(error);
-            setTimeout(dispatch.loadDivisions, 2000); //TODO перезапуск при ошибке
+            setTimeout(dispatch.loadData, 2000); //TODO перезапуск при ошибке
         });
     }
 }

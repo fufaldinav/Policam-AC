@@ -44,4 +44,7 @@ return [
     'updating' => 'Updating',
     'deleting' => 'Deleting',
     'personal' => 'Personal',
+    'card_forgot' => 'Forgot card',
+    'card_lost' => 'Lost card',
+    'card_broke' => 'Card is broken',
 ];

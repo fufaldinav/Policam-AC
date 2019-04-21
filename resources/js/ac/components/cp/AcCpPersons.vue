@@ -1,47 +1,45 @@
 <template xmlns:v-touch="http://www.w3.org/1999/xhtml">
-    <div>
+    <div class="container-fluid">
         <div v-if="loading">
             loading...
         </div>
-        <div v-else>
-            <div class="container-fluid">
-                <div class="row">
-                    <ac-menu-left></ac-menu-left>
-                    <transition
-                        name="ac-form-slide"
-                        enter-class="ac-form-slide-enter"
-                        enter-active-class="ac-form-slide-enter-active"
-                    >
-                        <div
-                            v-if="formShown"
-                            class="d-sm-block col-12 col-sm-9 col-lg-6 col-xl-7"
-                            :class="displayNone"
-                            v-touch:swipe.right="toggleLeftMenu"
-                        >
-                            <div class="row mt-4">
-                                <div class="container-fluid">
-                                    <ac-form-person></ac-form-person>
-                                </div>
-                            </div>
+        <div
+            v-else
+            class="row"
+        >
+            <ac-cp-persons-menu-left></ac-cp-persons-menu-left>
+            <transition
+                name="ac-form-slide"
+                enter-class="ac-form-slide-enter"
+                enter-active-class="ac-form-slide-enter-active"
+            >
+                <div
+                    v-if="formShown"
+                    class="d-sm-block col-12 col-sm-9 col-lg-6 col-xl-7"
+                    :class="displayNone"
+                    v-touch:swipe.right="toggleLeftMenu"
+                >
+                    <div class="row mt-4">
+                        <div class="container-fluid">
+                            <ac-form-person></ac-form-person>
                         </div>
-                    </transition>
-                    <ac-menu-right></ac-menu-right>
-                    <input id="type" name="type" type="text" hidden readonly>
+                    </div>
                 </div>
-            </div>
+            </transition>
+            <ac-cp-persons-menu-right></ac-cp-persons-menu-right>
         </div>
     </div>
 </template>
 
 <script>
-    import AcMenuLeft from './AcMenuLeft'
-    import AcMenuRight from './AcMenuRight'
-    import AcFormPerson from './forms/AcFormPerson'
+    import AcCpPersonsMenuLeft from './AcCpPersonsMenuLeft'
+    import AcCpPersonsMenuRight from './AcCpPersonsMenuRight'
+    import AcFormPerson from '../forms/AcFormPerson'
 
     export default {
         name: "AcCpPersons",
 
-        components: {AcMenuLeft, AcMenuRight, AcFormPerson},
+        components: {AcCpPersonsMenuLeft, AcCpPersonsMenuRight, AcFormPerson},
 
         computed: {
             loading() {
@@ -60,14 +58,6 @@
                 return {
                     'd-none': ! this.formShown
                 }
-            },
-
-            buttonPosition() {
-                if (this.formShown) {
-                    return 'ac-menu-button-left'
-                } else {
-                    return 'ac-menu-button-right'
-                }
             }
         },
 
@@ -83,7 +73,7 @@
         },
 
         created() {
-            this.$store.dispatch('loader/loadDivisions');
+            this.$store.dispatch('loader/loadData');
         },
 
         mounted() {
@@ -93,9 +83,6 @@
                         .listen('EventReceived', (e) => {
                             if (e.event === 2 || e.event === 3) {
                                 this.$store.commit('cards/setLast', e.card);
-                                console.log(e); //TODO delete
-                            } else if (e.event === 4 || e.event === 5) {
-                                console.log(e); //TODO delete
                             }
                         })
                         .listen('ControllerConnected', (e) => {

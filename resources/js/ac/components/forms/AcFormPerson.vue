@@ -114,7 +114,7 @@
                     type="text"
                     class="form-control"
                     :placeholder="$t('ac.uid')"
-                    disabled
+                    readonly
                 >
             </div>
         </div>
