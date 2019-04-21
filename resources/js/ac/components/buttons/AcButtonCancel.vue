@@ -2,7 +2,7 @@
     <button
         type="button"
         class="btn btn-secondary"
-        @click="unsetSelectedPerson"
+        @click="clearSelectedPerson"
     >
         {{ $t('ac.cancel') }}
     </button>
@@ -13,8 +13,8 @@
         name: "AcButtonCancel",
 
         methods: {
-            unsetSelectedPerson() {
-                this.$store.commit('persons/setSelected')
+            clearSelectedPerson() {
+                this.$store.commit('persons/clearSelected')
                 this.$store.commit('cp/showLeftMenu')
             }
         }

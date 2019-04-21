@@ -162,8 +162,8 @@ __webpack_require__.r(__webpack_exports__);
   name: "AcButtonBack",
   methods: {
     unselectDivisionAndPerson: function unselectDivisionAndPerson() {
-      this.$store.commit('divisions/setSelected');
-      this.$store.commit('persons/setSelected');
+      this.$store.commit('divisions/clearSelected');
+      this.$store.commit('persons/clearSelected');
     }
   }
 });
@@ -192,8 +192,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "AcButtonCancel",
   methods: {
-    unsetSelectedPerson: function unsetSelectedPerson() {
-      this.$store.commit('persons/setSelected');
+    clearSelectedPerson: function clearSelectedPerson() {
+      this.$store.commit('persons/clearSelected');
       this.$store.commit('cp/showLeftMenu');
     }
   }
@@ -750,6 +750,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return {
         'd-none': !this.leftMenuShown
       };
+    },
+    selectedDivisionPersons: function selectedDivisionPersons() {
+      return this.$store.getters['divisions/selectedSortedPersons'];
     }
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])({
     divisions: function divisions(state) {
@@ -1743,6 +1746,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return {
         'd-none': !this.leftMenuShown
       };
+    },
+    selectedDivisionPersons: function selectedDivisionPersons() {
+      return this.$store.getters['divisions/selectedSortedPersons'];
     }
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])({
     divisions: function divisions(state) {
@@ -5913,7 +5919,7 @@ var render = function() {
     {
       staticClass: "btn btn-secondary",
       attrs: { type: "button" },
-      on: { click: _vm.unsetSelectedPerson }
+      on: { click: _vm.clearSelectedPerson }
     },
     [_vm._v("\n    " + _vm._s(_vm.$t("ac.cancel")) + "\n")]
   )
@@ -6390,7 +6396,7 @@ var render = function() {
                       _vm._v(" "),
                       _c("ac-button-add"),
                       _vm._v(" "),
-                      _vm._l(_vm.selectedDivision.persons, function(id) {
+                      _vm._l(_vm.selectedDivisionPersons, function(id) {
                         return _c("ac-button-person", {
                           key: id,
                           attrs: { person: _vm.persons[id] }
@@ -7725,7 +7731,7 @@ var render = function() {
                     [
                       _c("ac-button-back"),
                       _vm._v(" "),
-                      _vm._l(_vm.selectedDivision.persons, function(id) {
+                      _vm._l(_vm.selectedDivisionPersons, function(id) {
                         return _c("ac-button-person", {
                           key: id,
                           attrs: { person: _vm.persons[id] }
@@ -11679,7 +11685,23 @@ var state = {
   collection: {},
   selected: null
 };
-var getters = {};
+var getters = {
+  selectedSortedPersons: function selectedSortedPersons(state, getters, rootState) {
+    if (state.selected === null) return null;
+    state.selected.persons.sort(function (a, b) {
+      var personA = rootState.persons.collection[a];
+      var personB = rootState.persons.collection[b];
+      if (personA.f < personB.f) return -1;
+      if (personA.f > personB.f) return 1;
+      if (personA.i < personB.i) return -1;
+      if (personA.i > personB.i) return 1;
+      if (personA.o < personB.o) return -1;
+      if (personA.o > personB.o) return 1;
+      return 0;
+    });
+    return state.selected.persons;
+  }
+};
 var mutations = {
   add: function add(state, division) {
     vue__WEBPACK_IMPORTED_MODULE_0___default.a.set(state.collection, division.id, new _classes__WEBPACK_IMPORTED_MODULE_1__["Division"](division));
@@ -11698,9 +11720,11 @@ var mutations = {
       state.collection[relation.divisionId].persons.splice(index, 1);
     }
   },
-  setSelected: function setSelected(state) {
-    var division = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+  setSelected: function setSelected(state, division) {
     state.selected = division;
+  },
+  clearSelected: function clearSelected(state) {
+    state.selected = null;
   }
 };
 var actions = {};
@@ -11943,9 +11967,11 @@ var mutations = {
   remove: function remove(state, person) {
     vue__WEBPACK_IMPORTED_MODULE_1___default.a.delete(state.collection, person.id);
   },
-  setSelected: function setSelected(state) {
-    var person = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : new _classes__WEBPACK_IMPORTED_MODULE_3__["Person"]({});
+  setSelected: function setSelected(state, person) {
     state.selected = person;
+  },
+  clearSelected: function clearSelected(state) {
+    state.selected = new _classes__WEBPACK_IMPORTED_MODULE_3__["Person"]({});
   },
   addCard: function addCard(state, card) {
     state.selected.cards.push(new _classes__WEBPACK_IMPORTED_MODULE_3__["Card"](card));
@@ -12011,12 +12037,6 @@ var actions = {
                     var division = _step.value;
                     var id = division.id;
                     divisions.push(id);
-                    commit('divisions/addPerson', {
-                      divisionId: id,
-                      personId: person.id
-                    }, {
-                      root: true
-                    });
                   }
                 } catch (err) {
                   _didIteratorError = true;
@@ -12035,7 +12055,19 @@ var actions = {
 
                 person.divisions = divisions;
                 commit('add', person);
-                commit('setSelected');
+                var _arr = divisions;
+
+                for (var _i = 0; _i < _arr.length; _i++) {
+                  var _id = _arr[_i];
+                  commit('divisions/addPerson', {
+                    divisionId: _id,
+                    personId: person.id
+                  }, {
+                    root: true
+                  });
+                }
+
+                commit('clearSelected');
                 window.Ac.alert(person.f + ' ' + person.i + ' ' + _vue_i18n__WEBPACK_IMPORTED_MODULE_2__["default"].t('ac.saved') + ' ' + _vue_i18n__WEBPACK_IMPORTED_MODULE_2__["default"].t('ac.successful'));
               }).catch(function (error) {
                 console.log(error);
@@ -12080,12 +12112,6 @@ var actions = {
                     var division = _step2.value;
                     var id = division.id;
                     divisions.push(id);
-                    commit('divisions/addPerson', {
-                      divisionId: id,
-                      personId: person.id
-                    }, {
-                      root: true
-                    });
                   }
                 } catch (err) {
                   _didIteratorError2 = true;
@@ -12104,7 +12130,19 @@ var actions = {
 
                 person.divisions = divisions;
                 commit('update', new _classes__WEBPACK_IMPORTED_MODULE_3__["Person"](person));
-                commit('setSelected');
+                var _arr2 = divisions;
+
+                for (var _i2 = 0; _i2 < _arr2.length; _i2++) {
+                  var _id2 = _arr2[_i2];
+                  commit('divisions/addPerson', {
+                    divisionId: _id2,
+                    personId: person.id
+                  }, {
+                    root: true
+                  });
+                }
+
+                commit('clearSelected');
                 window.Ac.alert(person.f + ' ' + person.i + ' ' + _vue_i18n__WEBPACK_IMPORTED_MODULE_2__["default"].t('ac.updated') + ' ' + _vue_i18n__WEBPACK_IMPORTED_MODULE_2__["default"].t('ac.successful'));
               }).catch(function (error) {
                 console.log(error);
@@ -12169,7 +12207,7 @@ var actions = {
 
                 var fullName = person.f + ' ' + person.i;
                 commit('remove', person);
-                commit('setSelected');
+                commit('clearSelected');
                 window.Ac.alert(fullName + ' ' + _vue_i18n__WEBPACK_IMPORTED_MODULE_2__["default"].t('ac.deleted') + ' ' + _vue_i18n__WEBPACK_IMPORTED_MODULE_2__["default"].t('ac.successful'));
               }).catch(function (error) {
                 console.log(error);

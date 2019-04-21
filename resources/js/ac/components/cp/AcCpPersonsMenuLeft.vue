@@ -30,7 +30,7 @@
                 <ac-button-back></ac-button-back>
                 <ac-button-add></ac-button-add>
                 <ac-button-person
-                    v-for="id in selectedDivision.persons"
+                    v-for="id in selectedDivisionPersons"
                     :key="id"
                     :person="persons[id]"
                 >
@@ -61,6 +61,10 @@
                 return {
                     'd-none': ! this.leftMenuShown
                 }
+            },
+
+            selectedDivisionPersons() {
+                return this.$store.getters['divisions/selectedSortedPersons']
             },
 
             ...mapState({
