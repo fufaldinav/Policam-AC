@@ -34,11 +34,13 @@ const getters = {
             if (sortByName !== 0) return sortByName
             return 0
         })
+
         return state.collection
     },
 
     selectedSortedPersons: (state, getters, rootState) => {
         if (state.selected === null) return null
+
         state.selected.persons.sort((a, b) => {
             let personA = rootState.persons.collection[a]
             let personB = rootState.persons.collection[b]
@@ -50,6 +52,7 @@ const getters = {
             if (personA.o > personB.o) return 1
             return 0
         })
+
         return state.selected.persons
     }
 }
@@ -60,16 +63,24 @@ const mutations = {
     },
 
     addPerson(state, relation) {
-        let index = state.collection[relation.divisionId].persons.indexOf(relation.personId)
+        let division = state.collection.find((value) => {
+            if (value.id === relation.divisionId) return true
+        })
+        console.log(division)
+        let index = division.persons.indexOf(relation.personId)
         if (index === -1) {
-            state.collection[relation.divisionId].persons.push(relation.personId)
+            division.persons.push(relation.personId)
         }
     },
 
     removePerson(state, relation) {
-        let index = state.collection[relation.divisionId].persons.indexOf(relation.personId)
+        let division = state.collection.find((value) => {
+            if (value.id === relation.divisionId) return true
+        })
+        console.log(division)
+        let index = division.persons.indexOf(relation.personId)
         if (index > -1) {
-            state.collection[relation.divisionId].persons.splice(index, 1)
+            division.persons.splice(index, 1)
         }
     },
 

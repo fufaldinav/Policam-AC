@@ -61,12 +61,15 @@
                 }
             },
 
+            divisions() {
+              return this.$store.getters['divisions/sorted']
+            },
+
             selectedDivisionPersons() {
                 return this.$store.getters['divisions/selectedSortedPersons']
             },
 
             ...mapState({
-                divisions: state => state.divisions.collection,
                 selectedDivision: state => state.divisions.selected,
                 persons: state => state.persons.collection,
                 breakpoint: state => state.bp.current

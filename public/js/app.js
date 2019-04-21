@@ -751,13 +751,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         'd-none': !this.leftMenuShown
       };
     },
+    divisions: function divisions() {
+      return this.$store.getters['divisions/sorted'];
+    },
     selectedDivisionPersons: function selectedDivisionPersons() {
       return this.$store.getters['divisions/selectedSortedPersons'];
     }
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])({
-    divisions: function divisions(state) {
-      return state.divisions.collection;
-    },
     selectedDivision: function selectedDivision(state) {
       return state.divisions.selected;
     },
@@ -1747,13 +1747,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         'd-none': !this.leftMenuShown
       };
     },
+    divisions: function divisions() {
+      return this.$store.getters['divisions/sorted'];
+    },
     selectedDivisionPersons: function selectedDivisionPersons() {
       return this.$store.getters['divisions/selectedSortedPersons'];
     }
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])({
-    divisions: function divisions(state) {
-      return state.divisions.collection;
-    },
     selectedDivision: function selectedDivision(state) {
       return state.divisions.selected;
     },
@@ -11734,17 +11734,25 @@ var mutations = {
     state.collection.push(new _classes__WEBPACK_IMPORTED_MODULE_0__["Division"](division));
   },
   addPerson: function addPerson(state, relation) {
-    var index = state.collection[relation.divisionId].persons.indexOf(relation.personId);
+    var division = state.collection.find(function (value) {
+      if (value.id === relation.divisionId) return true;
+    });
+    console.log(division);
+    var index = division.persons.indexOf(relation.personId);
 
     if (index === -1) {
-      state.collection[relation.divisionId].persons.push(relation.personId);
+      division.persons.push(relation.personId);
     }
   },
   removePerson: function removePerson(state, relation) {
-    var index = state.collection[relation.divisionId].persons.indexOf(relation.personId);
+    var division = state.collection.find(function (value) {
+      if (value.id === relation.divisionId) return true;
+    });
+    console.log(division);
+    var index = division.persons.indexOf(relation.personId);
 
     if (index > -1) {
-      state.collection[relation.divisionId].persons.splice(index, 1);
+      division.persons.splice(index, 1);
     }
   },
   setSelected: function setSelected(state, division) {
