@@ -53,7 +53,11 @@ window.Ac = new Vue({
         alertType: null
     },
 
-    computed: {},
+    computed: {
+        divisions() {
+            return store.state.divisions.collection
+        }
+    },
 
     created() {
         window.addEventListener('resize', this.handleResize)

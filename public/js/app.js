@@ -11676,16 +11676,43 @@ var actions = {};
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _classes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../classes */ "./resources/js/ac/classes/index.js");
-
+/* harmony import */ var _classes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../classes */ "./resources/js/ac/classes/index.js");
 
 var state = {
-  collection: {},
+  collection: [],
   selected: null
 };
 var getters = {
+  sorted: function sorted(state) {
+    function naturalCompare(a, b) {
+      var ax = [],
+          bx = [];
+      a.replace(/(\d+)|(\D+)/g, function (_, $1, $2) {
+        ax.push([$1 || Infinity, $2 || '']);
+      });
+      b.replace(/(\d+)|(\D+)/g, function (_, $1, $2) {
+        bx.push([$1 || Infinity, $2 || '']);
+      });
+
+      while (ax.length && bx.length) {
+        var an = ax.shift();
+        var bn = bx.shift();
+        var nn = an[0] - bn[0] || an[1].localeCompare(bn[1]);
+        if (nn) return nn;
+      }
+
+      return ax.length - bx.length;
+    }
+
+    state.collection.sort(function (a, b) {
+      if (a.type < b.type) return -1;
+      if (a.type > b.type) return 1;
+      var sortByName = naturalCompare(a.name, b.name);
+      if (sortByName !== 0) return sortByName;
+      return 0;
+    });
+    return state.collection;
+  },
   selectedSortedPersons: function selectedSortedPersons(state, getters, rootState) {
     if (state.selected === null) return null;
     state.selected.persons.sort(function (a, b) {
@@ -11704,7 +11731,7 @@ var getters = {
 };
 var mutations = {
   add: function add(state, division) {
-    vue__WEBPACK_IMPORTED_MODULE_0___default.a.set(state.collection, division.id, new _classes__WEBPACK_IMPORTED_MODULE_1__["Division"](division));
+    state.collection.push(new _classes__WEBPACK_IMPORTED_MODULE_0__["Division"](division));
   },
   addPerson: function addPerson(state, relation) {
     var index = state.collection[relation.divisionId].persons.indexOf(relation.personId);
@@ -12322,7 +12349,11 @@ window.Ac = new vue__WEBPACK_IMPORTED_MODULE_1___default.a({
     alertMessage: null,
     alertType: null
   },
-  computed: {},
+  computed: {
+    divisions: function divisions() {
+      return _ac_store__WEBPACK_IMPORTED_MODULE_3__["default"].state.divisions.collection;
+    }
+  },
   created: function created() {
     window.addEventListener('resize', this.handleResize);
     this.handleResize();
