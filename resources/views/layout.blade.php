@@ -37,7 +37,8 @@
                     <button class="navbar-toggler mr-3" type="button" data-toggle="collapse"
                             data-target="#navbarSupportedContent"
                             aria-controls="navbarSupportedContent" aria-expanded="false"
-                            aria-label="{{ __('Toggle navigation') }}">
+                            aria-label="{{ __('Toggle navigation') }}"
+                    >
                         <span class="navbar-toggler-icon"></span>
                     </button>
                 </template>
@@ -47,7 +48,7 @@
                             <a class="nav-item nav-link" href="{{ route('/') }}">{{ __('ac.observation') }}</a>
                             <a class="nav-item nav-link"
                                href="{{ route('cp.persons') }}">{{ __('ac.personal') }}</a>
-                            <a class="nav-item nav-link" href="{{ route('cp.classes') }}">{{ __('ac.classes') }}</a>
+{{--                            <a class="nav-item nav-link" href="{{ route('cp.classes') }}">{{ __('ac.classes') }}</a>--}}
                         @endauth
                     </div>
                 </template>
