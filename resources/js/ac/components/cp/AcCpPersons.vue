@@ -77,12 +77,13 @@
         },
 
         mounted() {
+            let self = this
             axios.get('/controllers/get_list').then(function (response) {
                 for (let k in response.data) {
                     window.Echo.private(`controller-events.${response.data[k].id}`)
                         .listen('EventReceived', (e) => {
                             if (e.event === 2 || e.event === 3) {
-                                this.$store.commit('cards/setLast', e.card);
+                                self.$store.commit('cards/setLast', e.card);
                             }
                         })
                         .listen('ControllerConnected', (e) => {

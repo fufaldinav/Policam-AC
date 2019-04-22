@@ -648,13 +648,12 @@ __webpack_require__.r(__webpack_exports__);
     this.$store.dispatch('loader/loadData');
   },
   mounted: function mounted() {
+    var self = this;
     axios.get('/controllers/get_list').then(function (response) {
-      var _this = this;
-
       for (var k in response.data) {
         window.Echo.private("controller-events.".concat(response.data[k].id)).listen('EventReceived', function (e) {
           if (e.event === 2 || e.event === 3) {
-            _this.$store.commit('cards/setLast', e.card);
+            self.$store.commit('cards/setLast', e.card);
           }
         }).listen('ControllerConnected', function (e) {
           console.log(e.controller_id); //TODO delete
@@ -1428,11 +1427,12 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _AcObserverMenuLeft__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AcObserverMenuLeft */ "./resources/js/ac/components/observer/AcObserverMenuLeft.vue");
-/* harmony import */ var _AcObserverMenuRight__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AcObserverMenuRight */ "./resources/js/ac/components/observer/AcObserverMenuRight.vue");
-/* harmony import */ var _buttons_AcButtonCardBroke__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../buttons/AcButtonCardBroke */ "./resources/js/ac/components/buttons/AcButtonCardBroke.vue");
-/* harmony import */ var _buttons_AcButtonCardForgot__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../buttons/AcButtonCardForgot */ "./resources/js/ac/components/buttons/AcButtonCardForgot.vue");
-/* harmony import */ var _buttons_AcButtonCardLost__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../buttons/AcButtonCardLost */ "./resources/js/ac/components/buttons/AcButtonCardLost.vue");
+/* harmony import */ var _classes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../classes */ "./resources/js/ac/classes/index.js");
+/* harmony import */ var _AcObserverMenuLeft__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AcObserverMenuLeft */ "./resources/js/ac/components/observer/AcObserverMenuLeft.vue");
+/* harmony import */ var _AcObserverMenuRight__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AcObserverMenuRight */ "./resources/js/ac/components/observer/AcObserverMenuRight.vue");
+/* harmony import */ var _buttons_AcButtonCardBroke__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../buttons/AcButtonCardBroke */ "./resources/js/ac/components/buttons/AcButtonCardBroke.vue");
+/* harmony import */ var _buttons_AcButtonCardForgot__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../buttons/AcButtonCardForgot */ "./resources/js/ac/components/buttons/AcButtonCardForgot.vue");
+/* harmony import */ var _buttons_AcButtonCardLost__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../buttons/AcButtonCardLost */ "./resources/js/ac/components/buttons/AcButtonCardLost.vue");
 //
 //
 //
@@ -1584,6 +1584,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+
 
 
 
@@ -1592,11 +1596,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "AcObserver",
   components: {
-    AcObserverMenuLeft: _AcObserverMenuLeft__WEBPACK_IMPORTED_MODULE_0__["default"],
-    AcObserverMenuRight: _AcObserverMenuRight__WEBPACK_IMPORTED_MODULE_1__["default"],
-    AcButtonCardBroke: _buttons_AcButtonCardBroke__WEBPACK_IMPORTED_MODULE_2__["default"],
-    AcButtonCardForgot: _buttons_AcButtonCardForgot__WEBPACK_IMPORTED_MODULE_3__["default"],
-    AcButtonCardLost: _buttons_AcButtonCardLost__WEBPACK_IMPORTED_MODULE_4__["default"]
+    AcObserverMenuLeft: _AcObserverMenuLeft__WEBPACK_IMPORTED_MODULE_1__["default"],
+    AcObserverMenuRight: _AcObserverMenuRight__WEBPACK_IMPORTED_MODULE_2__["default"],
+    AcButtonCardBroke: _buttons_AcButtonCardBroke__WEBPACK_IMPORTED_MODULE_3__["default"],
+    AcButtonCardForgot: _buttons_AcButtonCardForgot__WEBPACK_IMPORTED_MODULE_4__["default"],
+    AcButtonCardLost: _buttons_AcButtonCardLost__WEBPACK_IMPORTED_MODULE_5__["default"]
   },
   computed: {
     loading: function loading() {
@@ -1648,13 +1652,12 @@ __webpack_require__.r(__webpack_exports__);
     this.$store.commit('cp/showForm');
   },
   mounted: function mounted() {
+    var self = this;
     axios.get('/controllers/get_list').then(function (response) {
-      var _this = this;
-
       for (var k in response.data) {
         window.Echo.private("controller-events.".concat(response.data[k].id)).listen('EventReceived', function (e) {
           if (e.event === 4 || e.event === 5) {
-            _this.$store.commit('persons/setSelected', e.person);
+            self.$store.commit('persons/setSelected', new _classes__WEBPACK_IMPORTED_MODULE_0__["Person"](e.person));
           }
         }).listen('ControllerConnected', function (e) {
           console.log(e.controller_id); //TODO delete
@@ -7614,22 +7617,25 @@ var render = function() {
                                   )
                                 ]),
                                 _vm._v(" "),
-                                _c("div", { staticClass: "form-row" }, [
-                                  _c(
-                                    "div",
-                                    {
-                                      staticClass: "form-group col-6 col-sm-12"
-                                    },
-                                    [
-                                      _c("ac-button-card-forgot"),
-                                      _vm._v(" "),
-                                      _c("ac-button-card-lost"),
-                                      _vm._v(" "),
-                                      _c("ac-button-card-broke")
-                                    ],
-                                    1
-                                  )
-                                ])
+                                _vm.selectedPerson.id !== null
+                                  ? _c("div", { staticClass: "form-row" }, [
+                                      _c(
+                                        "div",
+                                        {
+                                          staticClass:
+                                            "form-group col-6 col-sm-12"
+                                        },
+                                        [
+                                          _c("ac-button-card-forgot"),
+                                          _vm._v(" "),
+                                          _c("ac-button-card-lost"),
+                                          _vm._v(" "),
+                                          _c("ac-button-card-broke")
+                                        ],
+                                        1
+                                      )
+                                    ])
+                                  : _vm._e()
                               ]
                             )
                           ])
@@ -11737,7 +11743,6 @@ var mutations = {
     var division = state.collection.find(function (value) {
       if (value.id === relation.divisionId) return true;
     });
-    console.log(division);
     var index = division.persons.indexOf(relation.personId);
 
     if (index === -1) {
@@ -11748,7 +11753,6 @@ var mutations = {
     var division = state.collection.find(function (value) {
       if (value.id === relation.divisionId) return true;
     });
-    console.log(division);
     var index = division.persons.indexOf(relation.personId);
 
     if (index > -1) {

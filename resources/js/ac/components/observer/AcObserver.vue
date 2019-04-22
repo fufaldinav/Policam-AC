@@ -131,7 +131,10 @@
                                         >
                                     </div>
                                 </div>
-                                <div class="form-row">
+                                <div
+                                    v-if="selectedPerson.id !== null"
+                                    class="form-row"
+                                >
                                     <div class="form-group col-6 col-sm-12">
                                         <ac-button-card-forgot></ac-button-card-forgot>
                                         <ac-button-card-lost></ac-button-card-lost>
@@ -150,6 +153,7 @@
 </template>
 
 <script>
+    import {Person} from '../../classes'
     import AcObserverMenuLeft from './AcObserverMenuLeft'
     import AcObserverMenuRight from './AcObserverMenuRight'
     import AcButtonCardBroke from '../buttons/AcButtonCardBroke'
@@ -217,12 +221,13 @@
         },
 
         mounted() {
+            let self = this
             axios.get('/controllers/get_list').then(function (response) {
                 for (let k in response.data) {
                     window.Echo.private(`controller-events.${response.data[k].id}`)
                         .listen('EventReceived', (e) => {
                             if (e.event === 4 || e.event === 5) {
-                                this.$store.commit('persons/setSelected', e.person)
+                                self.$store.commit('persons/setSelected', new Person(e.person))
                             }
                         })
                         .listen('ControllerConnected', (e) => {
