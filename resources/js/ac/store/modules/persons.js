@@ -23,6 +23,12 @@ const mutations = {
         Vue.delete(state.collection, person.id)
     },
 
+    clearCollection(state) {
+        for (let person in state.collection) {
+            Vue.delete(state.collection, person.id)
+        }
+    },
+
     setSelected(state, person) {
         state.selected = person
     },
@@ -73,8 +79,7 @@ const actions = {
         }
     },
 
-    async saveSelected({state, commit}) {
-        let self = this
+    async saveSelected({state, commit, rootState}) {
         window.axios.post('/api/persons', {
             person: state.selected
         }).then(response => {
@@ -98,13 +103,12 @@ const actions = {
 
             window.Ac.alert(person.f + ' ' + person.i + ' ' + i18n.t('ac.saved') + ' ' + i18n.t('ac.successful'))
         }).catch(error => {
-            if (self.$store.state.debug) console.log(error)
+            if (rootState.debug) console.log(error)
             window.Ac.alert(error, 'danger')
         })
     },
 
-    async updateSelected({state, commit}) {
-        let self = this
+    async updateSelected({state, commit, rootState}) {
         window.axios.put('/api/persons/' + state.selected.id, {
             person: state.selected
         }).then(response => {
@@ -128,14 +132,13 @@ const actions = {
 
             window.Ac.alert(person.f + ' ' + person.i + ' ' + i18n.t('ac.updated') + ' ' + i18n.t('ac.successful'))
         }).catch(error => {
-            if (self.$store.state.debug) console.log(error)
+            if (rootState.debug) console.log(error)
             window.Ac.alert(error, 'danger')
         })
     },
 
-    async removeSelected({state, commit}) {
-        let self = this
-        axios.delete('/api/persons/' + state.selected.id).then(response => {
+    async removeSelected({state, commit, rootState}) {
+        window.axios.delete('/api/persons/' + state.selected.id).then(response => {
             let id = response.data
             let person = state.collection[id]
 
@@ -150,7 +153,7 @@ const actions = {
 
             window.Ac.alert(fullName + ' ' + i18n.t('ac.deleted') + ' ' + i18n.t('ac.successful'))
         }).catch(error => {
-            if (self.$store.state.debug) console.log(error)
+            if (rootState.debug) console.log(error)
             window.Ac.alert(error, 'danger')
         })
     }

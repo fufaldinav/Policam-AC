@@ -1,7 +1,7 @@
 <template xmlns:v-touch="http://www.w3.org/1999/xhtml">
     <div class="container-fluid">
         <div v-if="loading">
-            loading...
+            <ac-loading></ac-loading>
         </div>
         <div
             v-else
@@ -32,6 +32,7 @@
 </template>
 
 <script>
+    import AcLoading from '../AcLoading'
     import AcCpPersonsMenuLeft from './AcCpPersonsMenuLeft'
     import AcCpPersonsMenuRight from './AcCpPersonsMenuRight'
     import AcFormPerson from '../forms/AcFormPerson'
@@ -39,7 +40,7 @@
     export default {
         name: "AcCpPersons",
 
-        components: {AcCpPersonsMenuLeft, AcCpPersonsMenuRight, AcFormPerson},
+        components: {AcLoading, AcCpPersonsMenuLeft, AcCpPersonsMenuRight, AcFormPerson},
 
         computed: {
             loading() {
@@ -73,28 +74,19 @@
         },
 
         created() {
-            this.$store.dispatch('loader/loadData')
+            this.$store.dispatch('loader/loadDivisions')
         },
 
         mounted() {
-            let self = this
-            axios.get('/controllers/get_list').then(response => {
-                for (let k in response.data) {
-                    window.Echo.private(`controller-events.${response.data[k].id}`)
-                        .listen('EventReceived', (e) => {
-                            if (e.event === 2 || e.event === 3) {
-                                if (self.$store.state.cards.manualInput === false ){
-                                    self.$store.commit('cards/setLast', e.card)
-                                }
-                            }
-                        })
-                        .listen('ControllerConnected', (e) => {
-                            if (self.$store.state.debug) console.log('Контроллер ID: ' + e.controller_id + ' вышел на связь')
-                        })
+            this.$bus.$on('EventReceived', e => {
+                if (e.event === 2 || e.event === 3) {
+                    if (this.$store.state.cards.manualInput === false ){
+                        this.$store.commit('cards/setLast', e.card)
+                    }
                 }
-            }).catch(error => {
-                if (self.$store.state.debug) console.log(error)
-                self.$root.alert(error, 'danger')
+            })
+            this.$bus.$on('ControllerConnected', e => {
+                if (this.$store.state.debug) console.log('Контроллер ID: ' + e.controller_id + ' вышел на связь')
             })
         },
     }

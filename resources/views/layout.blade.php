@@ -33,6 +33,11 @@
                         <img src="/img/logo-policam.png" alt="">
                     </a>
                 </template>
+                <template slot="ac-organizations">
+                    @auth
+                        <ac-organizations-dropdown-menu></ac-organizations-dropdown-menu>
+                    @endauth
+                </template>
                 <template slot="ac-menu-button">
                     <button class="navbar-toggler mr-3" type="button" data-toggle="collapse"
                             data-target="#navbarSupportedContent"
@@ -48,7 +53,7 @@
                             <a class="nav-item nav-link" href="{{ route('observer') }}">{{ __('ac.observation') }}</a>
                             <a class="nav-item nav-link"
                                href="{{ route('cp.persons') }}">{{ __('ac.personal') }}</a>
-{{--                            <a class="nav-item nav-link" href="{{ route('cp.classes') }}">{{ __('ac.classes') }}</a>--}}
+                            {{--                            <a class="nav-item nav-link" href="{{ route('cp.classes') }}">{{ __('ac.classes') }}</a>--}}
                         @endauth
                     </div>
                 </template>

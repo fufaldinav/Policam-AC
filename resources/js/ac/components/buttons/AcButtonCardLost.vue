@@ -21,17 +21,16 @@
         methods: {
             sendToServer() {
                 if (this.$store.state.modal.shown) {
-                    let self = this
                     window.axios.post('/util/card_problem', {
                         type: 3,
-                        person_id: self.selectedPerson.id
+                        person_id: this.selectedPerson.id
                     }).then(response => {
-                        self.$store.dispatch('modal/close')
-                        self.$root.alert(response.data)
+                        this.$store.dispatch('modal/close')
+                        this.$root.alert(response.data)
                     }).catch(error => {
-                        if (self.$store.debug === true) console.log(error)
-                        self.$store.dispatch('modal/close')
-                        self.$root.alert(error, 'danger')
+                        if (this.$store.debug === true) console.log(error)
+                        this.$store.dispatch('modal/close')
+                        this.$root.alert(error, 'danger')
                     })
                 } else {
                     this.$store.commit('modal/setTitle', this.$t('ac.card_lost'))

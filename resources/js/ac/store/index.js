@@ -9,7 +9,9 @@ import cards from './modules/cards'
 import cp from './modules/cp'
 import divisions from './modules/divisions'
 import loader from './modules/loader'
+import messenger from './modules/messenger'
 import modal from './modules/modal'
+import organizations from './modules/organizations'
 import persons from './modules/persons'
 
 Vue.use(Vuex)
@@ -29,6 +31,8 @@ export default new Vuex.Store({
         divisions,
         loader,
         modal,
+        messenger,
+        organizations,
         persons
     }
 })

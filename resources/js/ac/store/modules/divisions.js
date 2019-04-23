@@ -33,21 +33,19 @@ const getters = {
             return ax.length - bx.length
         }
 
-        state.collection.sort((a, b) => {
+        return state.collection.sort((a, b) => {
             if (a.type < b.type) return -1
             if (a.type > b.type) return 1
             let sortByName = naturalCompare(a.name, b.name)
             if (sortByName !== 0) return sortByName
             return 0
         })
-
-        return state.collection
     },
 
     selectedSortedPersons: (state, getters, rootState) => {
         if (state.selected === null) return null
 
-        state.selected.persons.sort((a, b) => {
+        return state.selected.persons.sort((a, b) => {
             let personA = rootState.persons.collection[a]
             let personB = rootState.persons.collection[b]
             if (personA.f < personB.f) return -1
@@ -58,14 +56,18 @@ const getters = {
             if (personA.o > personB.o) return 1
             return 0
         })
-
-        return state.selected.persons
     }
 }
 
 const mutations = {
     add(state, division) {
         state.collection.push(new Division(division))
+    },
+
+    clearCollection(state) {
+        while (state.collection.length > 0) {
+            state.collection.pop()
+        }
     },
 
     addPerson(state, relation) {
@@ -98,7 +100,6 @@ const mutations = {
 }
 
 const actions = {}
-
 
 export default {
     namespaced: true,

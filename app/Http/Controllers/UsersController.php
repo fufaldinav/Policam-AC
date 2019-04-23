@@ -95,4 +95,16 @@ class UsersController extends Controller
 
         return view('ac.notification', compact('photos', 'css_list', 'js_list'));
     }
+
+    /**
+     * Возвращает организации пользователя
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    public function getOrganizations(Request $request)
+    {
+        return $request->user()->organizations->load('controllers');
+    }
 }

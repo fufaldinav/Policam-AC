@@ -24,8 +24,7 @@ Route::get('observer', 'ObserverController@index')->name('observer');
  */
 Route::group(['prefix' => 'api', 'as' => 'api.'], function () {
     Route::group(['middleware' => 'role:3'], function () {
-        Route::resource('persons', 'PersonsController',
-            ['except' => ['create', 'edit']]);
+        Route::resource('persons', 'PersonsController')->except(['create', 'edit']);
     });
     Route::group(['middleware' => 'role:3'], function () {
         Route::resource('divisions', 'DivisionsController')->except(['create', 'edit']);
@@ -78,6 +77,7 @@ Route::post('server', 'ServersController@index');
  */
 Route::group(['prefix' => 'users', 'as' => 'users.'], function () {
     Route::post('token', 'UsersController@token');
+    Route::get('organizations', 'UsersController@getOrganizations');
 });
 Route::get('users/notification/{hash}', 'UsersController@notification');
 /*

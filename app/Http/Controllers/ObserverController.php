@@ -37,16 +37,11 @@ class ObserverController extends Controller
      * @param int|null $organization_id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index(Request $request, int $organization_id = null)
+    public function index(Request $request)
     {
-        if ($organization_id) {
-            $org = $request->user()->organizations()->where('organization_id', $organization_id)->first();
-            abort_if(! $org, 403);
-        } else {
-            $org = $request->user()->organizations()->first();
-            if (! $org) {
-                return view('ac.error', ['error' => 'Огранизации отсутствуют']);
-            }
+        $org = $request->user()->organizations()->first();
+        if (! $org) {
+            return view('ac.error', ['error' => 'Огранизации отсутствуют']);
         }
 
         return view('ac.observer');

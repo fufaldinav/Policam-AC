@@ -64,8 +64,6 @@
 
         methods: {
             uploadPhoto(files) {
-                let self = this
-
                 let formData = new FormData()
 
                 if (files.length === 0) return
@@ -80,8 +78,8 @@
                 }).then(response => {
                     this.$store.commit('persons/addPhoto', response.data)
                 }).catch(error => {
-                    if (self.$store.state.debug) console.log(error)
-                    self.$root.alert(error, 'danger')
+                    if (this.$store.state.debug) console.log(error)
+                    this.$root.alert(error, 'danger')
                 })
             },
 
