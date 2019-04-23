@@ -69,7 +69,7 @@ window.Ac = new Vue({
     },
 
     methods: {
-        alert(message, type = 'alert-info') {
+        alert(message, type = 'info') {
             type = 'alert-' + type
 
             this.alertMessage = message
