@@ -4,7 +4,8 @@ import {Card, Person, Photo} from '../../classes'
 
 const state = {
     collection: {},
-    selected: new Person({})
+    selected: new Person({}),
+    manually: false
 }
 
 const getters = {}
@@ -28,6 +29,10 @@ const mutations = {
 
     clearSelected(state) {
         state.selected = new Person({})
+    },
+
+    setManually(state, status = true) {
+        state.manually = status
     },
 
     addCard(state, card) {
