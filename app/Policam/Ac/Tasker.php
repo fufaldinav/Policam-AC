@@ -96,7 +96,7 @@ class Tasker
         $this->message->setOperation('set_door_params');
         $this->message->setOpenTime($open);
         $this->message->setOpenControl($open_control);
-        $this->message->setOpesetCloseControlnTime($close_control);
+        $this->message->setCloseControl($close_control);
     }
 
     /**
