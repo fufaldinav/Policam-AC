@@ -1,4 +1,5 @@
 export * from './card'
 export * from './division'
+export * from './organization'
 export * from './person'
 export * from './photo'

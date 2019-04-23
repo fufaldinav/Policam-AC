@@ -261,7 +261,7 @@
         },
 
         created() {
-            this.$store.dispatch('loader/loadData')
+            this.$store.dispatch('loader/loadDivisions')
         },
 
         beforeMount() {
@@ -269,25 +269,16 @@
         },
 
         mounted() {
-            let self = this
-            axios.get('/controllers/get_list').then(response => {
-                for (let k in response.data) {
-                    window.Echo.private(`controller-events.${response.data[k].id}`)
-                        .listen('EventReceived', (e) => {
-                            if (e.event === 4 || e.event === 5) {
-                                let person = this.getPerson(e.person)
-                                if (person === undefined) return
-                                self.$store.commit('persons/setSelected', person)
-                                self.$store.commit('persons/setManually', false)
-                            }
-                        })
-                        .listen('ControllerConnected', (e) => {
-                            if (self.$store.state.debug) console.log('Контроллер ID: ' + e.controller_id + ' вышел на связь')
-                        })
+            this.$bus.$on('EventReceived', e => {
+                if (e.event === 4 || e.event === 5) {
+                    let person = this.getPerson(e.person)
+                    if (person === undefined) return
+                    this.$store.commit('persons/setSelected', person)
+                    this.$store.commit('persons/setManually', false)
                 }
-            }).catch(error => {
-                if (self.$store.state.debug) console.log(error)
-                self.$root.alert(error, 'danger')
+            })
+            this.$bus.$on('ControllerConnected', e => {
+                if (this.$store.state.debug) console.log('Контроллер ID: ' + e.controller_id + ' вышел на связь')
             })
         },
     }

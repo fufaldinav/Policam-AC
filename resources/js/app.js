@@ -35,20 +35,28 @@ import AcLayout from './ac/components/AcLayout'
 import AcNavBar from './ac/components/AcNavBar'
 import AcObserver from './ac/components/observer/AcObserver'
 import AcCpPersons from './ac/components/cp/AcCpPersons'
+import AcOrganizationsDropdownMenu from './ac/components/AcOrganizationsDropdownMenu'
 import AcAlert from './ac/components/AcAlert'
 
 import Vue2TouchEvents from 'vue2-touch-events'
 
 Vue.use(Vue2TouchEvents)
 
+Object.defineProperty(Vue.prototype, '$bus', {
+    get() {
+        return this.$root.bus;
+    }
+});
+
 window.Ac = new Vue({
     el: '#ac',
     store,
     i18n,
 
-    components: {AcLayout, AcNavBar, AcObserver, AcCpPersons, AcAlert},
+    components: {AcLayout, AcNavBar, AcObserver, AcCpPersons, AcOrganizationsDropdownMenu, AcAlert},
 
     data: {
+        bus: new Vue({}),
         alertMessage: null,
         alertType: null
     },

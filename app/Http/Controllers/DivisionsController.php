@@ -65,20 +65,22 @@ class DivisionsController extends Controller
 
     public function index(Request $request)
     {
-        $divisions = $request->user()->divisions()->get()->load(['persons.cards', 'persons.photos']);
+        $organization = $request->user()->organizations()->first();
+
+        abort_if(! $organization, 403);
+
+        return response()->json(
+            $organization->divisions->load(['persons.cards', 'persons.photos'])
+        );
+    }
+
+    public function show(Request $request, $organization_id)
+    {
+        $divisions = $request->user()->divisions()->where('divisions.organization_id', $organization_id)->get()->load(['persons.cards', 'persons.photos']);
 
         abort_if(! $divisions, 403);
 
         return response()->json($divisions);
-    }
-
-    public function show(Request $request, $id)
-    {
-        $division = $request->user()->divisions()->where('divisions.id', $id)->first()->load('persons');
-
-        abort_if(! $division, 403);
-
-        return response()->json($division);
     }
 
     public function update(Request $request, $id)

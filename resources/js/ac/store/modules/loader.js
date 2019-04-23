@@ -2,20 +2,38 @@ const state = {
     loading: true
 }
 
-const getters = {
-
-}
+const getters = {}
 
 const mutations = {
-    changeLoadingState(state, loading) {
-        state.loading = loading
+    changeLoadingState(state, status) {
+        state.loading = status
     }
 }
 
 const actions = {
-    async loadData({commit, dispatch}) {
-        let self = this
-        window.axios.get('/api/divisions').then(response => {
+    async loadOrganizations({commit, dispatch, rootState}) {
+        window.axios.get('/users/organizations').then(response => {
+            for (let org of response.data) {
+                commit('organizations/add', org, {root: true})
+                if (rootState.organizations.selected === null) {
+                    commit('organizations/setSelected', rootState.organizations.collection[0], {root: true})
+                    dispatch('messenger/subscribe', null, {root: true})
+                }
+            }
+        }).catch(error => {
+            if (rootState.debug) console.log(error)
+        })
+    },
+
+    async loadDivisions({commit, dispatch, rootState}, organizationId = null) {
+        commit('changeLoadingState', true)
+        let url = '/api/divisions'
+        if (organizationId !== null) {
+            url += '/' + organizationId
+            commit('persons/clearCollection', null, {root: true})
+            commit('divisions/clearCollection', null, {root: true})
+        }
+        window.axios.get(url).then(response => {
             for (let division of response.data) {
                 for (let person of division.persons) {
                     person.divisions = [division.id]
@@ -25,8 +43,8 @@ const actions = {
             }
             commit('changeLoadingState', false)
         }).catch(error => {
-            if (self.$store.state.debug) console.log(error)
-            setTimeout(dispatch.loadData, 2000) //TODO перезапуск при ошибке
+            if (rootState.debug) console.log(error)
+            setTimeout(dispatch.loadDivisions, 2000) //TODO перезапуск при ошибке
         })
     }
 }
