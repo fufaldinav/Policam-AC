@@ -132,7 +132,7 @@
                                     </div>
                                 </div>
                                 <div
-                                    v-if="selectedPerson.id !== null"
+                                    v-if="selectedPerson.cards.length > 0"
                                     class="form-row"
                                 >
                                     <div class="form-group col-6 col-sm-12">
@@ -149,6 +149,7 @@
             <ac-observer-menu-right></ac-observer-menu-right>
             <input id="type" name="type" type="text" hidden readonly>
         </div>
+        <ac-observer-modal></ac-observer-modal>
     </div>
 </template>
 
@@ -159,11 +160,15 @@
     import AcButtonCardBroke from '../buttons/AcButtonCardBroke'
     import AcButtonCardForgot from '../buttons/AcButtonCardForgot'
     import AcButtonCardLost from '../buttons/AcButtonCardLost'
+    import AcObserverModal from './AcObserverModal'
 
     export default {
         name: "AcObserver",
 
-        components: {AcObserverMenuLeft, AcObserverMenuRight, AcButtonCardBroke, AcButtonCardForgot, AcButtonCardLost},
+        components: {
+            AcObserverMenuLeft, AcObserverMenuRight,
+            AcButtonCardBroke, AcButtonCardForgot, AcButtonCardLost, AcObserverModal
+        },
 
         computed: {
             loading() {
@@ -231,7 +236,7 @@
                             }
                         })
                         .listen('ControllerConnected', (e) => {
-                            if (self.$store.state.debug) console.log('Контроллер ID: ' + e.controller_id + 'вышел на связь')
+                            if (self.$store.state.debug) console.log('Контроллер ID: ' + e.controller_id + ' вышел на связь')
                         })
                 }
             }).catch(error => {

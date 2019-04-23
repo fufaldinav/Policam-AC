@@ -157,7 +157,7 @@
     import AcButtonRemovePerson from '../buttons/AcButtonRemovePerson'
     import AcButtonSavePerson from '../buttons/AcButtonSavePerson'
     import AcButtonUpdatePerson from '../buttons/AcButtonUpdatePerson'
-    import AcFormModal from "./AcFormModal"
+    import AcFormModal from './AcFormModal'
 
     export default {
         name: "AcFormPerson",

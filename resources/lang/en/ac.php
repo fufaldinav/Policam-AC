@@ -47,4 +47,6 @@ return [
     'card_forgot' => 'Forgot card',
     'card_lost' => 'Lost card',
     'card_broke' => 'Card is broken',
+    'must_confirm_action' => 'You must confirm the action',
+    'accept' => 'Accept',
 ];

@@ -46,7 +46,9 @@ export default {
             "personal": "Personal",
             "card_forgot": "Forgot card",
             "card_lost": "Lost card",
-            "card_broke": "Card is broken"
+            "card_broke": "Card is broken",
+            "must_confirm_action": "You must confirm the action",
+            "accept": "Accept"
         }
     },
     "ru": {
@@ -100,7 +102,9 @@ export default {
             "personal": "Персонал",
             "card_forgot": "Забыл карту",
             "card_lost": "Потерял карту",
-            "card_broke": "Карта не работает"
+            "card_broke": "Карта не работает",
+            "must_confirm_action": "Необходимо подтвердить действие",
+            "accept": "Подтвердить"
         }
     }
 }

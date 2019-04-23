@@ -89,7 +89,7 @@
                             }
                         })
                         .listen('ControllerConnected', (e) => {
-                            if (self.$store.state.debug) console.log('Контроллер ID: ' + e.controller_id + 'вышел на связь')
+                            if (self.$store.state.debug) console.log('Контроллер ID: ' + e.controller_id + ' вышел на связь')
                         })
                 }
             }).catch(error => {
