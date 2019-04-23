@@ -147,7 +147,7 @@
                                     </div>
                                 </div>
                                 <div
-                                    v-if="selectedPerson.cards.length > 0"
+                                    v-if="selectedPerson.cards.length > 0 && selectedManually"
                                     class="form-row"
                                 >
                                     <div class="form-group col-6 col-sm-12">
@@ -169,7 +169,6 @@
 </template>
 
 <script>
-    import {Person} from '../../classes'
     import AcObserverMenuLeft from './AcObserverMenuLeft'
     import AcObserverMenuRight from './AcObserverMenuRight'
     import AcButtonCardBroke from '../buttons/AcButtonCardBroke'
@@ -192,6 +191,10 @@
 
             selectedPerson() {
                 return this.$store.state.persons.selected
+            },
+
+            selectedManually() {
+                return this.$store.state.persons.manually
             },
 
             selectedPersonDivision() {
@@ -249,7 +252,11 @@
                 } else {
                     this.$store.commit('cp/showForm')
                 }
-            }
+            },
+
+            getPerson(id) {
+                return this.$store.state.persons.collection[id]
+            },
         },
 
         created() {
@@ -267,7 +274,8 @@
                     window.Echo.private(`controller-events.${response.data[k].id}`)
                         .listen('EventReceived', (e) => {
                             if (e.event === 4 || e.event === 5) {
-                                self.$store.commit('persons/setSelected', new Person(e.person))
+                                self.$store.commit('persons/setSelected', this.getPerson(e.person))
+                                self.$store.commit('persons/setManually', false)
                             }
                         })
                         .listen('ControllerConnected', (e) => {

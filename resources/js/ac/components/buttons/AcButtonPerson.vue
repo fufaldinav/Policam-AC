@@ -30,6 +30,7 @@
         methods: {
             selectPerson () {
                 this.$store.commit('persons/setSelected', new Person(this.person))
+                this.$store.commit('persons/setManually')
                 this.$store.commit('cp/showForm')
             }
         }
