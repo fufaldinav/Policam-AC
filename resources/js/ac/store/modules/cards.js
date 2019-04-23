@@ -2,6 +2,7 @@ import {Card} from '../../classes';
 
 const state = {
     last: null,
+    manualInput: false,
     removable: null
 }
 
@@ -14,6 +15,10 @@ const mutations = {
 
     clearLast(state) {
         state.last = null
+    },
+
+    setManualInput(state, status = true) {
+        state.manualInput = status
     },
 
     setRemovable(state, card) {

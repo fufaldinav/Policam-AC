@@ -16,7 +16,7 @@
                     data-placement="top"
                     data-trigger="manual"
                     :placeholder="$t('ac.last_card')"
-                    :readonly="formIfDisabled"
+                    :readonly="manualInput === false"
                     @click="formClicked"
                     @blur="leaveForm"
                 >
@@ -55,8 +55,19 @@
                 return this.lastFreeCard === null;
             },
 
-            formIfDisabled() {
-                return this.countClicked < 2;
+            manualInput: {
+                get() {
+                    return this.$store.state.cards.manualInput;
+                },
+
+                set(status) {
+                    if (status) {
+                        this.$store.commit('cards/setManualInput')
+                    } else {
+                        this.$store.commit('cards/setManualInput', false)
+                        this.countClicked = 0
+                    }
+                }
             },
 
             cardCode: {
@@ -82,22 +93,24 @@
 
         methods: {
             addCardToPerson() {
-                this.$store.commit('persons/addCard', this.lastFreeCard);
-                this.$store.commit('cards/clearLast');
-                this.countClicked = 0;
+                this.$store.commit('persons/addCard', this.lastFreeCard)
+                this.$store.commit('cards/clearLast')
+                this.manualInput = false
             },
 
             formClicked() {
-                this.countClicked++;
+                this.countClicked++
                 if (this.countClicked === 1) {
-                    $('.ac-input-card-code').tooltip('show');
+                    $('.ac-input-card-code').tooltip('show')
+                } else if (this.countClicked === 2) {
+                    this.manualInput = true
                 } else {
-                    $('.ac-input-card-code').tooltip('hide');
+                    $('.ac-input-card-code').tooltip('hide')
                 }
             },
 
             leaveForm() {
-                this.countClicked = 0;
+                this.manualInput = false
                 if (this.cardCode === '0000000000') {
                     this.$store.commit('cards/clearLast');
                 }

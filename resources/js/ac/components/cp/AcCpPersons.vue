@@ -83,7 +83,9 @@
                     window.Echo.private(`controller-events.${response.data[k].id}`)
                         .listen('EventReceived', (e) => {
                             if (e.event === 2 || e.event === 3) {
-                                self.$store.commit('cards/setLast', e.card);
+                                if (self.$store.state.cards.manualInput === false ){
+                                    self.$store.commit('cards/setLast', e.card);
+                                }
                             }
                         })
                         .listen('ControllerConnected', (e) => {
