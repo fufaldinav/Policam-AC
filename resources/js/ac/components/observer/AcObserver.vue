@@ -274,7 +274,9 @@
                     window.Echo.private(`controller-events.${response.data[k].id}`)
                         .listen('EventReceived', (e) => {
                             if (e.event === 4 || e.event === 5) {
-                                self.$store.commit('persons/setSelected', this.getPerson(e.person))
+                                let person = this.getPerson(e.person)
+                                if (person === undefined) return
+                                self.$store.commit('persons/setSelected', person)
                                 self.$store.commit('persons/setManually', false)
                             }
                         })
