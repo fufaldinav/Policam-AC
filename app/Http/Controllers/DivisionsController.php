@@ -50,7 +50,7 @@ class DivisionsController extends Controller
             ->orderByRaw('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
             ->get();
 
-        $org_name = $org->name ?? __('ac/common.missing');
+        $org_name = $org->name ?? __('ac.missing');
         $css_list = ['tables'];
         $js_list = ['classes'];
 
@@ -63,74 +63,52 @@ class DivisionsController extends Controller
         ));
     }
 
-    /**
-     * Получает коллекцию подразделений
-     *
-     * @param Request $request
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getList(Request $request)
+    public function index(Request $request)
     {
-        $divs = $request->user()->divisions()
-            ->orderByRaw('divisions.type ASC, CAST(divisions.name AS UNSIGNED) ASC, divisions.name ASC')
-            ->get();
+        $divisions = $request->user()->divisions()->get()->load(['persons.cards', 'persons.photos']);
 
-        return response()->json($divs);
+        abort_if(! $divisions, 403);
+
+        return response()->json($divisions);
     }
 
-    /**
-     * Сохраняет подразделение
-     *
-     * @param Request $request
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function save(Request $request)
+    public function show(Request $request, $id)
     {
-        $div_data = json_decode($request->input('div'), true);
+        $division = $request->user()->divisions()->where('divisions.id', $id)->first()->load('persons');
 
-        $div = App\Division::firstOrCreate($div_data);
+        abort_if(! $division, 403);
 
-        return response()->json($div);
+        return response()->json($division);
     }
 
-    /**
-     * Удаляет подразделение
-     *
-     * @param Request $request
-     *
-     * @return int
-     * @throws \Exception
-     */
-    public function delete(Request $request)
+    public function update(Request $request, $id)
     {
-        $div_id = $request->input('div_id');
+        $division = $request->user()->divisions()->where('divisions.id', $id)->first();
 
-        if (is_null($div_id)) {
-            return 0;
+        abort_if(! $division, 403);
+
+        $division->update($request->input('division'));
+
+        return response()->json($division->load('persons'));
+    }
+
+    public function store(Request $request)
+    {
+        $division = App\Division::create($request->input('division'));
+
+        return response()->json($division->load('persons'));
+    }
+
+    public function destroy(Request $request, int $id): ?int
+    {
+        $division = $request->user()->divisions()->where('divisions.id', $id)->first();
+
+        abort_if(! $division, 403);
+
+        if ($division->delete()) {
+            return $id;
         }
 
-        $org = $request->user()->organizations()->first();
-
-        $cur_div = $request->user()->divisions()->where('divisions.id', $div_id)->first();
-
-        abort_if(! $cur_div, 403);
-
-        //"Пустое" подразделение
-        $empty_div = App\Division::where('organization_id', $org->id)
-            ->where('type', 0)
-            ->first();
-
-        //Переносим полученных людей в "пустое" подразделение
-        foreach ($cur_div->persons as $person) {
-            $person->divisions()->detach($cur_div->id);
-
-            if ($person->divisions->count() == 0) {
-                $person->divisions()->attach($empty_div->id);
-            }
-        }
-
-        return (int)$cur_div->delete();
+        return null;
     }
 }

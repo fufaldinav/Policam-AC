@@ -19,7 +19,6 @@
 namespace App\Http\Controllers;
 
 use App;
-use App\Policam\Ac\Photo;
 use Illuminate\Http\Request;
 
 class PhotosController extends Controller
@@ -37,39 +36,32 @@ class PhotosController extends Controller
      *
      * @return
      */
-    public function save(Request $request)
+    public function store(Request $request)
     {
-        $file = $request->file('file');
+        $file = $request->file('file')->getRealPath();
 
-        return response()->json(
-            (new Photo())->save($file)
-        );
+        $photo = App\Photo::saveFileThenCreate($file);
+
+        return response()->json($photo);
     }
 
     /**
      * Удаляет фотографию
      *
-     * @param Request $request
+     * @param int $id
      *
      * @return int
      * @throws \Exception
      */
-    public function delete(Request $request): int
+    public function destroy(int $id): int
     {
-        $id = $request->input('photo_id');
-
         $photo = App\Photo::find($id);
 
         abort_if(! $photo, 404);
 
-        if ($photo->person_id === null) {
-            return (new Photo())->remove($id);
-        }
+        abort_if($photo->person_id, 403);
 
-        $person = $request->user()->persons()->where('persons.id', $photo->person_id)->first();
-
-        abort_if(! $person, 403);
-
-        return (new Photo())->remove($id);
+        $photo->deleteFile();
+        return (int)$photo->delete();
     }
 }

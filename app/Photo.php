@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Intervention\Image\ImageManagerStatic as Image;
+use Storage;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -56,5 +58,26 @@ class Photo extends Model
     public function person()
     {
         return $this->belongsTo('App\Person');
+    }
+
+    public static function saveFileThenCreate($file)
+    {
+        $file_hash = hash_file('md5', $file);
+
+        $photo = Image::make(file_get_contents($file))->encode('jpg')->save("photos/$file_hash.jpg");
+
+        Image::make($photo)->resize(null, 320, function ($constraint) {
+            $constraint->aspectRatio();
+        })->save("photos/thumbnails/$file_hash.jpg");
+
+        return self::firstOrCreate(['hash' => $file_hash]);
+    }
+
+    public function deleteFile(): self
+    {
+        Storage::disk('photos')->delete("$this->hash.jpg");
+        Storage::disk('photos')->delete("/thumbnails/$this->hash.jpg");
+
+        return $this;
     }
 }

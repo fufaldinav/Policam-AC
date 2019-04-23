@@ -67,7 +67,7 @@ class UtilsController extends Controller
             return null;
         }
 
-        $response = __('ac/common.registered');
+        $response = __('ac.registered');
 
         $person = App\Person::find($person_id);
 
@@ -102,7 +102,7 @@ class UtilsController extends Controller
 
             $tasker->send();
 
-            $response .= ' ' . __('ac/common.and') . ' ' . __('ac/common.card_deleted');
+            $response .= ' ' . __('ac.and') . ' ' . __('ac.card_deleted');
 
             $description .= 'lost/broke card';
         } else {

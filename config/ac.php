@@ -39,15 +39,15 @@ return [
      * Firebase Cloud Messaging
      */
     'fcm' => [
-        'fcm_url' => 'https://fcm.googleapis.com/fcm/send',
-        'server_key' => 'AAAA6hsRfn0:APA91bFXS5t_qUC7StorR89rPP0bKbc3qDA-N6xqdeaNRn1TBSqSS-qMUx4F3HKjOwTNDRdQnpxE8uvpJLwB8dcdKlCDu1N2_35zmLkDQ1TxJXBMLzWO3MrQ7WQhBjgvT_MNBIWcOzV5',
-        'api_key' => 'AIzaSyDI_-AwpqcTclSXCyXgYJzvaTNC-dky9iY',
-        'auth_domain' => 'policam-ac.firebaseapp.com',
-        'database_url' => 'https://policam-ac.firebaseio.com',
-        'project_id' => 'policam-ac',
-        'storage_bucket' => 'policam-ac.appspot.com',
-        'messaging_sender_id' => '1005476478589',
-        'public_vapid_key' => 'BPKQjI8lJAE9pymLNyKm5fsJSsu-7vXlPZivaRvR52lxGWgsxF2TN5s_iaIKQ1LWNZPh0S8arKNOXfq9nAAB3Yg',
+        'fcm_url' => env('FCM_URL', null),
+        'server_key' => env('FCM_SERVER_KEY', null),
+        'api_key' => env('FCM_API_KEY', null),
+        'auth_domain' => env('FCM_AUTH_DOMAIN', null),
+        'database_url' => env('FCM_DB_URL', null),
+        'project_id' => env('FCM_PROJECT_ID', null),
+        'storage_bucket' => env('FCM_STORAGE_BUCKET', null),
+        'messaging_sender_id' => env('FCM_SENDER_ID', null),
+        'public_vapid_key' => env('FCM_PUBLIC_VAPID_KEY', null),
     ],
 
     /*

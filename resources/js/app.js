@@ -4,66 +4,86 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-require('./bootstrap');
 
-window.Vue = require('vue');
-
-/**
- * The following block of code may be used to automatically register your
- * Vue components. It will recursively scan this directory for the Vue
- * components and automatically register them with their "basename".
- *
- * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
- */
-
-// const files = require.context('./', true, /\.vue$/i);
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
-
-// Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+require('./bootstrap')
 
 /**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
+ * Echo exposes an expressive API for subscribing to channels and listening
+ * for events that are broadcast by Laravel. Echo and event broadcasting
+ * allows your team to easily build robust real-time web applications.
  */
 
-// const app = new Vue({
-//     el: '#app'
-// });
+window.Pusher = require('pusher-js')
 
-axios.get(process.env.MIX_APP_URL + '/controllers/get_list')
-    .then(function (response) {
-        for (let k in response.data) {
-            Echo.private(`controller-events.${response.data[k].id}`)
-                .listen('EventReceived', (e) => {
-                    if (!events.includes(e.event)) {
-                        return;
-                    }
-                    if (e.event == 16 || e.event == 17) {
-                        setPersonInfo(e.card_id);
-                    } else if (e.event == 2 || e.event == 3) {
-                        if (!document.getElementById(`cards`).disabled) { //если меню неизвестных карт активно
-                            let o = confirm(`Введен неизвестный ключ. Выбрать его в качестве нового ключа пользователя?`); //TODO перевод
-                            if (o) {
-                                getCards(e.card_id);
-                            }
-                        } else if (document.getElementById(`unknown_cards`).hidden) {
-                            let o = confirm(`Введен неизвестный ключ. Добавить его текущему пользователю?`); //TODO перевод
-                            if (o) {
-                                saveCard(e.card_id);
-                            }
-                        }
-                    }
-                })
-                .listen('ControllerConnected', (e) => {
-                    SetControllerStatus(e.controller_id);
-                });
+import Echo from 'laravel-echo'
+
+window.Echo = new Echo({
+    authEndpoint: '/broadcasting/auth',
+    broadcaster: 'pusher',
+    key: process.env.MIX_PUSHER_APP_KEY,
+    wsHost: window.location.hostname,
+    wsPort: process.env.MIX_WS_PORT,
+    wssPort: process.env.MIX_WS_PORT,
+    disableStats: true,
+});
+
+import Vue from 'vue'
+import i18n from './vue-i18n'
+import store from './ac/store'
+
+import AcLayout from './ac/components/AcLayout'
+import AcNavBar from './ac/components/AcNavBar'
+import AcObserver from './ac/components/observer/AcObserver'
+import AcCpPersons from './ac/components/cp/AcCpPersons'
+import AcAlert from './ac/components/AcAlert'
+
+import Vue2TouchEvents from 'vue2-touch-events'
+
+Vue.use(Vue2TouchEvents)
+
+window.Ac = new Vue({
+    el: '#ac',
+    store,
+    i18n,
+
+    components: {AcLayout, AcNavBar, AcObserver, AcCpPersons, AcAlert},
+
+    data: {
+        alertMessage: null,
+        alertType: null
+    },
+
+    computed: {
+        divisions() {
+            return store.state.divisions.collection
         }
-    })
-    .catch(function (error) {
-        console.log(error);
-    });
+    },
 
-function SetControllerStatus(controller_id) {
-    console.log(controller_id);
-}
+    created() {
+        window.addEventListener('resize', this.handleResize)
+        this.handleResize()
+    },
+
+    destroyed() {
+        window.removeEventListener('resize', this.handleResize)
+    },
+
+    methods: {
+        alert(message, type = 'info') {
+            type = 'alert-' + type
+
+            this.alertMessage = message
+            this.alertType = type
+
+            setTimeout(this.closeAlert, 5000)
+        },
+
+        closeAlert() {
+            this.alertMessage = null
+        },
+
+        handleResize() {
+            store.dispatch('bp/handleResize', window.innerWidth)
+        }
+    }
+});

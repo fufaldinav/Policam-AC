@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Nunito);@charset "UTF-8";
+@import url(https://fonts.googleapis.com/css?family=Nunito);@import url(https://fonts.googleapis.com/css?family=Open+Sans);@charset "UTF-8";
 
 /*!
  * Bootstrap v4.3.1 (https://getbootstrap.com/)
@@ -34,7 +34,7 @@
   --breakpoint-md: 768px;
   --breakpoint-lg: 992px;
   --breakpoint-xl: 1200px;
-  --font-family-sans-serif: "Nunito", sans-serif;
+  --font-family-sans-serif: "Nunito", "Open Sans", sans-serif;
   --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
@@ -66,7 +66,7 @@ section {
 
 body {
   margin: 0;
-  font-family: "Nunito", sans-serif;
+  font-family: "Nunito", "Open Sans", sans-serif;
   font-size: 0.9rem;
   font-weight: 400;
   line-height: 1.6;
@@ -6141,7 +6141,7 @@ a.close.disabled {
   z-index: 1070;
   display: block;
   margin: 0;
-  font-family: "Nunito", sans-serif;
+  font-family: "Nunito", "Open Sans", sans-serif;
   font-style: normal;
   font-weight: 400;
   line-height: 1.6;
@@ -6266,7 +6266,7 @@ a.close.disabled {
   z-index: 1060;
   display: block;
   max-width: 276px;
-  font-family: "Nunito", sans-serif;
+  font-family: "Nunito", "Open Sans", sans-serif;
   font-style: normal;
   font-weight: 400;
   line-height: 1.6;
@@ -10655,8 +10655,65 @@ a.text-dark:focus {
   }
 }
 
-.navbar-laravel {
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(61, 177, 255, 0.63);
+  box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+::-webkit-scrollbar-thumb:window-inactive {
+  background: rgba(61, 177, 255, 0.23);
+}
+
+.navbar-brand img {
+  height: 39px;
+}
+
+.ac-navbar {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 4rem;
+}
+
+.ac-footer {
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+  height: 1.25rem;
+}
+
+.ac-menu {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 4rem;
+  height: calc(100vh - 4rem);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.ac-menu-left {
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+}
+
+.ac-menu-right {
+  box-shadow: -2px 0 4px rgba(0, 0, 0, 0.1);
+}
+
+.ac-alert {
+  position: fixed;
+  bottom: 5px;
+  left: 2%;
+  width: 96%;
+}
+
+@media (min-width: 768px) {
+  .ac-alert {
+    left: 20%;
+    width: 60%;
+  }
 }
 
