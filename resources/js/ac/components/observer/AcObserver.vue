@@ -281,6 +281,11 @@
                 if (this.$store.state.debug) console.log('Контроллер ID: ' + e.controller_id + ' вышел на связь')
             })
         },
+
+        beforeDestroy() {
+            this.$bus.$off('EventReceived')
+            this.$bus.$off('ControllerConnected')
+        }
     }
 </script>
 
