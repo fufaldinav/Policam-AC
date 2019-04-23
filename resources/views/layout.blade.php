@@ -45,7 +45,7 @@
                 <template slot="ac-nav-left-side">
                     <div class="navbar-nav mr-auto">
                         @auth
-                            <a class="nav-item nav-link" href="{{ route('/') }}">{{ __('ac.observation') }}</a>
+                            <a class="nav-item nav-link" href="{{ route('observer') }}">{{ __('ac.observation') }}</a>
                             <a class="nav-item nav-link"
                                href="{{ route('cp.persons') }}">{{ __('ac.personal') }}</a>
 {{--                            <a class="nav-item nav-link" href="{{ route('cp.classes') }}">{{ __('ac.classes') }}</a>--}}

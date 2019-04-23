@@ -90,18 +90,33 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="address">
-                                        {{ $t('ac.address') }}
-                                    </label>
-                                    <input
-                                        id="address"
-                                        v-model="selectedPerson.address"
-                                        type="text"
-                                        class="form-control"
-                                        :placeholder="$t('ac.address')"
-                                        readonly
-                                    >
+                                <div class="form-row">
+                                    <div class="form-group col-4 col-sm-3">
+                                        <label for="division">
+                                            {{ selectedPersonDivisionTypeName }}
+                                        </label>
+                                        <input
+                                            id="division"
+                                            v-model="selectedPersonDivisionName"
+                                            type="text"
+                                            class="form-control"
+                                            :placeholder="$t('ac.division')"
+                                            readonly
+                                        >
+                                    </div>
+                                    <div class="form-group col-8 col-sm-9">
+                                        <label for="address">
+                                            {{ $t('ac.address') }}
+                                        </label>
+                                        <input
+                                            id="address"
+                                            v-model="selectedPerson.address"
+                                            type="text"
+                                            class="form-control"
+                                            :placeholder="$t('ac.address')"
+                                            readonly
+                                        >
+                                    </div>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-6">
@@ -177,6 +192,26 @@
 
             selectedPerson() {
                 return this.$store.state.persons.selected
+            },
+
+            selectedPersonDivision() {
+                if (this.selectedPerson.divisions.length === 0) return null
+                let divisionId = this.selectedPerson.divisions[0]
+                return this.$store.getters['divisions/getById'](divisionId)
+            },
+
+            selectedPersonDivisionName() {
+                if (this.selectedPersonDivision === null) return null
+                return this.selectedPersonDivision.name
+            },
+
+            selectedPersonDivisionTypeName() {
+                if (this.selectedPersonDivision === null) return this.$t('ac.division')
+                if (this.selectedPersonDivision.type === 1) {
+                    return this.$t('ac.class')
+                } else {
+                    return this.$t('ac.division')
+                }
             },
 
             photo() {

@@ -48,7 +48,8 @@ export default {
             "card_lost": "Lost card",
             "card_broke": "Card is broken",
             "must_confirm_action": "You must confirm the action",
-            "accept": "Accept"
+            "accept": "Accept",
+            "division": "Division"
         }
     },
     "ru": {
@@ -104,7 +105,8 @@ export default {
             "card_lost": "Потерял карту",
             "card_broke": "Карта не работает",
             "must_confirm_action": "Необходимо подтвердить действие",
-            "accept": "Подтвердить"
+            "accept": "Подтвердить",
+            "division": "Подразделение"
         }
     }
 }
