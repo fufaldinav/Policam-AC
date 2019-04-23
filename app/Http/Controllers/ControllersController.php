@@ -48,7 +48,7 @@ class ControllersController extends Controller
      */
     public function setDoorParams(Request $request, int $ctrl_id = null, int $open_time = null): string
     {
-        abort_if(! $request->user()->isAdmin(), 403);
+        abort_if(!$request->user()->isAdmin(), 403);
 
         if (is_null($ctrl_id) || is_null($open_time)) {
             return 'Не выбран контроллер или не задано время открытия'; //TODO перевод
@@ -78,7 +78,7 @@ class ControllersController extends Controller
      */
     public function clear(Request $request, int $ctrl_id = null): string
     {
-        abort_if(! $request->user()->isAdmin(), 403);
+        abort_if(!$request->user()->isAdmin(), 403);
 
         if (is_null($ctrl_id)) {
             return 'Не выбран контроллер'; //TODO перевод
@@ -108,7 +108,7 @@ class ControllersController extends Controller
      */
     public function reloadCards(Request $request, int $ctrl_id = null): string
     {
-        abort_if(! $request->user()->isAdmin(), 403);
+        abort_if(!$request->user()->isAdmin(), 403);
 
         if (is_null($ctrl_id)) {
             return 'Не выбран контроллер'; //TODO перевод
@@ -120,10 +120,8 @@ class ControllersController extends Controller
 
         $cards = [];
 
-        foreach ($org->divisions as $div) {
-            foreach ($div->persons as $person) {
-                $cards = array_merge($cards, $person->cards);
-            }
+        foreach ($org->persons as $person) {
+            $cards = array_merge($cards, $person->cards->all());
         }
 
         $tasker = new Tasker();
