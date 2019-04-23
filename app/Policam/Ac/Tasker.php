@@ -83,16 +83,20 @@ class Tasker
     /**
      * Устанавливает параметры открывания и контроля состояния двери
      *
-     * @param int $open_time Время открытия в 0.1 сек
+     * @param int $open
+     * @param int $open_control
+     * @param int $close_control
      *
      * @return void
      */
-    public function setDoorParams(int $open_time): void
+    public function setDoorParams(int $open, int $open_control = 30, int $close_control = 30): void
     {
         $this->message = new OutgoingMessage();
 
         $this->message->setOperation('set_door_params');
-        $this->message->setOpenTime($open_time);
+        $this->message->setOpenTime($open);
+        $this->message->setOpenControl($open_control);
+        $this->message->setOpesetCloseControlnTime($close_control);
     }
 
     /**

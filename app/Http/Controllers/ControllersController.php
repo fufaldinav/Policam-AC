@@ -42,21 +42,23 @@ class ControllersController extends Controller
      *
      * @param Request $request
      * @param int|null $ctrl_id
-     * @param int|null $open_time
+     * @param int|null $open
+     * @param int $open_control
+     * @param int $close_control
      *
      * @return string
      */
-    public function setDoorParams(Request $request, int $ctrl_id = null, int $open_time = null): string
+    public function setDoorParams(Request $request, int $ctrl_id = null, int $open = null, int $open_control = 30, int $close_control = 30): string
     {
         abort_if(!$request->user()->isAdmin(), 403);
 
-        if (is_null($ctrl_id) || is_null($open_time)) {
+        if (is_null($ctrl_id) || is_null($open)) {
             return 'Не выбран контроллер или не задано время открытия'; //TODO перевод
         }
 
         $tasker = new Tasker();
 
-        $tasker->setDoorParams($open_time);
+        $tasker->setDoorParams($open, $open_control, $close_control);
         $tasker->add($ctrl_id);
 
         $count = $tasker->send();
