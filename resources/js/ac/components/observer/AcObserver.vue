@@ -1,7 +1,7 @@
 <template xmlns:v-touch="http://www.w3.org/1999/xhtml">
     <div class="container-fluid">
         <div v-if="loading">
-            loading...
+            <ac-loading></ac-loading>
         </div>
         <div
             v-else
@@ -169,6 +169,7 @@
 </template>
 
 <script>
+    import AcLoading from '../AcLoading'
     import AcObserverMenuLeft from './AcObserverMenuLeft'
     import AcObserverMenuRight from './AcObserverMenuRight'
     import AcButtonCardBroke from '../buttons/AcButtonCardBroke'
@@ -180,7 +181,7 @@
         name: "AcObserver",
 
         components: {
-            AcObserverMenuLeft, AcObserverMenuRight,
+            AcLoading, AcObserverMenuLeft, AcObserverMenuRight,
             AcButtonCardBroke, AcButtonCardForgot, AcButtonCardLost, AcObserverModal
         },
 

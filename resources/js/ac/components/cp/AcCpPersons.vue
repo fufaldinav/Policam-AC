@@ -1,7 +1,7 @@
 <template xmlns:v-touch="http://www.w3.org/1999/xhtml">
     <div class="container-fluid">
         <div v-if="loading">
-            loading...
+            <ac-loading></ac-loading>
         </div>
         <div
             v-else
@@ -32,6 +32,7 @@
 </template>
 
 <script>
+    import AcLoading from '../AcLoading'
     import AcCpPersonsMenuLeft from './AcCpPersonsMenuLeft'
     import AcCpPersonsMenuRight from './AcCpPersonsMenuRight'
     import AcFormPerson from '../forms/AcFormPerson'
@@ -39,7 +40,7 @@
     export default {
         name: "AcCpPersons",
 
-        components: {AcCpPersonsMenuLeft, AcCpPersonsMenuRight, AcFormPerson},
+        components: {AcLoading, AcCpPersonsMenuLeft, AcCpPersonsMenuRight, AcFormPerson},
 
         computed: {
             loading() {
