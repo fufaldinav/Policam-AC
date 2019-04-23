@@ -49,4 +49,5 @@ return [
     'card_broke' => 'Card is broken',
     'must_confirm_action' => 'You must confirm the action',
     'accept' => 'Accept',
+    'division' => 'Division',
 ];

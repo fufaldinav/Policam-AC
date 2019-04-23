@@ -6,7 +6,13 @@ const state = {
 }
 
 const getters = {
-    sorted: (state) => {
+    getById: state => id => {
+        return state.collection.find((value) => {
+            if (value.id === id) return true
+        })
+    },
+
+    sorted: state => {
         function naturalCompare(a, b) {
             let ax = [], bx = []
 

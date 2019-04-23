@@ -14,7 +14,11 @@
 /*
  * Home Page
  */
-Route::get('/', 'ObserverController@index')->name('/');
+Route::redirect('/', 'observer');
+/*
+ *
+ */
+Route::get('observer', 'ObserverController@index')->name('observer');
 /*
  * API
  */
