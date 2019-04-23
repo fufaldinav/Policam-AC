@@ -29,8 +29,8 @@ final class OutgoingMessage implements JsonSerializable
     protected $granted = 0;
     protected $events_success = 0;
     protected $open = 15;
-    protected $open_control = 0;
-    protected $close_control = 0;
+    protected $open_control = 30;
+    protected $close_control = 30;
     protected $cards = [];
     protected $operation_types = [
         'set_active' => ['active', 'online'],
@@ -102,6 +102,16 @@ final class OutgoingMessage implements JsonSerializable
     public function setOpenTime(int $open): void
     {
         $this->open = $open;
+    }
+
+    public function setOpenControl(int $open_control): void
+    {
+        $this->open_control = $open_control;
+    }
+
+    public function setCloseControl(int $close_control): void
+    {
+        $this->close_control = $close_control;
     }
 
     public function addCard(object $card): void
