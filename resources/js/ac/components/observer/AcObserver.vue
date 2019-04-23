@@ -91,7 +91,7 @@
                                     </div>
                                 </div>
                                 <div class="form-row">
-                                    <div class="form-group col-3">
+                                    <div class="form-group col-4 col-sm-3">
                                         <label for="division">
                                             {{ selectedPersonDivisionTypeName }}
                                         </label>
@@ -104,7 +104,7 @@
                                             readonly
                                         >
                                     </div>
-                                    <div class="form-group col-9">
+                                    <div class="form-group col-8 col-sm-9">
                                         <label for="address">
                                             {{ $t('ac.address') }}
                                         </label>
