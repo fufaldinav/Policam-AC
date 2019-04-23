@@ -12,9 +12,13 @@ import loader from './modules/loader'
 import modal from './modules/modal'
 import persons from './modules/persons'
 
-Vue.use(Vuex);
+Vue.use(Vuex)
 
 export default new Vuex.Store({
+    state: {
+        debug: process.env.NODE_ENV
+    },
+
     actions,
     mutations,
 
@@ -27,4 +31,4 @@ export default new Vuex.Store({
         modal,
         persons
     }
-});
+})

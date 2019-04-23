@@ -44,31 +44,33 @@
 
         computed: {
             selectedPerson() {
-                return this.$store.state.persons.selected;
+                return this.$store.state.persons.selected
             },
 
             photo() {
-                let person = this.$store.state.persons.selected;
+                let person = this.$store.state.persons.selected
 
                 if (person.photos.length > 0) {
-                    return person.photos[0];
+                    return person.photos[0]
                 }
 
-                return {id: 0, hash: 0};
+                return {id: 0, hash: 0}
             },
 
             url() {
-                return '/photos/thumbnails/' + this.photo.hash + '.jpg';
+                return '/photos/thumbnails/' + this.photo.hash + '.jpg'
             }
         },
 
         methods: {
             uploadPhoto(files) {
-                let formData = new FormData();
+                let self = this
 
-                if (files.length === 0) return;
+                let formData = new FormData()
 
-                formData.append('file', files[0]);
+                if (files.length === 0) return
+
+                formData.append('file', files[0])
 
                 window.axios({
                     method: 'post',
@@ -76,10 +78,10 @@
                     data: formData,
                     config: {headers: {'Content-Type': 'multipart/form-data'}}
                 }).then(response => {
-                    this.$store.commit('persons/addPhoto', response.data);
+                    this.$store.commit('persons/addPhoto', response.data)
                 }).catch(error => {
-                    console.log(error);
-                    this.$root.alert(error, 'danger');
+                    if (self.$store.state.debug) console.log(error)
+                    self.$root.alert(error, 'danger')
                 })
             },
 
@@ -87,16 +89,16 @@
                 if (this.photo.person_id === null) {
                     window.axios.delete('/api/photos/' + this.photo.id).then(response => {
                         if (response.data > 0) {
-                            this.$store.commit('persons/removePhoto', this.photo);
+                            this.$store.commit('persons/removePhoto', this.photo)
                         } else {
-                            this.$root.alert('Unknown error', 'danger');
+                            this.$root.alert('Unknown error', 'danger')
                         }
                     }).catch(error => {
-                        this.$root.alert(error, 'danger');
-                        console.log(error);
+                        if (this.$store.state.debug) console.log(error)
+                        this.$root.alert(error, 'danger')
                     })
                 } else {
-                    this.$store.commit('persons/removePhoto', this.photo);
+                    this.$store.commit('persons/removePhoto', this.photo)
                 }
             }
         }

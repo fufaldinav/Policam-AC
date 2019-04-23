@@ -171,19 +171,19 @@
             },
 
             selectedPerson() {
-                return this.$store.state.persons.selected;
+                return this.$store.state.persons.selected
             },
 
             photo() {
                 if (this.selectedPerson.photos.length > 0) {
-                    return this.selectedPerson.photos[0];
+                    return this.selectedPerson.photos[0]
                 }
 
-                return {id: 0, hash: 0};
+                return {id: 0, hash: 0}
             },
 
             url() {
-                return '/photos/thumbnails/' + this.photo.hash + '.jpg';
+                return '/photos/thumbnails/' + this.photo.hash + '.jpg'
             },
 
             breakpoint() {
@@ -213,7 +213,7 @@
         },
 
         created() {
-            this.$store.dispatch('loader/loadData');
+            this.$store.dispatch('loader/loadData')
         },
 
         beforeMount() {
@@ -222,7 +222,7 @@
 
         mounted() {
             let self = this
-            axios.get('/controllers/get_list').then(function (response) {
+            axios.get('/controllers/get_list').then(response => {
                 for (let k in response.data) {
                     window.Echo.private(`controller-events.${response.data[k].id}`)
                         .listen('EventReceived', (e) => {
@@ -231,13 +231,13 @@
                             }
                         })
                         .listen('ControllerConnected', (e) => {
-                            console.log(e.controller_id); //TODO delete
-                        });
+                            if (self.$store.state.debug) console.log('Контроллер ID: ' + e.controller_id + 'вышел на связь')
+                        })
                 }
-            }).catch(function (error) {
-                this.$root.alert(error, 'danger');
-                console.log(error);
-            });
+            }).catch(error => {
+                if (self.$store.state.debug) console.log(error)
+                self.$root.alert(error, 'danger')
+            })
         },
     }
 </script>

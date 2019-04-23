@@ -1,4 +1,4 @@
-import {Card} from '../../classes';
+import {Card} from '../../classes'
 
 const state = {
     last: null,

@@ -69,9 +69,10 @@ const actions = {
     },
 
     async saveSelected({state, commit}) {
+        let self = this
         window.axios.post('/api/persons', {
             person: state.selected
-        }).then(function (response) {
+        }).then(response => {
             let person = response.data
             let divisions = []
 
@@ -91,16 +92,17 @@ const actions = {
             commit('clearSelected')
 
             window.Ac.alert(person.f + ' ' + person.i + ' ' + i18n.t('ac.saved') + ' ' + i18n.t('ac.successful'))
-        }).catch(function (error) {
-            console.log(error)
+        }).catch(error => {
+            if (self.$store.state.debug) console.log(error)
             window.Ac.alert(error, 'danger')
         })
     },
 
     async updateSelected({state, commit}) {
+        let self = this
         window.axios.put('/api/persons/' + state.selected.id, {
             person: state.selected
-        }).then(function (response) {
+        }).then(response => {
             let person = response.data
             let divisions = []
 
@@ -120,14 +122,15 @@ const actions = {
             commit('clearSelected')
 
             window.Ac.alert(person.f + ' ' + person.i + ' ' + i18n.t('ac.updated') + ' ' + i18n.t('ac.successful'))
-        }).catch(function (error) {
-            console.log(error)
+        }).catch(error => {
+            if (self.$store.state.debug) console.log(error)
             window.Ac.alert(error, 'danger')
         })
     },
 
     async removeSelected({state, commit}) {
-        axios.delete('/api/persons/' + state.selected.id).then(function (response) {
+        let self = this
+        axios.delete('/api/persons/' + state.selected.id).then(response => {
             let id = response.data
             let person = state.collection[id]
 
@@ -141,8 +144,8 @@ const actions = {
             commit('clearSelected')
 
             window.Ac.alert(fullName + ' ' + i18n.t('ac.deleted') + ' ' + i18n.t('ac.successful'))
-        }).catch(function (error) {
-            console.log(error)
+        }).catch(error => {
+            if (self.$store.state.debug) console.log(error)
             window.Ac.alert(error, 'danger')
         })
     }

@@ -658,12 +658,12 @@ __webpack_require__.r(__webpack_exports__);
             }
           }
         }).listen('ControllerConnected', function (e) {
-          console.log(e.controller_id); //TODO delete
+          if (self.$store.state.debug) console.log('Контроллер ID: ' + e.controller_id + 'вышел на связь');
         });
       }
     }).catch(function (error) {
-      this.$root.alert(error, 'danger');
-      console.log(error);
+      if (self.$store.state.debug) console.log(error);
+      self.$root.alert(error, 'danger');
     });
   }
 });
@@ -1388,6 +1388,7 @@ __webpack_require__.r(__webpack_exports__);
     uploadPhoto: function uploadPhoto(files) {
       var _this = this;
 
+      var self = this;
       var formData = new FormData();
       if (files.length === 0) return;
       formData.append('file', files[0]);
@@ -1403,9 +1404,8 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (response) {
         _this.$store.commit('persons/addPhoto', response.data);
       }).catch(function (error) {
-        console.log(error);
-
-        _this.$root.alert(error, 'danger');
+        if (self.$store.state.debug) console.log(error);
+        self.$root.alert(error, 'danger');
       });
     },
     removeUploadedPhoto: function removeUploadedPhoto() {
@@ -1419,9 +1419,9 @@ __webpack_require__.r(__webpack_exports__);
             _this2.$root.alert('Unknown error', 'danger');
           }
         }).catch(function (error) {
-          _this2.$root.alert(error, 'danger');
+          if (_this2.$store.state.debug) console.log(error);
 
-          console.log(error);
+          _this2.$root.alert(error, 'danger');
         });
       } else {
         this.$store.commit('persons/removePhoto', this.photo);
@@ -1674,12 +1674,12 @@ __webpack_require__.r(__webpack_exports__);
             self.$store.commit('persons/setSelected', new _classes__WEBPACK_IMPORTED_MODULE_0__["Person"](e.person));
           }
         }).listen('ControllerConnected', function (e) {
-          console.log(e.controller_id); //TODO delete
+          if (self.$store.state.debug) console.log('Контроллер ID: ' + e.controller_id + 'вышел на связь');
         });
       }
     }).catch(function (error) {
-      this.$root.alert(error, 'danger');
-      console.log(error);
+      if (self.$store.state.debug) console.log(error);
+      self.$root.alert(error, 'danger');
     });
   }
 });
@@ -11498,6 +11498,9 @@ __webpack_require__.r(__webpack_exports__);
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__["default"]);
 /* harmony default export */ __webpack_exports__["default"] = (new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
+  state: {
+    debug: "development"
+  },
   actions: _actions__WEBPACK_IMPORTED_MODULE_2__["default"],
   mutations: _mutations__WEBPACK_IMPORTED_MODULE_3__["default"],
   modules: {
@@ -11827,12 +11830,13 @@ var actions = {
     var _loadData = _asyncToGenerator(
     /*#__PURE__*/
     _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(_ref) {
-      var commit, dispatch;
+      var commit, dispatch, self;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               commit = _ref.commit, dispatch = _ref.dispatch;
+              self = this;
               window.axios.get('/api/divisions').then(function (response) {
                 var _iteratorNormalCompletion = true;
                 var _didIteratorError = false;
@@ -11889,16 +11893,16 @@ var actions = {
 
                 commit('changeLoadingState', false);
               }).catch(function (error) {
-                console.log(error);
+                if (self.$store.state.debug) console.log(error);
                 setTimeout(dispatch.loadData, 2000); //TODO перезапуск при ошибке
               });
 
-            case 2:
+            case 3:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee);
+      }, _callee, this);
     }));
 
     function loadData(_x) {
@@ -12075,12 +12079,13 @@ var actions = {
     var _saveSelected = _asyncToGenerator(
     /*#__PURE__*/
     _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(_ref2) {
-      var state, commit;
+      var state, commit, self;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               state = _ref2.state, commit = _ref2.commit;
+              self = this;
               window.axios.post('/api/persons', {
                 person: state.selected
               }).then(function (response) {
@@ -12128,16 +12133,16 @@ var actions = {
                 commit('clearSelected');
                 window.Ac.alert(person.f + ' ' + person.i + ' ' + _vue_i18n__WEBPACK_IMPORTED_MODULE_2__["default"].t('ac.saved') + ' ' + _vue_i18n__WEBPACK_IMPORTED_MODULE_2__["default"].t('ac.successful'));
               }).catch(function (error) {
-                console.log(error);
+                if (self.$store.state.debug) console.log(error);
                 window.Ac.alert(error, 'danger');
               });
 
-            case 2:
+            case 3:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee);
+      }, _callee, this);
     }));
 
     function saveSelected(_x) {
@@ -12150,12 +12155,13 @@ var actions = {
     var _updateSelected = _asyncToGenerator(
     /*#__PURE__*/
     _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(_ref3) {
-      var state, commit;
+      var state, commit, self;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
               state = _ref3.state, commit = _ref3.commit;
+              self = this;
               window.axios.put('/api/persons/' + state.selected.id, {
                 person: state.selected
               }).then(function (response) {
@@ -12203,16 +12209,16 @@ var actions = {
                 commit('clearSelected');
                 window.Ac.alert(person.f + ' ' + person.i + ' ' + _vue_i18n__WEBPACK_IMPORTED_MODULE_2__["default"].t('ac.updated') + ' ' + _vue_i18n__WEBPACK_IMPORTED_MODULE_2__["default"].t('ac.successful'));
               }).catch(function (error) {
-                console.log(error);
+                if (self.$store.state.debug) console.log(error);
                 window.Ac.alert(error, 'danger');
               });
 
-            case 2:
+            case 3:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2);
+      }, _callee2, this);
     }));
 
     function updateSelected(_x2) {
@@ -12225,12 +12231,13 @@ var actions = {
     var _removeSelected = _asyncToGenerator(
     /*#__PURE__*/
     _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(_ref4) {
-      var state, commit;
+      var state, commit, self;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
               state = _ref4.state, commit = _ref4.commit;
+              self = this;
               axios.delete('/api/persons/' + state.selected.id).then(function (response) {
                 var id = response.data;
                 var person = state.collection[id];
@@ -12268,16 +12275,16 @@ var actions = {
                 commit('clearSelected');
                 window.Ac.alert(fullName + ' ' + _vue_i18n__WEBPACK_IMPORTED_MODULE_2__["default"].t('ac.deleted') + ' ' + _vue_i18n__WEBPACK_IMPORTED_MODULE_2__["default"].t('ac.successful'));
               }).catch(function (error) {
-                console.log(error);
+                if (self.$store.state.debug) console.log(error);
                 window.Ac.alert(error, 'danger');
               });
 
-            case 2:
+            case 3:
             case "end":
               return _context3.stop();
           }
         }
-      }, _callee3);
+      }, _callee3, this);
     }));
 
     function removeSelected(_x3) {

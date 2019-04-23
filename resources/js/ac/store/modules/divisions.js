@@ -8,7 +8,7 @@ const state = {
 const getters = {
     sorted: (state) => {
         function naturalCompare(a, b) {
-            let ax = [], bx = [];
+            let ax = [], bx = []
 
             a.replace(/(\d+)|(\D+)/g, function (_, $1, $2) {
                 ax.push([$1 || Infinity, $2 || ''])

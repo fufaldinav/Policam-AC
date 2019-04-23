@@ -48,16 +48,16 @@
 
         computed: {
             lastFreeCard() {
-                return this.$store.state.cards.last;
+                return this.$store.state.cards.last
             },
 
             buttonIsDisabled() {
-                return this.lastFreeCard === null;
+                return this.lastFreeCard === null
             },
 
             manualInput: {
                 get() {
-                    return this.$store.state.cards.manualInput;
+                    return this.$store.state.cards.manualInput
                 },
 
                 set(status) {
@@ -72,23 +72,23 @@
 
             cardCode: {
                 get() {
-                    let wiegand = '000000000000';
+                    let wiegand = '000000000000'
                     if (this.lastFreeCard !== null) {
-                        wiegand = this.lastFreeCard.wiegand;
+                        wiegand = this.lastFreeCard.wiegand
                     }
-                    return ('0000000000' + parseInt(wiegand, 16)).slice(-10);
+                    return ('0000000000' + parseInt(wiegand, 16)).slice(-10)
                 },
 
                 set(code) {
-                    code = parseInt(code);
-                    let wiegand = ('000000000000' + code.toString(16).toUpperCase()).slice(-12);
-                    this.$store.commit('cards/setLast', {wiegand: wiegand});
+                    code = parseInt(code)
+                    let wiegand = ('000000000000' + code.toString(16).toUpperCase()).slice(-12)
+                    this.$store.commit('cards/setLast', {wiegand: wiegand})
                 }
             },
         },
 
         mounted() {
-            $('.ac-input-card-code').tooltip({title: this.$t('ac.click_again_to_edit')});
+            $('.ac-input-card-code').tooltip({title: this.$t('ac.click_again_to_edit')})
         },
 
         methods: {
@@ -112,9 +112,9 @@
             leaveForm() {
                 this.manualInput = false
                 if (this.cardCode === '0000000000') {
-                    this.$store.commit('cards/clearLast');
+                    this.$store.commit('cards/clearLast')
                 }
-                $('.ac-input-card-code').tooltip('hide');
+                $('.ac-input-card-code').tooltip('hide')
             }
         }
     }

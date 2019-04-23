@@ -73,29 +73,29 @@
         },
 
         created() {
-            this.$store.dispatch('loader/loadData');
+            this.$store.dispatch('loader/loadData')
         },
 
         mounted() {
             let self = this
-            axios.get('/controllers/get_list').then(function (response) {
+            axios.get('/controllers/get_list').then(response => {
                 for (let k in response.data) {
                     window.Echo.private(`controller-events.${response.data[k].id}`)
                         .listen('EventReceived', (e) => {
                             if (e.event === 2 || e.event === 3) {
                                 if (self.$store.state.cards.manualInput === false ){
-                                    self.$store.commit('cards/setLast', e.card);
+                                    self.$store.commit('cards/setLast', e.card)
                                 }
                             }
                         })
                         .listen('ControllerConnected', (e) => {
-                            console.log(e.controller_id); //TODO delete
-                        });
+                            if (self.$store.state.debug) console.log('Контроллер ID: ' + e.controller_id + 'вышел на связь')
+                        })
                 }
-            }).catch(function (error) {
-                this.$root.alert(error, 'danger');
-                console.log(error);
-            });
+            }).catch(error => {
+                if (self.$store.state.debug) console.log(error)
+                self.$root.alert(error, 'danger')
+            })
         },
     }
 </script>
