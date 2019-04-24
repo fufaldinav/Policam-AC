@@ -89,16 +89,6 @@ class User extends Model implements
         'email_verified_at' => 'datetime',
     ];
 
-    public function hasRole($role)
-    {
-        return $this->belongsToMany('App\Role')->get()->contains($role);
-    }
-
-    public function isAdmin()
-    {
-        return $this->hasRole(1);
-    }
-
     public function cards()
     {
         return $this->hasManyDeep('App\Card', ['organization_user', 'App\Organization', 'App\Division', 'division_person', 'App\Person']);
@@ -142,6 +132,29 @@ class User extends Model implements
     public function tokens()
     {
         return $this->hasMany('App\Token');
+    }
+
+    /**
+     * Проверка роли пользователя
+     *
+     * @param $role
+     *
+     * @return bool
+     */
+    public function hasRole($role)
+    {
+        return $this->belongsToMany('App\Role')->where(['roles.id' => $role])->get()->count() > 0;
+    }
+
+
+    /**
+     * Проверка является ли пользователь админом
+     *
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return $this->hasRole(1);
     }
 
     /**
