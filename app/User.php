@@ -48,6 +48,7 @@ use Staudenmeir\EloquentHasManyDeep\HasRelationships;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereUpdatedAt($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\ReferralCode[] $referralCodes
  */
 class User extends Model implements
     AuthenticatableContract,
@@ -65,7 +66,7 @@ class User extends Model implements
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'last_name', 'email', 'password',
     ];
 
     /**
@@ -122,6 +123,11 @@ class User extends Model implements
     public function subscriptions()
     {
         return $this->belongsToMany('App\Person');
+    }
+
+    public function referralCodes()
+    {
+        return $this->hasMany('App\ReferralCode');
     }
 
     public function roles()

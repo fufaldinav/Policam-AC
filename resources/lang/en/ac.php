@@ -16,14 +16,14 @@ return [
     'address' => 'Address',
     'phone' => 'Phone number',
     'uid' => 'UID',
-    'cards' => 'Card|Cards',
+    'cards' => 'Card|Cards', //оставить
     'last_card' => 'Last card',
     'save' => 'Save',
     'clear' => 'Clear',
     'delete' => 'Delete',
     'number' => 'Number',
     'letter' => 'Letter',
-    'year_short' => '',
+    'year_short' => '', //оставить
     'developed' => 'Developed by',
     'missing' => 'Missing',
     'not_selected' => 'Not selected',
@@ -50,4 +50,5 @@ return [
     'must_confirm_action' => 'You must confirm the action',
     'accept' => 'Accept',
     'division' => 'Division',
+    'cp' => 'Control panel',
 ];

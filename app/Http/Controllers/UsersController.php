@@ -36,15 +36,11 @@ class UsersController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index()
+    public function index(Request $request)
     {
-        $org_name = __('ac.missing');
-        $css_list = ['ac'];
-        $js_list = ['push'];
+        $roles = $request->user()->roles;
 
-        return view('ac/cp', compact(
-            'org_name', 'css_list', 'js_list'
-        ));
+        return view('ac/cp', compact('roles'));
     }
 
     /**

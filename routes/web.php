@@ -2,7 +2,7 @@
 /*
  * Home Page
  */
-Route::redirect('/', 'observer');
+Route::redirect('/', 'cp');
 /*
  * Observer
  */
@@ -25,6 +25,7 @@ Route::group(['prefix' => 'api', 'as' => 'api.'], function () {
  * Auth
  */
 Auth::routes(['verify' => true]);
+Route::get('register/{referral_code}', 'Auth\RegisterController@showRegistrationForm');
 /*
  * Cards
  */
@@ -48,8 +49,8 @@ Route::group(['prefix' => 'controllers', 'as' => 'controllers.'], function () {
  */
 Route::group(['prefix' => 'cp', 'as' => 'cp.'], function () {
     Route::get('/', 'UsersController@index')->name('index');
-    Route::get('/classes/{organization_id?}', 'DivisionsController@classes')->name('classes')->middleware('role:3');
-    Route::get('/persons/{organization_id?}', 'PersonsController@page')->name('persons')->middleware('role:3');
+    Route::get('classes', 'DivisionsController@classes')->name('classes')->middleware('role:3');
+    Route::get('persons', 'PersonsController@page')->name('persons')->middleware('role:3');
 
 });
 /*

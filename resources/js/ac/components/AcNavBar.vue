@@ -4,7 +4,7 @@
             <slot name="ac-logo"></slot>
             <slot name="ac-organizations"></slot>
             <slot name="ac-menu-button"></slot>
-            <div class="collapse navbar-collapse bg-white" id="navbarSupportedContent">
+            <div class="collapse navbar-collapse px-2 bg-white" id="navbarSupportedContent">
                 <!-- Left Side Of Navbar -->
                 <slot name="ac-nav-left-side"></slot>
                 <!-- Right Side Of Navbar -->
