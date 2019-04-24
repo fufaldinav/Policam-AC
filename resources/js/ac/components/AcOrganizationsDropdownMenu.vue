@@ -51,6 +51,7 @@
             },
 
             changeOrganization(org) {
+                this.$store.commit('persons/clearSelected')
                 this.$store.commit('divisions/clearSelected')
                 this.$store.dispatch('messenger/unsubscribe')
                 this.$store.commit('organizations/setSelected', org)
