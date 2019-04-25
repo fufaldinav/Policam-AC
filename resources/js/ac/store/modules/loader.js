@@ -46,6 +46,22 @@ const actions = {
             if (rootState.debug) console.log(error)
             setTimeout(dispatch.loadDivisions, 2000) //TODO перезапуск при ошибке
         })
+    },
+
+    async loadPersons({commit, dispatch, rootState}, userId) {
+        commit('changeLoadingState', true)
+        window.axios.get('/users/persons').then(response => {
+            for (let person of response.data) {
+                for (let division of person.divisions) {
+                    person.divisions = [division.id]
+                    dispatch('persons/add', person, {root: true})
+                }
+            }
+            commit('changeLoadingState', false)
+        }).catch(error => {
+            if (rootState.debug) console.log(error)
+            setTimeout(dispatch.loadDivisions, 2000) //TODO перезапуск при ошибке
+        })
     }
 }
 

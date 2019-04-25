@@ -30,9 +30,7 @@
                 } else {
                     this.$store.commit('modal/setTitle', this.$t('Сохранение'))
 
-                    this.$store.commit('modal/setMessage', this.$t('Вы действительно хотите :action?', {
-                        action: this.$t('Сохранить').toLowerCase() + ' ' + this.selectedPerson.f + ' ' + this.selectedPerson.i
-                    }))
+                    this.$store.commit('modal/setMessage', this.$t('Вы действительно хотите сохранить ' + this.selectedPerson.f + ' ' + this.selectedPerson.i + '?'))
 
                     this.$store.commit('modal/setAcceptButton', 'updatePerson')
 

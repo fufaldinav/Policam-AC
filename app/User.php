@@ -22,6 +22,7 @@ use Staudenmeir\EloquentHasManyDeep\HasRelationships;
  * @mixin \Eloquent
  * @property int $id
  * @property string $name
+ * @property string $last_name
  * @property string $email
  * @property \Illuminate\Support\Carbon|null $email_verified_at
  * @property string $password
@@ -45,6 +46,7 @@ use Staudenmeir\EloquentHasManyDeep\HasRelationships;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereEmailVerifiedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereLastName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereUpdatedAt($value)
@@ -151,9 +153,9 @@ class User extends Model implements
     {
         $roles = $this->belongsToMany('App\Role');
         if (is_array($role)) {
-            $roles = $roles->whereIn('roles.id', $role)->get();
+            $roles = $roles->whereIn('roles.type', $role)->get();
         } else {
-            $roles = $roles->where(['roles.id' => $role])->get();
+            $roles = $roles->where(['roles.type' => $role])->get();
         }
         return $roles->count() > 0;
     }

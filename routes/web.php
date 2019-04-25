@@ -49,8 +49,9 @@ Route::group(['prefix' => 'controllers', 'as' => 'controllers.'], function () {
  */
 Route::group(['prefix' => 'cp', 'as' => 'cp.'], function () {
     Route::get('/', 'UsersController@index')->name('index');
-    Route::get('classes', 'DivisionsController@classes')->name('classes')->middleware('role:3');
-    Route::get('persons', 'PersonsController@page')->name('persons')->middleware('role:3');
+    Route::get('classes', 'DivisionsController@classes')->name('classes')->middleware('role:2,3');
+    Route::get('persons', 'PersonsController@page')->name('persons')->middleware('role:2,3');
+    Route::get('students', 'UsersController@students')->name('students');
 
 });
 /*
@@ -67,6 +68,7 @@ Route::post('server', 'ServersController@index');
 Route::group(['prefix' => 'users', 'as' => 'users.'], function () {
     Route::post('token', 'UsersController@token');
     Route::get('organizations', 'UsersController@getOrganizations');
+    Route::get('persons', 'UsersController@getPersons');
 });
 Route::get('users/notification/{hash}', 'UsersController@notification');
 /*

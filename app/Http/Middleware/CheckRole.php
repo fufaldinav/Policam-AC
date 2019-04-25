@@ -15,7 +15,7 @@ class CheckRole
      *
      * @return mixed
      */
-    public function handle($request, Closure $next, $role)
+    public function handle($request, Closure $next, ...$role)
     {
         if (! $request->user()->hasRole($role) && ! $request->user()->isAdmin()) {
             abort(403);

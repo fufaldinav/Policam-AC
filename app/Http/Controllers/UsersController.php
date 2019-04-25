@@ -36,11 +36,23 @@ class UsersController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index(Request $request)
+    public function index()
     {
-        $roles = $request->user()->roles;
+        return view('ac/cp');
+    }
 
-        return view('ac/cp', compact('roles'));
+    /**
+     * Панель управления
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function students(Request $request)
+    {
+        abort_if(! $request->user()->hasRole([1, 3, 4]), 403);
+
+        return view('ac/students');
     }
 
     /**
@@ -102,5 +114,17 @@ class UsersController extends Controller
     public function getOrganizations(Request $request)
     {
         return $request->user()->organizations->load('controllers');
+    }
+
+    /**
+     * Возвращает людей, привязанных к пользователю
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    public function getPersons(Request $request)
+    {
+        return $request->user()->subscriptions->load(['cards', 'divisions', 'photos']);
     }
 }

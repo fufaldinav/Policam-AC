@@ -52,15 +52,19 @@
                 <template slot="ac-nav-left-side">
                     <div class="navbar-nav mr-auto">
                         @auth
-                            @if(Auth::user()->hasRole(6) || Auth::user()->isAdmin())
+                            @if(Auth::user()->hasRole([1, 2, 3, 6]))
                                 <a class="nav-item nav-link"
                                    href="{{ route('observer') }}">{{ __('Наблюдение') }}</a>
                             @endif
-                            @if(Auth::user()->hasRole(3) || Auth::user()->isAdmin())
+                            @if(Auth::user()->hasRole([1, 2, 3]))
                                 <a class="nav-item nav-link"
                                    href="{{ route('cp.persons') }}">{{ __('Персонал') }}</a>
                                 <a class="nav-item nav-link" href="{{ route('cp.classes') }}">{{ __('Классы') }}</a>
                             @endif
+                                @if(Auth::user()->hasRole([1, 4, 5]))
+                                    <a class="nav-item nav-link"
+                                       href="{{ route('cp.students') }}">{{ __('Ученики') }}</a>
+                                @endif
                         @endauth
                     </div>
                 </template>

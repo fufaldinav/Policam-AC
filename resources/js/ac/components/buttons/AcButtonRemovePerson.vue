@@ -27,9 +27,7 @@
                 } else {
                     this.$store.commit('modal/setTitle', this.$t('Удаление'))
 
-                    this.$store.commit('modal/setMessage', this.$t('Вы действительно хотите :action?', {
-                        action: this.$t('Удалить').toLowerCase() + ' ' + this.selectedPerson.f + ' ' + this.selectedPerson.i
-                    }))
+                    this.$store.commit('modal/setMessage', this.$t('Вы действительно хотите удалить ' + this.selectedPerson.f + ' ' + this.selectedPerson.i + '?'))
 
                     this.$store.commit('modal/setAcceptButton', 'removePerson')
 
