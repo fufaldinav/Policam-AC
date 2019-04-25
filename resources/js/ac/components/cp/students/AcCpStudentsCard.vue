@@ -1,12 +1,15 @@
 <template>
-    <div
-        class="col-12 col-md-6 d-flex justify-content-center"
-        @click="openPerson"
-    >
-        <div class="card mb-3 ac-cp-student-card">
+    <div class="col-12 col-md-6 d-flex justify-content-center">
+        <div
+            class="card shadow-sm mb-3 ac-cp-student-card"
+            :class="cardClass"
+            @click="openPerson"
+            @mouseenter="highlighted = true"
+            @mouseleave="highlighted = false"
+        >
             <div class="row no-gutters">
                 <div class="col-4">
-                    <img :src="photoUrl" class="card-img" alt="">
+                    <img :src="photoUrl" class="card-img shadow-sm m-1" alt="">
                 </div>
                 <div class="col-8">
                     <div class="card-body">
@@ -15,8 +18,8 @@
                             <small>{{ person.o }}</small>
                         </p>
                         <p class="card-text">{{ $t('Дата рождения')}}: {{ person.birthday }}</p>
-                        <p class="card-text">{{ $t('Адрес')}}: {{ person.address }}</p>
-                        <p class="card-text">{{ $t('Номер телефона')}}: {{ person.phone }}</p>
+                        <p v-if="person.address" class="card-text">{{ $t('Адрес')}}: {{ person.address }}</p>
+                        <p v-if="person.phone" class="card-text">{{ $t('Номер телефона')}}: {{ person.phone }}</p>
                     </div>
                 </div>
             </div>
@@ -35,15 +38,26 @@
             }
         },
 
+        data() {
+            return {
+                highlighted: false
+            }
+        },
+
         computed: {
+            cardClass() {
+                return {
+                    'text-white bg-info': this.highlighted
+                }
+            },
+
             photo() {
                 if (this.person.photos.length === 0) return null
                 return this.person.photos[0]
             },
 
             photoUrl() {
-                console.log(window.location.hostname)
-                return '/photos/thumbnails/' + (this.photo !== null ? this.photo : '0') + '.jpg'
+                return '/photos/thumbnails/' + (this.photo !== null ? this.photo.hash : '0') + '.jpg'
             }
         },
 
