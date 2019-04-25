@@ -32,10 +32,10 @@
 </template>
 
 <script>
-    import AcLoading from '../AcLoading'
+    import AcLoading from '../../AcLoading'
     import AcCpPersonsMenuLeft from './AcCpPersonsMenuLeft'
     import AcCpPersonsMenuRight from './AcCpPersonsMenuRight'
-    import AcFormPerson from '../forms/AcFormPerson'
+    import AcFormPerson from '../../forms/AcFormPerson'
 
     export default {
         name: "AcCpPersons",

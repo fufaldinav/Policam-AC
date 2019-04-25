@@ -28,5 +28,4 @@ mix.js('resources/js/app.js', 'public/js')
         'resources/css/tables.css',
     ], 'public/css/style.css')
     .version()
-    .browserSync('localhost')
     .disableNotifications();

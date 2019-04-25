@@ -34,7 +34,8 @@ import store from './ac/store'
 import AcLayout from './ac/components/AcLayout'
 import AcNavBar from './ac/components/AcNavBar'
 import AcObserver from './ac/components/observer/AcObserver'
-import AcCpPersons from './ac/components/cp/AcCpPersons'
+import AcCpFunctionCard from './ac/components/cp/AcCpFunctionCard'
+import AcCpPersons from './ac/components/cp/persons/AcCpPersons'
 import AcOrganizationsDropdownMenu from './ac/components/AcOrganizationsDropdownMenu'
 import AcAlert from './ac/components/AcAlert'
 
@@ -53,7 +54,7 @@ window.Ac = new Vue({
     store,
     i18n,
 
-    components: {AcLayout, AcNavBar, AcObserver, AcCpPersons, AcOrganizationsDropdownMenu, AcAlert},
+    components: {AcLayout, AcNavBar, AcObserver, AcCpFunctionCard, AcCpPersons, AcOrganizationsDropdownMenu, AcAlert},
 
     data: {
         bus: new Vue({}),

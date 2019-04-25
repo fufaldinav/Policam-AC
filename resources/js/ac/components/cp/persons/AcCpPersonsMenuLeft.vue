@@ -42,10 +42,10 @@
 
 <script>
     import {mapState} from 'vuex'
-    import AcButtonAdd from '../buttons/AcButtonAdd'
-    import AcButtonBack from '../buttons/AcButtonBack'
-    import AcButtonPerson from '../buttons/AcButtonPerson'
-    import AcButtonDivision from '../buttons/AcButtonDivision'
+    import AcButtonAdd from '../../buttons/AcButtonAdd'
+    import AcButtonBack from '../../buttons/AcButtonBack'
+    import AcButtonPerson from '../../buttons/AcButtonPerson'
+    import AcButtonDivision from '../../buttons/AcButtonDivision'
 
     export default {
         name: "AcCpPersonsMenuLeft",

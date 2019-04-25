@@ -149,7 +149,13 @@ class User extends Model implements
      */
     public function hasRole($role)
     {
-        return $this->belongsToMany('App\Role')->where(['roles.id' => $role])->get()->count() > 0;
+        $roles = $this->belongsToMany('App\Role');
+        if (is_array($role)) {
+            $roles = $roles->whereIn('roles.id', $role)->get();
+        } else {
+            $roles = $roles->where(['roles.id' => $role])->get();
+        }
+        return $roles->count() > 0;
     }
 
 
@@ -166,7 +172,7 @@ class User extends Model implements
     /**
      * Send the password reset notification.
      *
-     * @param  string  $token
+     * @param string $token
      * @return void
      */
     public function sendPasswordResetNotification($token)
