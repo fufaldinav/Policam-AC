@@ -101,7 +101,7 @@ const actions = {
 
             commit('clearSelected')
 
-            window.Ac.alert(person.f + ' ' + person.i + ' ' + i18n.t('ac.saved') + ' ' + i18n.t('ac.successful'))
+            window.Ac.alert(person.f + ' ' + person.i + ' ' + i18n.t('сохранен') + ' ' + i18n.t('успешно'))
         }).catch(error => {
             if (rootState.debug) console.log(error)
             window.Ac.alert(error, 'danger')
@@ -130,7 +130,7 @@ const actions = {
 
             commit('clearSelected')
 
-            window.Ac.alert(person.f + ' ' + person.i + ' ' + i18n.t('ac.updated') + ' ' + i18n.t('ac.successful'))
+            window.Ac.alert(person.f + ' ' + person.i + ' ' + i18n.t('сохранен') + ' ' + i18n.t('успешно'))
         }).catch(error => {
             if (rootState.debug) console.log(error)
             window.Ac.alert(error, 'danger')
@@ -151,7 +151,7 @@ const actions = {
             commit('remove', person)
             commit('clearSelected')
 
-            window.Ac.alert(fullName + ' ' + i18n.t('ac.deleted') + ' ' + i18n.t('ac.successful'))
+            window.Ac.alert(fullName + ' ' + i18n.t('удален') + ' ' + i18n.t('успешно'))
         }).catch(error => {
             if (rootState.debug) console.log(error)
             window.Ac.alert(error, 'danger')

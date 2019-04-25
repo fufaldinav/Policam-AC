@@ -45,7 +45,7 @@
         methods: {
             organizationName(org) {
                 if (org.type === 1) {
-                    return `${this.$t('ac.school')} ${org.name}`
+                    return `${this.$t('Школа')} ${org.name}`
                 }
                 return org.name
             },

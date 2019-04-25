@@ -38,53 +38,52 @@
                                     <div class="form-group col-6">
                                         <div class="form-group">
                                             <label for="f">
-                                                {{ $t('ac.f') }}
+                                                {{ $t('Фамилия').toUpperCase() }}
                                             </label>
                                             <input
                                                 id="f"
                                                 v-model="selectedPerson.f"
                                                 type="text"
                                                 class="form-control"
-                                                :placeholder="$t('ac.f')"
+                                                :placeholder="$t('Фамилия')"
                                                 readonly
                                             >
                                         </div>
                                         <div class="form-group">
                                             <label for="i">
-                                                {{ $t('ac.i') }}
+                                                {{ $t('Имя') }}
                                             </label>
                                             <input
                                                 id="i"
                                                 v-model="selectedPerson.i"
                                                 type="text"
                                                 class="form-control"
-                                                :placeholder="$t('ac.i')"
+                                                :placeholder="$t('Имя')"
                                                 readonly
                                             >
                                         </div>
                                         <div class="form-group">
                                             <label for="o">
-                                                {{ $t('ac.o') }}
+                                                {{ $t('Отчество') }}
                                             </label>
                                             <input
                                                 id="o"
                                                 v-model="selectedPerson.o"
                                                 type="text"
                                                 class="form-control"
-                                                :placeholder="$t('ac.o')"
+                                                :placeholder="$t('Отчество')"
                                                 readonly
                                             >
                                         </div>
                                         <div class="form-group">
                                             <label for="birthday">
-                                                {{ $t('ac.birthday') }}
+                                                {{ $t('Дата рождения') }}
                                             </label>
                                             <input
                                                 id="birthday"
                                                 v-model="selectedPerson.birthday"
                                                 type="date"
                                                 class="form-control"
-                                                :placeholder="$t('ac.birthday')"
                                                 readonly
                                             >
                                         </div>
@@ -100,20 +99,20 @@
                                             v-model="selectedPersonDivisionName"
                                             type="text"
                                             class="form-control"
-                                            :placeholder="$t('ac.division')"
+                                            :placeholder="$t('Подразделение')"
                                             readonly
                                         >
                                     </div>
                                     <div class="form-group col-8 col-sm-9">
                                         <label for="address">
-                                            {{ $t('ac.address') }}
+                                            {{ $t('Адрес') }}
                                         </label>
                                         <input
                                             id="address"
                                             v-model="selectedPerson.address"
                                             type="text"
                                             class="form-control"
-                                            :placeholder="$t('ac.address')"
+                                            :placeholder="$t('Адрес')"
                                             readonly
                                         >
                                     </div>
@@ -121,27 +120,27 @@
                                 <div class="form-row">
                                     <div class="form-group col-6">
                                         <label for="phone">
-                                            {{ $t('ac.phone') }}
+                                            {{ $t('Номер телефона') }}
                                         </label>
                                         <input
                                             id="phone"
                                             v-model="selectedPerson.phone"
                                             type="text"
                                             class="form-control"
-                                            :placeholder="$t('ac.phone')"
+                                            :placeholder="$t('Номер телефона')"
                                             readonly
                                         >
                                     </div>
                                     <div class="form-group col-6">
                                         <label for="uid">
-                                            {{ $t('ac.uid') }}
+                                            {{ $t('Уникальный номер') }}
                                         </label>
                                         <input
                                             id="uid"
                                             v-model="selectedPerson.id"
                                             type="text"
                                             class="form-control"
-                                            :placeholder="$t('ac.uid')"
+                                            :placeholder="$t('Уникальный номер')"
                                             readonly
                                         >
                                     </div>
@@ -210,11 +209,11 @@
             },
 
             selectedPersonDivisionTypeName() {
-                if (this.selectedPersonDivision === null) return this.$t('ac.division')
+                if (this.selectedPersonDivision === null) return this.$t('Подразделение')
                 if (this.selectedPersonDivision.type === 1) {
-                    return this.$t('ac.class')
+                    return this.$t('Класс')
                 } else {
-                    return this.$t('ac.division')
+                    return this.$t('Подразделение')
                 }
             },
 

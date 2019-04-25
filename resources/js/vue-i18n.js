@@ -8,5 +8,6 @@ const lang = document.documentElement.lang.substr(0, 2);
 
 export default new VueInternationalization({
     locale: lang,
-    messages: Locale
+    messages: Locale,
+    silentTranslationWarn: process.env.NODE_ENV === 'production'
 });

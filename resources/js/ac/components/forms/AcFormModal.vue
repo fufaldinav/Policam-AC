@@ -39,7 +39,7 @@
                         class="btn btn-secondary"
                         data-dismiss="modal"
                     >
-                        {{ $t('ac.cancel') }}
+                        {{ $t('Отмена') }}
                     </button>
                     <ac-button-save-person v-if="this.$store.state.modal.acceptButton === 'savePerson'">
                     </ac-button-save-person>

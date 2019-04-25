@@ -41,20 +41,16 @@ class ControllersController extends Controller
      * Устанавливает параметры открытия двери
      *
      * @param Request $request
-     * @param int|null $ctrl_id
-     * @param int|null $open
+     * @param int $ctrl_id
+     * @param int $open
      * @param int $open_control
      * @param int $close_control
      *
      * @return string
      */
-    public function setDoorParams(Request $request, int $ctrl_id = null, int $open = null, int $open_control = 30, int $close_control = 30): string
+    public function setDoorParams(Request $request, int $ctrl_id, int $open, int $open_control = 30, int $close_control = 30): string
     {
         abort_if(!$request->user()->isAdmin(), 403);
-
-        if (is_null($ctrl_id) || is_null($open)) {
-            return 'Не выбран контроллер или не задано время открытия'; //TODO перевод
-        }
 
         $tasker = new Tasker();
 
@@ -64,9 +60,9 @@ class ControllersController extends Controller
         $count = $tasker->send();
 
         if ($count > 0) {
-            return "Заданий успешно отправлено: $count"; //TODO перевод
+            return __('Заданий успешно отправлено: :count', ['count' => $count]);
         } else {
-            return "Нет отправленных заданий"; //TODO перевод
+            return __('Нет отправленных заданий');
         }
     }
 
@@ -74,17 +70,13 @@ class ControllersController extends Controller
      * Очищает память контроллера
      *
      * @param Request $request
-     * @param int|null $ctrl_id
+     * @param int $ctrl_id
      *
      * @return string
      */
-    public function clear(Request $request, int $ctrl_id = null): string
+    public function clear(Request $request, int $ctrl_id): string
     {
         abort_if(!$request->user()->isAdmin(), 403);
-
-        if (is_null($ctrl_id)) {
-            return 'Не выбран контроллер'; //TODO перевод
-        }
 
         $tasker = new Tasker();
 
@@ -94,9 +86,9 @@ class ControllersController extends Controller
         $count = $tasker->send();
 
         if ($count > 0) {
-            return "Заданий успешно отправлено: $count"; //TODO перевод
+            return __('Заданий успешно отправлено: :count', ['count' => $count]);
         } else {
-            return "Нет отправленных заданий"; //TODO перевод
+            return __('Нет отправленных заданий');
         }
     }
 
@@ -104,17 +96,13 @@ class ControllersController extends Controller
      * Загружает в контроллер все карты
      *
      * @param Request $request
-     * @param int|null $ctrl_id
+     * @param int $ctrl_id
      *
      * @return string
      */
-    public function reloadCards(Request $request, int $ctrl_id = null): string
+    public function reloadCards(Request $request, int $ctrl_id): string
     {
         abort_if(!$request->user()->isAdmin(), 403);
-
-        if (is_null($ctrl_id)) {
-            return 'Не выбран контроллер'; //TODO перевод
-        }
 
         $ctrl = App\Controller::find($ctrl_id);
 
@@ -149,6 +137,8 @@ class ControllersController extends Controller
             }
         }
 
-        return "Отправлено заданий: {$tasker->send()}"; //TODO перевод
+        $count = $tasker->send();
+
+        return __('Заданий успешно отправлено: :count', ['count' => $count]);
     }
 }

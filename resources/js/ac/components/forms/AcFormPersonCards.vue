@@ -4,7 +4,7 @@
         class="dropdown"
     >
         <label for="cardsMenu">
-            {{ $tc('ac.cards', selectedPersonCards.length) }}
+            Карты
         </label>
         <div
             v-for="card in selectedPersonCards"

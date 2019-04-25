@@ -4,7 +4,7 @@
         class="btn btn-primary mb-1"
         @click="sendToServer"
     >
-        <slot>{{ $t('ac.card_forgot') }}</slot>
+        <slot>{{ $t('Забыл карту') }}</slot>
     </button>
 </template>
 
@@ -33,9 +33,9 @@
                         this.$root.alert(error, 'danger')
                     })
                 } else {
-                    this.$store.commit('modal/setTitle', this.$t('ac.card_forgot'))
+                    this.$store.commit('modal/setTitle', this.$t('Забыл карту'))
 
-                    this.$store.commit('modal/setMessage', this.$t('ac.must_confirm_action'))
+                    this.$store.commit('modal/setMessage', this.$t('Необходимо подтвердить действие'))
 
                     this.$store.commit('modal/setAcceptButton', 'cardForgot')
 

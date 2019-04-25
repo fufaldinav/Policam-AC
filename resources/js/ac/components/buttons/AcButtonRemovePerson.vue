@@ -4,7 +4,7 @@
         class="btn btn-danger"
         @click="removePerson"
     >
-        {{ $t('ac.delete') }}
+        {{ $t('Удалить') }}
     </button>
 </template>
 
@@ -25,10 +25,10 @@
                     this.$store.dispatch('modal/close')
                     this.$store.commit('cp/showLeftMenu')
                 } else {
-                    this.$store.commit('modal/setTitle', this.$t('ac.deleting'))
+                    this.$store.commit('modal/setTitle', this.$t('Удаление'))
 
-                    this.$store.commit('modal/setMessage', this.$t('ac.do_you_really_want_to', {
-                        action: this.$t('ac.delete').toLowerCase() + ' ' + this.selectedPerson.f + ' ' + this.selectedPerson.i
+                    this.$store.commit('modal/setMessage', this.$t('Вы действительно хотите :action?', {
+                        action: this.$t('Удалить').toLowerCase() + ' ' + this.selectedPerson.f + ' ' + this.selectedPerson.i
                     }))
 
                     this.$store.commit('modal/setAcceptButton', 'removePerson')

@@ -39,11 +39,11 @@
                         class="btn btn-secondary"
                         data-dismiss="modal"
                     >
-                        {{ $t('ac.cancel') }}
+                        {{ $t('Отмена') }}
                     </button>
-                    <ac-button-card-forgot v-if="this.$store.state.modal.acceptButton === 'cardForgot'">{{ $t('ac.accept') }}</ac-button-card-forgot>
-                    <ac-button-card-lost v-if="this.$store.state.modal.acceptButton === 'cardLost'">{{ $t('ac.accept') }}</ac-button-card-lost>
-                    <ac-button-card-broke v-if="this.$store.state.modal.acceptButton === 'cardBroke'">{{ $t('ac.accept') }}</ac-button-card-broke>
+                    <ac-button-card-forgot v-if="this.$store.state.modal.acceptButton === 'cardForgot'">{{ $t('Подтвердить') }}</ac-button-card-forgot>
+                    <ac-button-card-lost v-if="this.$store.state.modal.acceptButton === 'cardLost'">{{ $t('Подтвердить') }}</ac-button-card-lost>
+                    <ac-button-card-broke v-if="this.$store.state.modal.acceptButton === 'cardBroke'">{{ $t('Подтвердить') }}</ac-button-card-broke>
                 </div>
             </div>
         </div>

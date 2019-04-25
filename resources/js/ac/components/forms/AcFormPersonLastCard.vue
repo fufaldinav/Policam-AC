@@ -2,7 +2,7 @@
     <div>
         <div class="form-row">
             <label for="freeCards">
-                {{ $t('ac.last_card') }}
+                {{ $t('Последняя карта') }}
             </label>
         </div>
         <div class="form-row">
@@ -15,7 +15,6 @@
                     data-toggle="tooltip"
                     data-placement="top"
                     data-trigger="manual"
-                    :placeholder="$t('ac.last_card')"
                     :readonly="manualInput === false"
                     @click="formClicked"
                     @blur="leaveForm"
@@ -88,7 +87,7 @@
         },
 
         mounted() {
-            $('.ac-input-card-code').tooltip({title: this.$t('ac.click_again_to_edit')})
+            $('.ac-input-card-code').tooltip({title: this.$t('Нажмите еще раз для редактирования')})
         },
 
         methods: {

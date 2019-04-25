@@ -4,7 +4,7 @@
         class="btn btn-secondary"
         @click="clearSelectedPerson"
     >
-        {{ $t('ac.cancel') }}
+        {{ $t('Отмена') }}
     </button>
 </template>
 

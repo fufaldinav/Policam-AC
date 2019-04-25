@@ -10,8 +10,8 @@
             class="h-100 w-100 d-flex align-items-center ac-person-photo-content"
         >
             <div class="w-100">
-                <p class="h1 text-center"><strong>{{ $t('ac.press_') }}</strong></p>
-                <p class="text-center"><strong>{{ $t('ac._to_upload') }}</strong></p>
+                <p class="h1 text-center"><strong>{{ $t('Нажмите,') }}</strong></p>
+                <p class="text-center"><strong>{{ $t('чтобы загрузить фотографию') }}</strong></p>
             </div>
 
         </div>
@@ -32,7 +32,7 @@
                 class="btn btn-sm btn-danger"
                 @click="removeUploadedPhoto"
             >
-                {{ $t('ac.delete') }}
+                {{ $t('Удалить') }}
             </button>
         </div>
     </div>

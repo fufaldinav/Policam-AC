@@ -4,9 +4,9 @@
 # {{ $greeting }}
 @else
 @if ($level === 'error')
-# @lang('email.whoops')
+# @lang('Ууупс!')
 @else
-# @lang('email.hello')
+# @lang('Здравствуйте!')
 @endif
 @endif
 
@@ -43,14 +43,14 @@
 @if (! empty($salutation))
 {{ $salutation }}
 @else
-@lang('email.regards'),<br>@lang('email.team') {{ config('app.name') }}
+@lang('С уважением'),<br> @lang('администрация') {{ config('app.name') }}
 @endif
 
 {{-- Subcopy --}}
 @isset($actionText)
 @slot('subcopy')
 @lang(
-    'email.problems',
+    'Если у вас возникли проблемы с кнопкой \":actionText\", скопируйте и вставьте URL-адрес,\nуказанный ниже, в свой веб-браузер: [:actionURL](:actionURL)',
     [
         'actionText' => $actionText,
         'actionURL' => $actionUrl,

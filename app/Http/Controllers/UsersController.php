@@ -79,10 +79,10 @@ class UsersController extends Controller
         $notification = App\Notification::where(['hash' => $hash])->first();
 
         if (! $notification) {
-            return 'Уведомление устарело или не существует'; //TODO перевод
+            return __('Уведомление устарело или не существует');
         } elseif (Carbon::parse($notification->created_at) < Carbon::now()->subHour()) {
             $notification->delete();
-            return 'Уведомление устарело или не существует'; //TODO перевод
+            return __('Уведомление устарело или не существует');
         }
 
         $photos = Snapshot::getByNotification($notification);

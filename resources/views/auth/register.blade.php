@@ -5,7 +5,7 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">{{ __('auth.register') }}</div>
+                    <div class="card-header">{{ __('Регистрация') }}</div>
 
                     <div class="card-body">
                         <form method="POST" action="{{ route('register') }}">
@@ -13,7 +13,7 @@
 
                             <div class="form-group row">
                                 <label for="last-name"
-                                       class="col-md-4 col-form-label text-md-right">{{ __('ac.f') }}</label>
+                                       class="col-md-4 col-form-label text-md-right">{{ __('Фамилия') }}</label>
 
                                 <div class="col-md-6">
                                     <input id="last-name" type="text"
@@ -29,7 +29,7 @@
                             </div>
 
                             <div class="form-group row">
-                                <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('ac.i') }}</label>
+                                <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Имя') }}</label>
 
                                 <div class="col-md-6">
                                     <input id="name" type="text"
@@ -46,7 +46,7 @@
 
                             <div class="form-group row">
                                 <label for="email"
-                                       class="col-md-4 col-form-label text-md-right">{{ __('auth.email') }}</label>
+                                       class="col-md-4 col-form-label text-md-right">{{ __('Электронный адрес') }}</label>
 
                                 <div class="col-md-6">
                                     <input id="email" type="email"
@@ -63,7 +63,7 @@
 
                             <div class="form-group row">
                                 <label for="password"
-                                       class="col-md-4 col-form-label text-md-right">{{ __('auth.password') }}</label>
+                                       class="col-md-4 col-form-label text-md-right">{{ __('Пароль') }}</label>
 
                                 <div class="col-md-6">
                                     <input id="password" type="password"
@@ -80,7 +80,7 @@
 
                             <div class="form-group row">
                                 <label for="password-confirm"
-                                       class="col-md-4 col-form-label text-md-right">{{ __('auth.confirm') }}</label>
+                                       class="col-md-4 col-form-label text-md-right">{{ __('Подтвердите пароль') }}</label>
 
                                 <div class="col-md-6">
                                     <input id="password-confirm" type="password" class="form-control"
@@ -91,7 +91,7 @@
                             @if(isset($rc->card))
                                 <div class="form-group row">
                                     <label for="card-code"
-                                           class="col-md-4 col-form-label text-md-right">{{ trans_choice('ac.cards', 1) }}</label>
+                                           class="col-md-4 col-form-label text-md-right">Карта</label>
 
                                     <div class="col-md-6">
                                         <input id="card-code" type="text" class="form-control" name="card_code"
@@ -105,14 +105,14 @@
                                             <input type="radio" id="ac-role4" name="role"
                                                    class="custom-control-input" value="4" checked>
                                             <label class="custom-control-label" for="ac-role4">
-                                                {{ __('Parent') }}
+                                                {{ __('Родитель') }}
                                             </label>
                                         </div>
                                         <div class="custom-control custom-radio custom-control-inline">
                                             <input type="radio" id="ac-role5" name="role"
                                                    class="custom-control-input" value="5">
                                             <label class="custom-control-label" for="ac-role5">
-                                                {{ __('Student') }}
+                                                {{ __('Ученик') }}
                                             </label>
                                         </div>
                                     </div>
@@ -122,7 +122,7 @@
                             <div class="form-group row mb-0">
                                 <div class="col-md-6 offset-md-4">
                                     <button type="submit" class="btn btn-primary">
-                                        {{ __('auth.register') }}
+                                        {{ __('Регистрация') }}
                                     </button>
                                 </div>
                             </div>
