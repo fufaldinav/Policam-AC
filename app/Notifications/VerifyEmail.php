@@ -29,13 +29,13 @@ class VerifyEmail extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject(__('email.verify_email'))
-            ->line(__('email.verify_email_greetings'))
+            ->subject(__('Подтверждение адреса электронной почты'))
+            ->line(__('Пожалуйста, нажмите кнопку ниже, чтобы подтвердить свой адрес электронной почты.'))
             ->action(
-                __('email.verify_email_button'),
+                __('Подтвердить электронную почту'),
                 $this->verificationUrl($notifiable)
             )
-            ->line(__('email.verify_email_not_request'));
+            ->line(__('Если вы не создавали учетную запись, никаких дальнейших действий не требуется.'));
     }
 
     /**
