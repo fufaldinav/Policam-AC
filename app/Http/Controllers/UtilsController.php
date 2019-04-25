@@ -20,9 +20,9 @@ namespace App\Http\Controllers;
 
 use App;
 use App\Policam\Ac\Tasker;
-use App\Policam\Ac\Logger;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Log;
 
 class UtilsController extends Controller
 {
@@ -44,9 +44,7 @@ class UtilsController extends Controller
     {
         $err = $err ?? $request->input('error') ?? 'Неизвестная ошибка или ошибка не указана';
 
-        $logger = new Logger();
-        $logger->add('err', $err);
-        $logger->write();
+        Log::error($err);
 
         return $err;
     }
@@ -67,7 +65,7 @@ class UtilsController extends Controller
             return null;
         }
 
-        $response = __('ac.registered');
+        $response = __('Событие зарегистрировано');
 
         $person = App\Person::find($person_id);
 
@@ -102,7 +100,7 @@ class UtilsController extends Controller
 
             $tasker->send();
 
-            $response .= ' ' . __('ac.and') . ' ' . __('ac.card_deleted');
+            $response .= __(' и карта удалена');
 
             $description .= 'lost/broke card';
         } else {

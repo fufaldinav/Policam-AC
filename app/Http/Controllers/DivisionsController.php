@@ -44,23 +44,7 @@ class DivisionsController extends Controller
             return view('ac.error', ['error' => 'Огранизации отсутствуют']);
         }
 
-        $org_id = $org->id;
-
-        $divs = $org->divisions()
-            ->orderByRaw('type ASC, CAST(name AS UNSIGNED) ASC, name ASC')
-            ->get();
-
-        $org_name = $org->name ?? __('ac.missing');
-        $css_list = ['tables'];
-        $js_list = ['classes'];
-
-        return view('ac.classes', compact(
-            'org_id',
-            'divs',
-            'org_name',
-            'css_list',
-            'js_list'
-        ));
+        return view('ac.classes');
     }
 
     public function index(Request $request)

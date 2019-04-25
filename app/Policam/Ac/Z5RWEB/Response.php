@@ -41,7 +41,7 @@ final class Response implements JsonSerializable
         ];
     }
 
-    public function addMessage(object $message): void
+    public function addMessage($message): void
     {
         $this->messages[] = $message;
     }
