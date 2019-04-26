@@ -3,7 +3,7 @@
         <div
             class="card shadow-sm mb-3 ac-cp-student-card"
             :class="cardClass"
-            @click="openPerson"
+            @click="selectPerson"
             @mouseenter="highlighted = true"
             @mouseleave="highlighted = false"
         >
@@ -28,6 +28,8 @@
 </template>
 
 <script>
+    import {Person} from '../../../classes'
+
     export default {
         name: "AcCpStudentsCard",
 
@@ -62,8 +64,8 @@
         },
 
         methods: {
-            openPerson() {
-                console.log('open')
+            selectPerson() {
+                this.$store.commit('persons/setSelected', new Person(this.person))
             }
         }
     }
@@ -73,5 +75,9 @@
     .ac-cp-student-card {
         width: 100%;
         max-width: 540px;
+    }
+
+    .ac-cp-student-card:hover {
+        cursor: pointer;
     }
 </style>

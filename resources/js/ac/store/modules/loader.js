@@ -12,6 +12,7 @@ const mutations = {
 
 const actions = {
     async loadOrganizations({commit, dispatch, rootState}) {
+        commit('changeLoadingState', true)
         window.axios.get('/users/organizations').then(response => {
             for (let org of response.data) {
                 commit('organizations/add', org, {root: true})
@@ -20,6 +21,7 @@ const actions = {
                     dispatch('messenger/subscribe', null, {root: true})
                 }
             }
+            commit('changeLoadingState', false)
         }).catch(error => {
             if (rootState.debug) console.log(error)
         })

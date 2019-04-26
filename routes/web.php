@@ -11,15 +11,9 @@ Route::get('observer', 'ObserverController@index')->name('observer');
  * API
  */
 Route::group(['prefix' => 'api', 'as' => 'api.'], function () {
-    Route::group(['middleware' => 'role:3'], function () {
-        Route::resource('persons', 'PersonsController')->except(['create', 'edit']);
-    });
-    Route::group(['middleware' => 'role:3'], function () {
-        Route::resource('divisions', 'DivisionsController')->except(['create', 'edit']);
-    });
-    Route::group(['middleware' => 'role:3'], function () {
-        Route::resource('photos', 'PhotosController')->only(['store', 'destroy']);
-    });
+    Route::resource('persons', 'PersonsController')->except(['create', 'edit']);
+    Route::resource('divisions', 'DivisionsController')->except(['create', 'edit']);
+    Route::resource('photos', 'PhotosController')->only(['store', 'destroy']);
 });
 /*
  * Auth
@@ -68,7 +62,9 @@ Route::post('server', 'ServersController@index');
 Route::group(['prefix' => 'users', 'as' => 'users.'], function () {
     Route::post('token', 'UsersController@token');
     Route::get('organizations', 'UsersController@getOrganizations');
+    Route::get('organizations/{type}', 'UsersController@getOrganizationsByType');
     Route::get('persons', 'UsersController@getPersons');
+    Route::get('referral_codes', 'UsersController@getReferralCodes');
 });
 Route::get('users/notification/{hash}', 'UsersController@notification');
 /*

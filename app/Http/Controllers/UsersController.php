@@ -117,6 +117,18 @@ class UsersController extends Controller
     }
 
     /**
+     * Возвращает организации по типу
+     *
+     * @param int $type
+     *
+     * @return array
+     */
+    public function getOrganizationsByType(int $type)
+    {
+        return App\Organization::where('type', $type)->orderBy('name')->get();
+    }
+
+    /**
      * Возвращает людей, привязанных к пользователю
      *
      * @param Request $request
@@ -125,6 +137,18 @@ class UsersController extends Controller
      */
     public function getPersons(Request $request)
     {
-        return $request->user()->subscriptions->load(['cards', 'divisions', 'photos']);
+        return $request->user()->subscriptions->load(['cards', 'divisions', 'photos', 'users']);
+    }
+
+    /**
+     * Возвращает людей, привязанных к пользователю
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    public function getReferralCodes(Request $request)
+    {
+        return $request->user()->referralCodes;
     }
 }

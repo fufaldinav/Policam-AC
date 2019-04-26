@@ -11,6 +11,8 @@ export function Person(data) {
     this.phone = null
     this.divisions = []
     this.divisionsToDelete = []
+    this.organizations = {basic: null, additional: []}
+    this.organizationsToDelete = []
 
     for (let k in data) {
         if (this.hasOwnProperty(k)) {
@@ -22,6 +24,8 @@ export function Person(data) {
     this.cardsToDelete = []
     this.photos = []
     this.photosToDelete = []
+    this.users = []
+    this.usersToDelete = []
 
     if (data.cards !== undefined) {
         for (let card of data.cards) {
@@ -32,6 +36,12 @@ export function Person(data) {
     if (data.photos !== undefined) {
         for (let photo of data.photos) {
             this.photos.push(new Photo(photo))
+        }
+    }
+
+    if (data.users !== undefined) {
+        for (let user of data.users) {
+            this.users.push(user.id)
         }
     }
 }

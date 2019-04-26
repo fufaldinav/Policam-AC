@@ -74,6 +74,7 @@ const mutations = {
         let division = state.collection.find((value) => {
             if (value.id === relation.divisionId) return true
         })
+        if (division === undefined) return
         let index = division.persons.indexOf(relation.personId)
         if (index === -1) {
             division.persons.push(relation.personId)

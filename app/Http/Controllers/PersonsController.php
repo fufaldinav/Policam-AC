@@ -31,8 +31,10 @@ class PersonsController extends Controller
 
     public function page(Request $request)
     {
+        abort_if(!$request->user()->hasRole([1, 2, 3]), 403);
+
         $org = $request->user()->organizations()->first();
-        if (! $org) {
+        if (!$org) {
             return view('ac.error', ['error' => 'Огранизации отсутствуют']);
         }
 
@@ -41,27 +43,40 @@ class PersonsController extends Controller
 
     public function index(Request $request)
     {
+        abort_if(!$request->user()->hasRole([1, 2, 3]), 403);
+
         $persons = $request->user()->persons()->get();
 
-        abort_if(! $persons, 403);
+        abort_if(!$persons, 403);
 
         return response()->json($persons);
     }
 
     public function show(Request $request, $id)
     {
+        abort_if(!$request->user()->hasRole([1, 2, 3]), 403);
+
         $person = $request->user()->persons()->where('persons.id', $id)->first()->load(['photos', 'cards']);
 
-        abort_if(! $person, 403);
+        abort_if(!$person, 403);
 
         return response()->json($person);
     }
 
     public function update(Request $request, $id)
     {
-        $onUpdatePerson = $request->user()->persons()->where('persons.id', $id)->first();
+        $user = $request->user();
+        $onUpdatePerson = null;
 
-        abort_if(! $onUpdatePerson, 403);
+        if ($user->hasRole([4, 5])) {
+            $onUpdatePerson = $request->user()->subscriptions()->where('persons.id', $id)->first();
+        } elseif ($user->hasRole([1, 2, 3])) {
+            $onUpdatePerson = $request->user()->persons()->where('persons.id', $id)->first();
+        } else {
+            abort(403);
+        }
+
+        abort_if(!$onUpdatePerson, 403);
 
         $person = $request->input('person');
 
@@ -83,31 +98,50 @@ class PersonsController extends Controller
             ->detachCards($cardsToDelete)
             ->detachPhotos($photosToDelete);
 
-        return response()->json($onUpdatePerson->load(['cards', 'divisions', 'photos']));
+        return response()->json($onUpdatePerson->load(['cards', 'divisions', 'photos', 'users']));
     }
 
     public function store(Request $request)
     {
+        $user = $request->user();
+
+        abort_if(!$user->hasRole([1, 2, 3, 4, 5]), 403);
+
         $person = $request->input('person');
 
         $cards = $person['cards'];
         $divisions = $person['divisions'];
         $photos = $person['photos'];
+        $organizations = $person['organizations'];
 
         $person = App\Person::create($person);
 
         $person->attachDivisions($divisions)
             ->attachCards($cards)
-            ->attachPhotos($photos);
+            ->attachPhotos($photos)
+            ->attachOrganizations($organizations);
 
-        return response()->json($person->load(['cards', 'divisions', 'photos']));
+        if ($user->hasRole([4])) {
+            $person->attachSubscribers([$user->id]);
+        }
+
+        return response()->json($person->load(['cards', 'divisions', 'photos', 'users']));
     }
 
     public function destroy(Request $request, int $id): ?int
     {
-        $person = $request->user()->persons()->where('persons.id', $id)->first();
+        $user = $request->user();
+        $person = null;
 
-        abort_if(! $person, 403);
+        if ($user->hasRole([4, 5])) {
+            $person = $request->user()->subscriptions()->where('persons.id', $id)->first();
+        } elseif ($user->hasRole([1, 2, 3])) {
+            $person = $request->user()->persons()->where('persons.id', $id)->first();
+        } else {
+            abort(403);
+        }
+
+        abort_if(!$person, 403);
 
         $person->detachAllDivisions()
             ->detachAllCards()

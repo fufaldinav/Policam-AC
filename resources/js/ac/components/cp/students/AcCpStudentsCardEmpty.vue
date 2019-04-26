@@ -19,6 +19,8 @@
 </template>
 
 <script>
+    import {Person} from '../../../classes'
+
     export default {
         name: "AcCpStudentsCardEmpty",
 
@@ -44,7 +46,7 @@
 
         methods: {
             addPerson() {
-                console.log('add')
+                this.$store.commit('persons/setSelected', new Person({id: 0}))
             }
         }
     }
@@ -54,6 +56,10 @@
     .ac-cp-student-card {
         width: 100%;
         max-width: 540px;
+    }
+
+    .ac-cp-student-card:hover {
+        cursor: pointer;
     }
 
     .ac-cp-student-add {
