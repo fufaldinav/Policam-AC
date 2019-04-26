@@ -23,7 +23,7 @@
                         required
                     >
                     <div class="invalid-feedback">
-                        {{ $t('Поле \"{field}\" является обязательным!', {field: $t('Фамилия')}) }}
+                        {{ $t('Поле "фамилия" является обязательным!') }}
                     </div>
                 </div>
                 <div class="form-group">
@@ -41,7 +41,7 @@
                         required
                     >
                     <div class="invalid-feedback">
-                        {{ $t('Поле \"{field}\" является обязательным!', {field: $t('Имя')}) }}
+                        {{ $t('Поле "имя" является обязательным!') }}
                     </div>
                 </div>
                 <div class="form-group">
@@ -72,7 +72,7 @@
                         required
                     >
                     <div class="invalid-feedback">
-                        {{ $t('Поле \"{field}\" является обязательным!', {field: $t('Дата рождения')}) }}
+                        {{ $t('Поле "дата рождения" является обязательным!') }}
                     </div>
                 </div>
             </div>
@@ -153,10 +153,10 @@
     import AcFormCards from './AcFormPersonCards'
     import AcFormLastCard from './AcFormPersonLastCard'
     import AcFormPersonPhoto from './AcFormPersonPhoto'
-    import AcButtonCancel from '../buttons/AcButtonCancel'
-    import AcButtonRemovePerson from '../buttons/AcButtonRemovePerson'
-    import AcButtonSavePerson from '../buttons/AcButtonSavePerson'
-    import AcButtonUpdatePerson from '../buttons/AcButtonUpdatePerson'
+    import AcButtonCancel from '../../../buttons/AcButtonCancel'
+    import AcButtonRemovePerson from '../../../buttons/AcButtonRemovePerson'
+    import AcButtonSavePerson from '../../../buttons/AcButtonSavePerson'
+    import AcButtonUpdatePerson from '../../../buttons/AcButtonUpdatePerson'
     import AcFormModal from './AcFormModal'
 
     export default {

@@ -56,10 +56,10 @@
 </template>
 
 <script>
-    import AcButtonRemoveCard from '../buttons/AcButtonRemoveCard'
-    import AcButtonRemovePerson from '../buttons/AcButtonRemovePerson'
-    import AcButtonSavePerson from '../buttons/AcButtonSavePerson'
-    import AcButtonUpdatePerson from '../buttons/AcButtonUpdatePerson'
+    import AcButtonRemoveCard from '../../../buttons/AcButtonRemoveCard'
+    import AcButtonRemovePerson from '../../../buttons/AcButtonRemovePerson'
+    import AcButtonSavePerson from '../../../buttons/AcButtonSavePerson'
+    import AcButtonUpdatePerson from '../../../buttons/AcButtonUpdatePerson'
 
     export default {
         name: "AcFormModal",
