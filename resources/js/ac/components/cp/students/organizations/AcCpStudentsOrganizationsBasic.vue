@@ -6,8 +6,12 @@
         <div
             v-else
             class="card w-100"
+            :class="isInvalid"
         >
-            <div class="card-header">
+            <div
+                class="card-header"
+                :class="isInvalid"
+            >
                 {{ $t('Основное образование') }}
             </div>
             <ul class="list-group list-group-flush">
@@ -17,6 +21,12 @@
                     :key="org.id"
                 >
                     <ac-cp-students-organizations-basic-radio :org="org"></ac-cp-students-organizations-basic-radio>
+                </li>
+                <li
+                    v-if="isInvalid"
+                    class="list-group-item text-danger small"
+                >
+                    {{ $t('Необходимо выбрать как минимум одно образовательное учреждение') }}
                 </li>
             </ul>
         </div>
@@ -38,6 +48,18 @@
             return {
                 loading: true,
                 organizations: []
+            }
+        },
+
+        computed: {
+            selectedPerson() {
+                return this.$store.state.persons.selected
+            },
+
+            isInvalid() {
+                if (this.selectedPerson.organizations.basic === null) {
+                    return 'border-danger'
+                }
             }
         },
 

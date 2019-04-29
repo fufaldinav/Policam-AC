@@ -85,7 +85,6 @@ class PersonsController extends Controller
         $cards = $person['cards'];
         $divisions = $person['divisions'];
         $photos = $person['photos'];
-        $organizations = $person['organizations'];
 
         $cardsToDelete = $person['cardsToDelete'];
         $divisionsToDelete = $person['divisionsToDelete'];
@@ -95,8 +94,7 @@ class PersonsController extends Controller
 
         $onUpdatePerson->attachDivisions($divisions)
             ->attachCards($cards)
-            ->attachPhotos($photos)
-            ->attachOrganizations($organizations);
+            ->attachPhotos($photos);
 
         $onUpdatePerson->detachDivisions($divisionsToDelete)
             ->detachCards($cardsToDelete)

@@ -100,6 +100,16 @@ class Person extends Model
         return $this->belongsToMany('App\Division');
     }
 
+    public function organizations()
+    {
+        return $this->hasManyDeep(
+            'App\Organization',
+            ['division_person', 'App\Division'],
+            ['person_id', 'id', 'id'],
+            ['id', 'division_id', 'organization_id']
+        );
+    }
+
     public function photos()
     {
         return $this->hasMany('App\Photo');
@@ -115,7 +125,7 @@ class Person extends Model
         foreach ($divisions as $div_id) {
             $div = Division::find($div_id);
 
-            if (!$div) {
+            if (! $div) {
                 continue;
             }
 
@@ -130,7 +140,7 @@ class Person extends Model
         foreach ($divisions as $div) {
             $div = Division::find($div['id']);
 
-            if (!$div) {
+            if (! $div) {
                 continue;
             }
 
@@ -181,7 +191,7 @@ class Person extends Model
         foreach ($cards as $card) {
             $card = Card::find($card['id']);
 
-            if (!$card) {
+            if (! $card) {
                 continue;
             }
 
@@ -225,7 +235,7 @@ class Person extends Model
         foreach ($photos as $photo) {
             $photo = Photo::find($photo['id']);
 
-            if (!$photo) {
+            if (! $photo) {
                 continue;
             }
 
@@ -240,7 +250,7 @@ class Person extends Model
         foreach ($photos as $photo) {
             $photo = Photo::find($photo['id']);
 
-            if (!$photo) {
+            if (! $photo) {
                 continue;
             }
 
@@ -264,7 +274,7 @@ class Person extends Model
         foreach ($subs as $user_id) {
             $user = User::find($user_id);
 
-            if (!$user) {
+            if (! $user) {
                 continue;
             }
 

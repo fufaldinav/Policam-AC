@@ -23,7 +23,7 @@
                         required
                     >
                     <div class="invalid-feedback">
-                        {{ $t('Поле "фамилия" является обязательным!') }}
+                        {{ $t('Поле "Фамилия" является обязательным!') }}
                     </div>
                 </div>
                 <div class="form-group">
@@ -41,7 +41,7 @@
                         required
                     >
                     <div class="invalid-feedback">
-                        {{ $t('Поле "имя" является обязательным!') }}
+                        {{ $t('Поле "Имя" является обязательным!') }}
                     </div>
                 </div>
                 <div class="form-group">
@@ -72,7 +72,7 @@
                         required
                     >
                     <div class="invalid-feedback">
-                        {{ $t('Поле "дата рождения" является обязательным!') }}
+                        {{ $t('Поле "Дата рождения" является обязательным!') }}
                     </div>
                 </div>
             </div>
@@ -123,6 +123,12 @@
             <div class="form-group col-6">
             </div>
         </div>
+        <div class="form-row d-md-none">
+            <slot name="basicEducation"></slot>
+        </div>
+        <div class="form-row d-md-none">
+            <slot name="additionalEducation"></slot>
+        </div>
         <div class="form-row">
             <div class="form-group">
                 <ac-buttons-save-person
@@ -135,7 +141,7 @@
                     :disabled="hasErrors"
                 >
                 </ac-buttons-update-person>
-                <ac-buttons-cancel v-if="selectedPerson.id !== null"></ac-buttons-cancel>
+                <ac-buttons-cancel></ac-buttons-cancel>
             </div>
         </div>
         <ac-cp-students-forms-person-modal></ac-cp-students-forms-person-modal>
@@ -175,7 +181,7 @@
             },
 
             hasErrors() {
-                return this.errors.f || this.errors.i || this.errors.birthday
+                return this.errors.f || this.errors.i || this.errors.birthday || this.selectedPerson.organizations.basic === null
             }
         },
 

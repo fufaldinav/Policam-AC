@@ -5,7 +5,7 @@
         </div>
         <div v-else>
             <div
-                v-if="selectedPerson.id === null"
+                v-show="selectedPerson.id === null"
                 class="row"
             >
                 <div class="col"></div>
@@ -23,7 +23,7 @@
                 <div class="col"></div>
             </div>
             <div
-                v-else
+                v-show="selectedPerson.id !== null"
                 class="row justify-content-around"
             >
                 <div class="d-none d-lg-block col-lg-1"></div>
@@ -31,10 +31,21 @@
                     class="mb-2 col-12 col-sm-10 mb-md-0 col-md-6 col-lg-5"
                     :class="formContainerClass"
                 >
-                    <ac-cp-students-forms-person></ac-cp-students-forms-person>
+                    <ac-cp-students-forms-person>
+                        <template slot="basicEducation">
+                            <div class="container-fluid position-relative mb-3 p-0">
+                                <ac-cp-students-organizations-basic></ac-cp-students-organizations-basic>
+                            </div>
+                        </template>
+                        <template slot="additionalEducation">
+                            <div class="container-fluid position-relative mb-3 p-0">
+                                <ac-cp-students-organizations-additional></ac-cp-students-organizations-additional>
+                            </div>
+                        </template>
+                    </ac-cp-students-forms-person>
                 </div>
                 <div
-                    class="col-12 col-sm-10 col-md-5 col-lg-4 col-xl-3"
+                    class="d-none d-md-block col-sm-10 col-md-5 col-lg-4 col-xl-3"
                 >
                     <div class="row h-100">
                         <div

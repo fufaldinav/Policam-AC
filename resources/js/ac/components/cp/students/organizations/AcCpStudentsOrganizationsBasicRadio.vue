@@ -3,7 +3,7 @@
         <input
             type="radio"
             :id="'org' + org.id"
-            name="customRadio"
+            name="basicEducation"
             class="custom-control-input"
             :value="org.id"
             v-model="checked"
@@ -18,12 +18,6 @@
 <script>
     export default {
         name: "AcCpStudentsOrganizationsBasicRadio",
-
-        data() {
-            return {
-                basicOrgAlreadySet: false
-            }
-        },
 
         props: {
             org: {
