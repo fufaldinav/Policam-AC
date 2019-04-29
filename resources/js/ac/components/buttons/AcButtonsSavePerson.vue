@@ -11,7 +11,7 @@
 
 <script>
     export default {
-        name: "AcButtonSave",
+        name: "AcButtonsSavePerson",
 
         props: ['disabled'],
 

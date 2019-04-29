@@ -37,7 +37,7 @@
 
 <script>
     export default {
-        name: "AcFormLastCard",
+        name: "AcCpPersonsFormsLastCard",
 
         data: function () {
             return {

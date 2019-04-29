@@ -150,9 +150,9 @@
                                     class="form-row"
                                 >
                                     <div class="form-group col-6 col-sm-12">
-                                        <ac-button-card-forgot></ac-button-card-forgot>
-                                        <ac-button-card-lost></ac-button-card-lost>
-                                        <ac-button-card-broke></ac-button-card-broke>
+                                        <ac-observer-buttons-card-forgot></ac-observer-buttons-card-forgot>
+                                        <ac-observer-buttons-card-lost></ac-observer-buttons-card-lost>
+                                        <ac-observer-buttons-card-broke></ac-observer-buttons-card-broke>
                                     </div>
                                 </div>
                             </form>
@@ -161,7 +161,6 @@
                 </div>
             </transition>
             <ac-observer-menu-right></ac-observer-menu-right>
-            <input id="type" name="type" type="text" hidden readonly>
         </div>
         <ac-observer-modal></ac-observer-modal>
     </div>
@@ -171,9 +170,9 @@
     import AcLoading from '../AcLoading'
     import AcObserverMenuLeft from './AcObserverMenuLeft'
     import AcObserverMenuRight from './AcObserverMenuRight'
-    import AcButtonCardBroke from '../buttons/AcButtonCardBroke'
-    import AcButtonCardForgot from '../buttons/AcButtonCardForgot'
-    import AcButtonCardLost from '../buttons/AcButtonCardLost'
+    import AcObserverButtonsCardBroke from './buttons/AcObserverButtonsCardBroke'
+    import AcObserverButtonsCardForgot from './buttons/AcObserverButtonsCardForgot'
+    import AcObserverButtonsCardLost from './buttons/AcObserverButtonsCardLost'
     import AcObserverModal from './AcObserverModal'
 
     export default {
@@ -181,7 +180,7 @@
 
         components: {
             AcLoading, AcObserverMenuLeft, AcObserverMenuRight,
-            AcButtonCardBroke, AcButtonCardForgot, AcButtonCardLost, AcObserverModal
+            AcObserverButtonsCardBroke, AcObserverButtonsCardForgot, AcObserverButtonsCardLost, AcObserverModal
         },
 
         computed: {

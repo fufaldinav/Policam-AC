@@ -15,7 +15,7 @@
     import {Person} from '../../classes'
 
     export default {
-        name: "AcButtonPerson",
+        name: "AcButtonsPerson",
 
         props: {
             person: Object

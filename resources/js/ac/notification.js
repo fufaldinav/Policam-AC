@@ -1,4 +1,4 @@
-let slides = document.querySelectorAll(`#slides .slide`)
+let slides = document.querySelectorAll('#slides .slide')
 let currentSlide = 0
 
 function nextSlide() {
@@ -10,13 +10,13 @@ function previousSlide() {
 }
 
 function goToSlide(n) {
-    slides[currentSlide].classList.remove(`showing`)
+    slides[currentSlide].classList.remove('showing')
     currentSlide = (n + slides.length) % slides.length
-    slides[currentSlide].classList.add(`showing`)
+    slides[currentSlide].classList.add('showing')
 }
 
-let next = document.getElementById(`next`)
-let previous = document.getElementById(`previous`)
+let next = document.getElementById('next')
+let previous = document.getElementById('previous')
 
 next.onclick = function () {
     nextSlide()
@@ -25,7 +25,7 @@ previous.onclick = function () {
     previousSlide()
 }
 
-$(`#slides`).swipe({
+$('#slides').swipe({
     swipeLeft: leftSwipe,
     swipeRight: rightSwipe,
     threshold: 0

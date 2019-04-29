@@ -3,9 +3,7 @@
         <div v-if="loading">
             <ac-loading></ac-loading>
         </div>
-        <div
-            v-else
-        >
+        <div v-else>
             <div
                 v-if="selectedPerson.id === null"
                 class="row"
@@ -33,10 +31,10 @@
                     class="mb-2 col-12 col-sm-10 mb-md-0 col-md-6 col-lg-5"
                     :class="formContainerClass"
                 >
-                    <ac-form-person></ac-form-person>
+                    <ac-cp-students-forms-person></ac-cp-students-forms-person>
                 </div>
                 <div
-                    class="col-12 col-sm-10 col-md-5 col-lg-4"
+                    class="col-12 col-sm-10 col-md-5 col-lg-4 col-xl-3"
                 >
                     <div class="row h-100">
                         <div
@@ -64,7 +62,7 @@
     import AcLoading from '../../AcLoading'
     import AcCpStudentsCard from './AcCpStudentsCard'
     import AcCpStudentsCardEmpty from './AcCpStudentsCardEmpty'
-    import AcFormPerson from '../persons/forms/AcFormPerson'
+    import AcCpStudentsFormsPerson from './forms/AcCpStudentsFormsPerson'
     import AcCpStudentsOrganizationsBasic from './organizations/AcCpStudentsOrganizationsBasic'
     import AcCpStudentsOrganizationsAdditional from './organizations/AcCpStudentsOrganizationsAdditional'
 
@@ -72,7 +70,7 @@
         name: "AcCpStudents",
 
         components: {
-            AcLoading, AcCpStudentsCard, AcCpStudentsCardEmpty, AcFormPerson,
+            AcLoading, AcCpStudentsCard, AcCpStudentsCardEmpty, AcCpStudentsFormsPerson,
             AcCpStudentsOrganizationsBasic, AcCpStudentsOrganizationsAdditional
         },
 
@@ -101,19 +99,9 @@
         },
 
         created() {
+            this.$store.commit('setUserRole', 4)
             this.$store.dispatch('loader/loadPersons')
-
-            window.axios.get('/users/referral_codes')
-                .then(response => {
-                    let rc = response.data
-                    if (rc.length === 0) return
-                    let code = parseInt(rc[0].card)
-                    let wiegand = ('000000000000' + code.toString(16).toUpperCase()).slice(-12)
-                    this.$store.commit('cards/setLast', {wiegand: wiegand})
-                })
-                .catch(error => {
-                    if (this.$store.state.debug) console.log(error)
-                })
+            this.$store.dispatch('loader/loadReferralCodes')
         },
     }
 </script>

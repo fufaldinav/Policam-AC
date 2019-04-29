@@ -10,7 +10,7 @@
 
 <script>
     export default {
-        name: "AcButtonCancel",
+        name: "AcButtonsCancel",
 
         methods: {
             clearSelectedPerson() {

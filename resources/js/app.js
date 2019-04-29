@@ -77,7 +77,7 @@ window.Ac = new Vue({
         this.handleResize()
     },
 
-    destroyed() {
+    beforeDestroy() {
         window.removeEventListener('resize', this.handleResize)
     },
 

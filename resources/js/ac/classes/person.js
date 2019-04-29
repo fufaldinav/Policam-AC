@@ -12,7 +12,6 @@ export function Person(data) {
     this.divisions = []
     this.divisionsToDelete = []
     this.organizations = {basic: null, additional: []}
-    this.organizationsToDelete = []
 
     for (let k in data) {
         if (this.hasOwnProperty(k)) {

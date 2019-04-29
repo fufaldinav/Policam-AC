@@ -18,7 +18,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        debug: process.env.NODE_ENV === 'development'
+        debug: process.env.NODE_ENV === 'development',
+        userRole: null
     },
 
     actions,

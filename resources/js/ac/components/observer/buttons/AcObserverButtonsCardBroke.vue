@@ -1,16 +1,16 @@
 <template>
     <button
         type="button"
-        class="btn btn-warning mb-1"
+        class="btn btn-danger mb-1"
         @click="sendToServer"
     >
-        <slot>{{ $t('Потерял карту') }}</slot>
+        <slot>{{ $t('Карта не работает') }}</slot>
     </button>
 </template>
 
 <script>
     export default {
-        name: "AcButtonCardLost",
+        name: "AcObserverButtonsCardBroke",
 
         computed: {
             selectedPerson() {
@@ -33,11 +33,11 @@
                         this.$root.alert(error, 'danger')
                     })
                 } else {
-                    this.$store.commit('modal/setTitle', this.$t('Потерял карту'))
+                    this.$store.commit('modal/setTitle', this.$t('Карта не работает'))
 
                     this.$store.commit('modal/setMessage', this.$t('Необходимо подтвердить действие'))
 
-                    this.$store.commit('modal/setAcceptButton', 'cardLost')
+                    this.$store.commit('modal/setAcceptButton', 'cardBroke')
 
                     this.$store.dispatch('modal/show')
                 }

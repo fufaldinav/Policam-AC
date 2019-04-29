@@ -4,7 +4,7 @@
 
 <script>
     export default {
-        name: "AcCpButtonGo",
+        name: "AcCpButtonsGo",
 
         props: ['url']
     }

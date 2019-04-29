@@ -41,14 +41,14 @@
                     >
                         {{ $t('Отмена') }}
                     </button>
-                    <ac-button-save-person v-if="this.$store.state.modal.acceptButton === 'savePerson'">
-                    </ac-button-save-person>
-                    <ac-button-update-person v-if="this.$store.state.modal.acceptButton === 'updatePerson'">
-                    </ac-button-update-person>
-                    <ac-button-remove-person v-if="this.$store.state.modal.acceptButton === 'removePerson'">
-                    </ac-button-remove-person>
-                    <ac-button-remove-card v-if="this.$store.state.modal.acceptButton === 'removeCard'">
-                    </ac-button-remove-card>
+                    <ac-buttons-save-person v-if="this.$store.state.modal.acceptButton === 'savePerson'">
+                    </ac-buttons-save-person>
+                    <ac-buttons-update-person v-if="this.$store.state.modal.acceptButton === 'updatePerson'">
+                    </ac-buttons-update-person>
+                    <ac-buttons-remove-person v-if="this.$store.state.modal.acceptButton === 'removePerson'">
+                    </ac-buttons-remove-person>
+                    <ac-buttons-remove-card v-if="this.$store.state.modal.acceptButton === 'removeCard'">
+                    </ac-buttons-remove-card>
                 </div>
             </div>
         </div>
@@ -56,19 +56,19 @@
 </template>
 
 <script>
-    import AcButtonRemoveCard from '../../../buttons/AcButtonRemoveCard'
-    import AcButtonRemovePerson from '../../../buttons/AcButtonRemovePerson'
-    import AcButtonSavePerson from '../../../buttons/AcButtonSavePerson'
-    import AcButtonUpdatePerson from '../../../buttons/AcButtonUpdatePerson'
+    import AcButtonsRemoveCard from '../../../buttons/AcButtonsRemoveCard'
+    import AcButtonsRemovePerson from '../../../buttons/AcButtonsRemovePerson'
+    import AcButtonsSavePerson from '../../../buttons/AcButtonsSavePerson'
+    import AcButtonsUpdatePerson from '../../../buttons/AcButtonsUpdatePerson'
 
     export default {
-        name: "AcFormModal",
+        name: "AcCpPersonsFormsModal",
 
         components: {
-            AcButtonRemoveCard,
-            AcButtonRemovePerson,
-            AcButtonSavePerson,
-            AcButtonUpdatePerson
+            AcButtonsRemoveCard,
+            AcButtonsRemovePerson,
+            AcButtonsSavePerson,
+            AcButtonsUpdatePerson
         },
 
         computed: {

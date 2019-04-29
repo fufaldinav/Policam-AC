@@ -29,7 +29,7 @@
 </template>
 
 <script>
-    import AcButtonRemoveCard from '../../../buttons/AcButtonRemoveCard'
+    import AcButtonRemoveCard from '../../../buttons/AcButtonsRemoveCard'
 
     export default {
         name: "AcFormCards",

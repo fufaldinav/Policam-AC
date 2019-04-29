@@ -12,20 +12,11 @@ const mix = require('laravel-mix');
  */
 
 mix.js('resources/js/app.js', 'public/js')
-    .extract([
-        'axios', 'bootstrap', 'jquery', 'lodash', 'laravel-echo',
-        'popper.js', 'pusher-js', 'vue',
-    ])
+    .extract()
     .scripts([
         'resources/js/ac/notification.js',
         'resources/js/ac/push.js',
     ], 'public/js/scripts.js')
     .sass('resources/sass/app.scss', 'public/css')
-    .styles([
-        'resources/css/ac.css',
-        'resources/css/edit_persons.css',
-        'resources/css/notification.css',
-        'resources/css/tables.css',
-    ], 'public/css/style.css')
     .version()
     .disableNotifications();

@@ -9,10 +9,10 @@
 </template>
 
 <script>
-    import {Person} from '../../classes'
+    import {Person} from '../../../../classes'
 
     export default {
-        name: "AcButtonAdd",
+        name: "AcCpPersonsButtonsAdd",
 
         methods: {
             selectPerson() {

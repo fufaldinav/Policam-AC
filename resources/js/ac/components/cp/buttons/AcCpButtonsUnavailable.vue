@@ -4,7 +4,7 @@
 
 <script>
     export default {
-        name: "AcCpButtonUnavailable"
+        name: "AcCpButtonsUnavailable"
     }
 </script>
 

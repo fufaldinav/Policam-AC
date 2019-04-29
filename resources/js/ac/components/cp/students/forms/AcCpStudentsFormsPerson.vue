@@ -5,7 +5,7 @@
     >
         <div class="form-row">
             <div class="form-group col-6 d-flex justify-content-center align-items-center">
-                <ac-form-person-photo></ac-form-person-photo>
+                <ac-cp-students-forms-person-photo></ac-cp-students-forms-person-photo>
             </div>
             <div class="form-group col-6">
                 <div class="form-group">
@@ -19,7 +19,7 @@
                         class="form-control"
                         :class="{ 'is-invalid': checkField('f') === false }"
                         :placeholder="$t('Фамилия')"
-                        :disabled="selectedPerson.id === null"
+                        :disabled="selectedPerson.id > 0"
                         required
                     >
                     <div class="invalid-feedback">
@@ -37,7 +37,7 @@
                         class="form-control"
                         :class="{ 'is-invalid': checkField('i') === false }"
                         :placeholder="$t('Имя')"
-                        :disabled="selectedPerson.id === null"
+                        :disabled="selectedPerson.id > 0"
                         required
                     >
                     <div class="invalid-feedback">
@@ -54,7 +54,7 @@
                         type="text"
                         class="form-control"
                         :placeholder="$t('Отчество')"
-                        :disabled="selectedPerson.id === null"
+                        :disabled="selectedPerson.id > 0"
                     >
                 </div>
                 <div class="form-group">
@@ -68,7 +68,7 @@
                         class="form-control"
                         :class="{ 'is-invalid': checkField('birthday') === false }"
                         :placeholder="$t('Дата рождения')"
-                        :disabled="selectedPerson.id === null"
+                        :disabled="selectedPerson.id > 0"
                         required
                     >
                     <div class="invalid-feedback">
@@ -87,7 +87,6 @@
                 type="text"
                 class="form-control"
                 :placeholder="$t('Адрес')"
-                :disabled="selectedPerson.id === null"
             >
         </div>
         <div class="form-row">
@@ -101,7 +100,6 @@
                     type="text"
                     class="form-control"
                     :placeholder="$t('Номер телефона')"
-                    :disabled="selectedPerson.id === null"
                 >
             </div>
             <div class="form-group col-6">
@@ -123,44 +121,37 @@
                 <ac-form-cards></ac-form-cards>
             </div>
             <div class="form-group col-6">
-                <ac-form-last-card></ac-form-last-card>
             </div>
         </div>
         <div class="form-row">
             <div class="form-group">
-                <ac-button-save-person
+                <ac-buttons-save-person
                     v-if="selectedPerson.id === 0"
                     :disabled="hasErrors"
                 >
-                </ac-button-save-person>
-                <ac-button-update-person
+                </ac-buttons-save-person>
+                <ac-buttons-update-person
                     v-if="selectedPerson.id > 0"
                     :disabled="hasErrors"
                 >
-                </ac-button-update-person>
-                <ac-button-remove-person
-                    v-if="selectedPerson.id > 0"
-                >
-                </ac-button-remove-person>
-                <ac-button-cancel v-if="selectedPerson.id !== null"></ac-button-cancel>
+                </ac-buttons-update-person>
+                <ac-buttons-cancel v-if="selectedPerson.id !== null"></ac-buttons-cancel>
             </div>
         </div>
-        <ac-form-modal></ac-form-modal>
+        <ac-cp-students-forms-person-modal></ac-cp-students-forms-person-modal>
     </form>
 </template>
 
 <script>
-    import AcFormCards from './AcFormPersonCards'
-    import AcFormLastCard from './AcFormPersonLastCard'
-    import AcFormPersonPhoto from './AcFormPersonPhoto'
-    import AcButtonCancel from '../../../buttons/AcButtonCancel'
-    import AcButtonRemovePerson from '../../../buttons/AcButtonRemovePerson'
-    import AcButtonSavePerson from '../../../buttons/AcButtonSavePerson'
-    import AcButtonUpdatePerson from '../../../buttons/AcButtonUpdatePerson'
-    import AcFormModal from './AcFormModal'
+    import AcFormCards from './AcCpStudentsFormsPersonCards'
+    import AcCpStudentsFormsPersonPhoto from './AcCpStudentsFormsPersonPhoto'
+    import AcButtonsCancel from '../../../buttons/AcButtonsCancel'
+    import AcButtonsSavePerson from '../../../buttons/AcButtonsSavePerson'
+    import AcButtonsUpdatePerson from '../../../buttons/AcButtonsUpdatePerson'
+    import AcCpStudentsFormsPersonModal from './AcCpStudentsFormsPersonModal'
 
     export default {
-        name: "AcFormPerson",
+        name: "AcCpStudentsFormsPerson",
 
         data: function () {
             return {
@@ -173,9 +164,9 @@
         },
 
         components: {
-            AcFormCards, AcFormLastCard, AcFormPersonPhoto,
-            AcButtonCancel, AcButtonRemovePerson, AcButtonSavePerson, AcButtonUpdatePerson,
-            AcFormModal
+            AcFormCards, AcCpStudentsFormsPersonPhoto,
+            AcButtonsCancel, AcButtonsSavePerson, AcButtonsUpdatePerson,
+            AcCpStudentsFormsPersonModal
         },
 
         computed: {

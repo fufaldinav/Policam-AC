@@ -43,16 +43,24 @@
         },
 
         mounted() {
-            window.axios.get('/users/organizations/2')
-                .then(response => {
-                    for (let org of response.data) {
-                        this.organizations.push(org)
-                    }
-                    this.loading = false
-                })
-                .catch(error => {
-                    if (this.$store.state.debug) console.log(error)
-                })
+            this.loadOrganizations()
+        },
+
+        methods: {
+            loadOrganizations() {
+                window.axios.get('/users/organizations/2')
+                    .then(response => {
+                        this.organizations = []
+                        for (let org of response.data) {
+                            this.organizations.push(org)
+                        }
+                        this.loading = false
+                    })
+                    .catch(error => {
+                        if (this.$store.state.debug) console.log(error)
+                        setTimeout(this.loadOrganizations, 2000) //TODO перезапуск при ошибке
+                    })
+            }
         }
     }
 </script>

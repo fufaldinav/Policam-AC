@@ -40,7 +40,7 @@
 
 <script>
     export default {
-        name: "AcFormPersonPhoto",
+        name: "AcCpPersonsFormsPersonPhoto",
 
         computed: {
             selectedPerson() {
@@ -75,12 +75,14 @@
                     url: '/api/photos',
                     data: formData,
                     config: {headers: {'Content-Type': 'multipart/form-data'}}
-                }).then(response => {
-                    this.$store.commit('persons/addPhoto', response.data)
-                }).catch(error => {
-                    if (this.$store.state.debug) console.log(error)
-                    this.$root.alert(error, 'danger')
                 })
+                    .then(response => {
+                        this.$store.commit('persons/addPhoto', response.data)
+                    })
+                    .catch(error => {
+                        if (this.$store.state.debug) console.log(error)
+                        this.$root.alert(error, 'danger')
+                    })
             },
 
             removeUploadedPhoto() {

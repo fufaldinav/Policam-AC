@@ -10,7 +10,7 @@
 
 <script>
     export default {
-        name: "AcButtonBack",
+        name: "AcButtonsBack",
 
         methods: {
             unselectDivisionAndPerson() {

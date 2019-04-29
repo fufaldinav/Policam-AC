@@ -290,10 +290,12 @@ class Person extends Model
             $this->divisions()->syncWithoutDetaching($division->id);
         }
 
+        $divisionsToAttach = [];
         foreach ($organizations['additional'] as $orgId) {
             $division = Division::where(['organization_id' => $orgId, 'type' => 0])->first();
-            $this->divisions()->syncWithoutDetaching($division->id);
+            $divisionsToAttach[] = $division->id;
         }
+        $this->divisions()->syncWithoutDetaching($divisionsToAttach);
 
         return $this;
     }

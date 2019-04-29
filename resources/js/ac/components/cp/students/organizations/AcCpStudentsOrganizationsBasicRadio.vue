@@ -7,6 +7,7 @@
             class="custom-control-input"
             :value="org.id"
             v-model="checked"
+            :disabled="selectedPerson.id > 0"
         >
         <label class="custom-control-label" :for="'org' + org.id">
             {{ $t('Школа №')}}{{ org.name}}
@@ -17,6 +18,12 @@
 <script>
     export default {
         name: "AcCpStudentsOrganizationsBasicRadio",
+
+        data() {
+            return {
+                basicOrgAlreadySet: false
+            }
+        },
 
         props: {
             org: {
@@ -32,7 +39,7 @@
 
             checked: {
                 get() {
-                    return this.selectedPerson.organizations.basic === this.org.id
+                    return this.selectedPerson.organizations.basic
                 },
                 set(state) {
                     if (state) {

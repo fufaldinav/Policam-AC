@@ -2,17 +2,15 @@
     <button
         type="button"
         class="btn btn-danger"
-        @click="removeCard"
+        @click="removePerson"
     >
-        <slot>{{ $t('Удалить') }}</slot>
+        {{ $t('Удалить') }}
     </button>
 </template>
 
 <script>
     export default {
-        name: "AcButtonRemoveCard",
-
-        props: ['removableCard'],
+        name: "AcButtonsRemovePerson",
 
         computed: {
             selectedPerson() {
@@ -21,22 +19,21 @@
         },
 
         methods: {
-            removeCard() {
+            removePerson() {
                 if (this.$store.state.modal.shown) {
-                    this.$store.commit('persons/removeCard', this.$store.state.cards.removable)
+                    this.$store.dispatch('persons/removeSelected')
                     this.$store.dispatch('modal/close')
+                    this.$store.commit('cp/showLeftMenu')
                 } else {
-                    this.$store.commit('cards/setRemovable', this.removableCard)
-
                     this.$store.commit('modal/setTitle', this.$t('Удаление'))
 
-                    this.$store.commit('modal/setMessage', this.$t('Вы действительно хотите удалить карту?'))
+                    this.$store.commit('modal/setMessage', this.$t('Вы действительно хотите удалить ' + this.selectedPerson.f + ' ' + this.selectedPerson.i + '?'))
 
-                    this.$store.commit('modal/setAcceptButton', 'removeCard')
+                    this.$store.commit('modal/setAcceptButton', 'removePerson')
 
                     this.$store.dispatch('modal/show')
                 }
-            },
+            }
         }
     }
 </script>

@@ -41,9 +41,12 @@
                     >
                         {{ $t('Отмена') }}
                     </button>
-                    <ac-observer-buttons-card-forgot v-if="this.$store.state.modal.acceptButton === 'cardForgot'">{{ $t('Подтвердить') }}</ac-observer-buttons-card-forgot>
-                    <ac-observer-buttons-card-lost v-if="this.$store.state.modal.acceptButton === 'cardLost'">{{ $t('Подтвердить') }}</ac-observer-buttons-card-lost>
-                    <ac-observer-buttons-card-broke v-if="this.$store.state.modal.acceptButton === 'cardBroke'">{{ $t('Подтвердить') }}</ac-observer-buttons-card-broke>
+                    <ac-button-save-person v-if="this.$store.state.modal.acceptButton === 'savePerson'">
+                    </ac-button-save-person>
+                    <ac-button-update-person v-if="this.$store.state.modal.acceptButton === 'updatePerson'">
+                    </ac-button-update-person>
+                    <ac-button-remove-card v-if="this.$store.state.modal.acceptButton === 'removeCard'">
+                    </ac-button-remove-card>
                 </div>
             </div>
         </div>
@@ -51,17 +54,17 @@
 </template>
 
 <script>
-    import AcObserverButtonsCardBroke from './buttons/AcObserverButtonsCardBroke'
-    import AcObserverButtonsCardForgot from './buttons/AcObserverButtonsCardForgot'
-    import AcObserverButtonsCardLost from './buttons/AcObserverButtonsCardLost'
+    import AcButtonRemoveCard from '../../../buttons/AcButtonsRemoveCard'
+    import AcButtonSavePerson from '../../../buttons/AcButtonsSavePerson'
+    import AcButtonUpdatePerson from '../../../buttons/AcButtonsUpdatePerson'
 
     export default {
-        name: "AcObserverModal",
+        name: "AcFormModal",
 
         components: {
-            AcObserverButtonsCardBroke,
-            AcObserverButtonsCardForgot,
-            AcObserverButtonsCardLost
+            AcButtonRemoveCard,
+            AcButtonSavePerson,
+            AcButtonUpdatePerson
         },
 
         computed: {

@@ -16,7 +16,7 @@
 
 <script>
     export default {
-        name: "AcButtonDivision",
+        name: "AcButtonsDivision",
 
         props: {
             division: Object

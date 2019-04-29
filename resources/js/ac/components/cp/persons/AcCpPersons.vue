@@ -21,7 +21,7 @@
                 >
                     <div class="row mt-4">
                         <div class="container-fluid">
-                            <ac-form-person></ac-form-person>
+                            <ac-cp-persons-forms-person></ac-cp-persons-forms-person>
                         </div>
                     </div>
                 </div>
@@ -35,12 +35,12 @@
     import AcLoading from '../../AcLoading'
     import AcCpPersonsMenuLeft from './AcCpPersonsMenuLeft'
     import AcCpPersonsMenuRight from './AcCpPersonsMenuRight'
-    import AcFormPerson from './forms/AcFormPerson'
+    import AcCpPersonsFormsPerson from './forms/AcCpPersonsFormsPerson'
 
     export default {
         name: "AcCpPersons",
 
-        components: {AcLoading, AcCpPersonsMenuLeft, AcCpPersonsMenuRight, AcFormPerson},
+        components: {AcLoading, AcCpPersonsMenuLeft, AcCpPersonsMenuRight, AcCpPersonsFormsPerson},
 
         computed: {
             loading() {

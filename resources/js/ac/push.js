@@ -10,7 +10,7 @@ let config = {
 firebase.initializeApp(config)
 // пользователь уже разрешил получение уведомлений
 // подписываем на уведомления если ещё не подписали
-if (Notification.permission === `granted`) {
+if (Notification.permission === 'granted') {
     subscribe()
 }
 
@@ -21,27 +21,27 @@ window.subscribe = function () {
     messaging.requestPermission().then(function () {
         // получаем ID устройства
         messaging.getToken().then(function (currentToken) {
-            console.log(`Токен успешно получен`) //TODO перевод
+            console.log('Токен успешно получен') //TODO перевод
             if (currentToken) {
                 sendTokenToServer(currentToken)
             } else {
-                console.warn(`Не удалось получить токен.`) //TODO перевод
+                console.warn('Не удалось получить токен.') //TODO перевод
                 setTokenSentToServer(false)
             }
         }).catch(function (err) {
-            console.warn(`При получении токена произошла ошибка.`, err) //TODO перевод
+            console.warn('При получении токена произошла ошибка.', err) //TODO перевод
             setTokenSentToServer(false)
         })
     }).catch(function (err) {
-        console.warn(`Не удалось получить разрешение на показ уведомлений.`, err) //TODO перевод
+        console.warn('Не удалось получить разрешение на показ уведомлений.', err) //TODO перевод
     })
 }
 
 // отправка ID на сервер
 function sendTokenToServer(currentToken) {
     if (!isTokenSentToServer(currentToken)) {
-        console.log(`Отправка токена на сервер...`) //TODO перевод
-        axios.post(`/users/token`, {
+        console.log('Отправка токена на сервер...') //TODO перевод
+        window.axios.post('/users/token', {
                 token: currentToken
             })
             .then(function (response) {
@@ -52,19 +52,19 @@ function sendTokenToServer(currentToken) {
             })
         setTokenSentToServer(currentToken)
     } else {
-        console.log(`Токен уже отправлен на сервер.`) //TODO перевод
+        console.log('Токен уже отправлен на сервер.') //TODO перевод
     }
 }
 
 // используем localStorage для отметки того,
 // что пользователь уже подписался на уведомления
 function isTokenSentToServer(currentToken) {
-    return window.localStorage.getItem(`sentFirebaseMessagingToken`) == currentToken
+    return window.localStorage.getItem('sentFirebaseMessagingToken') === currentToken
 }
 
 function setTokenSentToServer(currentToken) {
     window.localStorage.setItem(
-        `sentFirebaseMessagingToken`,
-        currentToken ? currentToken : ``
+        'sentFirebaseMessagingToken',
+        currentToken ? currentToken : ''
     )
 }
