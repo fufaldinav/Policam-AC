@@ -92,7 +92,7 @@
                                 <div class="form-row">
                                     <div class="form-group col-4 col-sm-3">
                                         <label for="division">
-                                            {{ selectedPersonDivisionTypeName }}
+                                            {{ selectedPersonDivisionNameByType }}
                                         </label>
                                         <input
                                             id="division"
@@ -207,7 +207,7 @@
                 return this.selectedPersonDivision.name
             },
 
-            selectedPersonDivisionTypeName() {
+            selectedPersonDivisionNameByType() {
                 if (this.selectedPersonDivision === null) return this.$t('Подразделение')
                 if (this.selectedPersonDivision.type === 1) {
                     return this.$t('Класс')

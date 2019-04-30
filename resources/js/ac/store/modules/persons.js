@@ -131,6 +131,10 @@ const actions = {
                     commit('divisions/addPerson', {divisionId: id, personId: person.id}, {root: true})
                 }
 
+                for (let id of state.selected.divisionsToDelete) {
+                    commit('divisions/removePerson', {divisionId: id, personId: person.id}, {root: true})
+                }
+
                 commit('clearSelected')
 
                 window.Ac.alert(person.f + ' ' + person.i + ' ' + i18n.t('сохранен') + ' ' + i18n.t('успешно'))

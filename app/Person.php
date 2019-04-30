@@ -122,8 +122,8 @@ class Person extends Model
 
     public function attachDivisions(array $divisions): self
     {
-        foreach ($divisions as $div_id) {
-            $div = Division::find($div_id);
+        foreach ($divisions as $divisionId) {
+            $div = Division::find($divisionId);
 
             if (! $div) {
                 continue;
@@ -137,8 +137,8 @@ class Person extends Model
 
     public function detachDivisions(array $divisions): self
     {
-        foreach ($divisions as $div) {
-            $div = Division::find($div['id']);
+        foreach ($divisions as $divisionId) {
+            $div = Division::find($divisionId);
 
             if (! $div) {
                 continue;

@@ -77,18 +77,23 @@
                 </div>
             </div>
         </div>
-        <div class="form-group">
-            <label for="address">
-                {{ $t('Адрес') }}
-            </label>
-            <input
-                id="address"
-                v-model="selectedPerson.address"
-                type="text"
-                class="form-control"
-                :placeholder="$t('Адрес')"
-                :disabled="selectedPerson.id === null"
-            >
+        <div class="form-row">
+            <div class="form-group col-4 col-sm-3">
+                <ac-cp-persons-forms-select-division v-if="selectedOrganization.type === 1"></ac-cp-persons-forms-select-division>
+            </div>
+            <div class="form-group col-8 col-sm-9">
+                <label for="address">
+                    {{ $t('Адрес') }}
+                </label>
+                <input
+                    id="address"
+                    v-model="selectedPerson.address"
+                    type="text"
+                    class="form-control"
+                    :placeholder="$t('Адрес')"
+                    :disabled="selectedPerson.id === null"
+                >
+            </div>
         </div>
         <div class="form-row">
             <div class="form-group col-6">
@@ -153,6 +158,7 @@
     import AcCpPersonsFormsCards from './AcCpPersonsFormsCards'
     import AcCpPersonsFormsLastCard from './AcCpPersonsFormsLastCard'
     import AcCpPersonsFormsPersonPhoto from './AcCpPersonsFormsPersonPhoto'
+    import AcCpPersonsFormsSelectDivision from './AcCpPersonsFormsSelectDivision'
     import AcButtonsCancel from '../../../buttons/AcButtonsCancel'
     import AcButtonsRemovePerson from '../../../buttons/AcButtonsRemovePerson'
     import AcButtonsSavePerson from '../../../buttons/AcButtonsSavePerson'
@@ -174,11 +180,15 @@
 
         components: {
             AcCpPersonsFormsCards, AcCpPersonsFormsLastCard, AcCpPersonsFormsPersonPhoto,
-            AcButtonsCancel, AcButtonsRemovePerson, AcButtonsSavePerson, AcButtonsUpdatePerson,
-            AcCpPersonsFormsModal
+            AcCpPersonsFormsSelectDivision, AcButtonsCancel, AcButtonsRemovePerson, AcButtonsSavePerson,
+            AcButtonsUpdatePerson, AcCpPersonsFormsModal
         },
 
         computed: {
+            selectedOrganization() {
+                return this.$store.state.organizations.selected
+            },
+
             selectedPerson() {
                 return this.$store.state.persons.selected
             },

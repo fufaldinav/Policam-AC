@@ -16,8 +16,8 @@
                     class="list-group-item"
                     :key="org.id"
                 >
-                    <ac-cp-students-organizations-additional-checkbox
-                        :org="org"></ac-cp-students-organizations-additional-checkbox>
+                    <ac-cp-students-organizations-additional-checkbox :org="org">
+                    </ac-cp-students-organizations-additional-checkbox>
                 </li>
             </ul>
         </div>
