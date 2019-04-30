@@ -63,6 +63,6 @@ class Division extends Model
 
     public function persons()
     {
-        return $this->belongsToMany('App\Person');
+        return $this->belongsToMany('App\Person')->withTimestamps();
     }
 }

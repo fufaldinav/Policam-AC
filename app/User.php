@@ -114,7 +114,7 @@ class User extends Model implements
 
     public function organizations()
     {
-        return $this->belongsToMany('App\Organization');
+        return $this->belongsToMany('App\Organization')->withTimestamps();
     }
 
     public function persons()
@@ -124,7 +124,7 @@ class User extends Model implements
 
     public function subscriptions()
     {
-        return $this->belongsToMany('App\Person');
+        return $this->belongsToMany('App\Person')->withTimestamps();
     }
 
     public function referralCodes()
@@ -134,7 +134,7 @@ class User extends Model implements
 
     public function roles()
     {
-        return $this->belongsToMany('App\Role');
+        return $this->belongsToMany('App\Role')->withTimestamps();
     }
 
     public function tokens()
@@ -151,7 +151,7 @@ class User extends Model implements
      */
     public function hasRole($role)
     {
-        $roles = $this->belongsToMany('App\Role');
+        $roles = $this->belongsToMany('App\Role')->withTimestamps();
         if (is_array($role)) {
             $roles = $roles->whereIn('roles.type', $role)->get();
         } else {

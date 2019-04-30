@@ -79,7 +79,7 @@ class Controller extends Model
 
     public function cameras()
     {
-        return $this->belongsToMany('App\Camera');
+        return $this->belongsToMany('App\Camera')->withTimestamps();
     }
 
     public function notifications()

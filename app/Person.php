@@ -97,7 +97,7 @@ class Person extends Model
 
     public function divisions()
     {
-        return $this->belongsToMany('App\Division');
+        return $this->belongsToMany('App\Division')->withTimestamps();
     }
 
     public function organizations()
@@ -117,7 +117,7 @@ class Person extends Model
 
     public function users()
     {
-        return $this->belongsToMany('App\User');
+        return $this->belongsToMany('App\User')->withTimestamps();
     }
 
     public function attachDivisions(array $divisions): self

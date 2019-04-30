@@ -60,6 +60,6 @@ class Camera extends Model
 
     public function controllers()
     {
-        return $this->belongsToMany('App\Controller');
+        return $this->belongsToMany('App\Controller')->withTimestamps();
     }
 }
