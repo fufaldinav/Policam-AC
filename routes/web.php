@@ -12,8 +12,13 @@ Route::get('observer', 'ObserverController@index')->name('observer');
  */
 Route::group(['prefix' => 'api', 'as' => 'api.'], function () {
     Route::resource('persons', 'PersonsController')->except(['create', 'edit']);
-    Route::resource('divisions', 'DivisionsController')->except(['create', 'edit']);
     Route::resource('photos', 'PhotosController')->only(['store', 'destroy']);
+    Route::group(['prefix' => 'divisions', 'as' => 'divisions.'], function () {
+        Route::get('{organizationId}/{withPersons?}', 'DivisionsController@getByOrganization');
+        Route::post('/', 'DivisionsController@store');
+        Route::put('{id}', 'DivisionsController@update');
+        Route::delete('{id}', 'DivisionsController@destroy');
+    });
 });
 /*
  * Auth

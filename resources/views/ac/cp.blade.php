@@ -2,8 +2,7 @@
 
 @section('content')
     <div class="container-fluid d-flex justify-content-center">
-        <div class="row mt-2">
-            <div class="col"></div>
+        <div class="row justify-content-center mt-2">
             <div class="col-12 col-lg-10 col-xl-8">
                 <div class="row">
                     <div class="col-12 col-md-4 d-flex justify-content-center">
@@ -72,7 +71,6 @@
                     </div>
                 </div>
             </div>
-            <div class="col"></div>
         </div>
     </div>
 @endsection

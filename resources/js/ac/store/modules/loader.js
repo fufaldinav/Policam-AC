@@ -30,20 +30,22 @@ const actions = {
             })
     },
 
-    async loadDivisions({commit, dispatch, rootState}, organizationId = null) {
+    async loadDivisions({commit, dispatch, rootState}, params) {
         commit('changeLoadingState', true)
-        let url = '/api/divisions'
-        if (organizationId !== null) {
-            url += '/' + organizationId
-            commit('persons/clearCollection', null, {root: true})
+        if (params.organizationId > 0) {
             commit('divisions/clearCollection', null, {root: true})
         }
-        window.axios.get(url)
+        if (params.withPersons > 0) {
+            commit('persons/clearCollection', null, {root: true})
+        }
+        window.axios.get(`/api/divisions/${params.organizationId}/${params.withPersons}`)
             .then(response => {
                 for (let division of response.data) {
-                    for (let person of division.persons) {
-                        person.divisions = [division.id]
-                        dispatch('persons/add', person, {root: true})
+                    if (params.withPersons > 0) {
+                        for (let person of division.persons) {
+                            person.divisions = [division.id]
+                            dispatch('persons/add', person, {root: true})
+                        }
                     }
                     commit('divisions/add', division, {root: true})
                 }
@@ -51,7 +53,7 @@ const actions = {
             })
             .catch(error => {
                 if (rootState.debug) console.log(error)
-                setTimeout(dispatch('loadDivisions'), 2000) //TODO перезапуск при ошибке
+                setTimeout(dispatch('loadDivisions', params), 2000) //TODO перезапуск при ошибке
             })
     },
 

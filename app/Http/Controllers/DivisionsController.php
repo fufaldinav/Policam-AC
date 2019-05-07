@@ -47,24 +47,28 @@ class DivisionsController extends Controller
         return view('ac.classes');
     }
 
-    public function index(Request $request)
+    public function getByOrganization(Request $request, int $organizationId = 0, int $withPersons = 0)
     {
-        $organization = $request->user()->organizations()->first();
+        if ($organizationId > 0) {
+            $divisions = $request->user()->divisions()->where('divisions.organization_id', $organizationId)->get();
+        } else {
+            $divisions = $request->user()->organizations()->first()->divisions;
+        }
 
-        abort_if(! $organization, 403);
-
-        return response()->json(
-            $organization->divisions->load(['persons.cards', 'persons.photos'])
-        );
-    }
-
-    public function show(Request $request, $organization_id)
-    {
-        $divisions = $request->user()->divisions()->where('divisions.organization_id', $organization_id)->get()->load(['persons.cards', 'persons.photos']);
+        if ($withPersons > 0) {
+            $divisions->load(['persons.cards', 'persons.photos']);
+        }
 
         abort_if(! $divisions, 403);
 
         return response()->json($divisions);
+    }
+
+    public function store(Request $request)
+    {
+        $division = App\Division::create($request->input('division'));
+
+        return response()->json($division);
     }
 
     public function update(Request $request, $id)
@@ -75,14 +79,7 @@ class DivisionsController extends Controller
 
         $division->update($request->input('division'));
 
-        return response()->json($division->load('persons'));
-    }
-
-    public function store(Request $request)
-    {
-        $division = App\Division::create($request->input('division'));
-
-        return response()->json($division->load('persons'));
+        return response()->json($division);
     }
 
     public function destroy(Request $request, int $id): ?int

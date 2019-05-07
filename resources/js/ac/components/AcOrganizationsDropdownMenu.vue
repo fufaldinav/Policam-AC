@@ -1,7 +1,7 @@
 <template>
     <div class="nav-item">
         <div v-if="organizations.length === 1">
-            <a class="navbar-brand" href="" @click.prevent="">{{ organizationName(currentOrganization) }}</a>
+            <a class="navbar-brand" href="" @click.prevent>{{ organizationName(currentOrganization) }}</a>
         </div>
         <div
             v-else-if="organizations.length > 0"
@@ -56,7 +56,7 @@
                 this.$store.dispatch('messenger/unsubscribe')
                 this.$store.commit('organizations/setSelected', org)
                 this.$store.dispatch('messenger/subscribe')
-                this.$store.dispatch('loader/loadDivisions', org.id)
+                this.$store.dispatch('loader/loadDivisions', {organizationId: org.id, withPersons: this.$store.state.personsMustBeLoaded})
             }
         },
     }

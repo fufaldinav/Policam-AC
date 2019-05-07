@@ -259,7 +259,7 @@
         },
 
         created() {
-            this.$store.dispatch('loader/loadDivisions')
+            this.$store.dispatch('loader/loadDivisions', {organizationId: 0, withPersons: 1})
         },
 
         beforeMount() {

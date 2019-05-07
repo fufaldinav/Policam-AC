@@ -1,4 +1,5 @@
 import {Division} from '../../classes'
+import i18n from "../../../vue-i18n";
 
 const state = {
     collection: [],
@@ -7,9 +8,7 @@ const state = {
 
 const getters = {
     getById: state => id => {
-        return state.collection.find((value) => {
-            if (value.id === id) return true
-        })
+        return state.collection.find(value => value.id === id)
     },
 
     sorted: state => {
@@ -64,6 +63,13 @@ const mutations = {
         state.collection.push(new Division(division))
     },
 
+    remove(state, division) {
+        let index = state.collection.indexOf(division)
+        if (index > -1) {
+            state.collection.splice(index, 1)
+        }
+    },
+
     clearCollection(state) {
         while (state.collection.length > 0) {
             state.collection.pop()
@@ -85,6 +91,7 @@ const mutations = {
         let division = state.collection.find((value) => {
             if (value.id === relation.divisionId) return true
         })
+        if (division === undefined) return
         let index = division.persons.indexOf(relation.personId)
         if (index > -1) {
             division.persons.splice(index, 1)
@@ -100,7 +107,45 @@ const mutations = {
     }
 }
 
-const actions = {}
+const actions = {
+    async saveSelected({state, commit, rootState}) {
+        window.axios.post('/api/divisions', {
+            division: state.selected
+        })
+            .then(response => {
+                let division = response.data
+
+                commit('add', division)
+
+                commit('clearSelected')
+
+                window.Ac.alert(division.name + ' ' + i18n.t('сохранено') + ' ' + i18n.t('успешно'))
+            })
+            .catch(error => {
+                if (rootState.debug) console.log(error)
+                window.Ac.alert(error, 'danger')
+            })
+    },
+
+    async removeSelected({state, commit, rootState, rootGetters}) {
+        window.axios.delete('/api/divisions/' + state.selected.id)
+            .then(response => {
+                let id = response.data
+                let division = rootGetters['divisions/getById'](id)
+
+                let name = division.name
+
+                commit('remove', division)
+                commit('clearSelected')
+
+                window.Ac.alert(name + ' ' + i18n.t('удалено') + ' ' + i18n.t('успешно'))
+            })
+            .catch(error => {
+                if (rootState.debug) console.log(error)
+                window.Ac.alert(error, 'danger')
+            })
+    }
+}
 
 export default {
     namespaced: true,
