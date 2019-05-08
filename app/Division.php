@@ -65,4 +65,23 @@ class Division extends Model
     {
         return $this->belongsToMany('App\Person')->withTimestamps();
     }
+
+    public function detachPersons(): self
+    {
+        if ($this->type === 0) {
+            $this->persons()->sync([]);
+            return $this;
+        }
+
+        foreach ($this->persons as $person) {
+            if ($person->divisions->count() === 1) {
+                $emptyDivision = Division::where(['type' => 0, 'organization_id' => $this->organization_id])->first();
+                $person->divisions()->sync([$emptyDivision->id]);
+            } else {
+                $person->divisions()->detach($this->id);
+            }
+        }
+
+        return $this;
+    }
 }

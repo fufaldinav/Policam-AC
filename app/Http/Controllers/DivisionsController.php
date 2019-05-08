@@ -88,6 +88,8 @@ class DivisionsController extends Controller
 
         abort_if(! $division, 403);
 
+        $division->detachPersons();
+
         if ($division->delete()) {
             return $id;
         }
