@@ -39,11 +39,11 @@
                         class="btn btn-secondary"
                         data-dismiss="modal"
                     >
-                        {{ $t('ac.cancel') }}
+                        {{ $t('Отмена') }}
                     </button>
-                    <ac-button-card-forgot v-if="this.$store.state.modal.acceptButton === 'cardForgot'">{{ $t('ac.accept') }}</ac-button-card-forgot>
-                    <ac-button-card-lost v-if="this.$store.state.modal.acceptButton === 'cardLost'">{{ $t('ac.accept') }}</ac-button-card-lost>
-                    <ac-button-card-broke v-if="this.$store.state.modal.acceptButton === 'cardBroke'">{{ $t('ac.accept') }}</ac-button-card-broke>
+                    <ac-observer-buttons-card-forgot v-if="this.$store.state.modal.acceptButton === 'cardForgot'">{{ $t('Подтвердить') }}</ac-observer-buttons-card-forgot>
+                    <ac-observer-buttons-card-lost v-if="this.$store.state.modal.acceptButton === 'cardLost'">{{ $t('Подтвердить') }}</ac-observer-buttons-card-lost>
+                    <ac-observer-buttons-card-broke v-if="this.$store.state.modal.acceptButton === 'cardBroke'">{{ $t('Подтвердить') }}</ac-observer-buttons-card-broke>
                 </div>
             </div>
         </div>
@@ -51,17 +51,17 @@
 </template>
 
 <script>
-    import AcButtonCardBroke from '../buttons/AcButtonCardBroke'
-    import AcButtonCardForgot from '../buttons/AcButtonCardForgot'
-    import AcButtonCardLost from '../buttons/AcButtonCardLost'
+    import AcObserverButtonsCardBroke from './buttons/AcObserverButtonsCardBroke'
+    import AcObserverButtonsCardForgot from './buttons/AcObserverButtonsCardForgot'
+    import AcObserverButtonsCardLost from './buttons/AcObserverButtonsCardLost'
 
     export default {
-        name: "AcFormModal",
+        name: "AcObserverModal",
 
         components: {
-            AcButtonCardBroke,
-            AcButtonCardForgot,
-            AcButtonCardLost
+            AcObserverButtonsCardBroke,
+            AcObserverButtonsCardForgot,
+            AcObserverButtonsCardLost
         },
 
         computed: {

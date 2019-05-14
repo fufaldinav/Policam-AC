@@ -2,6 +2,8 @@ import {Organization} from '../../classes'
 
 const state = {
     collection: [],
+    basic: [],
+    additional: [],
     selected: null
 }
 

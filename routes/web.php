@@ -1,42 +1,30 @@
 <?php
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
 /*
  * Home Page
  */
-Route::redirect('/', 'observer');
+Route::redirect('/', 'cp');
 /*
- *
+ * Observer
  */
 Route::get('observer', 'ObserverController@index')->name('observer');
 /*
  * API
  */
 Route::group(['prefix' => 'api', 'as' => 'api.'], function () {
-    Route::group(['middleware' => 'role:3'], function () {
-        Route::resource('persons', 'PersonsController')->except(['create', 'edit']);
-    });
-    Route::group(['middleware' => 'role:3'], function () {
-        Route::resource('divisions', 'DivisionsController')->except(['create', 'edit']);
-    });
-    Route::group(['middleware' => 'role:3'], function () {
-        Route::resource('photos', 'PhotosController')->only(['store', 'destroy']);
+    Route::resource('persons', 'PersonsController')->except(['create', 'edit']);
+    Route::resource('photos', 'PhotosController')->only(['store', 'destroy']);
+    Route::group(['prefix' => 'divisions', 'as' => 'divisions.'], function () {
+        Route::get('{organizationId}/{withPersons?}', 'DivisionsController@getByOrganization');
+        Route::post('/', 'DivisionsController@store');
+        Route::put('{id}', 'DivisionsController@update');
+        Route::delete('{id}', 'DivisionsController@destroy');
     });
 });
 /*
  * Auth
  */
 Auth::routes(['verify' => true]);
+Route::get('register/{referral_code}', 'Auth\RegisterController@showRegistrationForm');
 /*
  * Cards
  */
@@ -51,7 +39,7 @@ Route::group(['prefix' => 'cards', 'as' => 'cards.'], function () {
  */
 Route::group(['prefix' => 'controllers', 'as' => 'controllers.'], function () {
     Route::get('get_list', 'ControllersController@getList');
-    Route::get('set_door_params/{controller_id}/{open_time}', 'ControllersController@setDoorParams');
+    Route::get('set_door_params/{controller_id}/{open_time}/{?open_control}/{?close_control}', 'ControllersController@setDoorParams');
     Route::get('clear/{controller_id}', 'ControllersController@clear');
     Route::get('reload_cards/{controller_id}', 'ControllersController@reloadCards');
 });
@@ -60,8 +48,9 @@ Route::group(['prefix' => 'controllers', 'as' => 'controllers.'], function () {
  */
 Route::group(['prefix' => 'cp', 'as' => 'cp.'], function () {
     Route::get('/', 'UsersController@index')->name('index');
-    Route::get('/classes/{organization_id?}', 'DivisionsController@classes')->name('classes')->middleware('role:3');
-    Route::get('/persons/{organization_id?}', 'PersonsController@page')->name('persons')->middleware('role:3');
+    Route::get('classes', 'DivisionsController@classes')->name('classes')->middleware('role:2,3');
+    Route::get('persons', 'PersonsController@page')->name('persons')->middleware('role:2,3');
+    Route::get('students', 'UsersController@students')->name('students');
 
 });
 /*
@@ -78,6 +67,9 @@ Route::post('server', 'ServersController@index');
 Route::group(['prefix' => 'users', 'as' => 'users.'], function () {
     Route::post('token', 'UsersController@token');
     Route::get('organizations', 'UsersController@getOrganizations');
+    Route::get('organizations/{type}', 'UsersController@getOrganizationsByType');
+    Route::get('persons', 'UsersController@getPersons');
+    Route::get('referral_codes', 'UsersController@getReferralCodes');
 });
 Route::get('users/notification/{hash}', 'UsersController@notification');
 /*

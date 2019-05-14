@@ -45,10 +45,10 @@ class ResetPassword extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject(__('email.reset_password_notification'))
-            ->line(__('email.reset_password_greetings'))
-            ->action(__('email.reset_password'), url(config('app.url').route('password.reset', ['token' => $this->token], false)))
-            ->line(__('email.reset_password_expire_in', ['count' => config('auth.passwords.users.expire')]))
-            ->line(__('email.reset_password_not_request'));
+            ->subject(__('Сброс пароля'))
+            ->line(__('Вы получили это письмо, потому что мы получили запрос на сброс пароля для вашей учетной записи.'))
+            ->action(__('Сбросить пароль'), url(config('app.url').route('password.reset', ['token' => $this->token], false)))
+            ->line(__('Срок действия ссылки для сброса пароля истекает через :count мин.', ['count' => config('auth.passwords.users.expire')]))
+            ->line(__('Если вы не запрашивали сброс пароля, никаких дальнейших действий не требуется.'));
     }
 }

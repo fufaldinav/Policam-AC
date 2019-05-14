@@ -1,5 +1,5 @@
 <template>
-    <div class="position-fixed d-flex justify-content-center align-items-center ac-loading">
+    <div class="position-absolute d-flex justify-content-center align-items-center ac-loading">
         <div class="mx-auto">
             <div class="spinner-border text-primary" role="status">
                 <span class="sr-only">Loading...</span>
@@ -16,8 +16,8 @@
 
 <style scoped>
     .ac-loading {
-        top: calc(50vh - 2rem);
-        left: calc(50vw - 2rem);
+        top: calc(50% - 2rem);
+        left: calc(50% - 2rem);
         max-height: 4rem;
         max-width: 4rem;
         height: 4rem;

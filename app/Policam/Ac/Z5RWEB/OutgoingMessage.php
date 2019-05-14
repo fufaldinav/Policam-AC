@@ -114,7 +114,7 @@ final class OutgoingMessage implements JsonSerializable
         $this->close_control = $close_control;
     }
 
-    public function addCard(object $card): void
+    public function addCard(Card $card): void
     {
         $this->cards[] = $card;
     }

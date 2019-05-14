@@ -107,11 +107,11 @@ class Notificator
     {
         switch ($this->event->event) {
             case 4: //вход
-                $event = __('ac.entrance');
+                $event = __('Вход');
                 break;
 
             case 5: //выход
-                $event = __('ac.exit');
+                $event = __('Выход');
                 break;
 
             default:
@@ -183,9 +183,5 @@ class Notificator
         if ($response) {
             $notification->save();
         }
-
-        $logger = new Logger();
-        $logger->add('push', "USER: $user->id || $response");
-        $logger->write();
     }
 }

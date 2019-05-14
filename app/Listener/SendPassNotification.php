@@ -4,8 +4,6 @@ namespace App\Listener;
 
 use App\Events\EventReceived;
 use App\Policam\Ac\Notificator;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class SendPassNotification
 {

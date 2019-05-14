@@ -35,14 +35,16 @@
                 </template>
                 <template slot="ac-organizations">
                     @auth
-                        <ac-organizations-dropdown-menu></ac-organizations-dropdown-menu>
+                        @if(Auth::user()->hasVerifiedEmail())
+                            <ac-organizations-dropdown-menu></ac-organizations-dropdown-menu>
+                        @endif
                     @endauth
                 </template>
                 <template slot="ac-menu-button">
                     <button class="navbar-toggler mr-3" type="button" data-toggle="collapse"
                             data-target="#navbarSupportedContent"
                             aria-controls="navbarSupportedContent" aria-expanded="false"
-                            aria-label="{{ __('Toggle navigation') }}"
+                            aria-label="{{ __('Переключить навигацию') }}"
                     >
                         <span class="navbar-toggler-icon"></span>
                     </button>
@@ -50,10 +52,19 @@
                 <template slot="ac-nav-left-side">
                     <div class="navbar-nav mr-auto">
                         @auth
-                            <a class="nav-item nav-link" href="{{ route('observer') }}">{{ __('ac.observation') }}</a>
-                            <a class="nav-item nav-link"
-                               href="{{ route('cp.persons') }}">{{ __('ac.personal') }}</a>
-                            {{--                            <a class="nav-item nav-link" href="{{ route('cp.classes') }}">{{ __('ac.classes') }}</a>--}}
+                            @if(Auth::user()->hasRole([1, 2, 3, 6]))
+                                <a class="nav-item nav-link"
+                                   href="{{ route('observer') }}">{{ __('Наблюдение') }}</a>
+                            @endif
+                            @if(Auth::user()->hasRole([1, 2, 3]))
+                                <a class="nav-item nav-link"
+                                   href="{{ route('cp.persons') }}">{{ __('Персонал') }}</a>
+                                <a class="nav-item nav-link" href="{{ route('cp.classes') }}">{{ __('Классы') }}</a>
+                            @endif
+                                @if(Auth::user()->hasRole([1, 4, 5]))
+                                    <a class="nav-item nav-link"
+                                       href="{{ route('cp.students') }}">{{ __('Ученики') }}</a>
+                                @endif
                         @endauth
                     </div>
                 </template>
@@ -61,18 +72,31 @@
                     <div class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
                         @guest
-                            <a class="nav-item nav-link" href="{{ route('login') }}">{{ __('auth.login') }}</a>
+                            <a class="nav-item nav-link" href="{{ route('login') }}">{{ __('Вход') }}</a>
                             @if (Route::has('register'))
                                 <a class="nav-item nav-link"
-                                   href="{{ route('register') }}">{{ __('auth.register') }}</a>
+                                   href="{{ route('register') }}">{{ __('Регистрация') }}</a>
                             @endif
                         @else
-                            <a class="nav-item nav-link" href="{{ route('logout') }}"
-                               onclick="event.preventDefault();
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdownMenuLink"
+                                   data-toggle="dropdown" data-display="static" aria-haspopup="true"
+                                   aria-expanded="false">
+                                    {{ Auth::user()->name }}
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right m-2 px-2"
+                                     aria-labelledby="userDropdownMenuLink">
+                                    <a class="nav-item nav-link" href="{{ route('cp.index') }}">
+                                        {{ __('Панель управления') }}
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="nav-item nav-link" href="{{ route('logout') }}"
+                                       onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                {{ __('auth.logout') }}
-                            </a>
-
+                                        {{ __('Выход') }}
+                                    </a>
+                                </div>
+                            </li>
                             <form id="logout-form" action="{{ route('logout') }}" method="POST"
                                   style="display: none;">
                                 @csrf

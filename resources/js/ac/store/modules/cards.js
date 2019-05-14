@@ -3,7 +3,8 @@ import {Card} from '../../classes'
 const state = {
     last: null,
     manualInput: false,
-    removable: null
+    removable: null,
+    referralCards: []
 }
 
 const getters = {}
@@ -23,6 +24,10 @@ const mutations = {
 
     setRemovable(state, card) {
         state.removable = card
+    },
+
+    addReferralCard(state, card){
+        state.referralCards.push(card)
     }
 }
 

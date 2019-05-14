@@ -82,80 +82,90 @@ const actions = {
     async saveSelected({state, commit, rootState}) {
         window.axios.post('/api/persons', {
             person: state.selected
-        }).then(response => {
-            let person = response.data
-            let divisions = []
-
-            for (let division of person.divisions) {
-                let id = division.id
-                divisions.push(id)
-            }
-
-            person.divisions = divisions
-
-            commit('add', person)
-
-            for (let id of divisions) {
-                commit('divisions/addPerson', {divisionId: id, personId: person.id}, {root: true})
-            }
-
-            commit('clearSelected')
-
-            window.Ac.alert(person.f + ' ' + person.i + ' ' + i18n.t('ac.saved') + ' ' + i18n.t('ac.successful'))
-        }).catch(error => {
-            if (rootState.debug) console.log(error)
-            window.Ac.alert(error, 'danger')
         })
+            .then(response => {
+                let person = response.data
+                let divisions = []
+
+                for (let division of person.divisions) {
+                    let id = division.id
+                    divisions.push(id)
+                }
+
+                person.divisions = divisions
+
+                commit('add', person)
+
+                for (let id of divisions) {
+                    commit('divisions/addPerson', {divisionId: id, personId: person.id}, {root: true})
+                }
+
+                commit('clearSelected')
+
+                window.Ac.alert(person.f + ' ' + person.i + ' ' + i18n.t('сохранен') + ' ' + i18n.t('успешно'))
+            })
+            .catch(error => {
+                if (rootState.debug) console.log(error)
+                window.Ac.alert(error, 'danger')
+            })
     },
 
     async updateSelected({state, commit, rootState}) {
         window.axios.put('/api/persons/' + state.selected.id, {
             person: state.selected
-        }).then(response => {
-            let person = response.data
-            let divisions = []
-
-            for (let division of person.divisions) {
-                let id = division.id
-                divisions.push(id)
-            }
-
-            person.divisions = divisions
-
-            commit('update', new Person(person))
-
-            for (let id of divisions) {
-                commit('divisions/addPerson', {divisionId: id, personId: person.id}, {root: true})
-            }
-
-            commit('clearSelected')
-
-            window.Ac.alert(person.f + ' ' + person.i + ' ' + i18n.t('ac.updated') + ' ' + i18n.t('ac.successful'))
-        }).catch(error => {
-            if (rootState.debug) console.log(error)
-            window.Ac.alert(error, 'danger')
         })
+            .then(response => {
+                let person = response.data
+                let divisions = []
+
+                for (let division of person.divisions) {
+                    let id = division.id
+                    divisions.push(id)
+                }
+
+                person.divisions = divisions
+
+                commit('update', new Person(person))
+
+                for (let id of divisions) {
+                    commit('divisions/addPerson', {divisionId: id, personId: person.id}, {root: true})
+                }
+
+                for (let id of state.selected.divisionsToDelete) {
+                    commit('divisions/removePerson', {divisionId: id, personId: person.id}, {root: true})
+                }
+
+                commit('clearSelected')
+
+                window.Ac.alert(person.f + ' ' + person.i + ' ' + i18n.t('сохранен') + ' ' + i18n.t('успешно'))
+            })
+            .catch(error => {
+                if (rootState.debug) console.log(error)
+                window.Ac.alert(error, 'danger')
+            })
     },
 
     async removeSelected({state, commit, rootState}) {
-        window.axios.delete('/api/persons/' + state.selected.id).then(response => {
-            let id = response.data
-            let person = state.collection[id]
+        window.axios.delete('/api/persons/' + state.selected.id)
+            .then(response => {
+                let id = response.data
+                let person = state.collection[id]
 
-            for (let division of person.divisions) {
-                commit('divisions/removePerson', {divisionId: division, personId: person.id}, {root: true})
-            }
+                for (let division of person.divisions) {
+                    commit('divisions/removePerson', {divisionId: division, personId: person.id}, {root: true})
+                }
 
-            let fullName = person.f + ' ' + person.i
+                let fullName = person.f + ' ' + person.i
 
-            commit('remove', person)
-            commit('clearSelected')
+                commit('remove', person)
+                commit('clearSelected')
 
-            window.Ac.alert(fullName + ' ' + i18n.t('ac.deleted') + ' ' + i18n.t('ac.successful'))
-        }).catch(error => {
-            if (rootState.debug) console.log(error)
-            window.Ac.alert(error, 'danger')
-        })
+                window.Ac.alert(fullName + ' ' + i18n.t('удален') + ' ' + i18n.t('успешно'))
+            })
+            .catch(error => {
+                if (rootState.debug) console.log(error)
+                window.Ac.alert(error, 'danger')
+            })
     }
 }
 

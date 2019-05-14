@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\ReferralCode;
+use App\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+
+use Log;
 
 class RegisterController extends Controller
 {
@@ -41,6 +45,24 @@ class RegisterController extends Controller
     }
 
     /**
+     * Show the application registration form.
+     *
+     * @param string|null $referralCode
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showRegistrationForm(string $referralCode = null)
+    {
+        if ($referralCode) {
+            $rc = ReferralCode::where(['code' => $referralCode, 'user_id' => null])->first();
+        } else {
+            $rc = null;
+        }
+
+        return view('auth.register', compact('rc'));
+    }
+
+    /**
      * Get a validator for an incoming registration request.
      *
      * @param  array  $data
@@ -50,6 +72,7 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
@@ -63,10 +86,24 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
+            'last_name' => $data['last_name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+
+        if (isset($data['card_code'])) {
+            $rc = ReferralCode::where(['card' => $data['card_code']])->first();
+            $rc->user_id = $user->id;
+            $rc->save();
+        }
+
+        if (isset($data['role'])) {
+            $role = Role::find($data['role']);
+            $user->roles()->save($role);
+        }
+
+        return $user;
     }
 }

@@ -22,6 +22,7 @@ use Staudenmeir\EloquentHasManyDeep\HasRelationships;
  * @mixin \Eloquent
  * @property int $id
  * @property string $name
+ * @property string $last_name
  * @property string $email
  * @property \Illuminate\Support\Carbon|null $email_verified_at
  * @property string $password
@@ -45,9 +46,11 @@ use Staudenmeir\EloquentHasManyDeep\HasRelationships;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereEmailVerifiedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereLastName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereUpdatedAt($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\ReferralCode[] $referralCodes
  */
 class User extends Model implements
     AuthenticatableContract,
@@ -65,7 +68,7 @@ class User extends Model implements
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'last_name', 'email', 'password',
     ];
 
     /**
@@ -89,16 +92,6 @@ class User extends Model implements
         'email_verified_at' => 'datetime',
     ];
 
-    public function hasRole($role)
-    {
-        return $this->belongsToMany('App\Role')->get()->contains($role);
-    }
-
-    public function isAdmin()
-    {
-        return $this->hasRole(1);
-    }
-
     public function cards()
     {
         return $this->hasManyDeep('App\Card', ['organization_user', 'App\Organization', 'App\Division', 'division_person', 'App\Person']);
@@ -121,7 +114,7 @@ class User extends Model implements
 
     public function organizations()
     {
-        return $this->belongsToMany('App\Organization');
+        return $this->belongsToMany('App\Organization')->withTimestamps();
     }
 
     public function persons()
@@ -131,12 +124,17 @@ class User extends Model implements
 
     public function subscriptions()
     {
-        return $this->belongsToMany('App\Person');
+        return $this->belongsToMany('App\Person')->withTimestamps();
+    }
+
+    public function referralCodes()
+    {
+        return $this->hasMany('App\ReferralCode');
     }
 
     public function roles()
     {
-        return $this->belongsToMany('App\Role');
+        return $this->belongsToMany('App\Role')->withTimestamps();
     }
 
     public function tokens()
@@ -145,9 +143,38 @@ class User extends Model implements
     }
 
     /**
+     * Проверка роли пользователя
+     *
+     * @param $role
+     *
+     * @return bool
+     */
+    public function hasRole($role)
+    {
+        $roles = $this->belongsToMany('App\Role')->withTimestamps();
+        if (is_array($role)) {
+            $roles = $roles->whereIn('roles.type', $role)->get();
+        } else {
+            $roles = $roles->where(['roles.type' => $role])->get();
+        }
+        return $roles->count() > 0;
+    }
+
+
+    /**
+     * Проверка является ли пользователь админом
+     *
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return $this->hasRole(1);
+    }
+
+    /**
      * Send the password reset notification.
      *
-     * @param  string  $token
+     * @param string $token
      * @return void
      */
     public function sendPasswordResetNotification($token)

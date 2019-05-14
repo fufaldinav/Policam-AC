@@ -97,7 +97,17 @@ class Person extends Model
 
     public function divisions()
     {
-        return $this->belongsToMany('App\Division');
+        return $this->belongsToMany('App\Division')->withTimestamps();
+    }
+
+    public function organizations()
+    {
+        return $this->hasManyDeep(
+            'App\Organization',
+            ['division_person', 'App\Division'],
+            ['person_id', 'id', 'id'],
+            ['id', 'division_id', 'organization_id']
+        );
     }
 
     public function photos()
@@ -107,13 +117,13 @@ class Person extends Model
 
     public function users()
     {
-        return $this->belongsToMany('App\User');
+        return $this->belongsToMany('App\User')->withTimestamps();
     }
 
     public function attachDivisions(array $divisions): self
     {
-        foreach ($divisions as $div_id) {
-            $div = Division::find($div_id);
+        foreach ($divisions as $divisionId) {
+            $div = Division::find($divisionId);
 
             if (! $div) {
                 continue;
@@ -127,8 +137,8 @@ class Person extends Model
 
     public function detachDivisions(array $divisions): self
     {
-        foreach ($divisions as $div) {
-            $div = Division::find($div['id']);
+        foreach ($divisions as $divisionId) {
+            $div = Division::find($divisionId);
 
             if (! $div) {
                 continue;
@@ -268,7 +278,7 @@ class Person extends Model
                 continue;
             }
 
-            $this->users()->attach($user->id);
+            $this->users()->syncWithoutDetaching($user->id);
         }
 
         return $this;
@@ -279,6 +289,23 @@ class Person extends Model
         foreach ($this->users as $sub) {
             $this->users()->detach($sub->id);
         }
+
+        return $this;
+    }
+
+    public function attachOrganizations(array $organizations): self
+    {
+        if ($organizations['basic'] !== null) {
+            $division = Division::where(['organization_id' => $organizations['basic'], 'type' => 0])->first();
+            $this->divisions()->syncWithoutDetaching($division->id);
+        }
+
+        $divisionsToAttach = [];
+        foreach ($organizations['additional'] as $orgId) {
+            $division = Division::where(['organization_id' => $orgId, 'type' => 0])->first();
+            $divisionsToAttach[] = $division->id;
+        }
+        $this->divisions()->syncWithoutDetaching($divisionsToAttach);
 
         return $this;
     }

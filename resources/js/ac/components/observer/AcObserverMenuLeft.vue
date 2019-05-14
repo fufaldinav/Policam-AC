@@ -12,28 +12,26 @@
         >
             <div
                 v-if="selectedDivision === null"
-                key="list-divisions"
                 class="list-group list-group-flush"
             >
-                <ac-button-division
+                <ac-buttons-division
                     v-for="(division, id) in divisions"
                     :key="id"
                     :division="division"
                 >
-                </ac-button-division>
+                </ac-buttons-division>
             </div>
             <div
                 v-else
-                key="list-persons"
                 class="list-group list-group-flush"
             >
-                <ac-button-back></ac-button-back>
-                <ac-button-person
+                <ac-buttons-back></ac-buttons-back>
+                <ac-buttons-person
                     v-for="id in selectedDivisionPersons"
                     :key="id"
                     :person="persons[id]"
                 >
-                </ac-button-person>
+                </ac-buttons-person>
             </div>
         </div>
     </transition>
@@ -41,14 +39,14 @@
 
 <script>
     import {mapState} from 'vuex'
-    import AcButtonBack from '../buttons/AcButtonBack'
-    import AcButtonPerson from '../buttons/AcButtonPerson'
-    import AcButtonDivision from '../buttons/AcButtonDivision'
+    import AcButtonsBack from '../buttons/AcButtonsBack'
+    import AcButtonsPerson from '../buttons/AcButtonsPerson'
+    import AcButtonsDivision from '../buttons/AcButtonsDivision'
 
     export default {
         name: "AcObserverMenuLeft",
 
-        components: {AcButtonBack, AcButtonPerson, AcButtonDivision},
+        components: {AcButtonsBack, AcButtonsPerson, AcButtonsDivision},
 
         computed: {
             leftMenuShown() {

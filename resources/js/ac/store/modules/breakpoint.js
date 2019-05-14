@@ -9,27 +9,7 @@ const state = {
     debounceTime: 100
 }
 
-const getters = {
-    isXs: state => {
-        return state.current === 'xs'
-    },
-
-    isSm: state => {
-        return state.current === 'sm'
-    },
-
-    isMd: state => {
-        return state.current === 'md'
-    },
-
-    isLg: state => {
-        return state.current === 'lg'
-    },
-
-    isXl: state => {
-        return state.current === 'xl'
-    },
-}
+const getters = {}
 
 const mutations = {
     setCurrentBreakpoint(state, bp) {

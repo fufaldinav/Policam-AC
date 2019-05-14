@@ -38,53 +38,52 @@
                                     <div class="form-group col-6">
                                         <div class="form-group">
                                             <label for="f">
-                                                {{ $t('ac.f') }}
+                                                {{ $t('Фамилия').toUpperCase() }}
                                             </label>
                                             <input
                                                 id="f"
                                                 v-model="selectedPerson.f"
                                                 type="text"
                                                 class="form-control"
-                                                :placeholder="$t('ac.f')"
+                                                :placeholder="$t('Фамилия')"
                                                 readonly
                                             >
                                         </div>
                                         <div class="form-group">
                                             <label for="i">
-                                                {{ $t('ac.i') }}
+                                                {{ $t('Имя') }}
                                             </label>
                                             <input
                                                 id="i"
                                                 v-model="selectedPerson.i"
                                                 type="text"
                                                 class="form-control"
-                                                :placeholder="$t('ac.i')"
+                                                :placeholder="$t('Имя')"
                                                 readonly
                                             >
                                         </div>
                                         <div class="form-group">
                                             <label for="o">
-                                                {{ $t('ac.o') }}
+                                                {{ $t('Отчество') }}
                                             </label>
                                             <input
                                                 id="o"
                                                 v-model="selectedPerson.o"
                                                 type="text"
                                                 class="form-control"
-                                                :placeholder="$t('ac.o')"
+                                                :placeholder="$t('Отчество')"
                                                 readonly
                                             >
                                         </div>
                                         <div class="form-group">
                                             <label for="birthday">
-                                                {{ $t('ac.birthday') }}
+                                                {{ $t('Дата рождения') }}
                                             </label>
                                             <input
                                                 id="birthday"
                                                 v-model="selectedPerson.birthday"
                                                 type="date"
                                                 class="form-control"
-                                                :placeholder="$t('ac.birthday')"
                                                 readonly
                                             >
                                         </div>
@@ -93,27 +92,27 @@
                                 <div class="form-row">
                                     <div class="form-group col-4 col-sm-3">
                                         <label for="division">
-                                            {{ selectedPersonDivisionTypeName }}
+                                            {{ selectedPersonDivisionNameByType }}
                                         </label>
                                         <input
                                             id="division"
                                             v-model="selectedPersonDivisionName"
                                             type="text"
                                             class="form-control"
-                                            :placeholder="$t('ac.division')"
+                                            :placeholder="$t('Подразделение')"
                                             readonly
                                         >
                                     </div>
                                     <div class="form-group col-8 col-sm-9">
                                         <label for="address">
-                                            {{ $t('ac.address') }}
+                                            {{ $t('Адрес') }}
                                         </label>
                                         <input
                                             id="address"
                                             v-model="selectedPerson.address"
                                             type="text"
                                             class="form-control"
-                                            :placeholder="$t('ac.address')"
+                                            :placeholder="$t('Адрес')"
                                             readonly
                                         >
                                     </div>
@@ -121,27 +120,27 @@
                                 <div class="form-row">
                                     <div class="form-group col-6">
                                         <label for="phone">
-                                            {{ $t('ac.phone') }}
+                                            {{ $t('Номер телефона') }}
                                         </label>
                                         <input
                                             id="phone"
                                             v-model="selectedPerson.phone"
                                             type="text"
                                             class="form-control"
-                                            :placeholder="$t('ac.phone')"
+                                            :placeholder="$t('Номер телефона')"
                                             readonly
                                         >
                                     </div>
                                     <div class="form-group col-6">
                                         <label for="uid">
-                                            {{ $t('ac.uid') }}
+                                            {{ $t('Уникальный номер') }}
                                         </label>
                                         <input
                                             id="uid"
                                             v-model="selectedPerson.id"
                                             type="text"
                                             class="form-control"
-                                            :placeholder="$t('ac.uid')"
+                                            :placeholder="$t('Уникальный номер')"
                                             readonly
                                         >
                                     </div>
@@ -151,9 +150,9 @@
                                     class="form-row"
                                 >
                                     <div class="form-group col-6 col-sm-12">
-                                        <ac-button-card-forgot></ac-button-card-forgot>
-                                        <ac-button-card-lost></ac-button-card-lost>
-                                        <ac-button-card-broke></ac-button-card-broke>
+                                        <ac-observer-buttons-card-forgot></ac-observer-buttons-card-forgot>
+                                        <ac-observer-buttons-card-lost></ac-observer-buttons-card-lost>
+                                        <ac-observer-buttons-card-broke></ac-observer-buttons-card-broke>
                                     </div>
                                 </div>
                             </form>
@@ -162,7 +161,6 @@
                 </div>
             </transition>
             <ac-observer-menu-right></ac-observer-menu-right>
-            <input id="type" name="type" type="text" hidden readonly>
         </div>
         <ac-observer-modal></ac-observer-modal>
     </div>
@@ -172,9 +170,9 @@
     import AcLoading from '../AcLoading'
     import AcObserverMenuLeft from './AcObserverMenuLeft'
     import AcObserverMenuRight from './AcObserverMenuRight'
-    import AcButtonCardBroke from '../buttons/AcButtonCardBroke'
-    import AcButtonCardForgot from '../buttons/AcButtonCardForgot'
-    import AcButtonCardLost from '../buttons/AcButtonCardLost'
+    import AcObserverButtonsCardBroke from './buttons/AcObserverButtonsCardBroke'
+    import AcObserverButtonsCardForgot from './buttons/AcObserverButtonsCardForgot'
+    import AcObserverButtonsCardLost from './buttons/AcObserverButtonsCardLost'
     import AcObserverModal from './AcObserverModal'
 
     export default {
@@ -182,7 +180,7 @@
 
         components: {
             AcLoading, AcObserverMenuLeft, AcObserverMenuRight,
-            AcButtonCardBroke, AcButtonCardForgot, AcButtonCardLost, AcObserverModal
+            AcObserverButtonsCardBroke, AcObserverButtonsCardForgot, AcObserverButtonsCardLost, AcObserverModal
         },
 
         computed: {
@@ -209,12 +207,12 @@
                 return this.selectedPersonDivision.name
             },
 
-            selectedPersonDivisionTypeName() {
-                if (this.selectedPersonDivision === null) return this.$t('ac.division')
+            selectedPersonDivisionNameByType() {
+                if (this.selectedPersonDivision === null) return this.$t('Подразделение')
                 if (this.selectedPersonDivision.type === 1) {
-                    return this.$t('ac.class')
+                    return this.$t('Класс')
                 } else {
-                    return this.$t('ac.division')
+                    return this.$t('Подразделение')
                 }
             },
 
@@ -261,7 +259,7 @@
         },
 
         created() {
-            this.$store.dispatch('loader/loadDivisions')
+            this.$store.dispatch('loader/loadDivisions', {organizationId: 0, withPersons: 1})
         },
 
         beforeMount() {

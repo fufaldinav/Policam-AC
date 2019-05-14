@@ -38,13 +38,21 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $org_name = __('ac.missing');
-        $css_list = ['ac'];
-        $js_list = ['push'];
+        return view('ac/cp');
+    }
 
-        return view('ac/cp', compact(
-            'org_name', 'css_list', 'js_list'
-        ));
+    /**
+     * Панель управления
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function students(Request $request)
+    {
+        abort_if(! $request->user()->hasRole([1, 3, 4]), 403);
+
+        return view('ac/students');
     }
 
     /**
@@ -83,10 +91,10 @@ class UsersController extends Controller
         $notification = App\Notification::where(['hash' => $hash])->first();
 
         if (! $notification) {
-            return 'Уведомление устарело или не существует'; //TODO перевод
+            return __('Уведомление устарело или не существует');
         } elseif (Carbon::parse($notification->created_at) < Carbon::now()->subHour()) {
             $notification->delete();
-            return 'Уведомление устарело или не существует'; //TODO перевод
+            return __('Уведомление устарело или не существует');
         }
 
         $photos = Snapshot::getByNotification($notification);
@@ -106,5 +114,41 @@ class UsersController extends Controller
     public function getOrganizations(Request $request)
     {
         return $request->user()->organizations->load('controllers');
+    }
+
+    /**
+     * Возвращает организации по типу
+     *
+     * @param int $type
+     *
+     * @return array
+     */
+    public function getOrganizationsByType(int $type)
+    {
+        return App\Organization::where('type', $type)->orderBy('name')->get();
+    }
+
+    /**
+     * Возвращает людей, привязанных к пользователю
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    public function getPersons(Request $request)
+    {
+        return $request->user()->subscriptions->load(['cards', 'divisions.organization', 'photos', 'users']);
+    }
+
+    /**
+     * Возвращает людей, привязанных к пользователю
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    public function getReferralCodes(Request $request)
+    {
+        return $request->user()->referralCodes;
     }
 }

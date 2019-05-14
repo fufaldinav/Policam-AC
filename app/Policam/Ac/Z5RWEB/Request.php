@@ -21,7 +21,6 @@ namespace App\Policam\Ac\Z5RWEB;
 use App;
 use App\Events\ControllerConnected;
 use App\Events\EventReceived;
-use App\Policam\Ac\Logger;
 use Carbon\Carbon;
 
 final class Request
@@ -50,8 +49,6 @@ final class Request
 
         $response = new Response($datetime);
 
-        $logger = new Logger;
-
         $type = $this->request->type;
         $sn = $this->request->sn;
         $messages = $this->request->messages;
@@ -59,9 +56,6 @@ final class Request
         $ctrl = App\Controller::where(['sn' => $sn])->first();
 
         if (! $ctrl) {
-            $logger->add('inc', "TYPE: $type || SN: $sn || Неизвестный контроллер");
-            $logger->write();
-
             return null;
         }
 
@@ -69,8 +63,6 @@ final class Request
         $ctrl->save();
 
         event(new ControllerConnected($ctrl));
-
-        $logger->add('inc', "TYPE: $type || SN: $sn || " . json_encode($messages));
 
         foreach ($messages as $message) {
             /*
@@ -160,9 +152,6 @@ final class Request
         if ($task) {
             $response->addMessage($task->json);
         }
-
-        $logger->add('out', "TYPE: $type || SN: $sn || {$response->getMessages()}");
-        $logger->write();
 
         return $response->getMessages();
     }
