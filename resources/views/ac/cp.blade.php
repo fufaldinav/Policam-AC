@@ -18,9 +18,9 @@
                     <div class="col-12 col-md-4 d-flex justify-content-center">
                         <ac-cp-function-card
                             :active="{{ Auth::user()->hasRole([1, 2, 3, 4, 5]) ? 'true' : 'false' }}"
-                            :url="'/cp/schedule'"
+                            :url="'/cp/timetable'"
                         >
-                            <template slot="img"><img src="/img/schedule.jpg" class="card-img-top" alt="..."></template>
+                            <template slot="img"><img src="/img/timetable.jpg" class="card-img-top" alt="..."></template>
                             <template slot="title">{{ __('Расписание') }}</template>
                             <template slot="text">Просмотр и управление расписанием</template>
                         </ac-cp-function-card>

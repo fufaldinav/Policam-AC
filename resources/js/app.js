@@ -38,6 +38,7 @@ import AcCpFunctionCard from './ac/components/cp/AcCpFunctionCard'
 import AcCpClasses from './ac/components/cp/classes/AcCpClasses'
 import AcCpPersons from './ac/components/cp/persons/AcCpPersons'
 import AcCpStudents from './ac/components/cp/students/AcCpStudents'
+import AcCpTimetable from './ac/components/cp/timetable/AcCpTimetable'
 import AcOrganizationsDropdownMenu from './ac/components/AcOrganizationsDropdownMenu'
 import AcAlert from './ac/components/AcAlert'
 
@@ -57,7 +58,7 @@ window.Ac = new Vue({
     i18n,
 
     components: {
-        AcLayout, AcNavBar, AcObserver, AcCpFunctionCard, AcCpClasses,
+        AcLayout, AcNavBar, AcObserver, AcCpFunctionCard, AcCpClasses, AcCpTimetable,
         AcCpStudents, AcCpPersons, AcOrganizationsDropdownMenu, AcAlert
     },
 

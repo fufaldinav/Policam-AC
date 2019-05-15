@@ -51,6 +51,7 @@ Route::group(['prefix' => 'cp', 'as' => 'cp.'], function () {
     Route::get('classes', 'DivisionsController@classes')->name('classes')->middleware('role:2,3');
     Route::get('persons', 'PersonsController@page')->name('persons')->middleware('role:2,3');
     Route::get('students', 'UsersController@students')->name('students');
+    Route::get('timetable', 'TimetableController@page')->name('timetable');
 
 });
 /*

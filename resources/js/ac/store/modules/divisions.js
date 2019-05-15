@@ -8,7 +8,7 @@ const state = {
 
 const getters = {
     getById: state => id => {
-        return state.collection.find(value => value.id === id)
+        return state.collection.find(division => division.id === id)
     },
 
     sorted: state => {
@@ -77,9 +77,7 @@ const mutations = {
     },
 
     addPerson(state, relation) {
-        let division = state.collection.find((value) => {
-            if (value.id === relation.divisionId) return true
-        })
+        let division = state.collection.find(division => division.id === relation.divisionId)
         if (division === undefined) return
         let index = division.persons.indexOf(relation.personId)
         if (index === -1) {
@@ -88,9 +86,7 @@ const mutations = {
     },
 
     removePerson(state, relation) {
-        let division = state.collection.find((value) => {
-            if (value.id === relation.divisionId) return true
-        })
+        let division = state.collection.find(division => division.id === relation.divisionId)
         if (division === undefined) return
         let index = division.persons.indexOf(relation.personId)
         if (index > -1) {
