@@ -2,11 +2,17 @@
 /*
  * Home Page
  */
-Route::redirect('/', 'cp');
+Route::get('/', 'PortalController@index');
 /*
  * Portal
  */
-Route::get('portal', 'PortalController@index');
+Route::group(['as' => 'portal.'], function () {
+    Route::get('portal', 'PortalController@index')->name('index');
+    Route::get('services', 'PortalController@services')->name('services');
+    Route::get('prices', 'PortalController@prices')->name('prices');
+    Route::get('support', 'PortalController@support')->name('support');
+    Route::get('news', 'PortalController@news')->name('news');
+});
 /*
  * Observer
  */

@@ -1,8 +1,6 @@
 <!DOCTYPE html>
-<html lang="ru">
-
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-
     <meta charset="utf-8">
     <base href="/">
 
@@ -24,15 +22,14 @@
     <!-- Custom Browsers Color End -->
 
     <link rel="stylesheet" href="css/portal.css">
+    <link rel="stylesheet" href="css/portal-main.css">
     <link rel="stylesheet" href="libs/fontAwesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="libs/owlCarousel/css/owl.carousel.min.css">
     <link rel="stylesheet" href="libs/owlCarousel/css/owl.theme.default.min.css">
     <link rel="stylesheet" href="libs/animate/animate.css">
 
 </head>
-
 <body>
-
 <!-- Main Container Start -->
 <div class="container-fluid site-cont">
 

@@ -11,19 +11,19 @@
                             <a href="#mainHistory">ИСТОРИЯ&nbsp;УСПЕХА</a>
                         </li>
                         <li class="header-mobile-menu-item">
-                            <a href="">УСЛУГИ</a>
+                            <a href="{{ route('portal.services') }}">УСЛУГИ</a>
                         </li>
                         <li class="header-mobile-menu-item">
-                            <a href="">ЦЕНЫ</a>
+                            <a href="{{ route('portal.prices') }}">ЦЕНЫ</a>
                         </li>
                         <li class="header-mobile-menu-item">
-                            <a href="">ПОДДЕРЖКА</a>
+                            <a href="{{ route('portal.support') }}">ПОДДЕРЖКА</a>
                         </li>
                         <li class="header-mobile-menu-item">
                             <a href="#mainClients">ПАРТНЁРАМ</a>
                         </li>
                         <li class="header-mobile-menu-item">
-                            <a href="#mainNews">НОВОСТИ</a>
+                            <a href="{{ route('portal.news') }}">НОВОСТИ</a>
                         </li>
                     </ul>
                 </div>
@@ -80,9 +80,9 @@
         <nav class="header-nav">
             <ul>
                 <li class="header-menu-btn">
-							<span class="menu-btn">
-								<span></span>
-							</span>
+                    <span class="menu-btn">
+                        <span></span>
+                    </span>
                 </li>
                 <li class="header-logo">
                     <a href="/">
@@ -96,22 +96,22 @@
                     <a href="#mainHistory">ИСТОРИЯ&nbsp;УСПЕХА</a>
                 </li>
                 <li class="header-menu-item">
-                    <a href="">УСЛУГИ</a>
+                    <a href="{{ route('portal.services') }}">УСЛУГИ</a>
                 </li>
                 <li class="header-menu-item">
-                    <a href="">ЦЕНЫ</a>
+                    <a href="{{ route('portal.prices') }}">ЦЕНЫ</a>
                 </li>
                 <li class="header-menu-item">
-                    <a href="">ПОДДЕРЖКА</a>
+                    <a href="{{ route('portal.support') }}">ПОДДЕРЖКА</a>
                 </li>
                 <li class="header-menu-item">
                     <a href="#mainClients">ПАРТНЁРАМ</a>
                 </li>
                 <li class="header-menu-item">
-                    <a href="#mainNews">НОВОСТИ</a>
+                    <a href="{{ route('portal.news') }}">НОВОСТИ</a>
                 </li>
                 <li class="header-menu-main header-menu-main-1">
-                    <a href="#">
+                    <a href="mailto:ixbit@mail.ru" target="_blank">
                         <i class="fa fa-envelope-o" aria-hidden="true"></i>
                     </a>
                 </li>
@@ -120,11 +120,19 @@
                         <i class="fa fa-search" aria-hidden="true"></i>
                     </a>
                 </li>
-                <li class="header-menu-main header-menu-main-3">
-                    <a href="#">
-                        <i class="fa fa-user" aria-hidden="true"></i>
-                    </a>
-                </li>
+                @auth
+                    <li class="header-menu-item">
+                        <a href="{{ route('cp.index') }}">
+                            {{ Auth::user()->name }}
+                        </a>
+                    </li>
+                @else
+                    <li class="header-menu-main header-menu-main-3">
+                        <a href="{{ route('cp.index') }}">
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                        </a>
+                    </li>
+                @endauth
             </ul>
         </nav>
     </header>

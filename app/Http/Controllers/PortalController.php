@@ -10,4 +10,24 @@ class PortalController extends Controller
     {
         return view('portal.index');
     }
+
+    public function services()
+    {
+        return view('portal.services');
+    }
+
+    public function prices()
+    {
+        return view('portal.prices');
+    }
+
+    public function support()
+    {
+        return view('portal.support');
+    }
+
+    public function news()
+    {
+        return view('portal.news');
+    }
 }
