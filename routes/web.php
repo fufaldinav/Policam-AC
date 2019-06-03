@@ -4,6 +4,10 @@
  */
 Route::redirect('/', 'cp');
 /*
+ * Portal
+ */
+Route::get('portal', 'PortalController@index');
+/*
  * Observer
  */
 Route::get('observer', 'ObserverController@index')->name('observer');
