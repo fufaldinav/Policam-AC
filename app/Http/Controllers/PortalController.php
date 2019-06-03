@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App;
 use Illuminate\Http\Request;
 
 class PortalController extends Controller
@@ -28,6 +29,9 @@ class PortalController extends Controller
 
     public function news()
     {
-        return view('portal.news');
+        $lastNews = App\News::orderBy('created_at', 'ASC')
+            ->limit(5)
+            ->get();
+        return view('portal.news', compact('lastNews'));
     }
 }

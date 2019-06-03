@@ -1,15 +1,16 @@
 @extends('portal.layout')
 
 @section('content')
-    <div class="section-main" style="margin-top: 62px;">
+    <div class="section-main" style="margin-top: 64px;">
         <div class="container">
-            <div class="row news-entry">
-                <div class="col-3 news-entry-date">Дата</div>
-                <div class="col-9 news-entry-header">Новость</div>
-            </div>
+            @foreach($lastNews as $entry)
+                <a href="#" class="news-entry-link">
+                    <div class="row news-entry">
+                        <div class="col-2 news-entry-date">{{ $entry->created_at }}</div>
+                        <div class="col-10 news-entry-header">{{ $entry->header }}</div>
+                    </div>
+                </a>
+            @endforeach
         </div>
-        <div class="container">NEWS</div>
-        <div class="container">NEWS</div>
-        <div class="container">NEWS</div>
     </div>
 @endsection

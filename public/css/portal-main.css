@@ -3,6 +3,11 @@
     margin-bottom: 1rem;
 }
 
+.news-entry-link:link, .news-entry-link:visited, .news-entry-link:hover {
+    color: #fff;
+    text-decoration: none;
+}
+
 .news-entry-date {
     background: #00b3ee;
 }
