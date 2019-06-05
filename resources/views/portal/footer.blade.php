@@ -1,3 +1,4 @@
+<!-- Footer Start -->
 <div class="section-main">
     <footer>
         <div class="container">
@@ -73,25 +74,28 @@
                 <div class="col-sm-3">
                     <div class="footer-contact-info">
                         <div class="footer-contact-address">
-                            <p>Свердловская обл., г. Заречный</p>
-                            <p>ул. Мира, 40</p>
+                            <p>Санкт-Петербург</p>
+                            <p>ул. Красуцкого, 4</p>
                         </div>
                         <div class="footer-contact-phone">
-                            <a href="tel:+73437778887">
-                                <p>+ 7 (343) 777 888 7</p>
+                            <a href="">
+                                <p>+ 7 (812) 325 88 48</p>
+                            </a>
+                            <a href="">
+                                <p>+ 7 (812) 324 79 89</p>
                             </a>
                         </div>
                     </div>
                     <div class="footer-soc-line"></div>
                     <div class="footer-soc">
-                        <a href="https://vk.com/policam66" class="social-item" target="_blank">
+                        <a href="#" class="social-item">
                             <i class="fa fa-vk" aria-hidden="true"></i>
                         </a>
-                        <a href="https://facebook.com/policam66" class="social-item" target="_blank">
+                        <a href="#" class="social-item">
                             <i class="fa fa-facebook" aria-hidden="true"></i>
                         </a>
-                        <a href="https://youtube.com/policam66" class="social-item" target="_blank">
-                            <i class="fa fa-youtube" aria-hidden="true"></i>
+                        <a href="#" class="social-item">
+                            <i class="fa fa-linkedin" aria-hidden="true"></i>
                         </a>
                     </div>
                 </div>
@@ -103,3 +107,4 @@
         </div>
     </footer>
 </div>
+<!-- Footer End -->
