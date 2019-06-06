@@ -5,7 +5,7 @@
 <div class="section-main">
     <div class="main-banner">
         <!-- <img src="../img/templates/main-banner/video-screen.jpg" alt="" class="video-banner"> -->
-        <video src="../img/templates/main-banner/video-banner.mp4" autoplay="autoplay" loop="loop"
+        <video id="video-banner" src="../img/templates/main-banner/video-banner.mp4" autoplay loop
                class="video-banner"></video>
         <img src="../img/templates/main-banner/video-screen.jpg" class="video-screen">
         <div class="banner-title">

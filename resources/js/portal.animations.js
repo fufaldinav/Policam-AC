@@ -70,24 +70,21 @@ $(document).ready(function () {
     });
 });
 
-$(function() {
 
-    $('.menu-btn').on('click', function(e) {
-        e.preventDefault();
-        $(this).toggleClass('menu-btn_active');
-        $('.header-catalog').toggleClass('header-catalog_active');
-    });
-
-    video.addEventListener('click',function(){
-        video.play();
-    },false);
-    $(video).click();
-    video.play();
-
+$('.menu-btn').on('click', function (e) {
+    e.preventDefault();
+    $(this).toggleClass('menu-btn_active');
+    $('.header-catalog').toggleClass('header-catalog_active');
 });
 
+let video = document.getElementById('video-banner')
+const promise = video.play()
 
-$(document).ready(function(){
+if (promise !== null) {
+    promise.catch(() => video.play())
+}
+
+$(document).ready(function () {
     $(".main-products-item-1").click(function () {
         if ($(".main-product-item-1").is(":hidden")) {
             $(".main-product-item-1").show("slow");

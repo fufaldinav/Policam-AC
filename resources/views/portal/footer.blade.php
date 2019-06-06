@@ -14,19 +14,19 @@
                             <a href="#">О компании</a>
                         </li>
                         <li>
-                            <a href="#">Продукты</a>
+                            <a href="#mainProducts">Продукты</a>
                         </li>
                         <li>
-                            <a href="#">Решения</a>
+                            <a href="#mainProducts">Решения</a>
                         </li>
                         <li>
-                            <a href="#">Услуги</a>
+                            <a href="{{ route('portal.services') }}">Услуги</a>
                         </li>
                         <li>
-                            <a href="#">История успеха</a>
+                            <a href="#mainProducts">История успеха</a>
                         </li>
                         <li>
-                            <a href="#">Поддержка</a>
+                            <a href="{{ route('portal.support') }}">Поддержка</a>
                         </li>
                     </ul>
                 </div>
@@ -74,28 +74,26 @@
                 <div class="col-sm-3">
                     <div class="footer-contact-info">
                         <div class="footer-contact-address">
-                            <p>Санкт-Петербург</p>
-                            <p>ул. Красуцкого, 4</p>
+                            <p>Свердловская обл.</p>
+                            <p>г. Заречный</p>
+                            <p>ул. Мира, 40</p>
                         </div>
                         <div class="footer-contact-phone">
-                            <a href="">
-                                <p>+ 7 (812) 325 88 48</p>
-                            </a>
-                            <a href="">
-                                <p>+ 7 (812) 324 79 89</p>
+                            <a href="tel:+73437778887">
+                                <p>+ 7 (343) 777 888 7</p>
                             </a>
                         </div>
                     </div>
                     <div class="footer-soc-line"></div>
                     <div class="footer-soc">
-                        <a href="#" class="social-item">
+                        <a class="social-item" href="https://vk.com/policam66" target="_blank">
                             <i class="fa fa-vk" aria-hidden="true"></i>
                         </a>
-                        <a href="#" class="social-item">
+                        <a class="social-item" href="https://facebook.com/policam66" target="_blank">
                             <i class="fa fa-facebook" aria-hidden="true"></i>
                         </a>
-                        <a href="#" class="social-item">
-                            <i class="fa fa-linkedin" aria-hidden="true"></i>
+                        <a class="social-item" href="https://youtube.com/policam66" target="_blank">
+                            <i class="fa fa-youtube" aria-hidden="true"></i>
                         </a>
                     </div>
                 </div>

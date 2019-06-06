@@ -12,6 +12,7 @@ Route::group(['as' => 'portal.'], function () {
     Route::get('prices', 'PortalController@prices')->name('prices');
     Route::get('support', 'PortalController@support')->name('support');
     Route::get('news', 'PortalController@news')->name('news');
+    Route::get('news/{id?}', 'NewsController@getEntry')->name('news.entry');
 });
 /*
  * Observer

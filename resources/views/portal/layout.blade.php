@@ -32,7 +32,7 @@
     <link href="{{ env('APP_URL') }}{{ mix('css/portal.css') }}" rel="stylesheet">
     <link href="{{ env('APP_URL') }}{{ mix('css/portal.animations.css') }}" rel="stylesheet">
     <link href="{{ env('APP_URL') }}{{ mix('css/fonts.css') }}" rel="stylesheet">
-    <link href="css/portal/main.min.css" rel="stylesheet">
+    <link href="{{ env('APP_URL') }}/css/portal/main.min.css" rel="stylesheet">
 </head>
 <body>
 <div id="portal">

@@ -29,7 +29,7 @@ class PortalController extends Controller
 
     public function news()
     {
-        $lastNews = App\News::orderBy('created_at', 'ASC')
+        $lastNews = App\News::orderBy('created_at', 'DESC')
             ->limit(5)
             ->get();
         return view('portal.news', compact('lastNews'));
