@@ -8,7 +8,7 @@
         </div>
         <div class="container mt-4 pb-2">
             <div class="row shadow mb-4">
-                <div class="col-sm-12 col-md-8 bg-light py-2">
+                <div class="col-sm-12 col-md-8 bg-white py-2">
                     <h4>{{ $entry->header }}</h4>
                     <p class="text-right">
                         @php

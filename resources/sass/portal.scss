@@ -20,3 +20,9 @@ a.news-entry:link, a.news-entry:hover, a.news-entry:visited, a.news-entry:active
 .news-entry-header {
     color: #000;
 }
+
+.news-img {
+    max-width: 360px;
+    float: left;
+    margin: 0 10px 2px 0;
+}
