@@ -11,8 +11,15 @@ Route::group(['as' => 'portal.'], function () {
     Route::get('services', 'PortalController@services')->name('services');
     Route::get('prices', 'PortalController@prices')->name('prices');
     Route::get('support', 'PortalController@support')->name('support');
+    Route::get('contacts', 'PortalController@support')->name('contacts');
     Route::get('news', 'PortalController@news')->name('news');
     Route::get('news/{id?}', 'NewsController@getEntry')->name('news.entry');
+});/*
+ * Pages
+ */
+Route::group(['prefix' => 'pages', 'as' => 'pages.'], function () {
+    Route::get('/', 'PagesController@index')->name('index');
+    Route::get('{id}', 'PagesController@getEntry')->name('entry');
 });
 /*
  * Observer

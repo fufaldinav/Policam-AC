@@ -6,10 +6,10 @@
                 <div class="header-mobile-menu">
                     <ul>
                         <li class="header-mobile-menu-item">
-                            <a href="#mainProducts">РЕШЕНИЯ</a>
+                            <a href="{{ url('/') }}#mainProducts">РЕШЕНИЯ</a>
                         </li>
                         <li class="header-mobile-menu-item">
-                            <a href="#mainHistory">ИСТОРИЯ&nbsp;УСПЕХА</a>
+                            <a href="{{ url('/') }}#mainHistory">ИСТОРИЯ&nbsp;УСПЕХА</a>
                         </li>
                         <li class="header-mobile-menu-item">
                             <a href="{{ route('portal.services') }}">УСЛУГИ</a>
@@ -21,7 +21,7 @@
                             <a href="{{ route('portal.support') }}">ПОДДЕРЖКА</a>
                         </li>
                         <li class="header-mobile-menu-item">
-                            <a href="#mainClients">ПАРТНЁРАМ</a>
+                            <a href="{{ url('/') }}#mainClients">ПАРТНЁРАМ</a>
                         </li>
                         <li class="header-mobile-menu-item">
                             <a href="{{ route('portal.news') }}">НОВОСТИ</a>
@@ -91,10 +91,10 @@
                     </a>
                 </li>
                 <li class="header-menu-item">
-                    <a href="#mainProducts">РЕШЕНИЯ</a>
+                    <a href="{{ url('/') }}#mainProducts">РЕШЕНИЯ</a>
                 </li>
                 <li class="header-menu-item">
-                    <a href="#mainHistory">ИСТОРИЯ&nbsp;УСПЕХА</a>
+                    <a href="{{ url('/') }}#mainHistory">ИСТОРИЯ&nbsp;УСПЕХА</a>
                 </li>
                 <li class="header-menu-item">
                     <a href="{{ route('portal.services') }}">УСЛУГИ</a>
@@ -106,7 +106,7 @@
                     <a href="{{ route('portal.support') }}">ПОДДЕРЖКА</a>
                 </li>
                 <li class="header-menu-item">
-                    <a href="#mainClients">ПАРТНЁРАМ</a>
+                    <a href="{{ url('/') }}#mainClients">ПАРТНЁРАМ</a>
                 </li>
                 <li class="header-menu-item">
                     <a href="{{ route('portal.news') }}">НОВОСТИ</a>

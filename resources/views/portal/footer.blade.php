@@ -11,19 +11,19 @@
                     </div>
                     <ul class="footer-links">
                         <li>
-                            <a href="#">О компании</a>
+                            <a href="{{ route('portal.contacts') }}">О компании</a>
                         </li>
                         <li>
-                            <a href="#mainProducts">Продукты</a>
+                            <a href="{{ url('/') }}#mainProducts">Продукты</a>
                         </li>
                         <li>
-                            <a href="#mainProducts">Решения</a>
+                            <a href="{{ url('/') }}#mainProducts">Решения</a>
                         </li>
                         <li>
                             <a href="{{ route('portal.services') }}">Услуги</a>
                         </li>
                         <li>
-                            <a href="#mainProducts">История успеха</a>
+                            <a href="{{ url('/') }}#mainProducts">История успеха</a>
                         </li>
                         <li>
                             <a href="{{ route('portal.support') }}">Поддержка</a>
@@ -33,41 +33,26 @@
                 <div class="col-sm-3">
                     <ul class="footer-links">
                         <li>
-                            <a href="#">Системы записи телефонных разговоров</a>
+                            <a href="{{ route('pages.entry', ['id' => 1]) }}">Система контроля и управления доступом</a>
                         </li>
                         <li>
-                            <a href="#">Системы речевого оповещения</a>
+                            <a href="{{ route('pages.entry', ['id' => 2]) }}">Системы видеонаблюдения и видеорегистраторы</a>
                         </li>
                         <li>
-                            <a href="#">Профессиональные диктофоны</a>
-                        </li>
-                        <li>
-                            <a href="#">Системы управления качеством и автоматизации работы контактного центра</a>
-                        </li>
-                        <li>
-                            <a href="#">Системы биометрического контроля доступа, учета и поиска</a>
-                        </li>
-                        <li>
-                            <a href="#">Экспертные системы и шумоочистка</a>
+                            <a href="{{ route('pages.entry', ['id' => 3]) }}">Программное обеспечение для детских садов и школ</a>
                         </li>
                     </ul>
                 </div>
                 <div class="col-sm-3">
                     <ul class="footer-links">
                         <li>
-                            <a href="#">Экспертные системы и шумоочистка</a>
+                            <a href="{{ route('pages.entry', ['id' => 4]) }}">Спутниковой мониторинг ГЛОНАСС</a>
                         </li>
                         <li>
-                            <a href="#">Микрофонные решения и усилители</a>
+                            <a href="{{ route('pages.entry', ['id' => 5]) }}">Умный дом</a>
                         </li>
                         <li>
-                            <a href="#">Системы аудио- и видеопротоколирования</a>
-                        </li>
-                        <li>
-                            <a href="#">Системы видеонаблюдения и видеорегистраторы</a>
-                        </li>
-                        <li>
-                            <a href="#">Программы для распознавания речи в текст</a>
+                            <a href="{{ route('pages.entry', ['id' => 6]) }}">Охрана периметра</a>
                         </li>
                     </ul>
                 </div>

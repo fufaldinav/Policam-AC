@@ -26,3 +26,17 @@ a.news-entry:link, a.news-entry:hover, a.news-entry:visited, a.news-entry:active
     float: left;
     margin: 0 10px 2px 0;
 }
+
+.pages-img {
+    max-width: 480px;
+    float: left;
+    margin: 0 10px 2px 0;
+}
+
+@media (max-width: 576px) {
+    .pages-img {
+        max-width: 200px !important;
+        float: left;
+        margin: 0 10px 2px 0;
+    }
+}
