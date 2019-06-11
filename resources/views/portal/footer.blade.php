@@ -82,7 +82,7 @@
                         </a>
                     </div>
                 </div>
-                <div style="background-color: #104A64; margin: 20px 0px; width: 100%; height: 1px;"></div>
+                <div style="background-color: #104A64; margin: 20px 0; width: 100%; height: 1px;"></div>
                 <p class="footer-policy">Вся размещенная на сайте информация носит информационно-справочный характер
                     и не является публичной офертой согласно действующему законодательству РФ. <a href="#">Политика
                         конфиденциальности</a>.</p>
