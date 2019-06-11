@@ -471,33 +471,30 @@
 <!-- Clients Start -->
 <div class="section">
     <div class="main-clients" id="mainClients">
-        <h2 class="wow fadeInUp" data-wow-duration="1s">НАШИ КЛИЕНТЫ</h2>
+        <h2 class="wow fadeInUp" data-wow-duration="1s">НАШИ ПАРТНЁРЫ</h2>
         <div class="title-line"></div>
         <div class="container">
             <div class="main-clients-content owl-carousel owl-theme owl-loaded">
                 <div class="main-clients-item">
-                    <img src="../img/templates/clients/zimbra.png" alt="Клиент Zimbra">
+                    <img src="../img/partners/dahua.jpg" alt="Dahua">
                 </div>
                 <div class="main-clients-item">
-                    <img src="../img/templates/clients/roskosmos.png" alt="Клиент Роскосмос">
+                    <img src="../img/partners/devline.jpg" alt="Devline">
                 </div>
                 <div class="main-clients-item">
-                    <img src="../img/templates/clients/nefco.png" alt="Клиент Nefco">
+                    <img src="../img/partners/hikvision.png" alt="Hikvision">
                 </div>
                 <div class="main-clients-item">
-                    <img src="../img/templates/clients/second-life.png" alt="Клиент Second Life">
+                    <img src="../img/partners/ironlogic.jpg" alt="IronLogic">
                 </div>
                 <div class="main-clients-item">
-                    <img src="../img/templates/clients/zimbra.png" alt="Клиент Zimbra">
+                    <img src="../img/partners/macroscop.png" alt="Macroscop">
                 </div>
                 <div class="main-clients-item">
-                    <img src="../img/templates/clients/roskosmos.png" alt="Клиент Роскосмос">
+                    <img src="../img/partners/sigur.jpg" alt="Sigur">
                 </div>
                 <div class="main-clients-item">
-                    <img src="../img/templates/clients/nefco.png" alt="Клиент Nefco">
-                </div>
-                <div class="main-clients-item">
-                    <img src="../img/templates/clients/second-life.png" alt="Клиент Second Life">
+                    <img src="../img/partners/trassir.jpg" alt="Trassir">
                 </div>
             </div>
         </div>

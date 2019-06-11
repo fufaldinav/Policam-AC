@@ -47,7 +47,10 @@ $(document).ready(function () {
         }
     });
     $(".owl-carousel").owlCarousel({
-        loop: false,
+        autoplay: true,
+        autoplayTimeout: 2000,
+        autoplayHoverPause: true,
+        loop: true,
         margin: 10,
         nav: true,
         pagination: false,
