@@ -40,4 +40,11 @@ class News extends Model
     {
         return $this->belongsTo('App\User');
     }
+
+    public function formattedDate(string $format)
+    {
+        $timestamp = strtotime($this->created_at);
+
+        return date($format, $timestamp);
+    }
 }

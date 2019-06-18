@@ -9,7 +9,11 @@ class PortalController extends Controller
 {
     public function index()
     {
-        return view('portal.index');
+        $lastNews = App\News::orderBy('created_at', 'DESC')
+            ->limit(5)
+            ->get();
+
+        return view('portal.index', compact('lastNews'));
     }
 
     public function services()
@@ -32,6 +36,7 @@ class PortalController extends Controller
         $lastNews = App\News::orderBy('created_at', 'DESC')
             ->limit(5)
             ->get();
+
         return view('portal.news', compact('lastNews'));
     }
 }

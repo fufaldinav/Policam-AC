@@ -263,7 +263,7 @@
 <!-- News Start -->
 <div class="section">
     <div class="main-news" id="mainNews">
-        <h2 class="wow fadeInUp" data-wow-duration="1s">НОВОСТИ КОМПАНИИ</h2>
+        <h2 class="wow fadeInUp" data-wow-duration="1s">НОВОСТИ</h2>
         <div class="title-line"></div>
         <div class="main-news-content">
             <div class="container">
@@ -291,10 +291,9 @@
                                     <div class="img-overlay"></div>
                                     <div class="main-news-theme-day-text-content">
                                         <p class="main-news-theme-day-text-name">Тема дня</p>
-                                        <p class="main-news-theme-day-text-p">РБК+: «Биометрия – инструмент новых
-                                            возможностей»</p>
-                                        <p class="main-news-theme-day-text-date">22 апреля 2019 г.</p>
-                                        <a href="#" class="main-news-theme-day-text-link">Читать
+                                        <p class="main-news-theme-day-text-p">{{ $lastNews[0]->header }}</p>
+                                        <p class="main-news-theme-day-text-date">{{ $lastNews[0]->formattedDate('d/m/Y') }}</p>
+                                        <a href="{{ route('portal.news.entry', ['id' => $lastNews[0]->id]) }}" class="main-news-theme-day-text-link">Читать
                                             <i class="fa fa-angle-right" aria-hidden="true"></i>
                                             <i class="fa fa-angle-right" aria-hidden="true"></i>
                                             <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -321,40 +320,17 @@
                     <div class="col-sm-3 main-news-2 wow fadeInRight" data-wow-duration="2s">
                         <div class="main-other-news">
                             <h3 class="main-other-news-name">Другие новости</h3>
+                            @foreach($lastNews as $entry)
                             <div class="main-other-news-item">
-                                <a href="#">
-                                    <h4>РБК+: «Биометрия – инструмент новых возможностей»</h4>
-                                    <p>18 апреля 2019 г.</p>
+                                <a href="{{ route('portal.news.entry', ['id' => $entry->id]) }}">
+                                    <h4>{{ $entry->header }}</h4>
+                                    <p>{{ $entry->formattedDate('d/m/Y') }}</p>
                                 </a>
                             </div>
-                            <div class="main-other-news-item">
-                                <a href="#">
-                                    <h4>Сбербанк создал цифровую телеведущую новостей с голосом от ЦРТ</h4>
-                                    <p>18 апреля 2019 г.</p>
-                                </a>
-                            </div>
-                            <div class="main-other-news-item">
-                                <a href="#">
-                                    <h4>ТАСС: Система распознавания лиц не пустила болельщика на матч РПЛ «Арсенал»
-                                        – «Урал»</h4>
-                                    <p>18 апреля 2019 г.</p>
-                                </a>
-                            </div>
-                            <div class="main-other-news-item main-other-news-item-end">
-                                <a href="#">
-                                    <h4>РБК+: «Биометрия – инструмент новых возможностей»</h4>
-                                    <p>18 апреля 2019 г.</p>
-                                </a>
-                            </div>
-                            <div class="main-other-news-item main-other-news-item-end">
-                                <a href="#">
-                                    <h4>Сбербанк создал цифровую телеведущую новостей с голосом от ЦРТ</h4>
-                                    <p>18 апреля 2019 г.</p>
-                                </a>
-                            </div>
+                            @endforeach
                             <span class="main-button-link">
-										<a href="#">Все новости</a>
-									</span>
+                                <a href="{{ route('portal.news') }}">Все новости</a>
+                            </span>
                         </div>
                     </div>
                 </div>
