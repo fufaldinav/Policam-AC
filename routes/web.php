@@ -81,6 +81,10 @@ Route::get('dev', 'DevController@index');
  */
 Route::post('server', 'ServersController@index');
 /*
+ * Stream
+ */
+Route::get('stream', 'StreamController@index');
+/*
  * Users
  */
 Route::group(['prefix' => 'users', 'as' => 'users.'], function () {
