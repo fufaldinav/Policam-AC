@@ -4,7 +4,7 @@
  * Author: Artem Fufaldin
  *         artem.fufaldin@gmail.com
  *
- * Created: 28.03.2019
+ * Created: 09.07.2019
  *
  * Description: Приложение для систем контроля и управления доступом.
  *
@@ -16,7 +16,7 @@
  * @filesource
  */
 
-namespace App\Policam\Ac\Z5RWEB;
+namespace App\Policam\Ac\Policont;
 
 use App;
 use App\Events\ControllerConnected;
@@ -47,7 +47,7 @@ final class Request
 
         $datetime = Carbon::now()->toDateTimeString();
 
-        $response = new Response($datetime);
+        $response = new Response();
 
         $type = $this->request->type;
         $sn = $this->request->sn;
@@ -125,8 +125,11 @@ final class Request
 
                 //чтение событий
                 foreach ($message->events as $inc_event) {
-                    $card = App\Card::firstOrNew(['wiegand' => $inc_event->card]);
-                    $card->last_conn = $inc_event->time;
+                    $wiegand = str_pad($inc_event->card, 12, '0', STR_PAD_LEFT);
+                    $dateTimeString = Carbon::createFromTimestamp($inc_event->timestamp, date_default_timezone_get())->toDateTimeString();
+
+                    $card = App\Card::firstOrNew(['wiegand' => $wiegand]);
+                    $card->last_conn = $dateTimeString;
                     $card->controller_id = $ctrl->id;
                     $card->save();
 
@@ -134,7 +137,7 @@ final class Request
                     $event->controller_id = $ctrl->id;
                     $event->event = $inc_event->event;
                     $event->flag = $inc_event->flag;
-                    $event->time = $inc_event->time;
+                    $event->time = $dateTimeString;
                     $event->card_id = $card->id;
                     $event->save();
 

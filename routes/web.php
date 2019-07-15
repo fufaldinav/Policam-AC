@@ -80,6 +80,7 @@ Route::get('dev', 'DevController@index');
  * Server
  */
 Route::post('server', 'ServersController@index');
+Route::post('policont', 'ServersController@policont');
 /*
  * Stream
  */
