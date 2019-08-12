@@ -30,3 +30,4 @@ _ide_helper.php
 /public/js/*.js
 /public/css/*.css
 /public/fonts/*
+/public/photos/*
