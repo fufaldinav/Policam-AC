@@ -24,7 +24,8 @@ Route::group(['prefix' => 'api', 'as' => 'api.'], function () {
  * Auth
  */
 Auth::routes(['verify' => true]);
-Route::get('register/{referral_code}', 'Auth\RegisterController@showRegistrationForm');
+Route::get('reg', 'Auth\RegisterController@showRegistrationForm');
+Route::get('reg/{referral_code}', 'Auth\RegisterController@showRegistrationForm');
 /*
  * Cards
  */
