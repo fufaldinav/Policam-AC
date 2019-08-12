@@ -8,7 +8,14 @@ const state = {
     manually: false
 }
 
-const getters = {}
+const getters = {
+    getById: state => id => {
+        if (id > 0)
+            return state.collection[id]
+        else
+            return new Person({})
+    }
+}
 
 const mutations = {
     add(state, person) {
