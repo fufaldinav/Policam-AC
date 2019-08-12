@@ -29,6 +29,7 @@ Route::get('observer', 'ObserverController@index')->name('observer');
  * API
  */
 Route::group(['prefix' => 'api', 'as' => 'api.'], function () {
+    Route::get('events/{organizationId}/{count?}', 'ServersController@getEvents')->middleware('role:2,3');
     Route::resource('persons', 'PersonsController')->except(['create', 'edit']);
     Route::resource('photos', 'PhotosController')->only(['store', 'destroy']);
     Route::group(['prefix' => 'divisions', 'as' => 'divisions.'], function () {
@@ -43,7 +44,7 @@ Route::group(['prefix' => 'api', 'as' => 'api.'], function () {
  */
 Auth::routes(['verify' => true]);
 Route::get('reg', 'Auth\RegisterController@showRegistrationForm');
-Route::get('reg/{referral_code}', 'Auth\RegisterController@showRegistrationForm');
+Route::get('reg/{?referral_code}', 'Auth\RegisterController@showRegistrationForm');
 /*
  * Cards
  */

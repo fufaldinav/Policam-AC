@@ -18,6 +18,7 @@
 
 namespace App\Http\Controllers;
 
+use App;
 use App\Policam\Ac\Z5RWEB;
 use App\Policam\Ac\Policont;
 use Illuminate\Http\Request;
@@ -46,5 +47,19 @@ class ServersController extends Controller
     {
         $handler = new Policont\Request($request->getContent());
         return $handler->handle();
+    }
+
+    public function getEvents(int $organizationId, int $count = null)
+    {
+        $organization = App\Organization::find($organizationId);
+
+        $events = App\Event::whereIn('controller_id', $organization->controllers)->orderBy('time', 'asc')->limit($count)->get();
+
+        foreach ($events as &$event) {
+            $card = App\Card::find($event->card_id);
+            $event->person_id = $card->person->id;
+        }
+
+        return response()->json($events);
     }
 }

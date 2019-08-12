@@ -8,6 +8,7 @@ import bp from './modules/breakpoint'
 import cards from './modules/cards'
 import cp from './modules/cp'
 import divisions from './modules/divisions'
+import history from './modules/history'
 import loader from './modules/loader'
 import messenger from './modules/messenger'
 import modal from './modules/modal'
@@ -32,6 +33,7 @@ export default new Vuex.Store({
         cards,
         cp,
         divisions,
+        history,
         loader,
         modal,
         messenger,
