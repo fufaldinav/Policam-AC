@@ -50,16 +50,16 @@ class EventReceived implements ShouldBroadcastNow
         if ($event->event === 2 || $event->event === 3) {
             return [
                 'card' => $card,
-                'event' => $event->event,
+                'event' => $event,
             ];
-        } elseif ($event->event === 4 || $event->event === 5) {
+        } elseif ($event->event === 4 || $event->event === 5 || $event->event === 16 || $event->event === 17) {
             return [
                 'person_id' => $card->person->id,
                 'event' => $event,
             ];
         } else {
             return [
-                'event' => $event->event,
+                'event' => $event,
             ];
         }
     }

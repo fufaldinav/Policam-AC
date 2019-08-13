@@ -53,7 +53,11 @@ class ServersController extends Controller
     {
         $organization = App\Organization::find($organizationId);
 
-        $events = App\Event::whereIn('controller_id', $organization->controllers)->orderBy('time', 'asc')->limit($count)->get();
+        $events = App\Event::whereIn('event', [2, 3, 4, 5, 6, 7, 16, 17])
+            ->whereIn('controller_id', $organization->controllers)
+            ->orderBy('time', 'desc')
+            ->limit($count)
+            ->get();
 
         foreach ($events as &$event) {
             $card = App\Card::find($event->card_id);
