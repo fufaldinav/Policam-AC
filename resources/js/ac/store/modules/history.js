@@ -28,7 +28,7 @@ const getters = {
 const mutations = {
     add(state, event) {
         state.collection.unshift(new Event(event))
-        while (state.collection.length > 50) {
+        while (state.collection.length > 5) {
             state.collection.pop()
         }
     },
@@ -49,10 +49,10 @@ const mutations = {
 
 const actions = {
     async getLast({commit, rootState}, orgId) {
-        window.axios.get('/api/events/' + orgId + '/50')
+        window.axios.get('/api/events/' + orgId + '/5')
             .then(response => {
-                for (let event of response.data) {
-                    commit('add', event);
+                for (let i = response.data.length; i--; i >= 0) {
+                    commit('add', response.data[i]);
                 }
             })
             .catch(error => {

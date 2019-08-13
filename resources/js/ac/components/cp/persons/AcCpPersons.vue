@@ -79,7 +79,7 @@
 
         mounted() {
             this.$bus.$on('EventReceived', e => {
-                if (e.event === 2 || e.event === 3) {
+                if (e.event.event === 2 || e.event.event === 3) {
                     if (this.$store.state.cards.manualInput === false ){
                         this.$store.commit('cards/setLast', e.card)
                     }

@@ -268,7 +268,7 @@
 
         mounted() {
             this.$bus.$on('EventReceived', e => {
-                if (e.event.event === 4 || e.event.event === 5) {
+                if (e.event.event === 4 || e.event.event === 5 || e.event.event === 16 || e.event.event === 17) {
                     e.event.person_id = e.person_id
                     this.$store.commit('history/add', e.event)
 
@@ -277,6 +277,9 @@
 
                     this.$store.commit('persons/setSelected', person)
                     this.$store.commit('persons/setManually', false)
+                } else if (e.event.event === 2 || e.event.event === 3) {
+                    e.event.person_id = e.person_id
+                    this.$store.commit('history/add', e.event)
                 }
             })
             this.$bus.$on('ControllerConnected', e => {
