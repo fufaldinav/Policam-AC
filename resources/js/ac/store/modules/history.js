@@ -1,8 +1,7 @@
-import Vue from 'vue'
 import {Event} from '../../classes'
 
 const state = {
-    collection: {},
+    collection: [],
     last: new Event({}),
     types: {
         2: 'Доступ запрещен',
@@ -28,24 +27,29 @@ const getters = {
 
 const mutations = {
     add(state, event) {
-        Vue.set(state.collection, event.id, new Event(event))
+        state.collection.unshift(new Event(event))
+        while (state.collection.length > 50) {
+            state.collection.pop()
+        }
     },
 
     remove(state, event) {
-        Vue.delete(state.collection, event.id)
+        let index = state.collection.indexOf(event)
+        if (index > -1) {
+            state.collection.splice(index, 1)
+        }
     },
 
     clearCollection(state) {
-        for (let event in state.collection) {
-            Vue.delete(state.collection, event.id)
+        while (state.collection.length > 0) {
+            state.collection.pop()
         }
     }
 }
 
 const actions = {
-    async getLast({commit, rootState}) {
-        let organizationId = rootState.organizations.selected.id;
-        window.axios.get('/api/events/' + organizationId + '/50')
+    async getLast({commit, rootState}, orgId) {
+        window.axios.get('/api/events/' + orgId + '/50')
             .then(response => {
                 for (let event of response.data) {
                     commit('add', event);

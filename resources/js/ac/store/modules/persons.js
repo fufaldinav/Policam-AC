@@ -10,7 +10,7 @@ const state = {
 
 const getters = {
     getById: state => id => {
-        if (id > 0)
+        if (state.collection.hasOwnProperty(id))
             return state.collection[id]
         else
             return new Person({})

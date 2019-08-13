@@ -52,6 +52,7 @@ const mutations = {
 
     setSelected(state, org) {
         state.selected = org
+        window.Ac.$bus.$emit('OrgSelected', org.id)
     }
 }
 

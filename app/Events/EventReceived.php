@@ -54,8 +54,8 @@ class EventReceived implements ShouldBroadcastNow
             ];
         } elseif ($event->event === 4 || $event->event === 5) {
             return [
-                'person' => $card->person->id,
-                'event' => $event->event,
+                'person_id' => $card->person->id,
+                'event' => $event,
             ];
         } else {
             return [
