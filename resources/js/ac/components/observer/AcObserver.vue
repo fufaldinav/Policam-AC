@@ -268,9 +268,13 @@
 
         mounted() {
             this.$bus.$on('EventReceived', e => {
-                if (e.event === 4 || e.event === 5) {
-                    let person = this.getPerson(e.person)
+                if (e.event.event === 4 || e.event.event === 5) {
+                    e.event.person_id = e.person_id
+                    this.$store.commit('history/add', e.event)
+
+                    let person = this.getPerson(e.person_id)
                     if (person === undefined) return
+
                     this.$store.commit('persons/setSelected', person)
                     this.$store.commit('persons/setManually', false)
                 }

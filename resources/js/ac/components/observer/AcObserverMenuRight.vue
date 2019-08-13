@@ -26,7 +26,18 @@
         },
 
         mounted() {
-            this.$store.dispatch('history/getLast')
+            if (this.$store.state.organizations.selected) {
+                this.$store.dispatch('history/getLast', this.$store.state.organizations.selected.id)
+            }
+
+            this.$bus.$on('OrgSelected', orgId => {
+                this.$store.commit('history/clearCollection')
+                this.$store.dispatch('history/getLast', orgId)
+            })
+        },
+
+        beforeDestroy() {
+            this.$bus.$off('OrgSelected')
         }
     }
 </script>
