@@ -39,10 +39,10 @@
                         class="btn btn-secondary"
                         data-dismiss="modal"
                     >
-                        {{ $t('Отмена') }}
+                        Отмена
                     </button>
-                    <ac-cp-classes-buttons-add v-if="this.$store.state.modal.acceptButton === 'saveDivision'">{{ $t('Сохранить') }}</ac-cp-classes-buttons-add>
-                    <ac-cp-classes-buttons-remove v-if="this.$store.state.modal.acceptButton === 'removeDivision'">{{ $t('Удалить') }}</ac-cp-classes-buttons-remove>
+                    <ac-cp-classes-buttons-add v-if="this.$store.state.modal.acceptButton === 'saveDivision'">'Сохранить</ac-cp-classes-buttons-add>
+                    <ac-cp-classes-buttons-remove v-if="this.$store.state.modal.acceptButton === 'removeDivision'">Удалить</ac-cp-classes-buttons-remove>
                 </div>
             </div>
         </div>

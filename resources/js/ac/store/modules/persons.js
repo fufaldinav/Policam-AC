@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import i18n from '../../../vue-i18n'
 import {Card, Person, Photo} from '../../classes'
 
 const state = {
@@ -109,7 +108,7 @@ const actions = {
 
                 commit('clearSelected')
 
-                window.Ac.alert(person.f + ' ' + person.i + ' ' + i18n.t('сохранен') + ' ' + i18n.t('успешно'))
+                window.Ac.alert(`${person.f} ${person.i} сохранен успешно`)
             })
             .catch(error => {
                 if (rootState.debug) console.log(error)
@@ -144,7 +143,7 @@ const actions = {
 
                 commit('clearSelected')
 
-                window.Ac.alert(person.f + ' ' + person.i + ' ' + i18n.t('сохранен') + ' ' + i18n.t('успешно'))
+                window.Ac.alert(`${person.f} ${person.i} сохранен успешно`)
             })
             .catch(error => {
                 if (rootState.debug) console.log(error)
@@ -167,7 +166,7 @@ const actions = {
                 commit('remove', person)
                 commit('clearSelected')
 
-                window.Ac.alert(fullName + ' ' + i18n.t('удален') + ' ' + i18n.t('успешно'))
+                window.Ac.alert(`${fullName} удален успешно`)
             })
             .catch(error => {
                 if (rootState.debug) console.log(error)

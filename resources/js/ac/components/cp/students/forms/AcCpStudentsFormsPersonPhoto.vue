@@ -10,8 +10,8 @@
             class="h-100 w-100 d-flex align-items-center ac-person-photo-content"
         >
             <div class="w-100">
-                <p class="h1 text-center"><strong>{{ $t('Нажмите,') }}</strong></p>
-                <p class="text-center"><strong>{{ $t('чтобы загрузить фотографию') }}</strong></p>
+                <p class="h1 text-center"><strong>Нажмите,</strong></p>
+                <p class="text-center"><strong>чтобы загрузить фотографию</strong></p>
             </div>
 
         </div>
@@ -32,7 +32,7 @@
                 class="btn btn-sm btn-danger"
                 @click="removeUploadedPhoto"
             >
-                {{ $t('Удалить') }}
+                Удалить
             </button>
         </div>
     </div>

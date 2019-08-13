@@ -6,7 +6,7 @@
         :disabled="buttonDisabled"
         @click="addDivision"
     >
-        {{ $t('Сохранить') }}
+        Сохранить
     </button>
 </template>
 
@@ -45,9 +45,9 @@
                 } else {
                     this.$store.commit('divisions/setSelected', new Division({name: this.divisionName, organization_id: this.selectedOrganization.id}))
 
-                    this.$store.commit('modal/setTitle', this.$t('Сохранение'))
+                    this.$store.commit('modal/setTitle', 'Сохранение')
 
-                    this.$store.commit('modal/setMessage', this.$t('Вы действительно хотите сохранить подразделение?'))
+                    this.$store.commit('modal/setMessage', 'Вы действительно хотите сохранить подразделение?')
 
                     this.$store.commit('modal/setAcceptButton', 'saveDivision')
 

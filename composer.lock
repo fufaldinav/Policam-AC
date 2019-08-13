@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b51adc2acd2f1d82c8725681d6b9b8ac",
+    "content-hash": "10c7cea9788389d8d111b431286d24a9",
     "packages": [
         {
             "name": "barryvdh/laravel-ide-helper",
@@ -1860,59 +1860,6 @@
             "time": "2019-06-18T20:09:29+00:00"
         },
         {
-            "name": "martinlindhe/laravel-vue-i18n-generator",
-            "version": "0.1.39",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/martinlindhe/laravel-vue-i18n-generator.git",
-                "reference": "841d82bb2a738f5aa49f975c3ae61c2946df392d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/martinlindhe/laravel-vue-i18n-generator/zipball/841d82bb2a738f5aa49f975c3ae61c2946df392d",
-                "reference": "841d82bb2a738f5aa49f975c3ae61c2946df392d",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/console": "~5.1.0|~5.2.0|~5.3.0|~5.4.0|~5.5.0|~5.6.0|~5.7.0|~5.8.0",
-                "illuminate/support": "~5.1.0|~5.2.0|~5.3.0|~5.4.0|~5.5.0|~5.6.0|~5.7.0|~5.8.0",
-                "php": ">=5.5.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.7"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "MartinLindhe\\VueInternationalizationGenerator\\GeneratorProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "MartinLindhe\\VueInternationalizationGenerator\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Martin Lindhe",
-                    "email": "martin@ubique.se"
-                }
-            ],
-            "description": "Generates a vue-i18n compatible include file from your Laravel translations.",
-            "homepage": "http://github.com/martinlindhe/laravel-vue-i18n-generator",
-            "keywords": [
-                "laravel",
-                "vue-i18n"
-            ],
-            "time": "2019-05-23T04:46:51+00:00"
-        },
-        {
             "name": "monolog/monolog",
             "version": "1.24.0",
             "source": {
@@ -2059,16 +2006,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v4.2.2",
+            "version": "v4.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "1bd73cc04c3843ad8d6b0bfc0956026a151fc420"
+                "reference": "e612609022e935f3d0337c1295176505b41188c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/1bd73cc04c3843ad8d6b0bfc0956026a151fc420",
-                "reference": "1bd73cc04c3843ad8d6b0bfc0956026a151fc420",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/e612609022e935f3d0337c1295176505b41188c8",
+                "reference": "e612609022e935f3d0337c1295176505b41188c8",
                 "shasum": ""
             },
             "require": {
@@ -2076,7 +2023,7 @@
                 "php": ">=7.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^6.5 || ^7.0"
+                "phpunit/phpunit": "^6.5 || ^7.0 || ^8.0"
             },
             "bin": [
                 "bin/php-parse"
@@ -2106,7 +2053,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2019-05-25T20:07:01+00:00"
+            "time": "2019-08-12T20:17:41+00:00"
         },
         {
             "name": "opis/closure",

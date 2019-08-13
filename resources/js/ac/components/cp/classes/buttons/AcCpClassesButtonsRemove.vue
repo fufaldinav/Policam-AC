@@ -5,7 +5,7 @@
         type="button"
         @click="deleteDivision"
     >
-        {{ $t('Удалить') }}
+        Удалить
     </button>
 </template>
 
@@ -33,9 +33,9 @@
                 } else {
                     this.$store.commit('divisions/setSelected', this.division)
 
-                    this.$store.commit('modal/setTitle', this.$t('Удаление'))
+                    this.$store.commit('modal/setTitle', 'Удаление')
 
-                    this.$store.commit('modal/setMessage', this.$t('Вы действительно хотите удалить подразделение? Все члены подразделения будут перемещены в "пустое" подразделение.'))
+                    this.$store.commit('modal/setMessage', 'Вы действительно хотите удалить подразделение? Все члены подразделения будут перемещены в "пустое" подразделение.')
 
                     this.$store.commit('modal/setAcceptButton', 'removeDivision')
 

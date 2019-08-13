@@ -5,7 +5,7 @@
         :disabled="disabled"
         @click="updatePerson"
     >
-        {{ $t('Сохранить') }}
+        Сохранить
     </button>
 </template>
 
@@ -28,9 +28,9 @@
                     this.$store.dispatch('modal/close')
                     this.$store.commit('cp/showLeftMenu')
                 } else {
-                    this.$store.commit('modal/setTitle', this.$t('Сохранение'))
+                    this.$store.commit('modal/setTitle', 'Сохранение')
 
-                    this.$store.commit('modal/setMessage', this.$t('Вы действительно хотите сохранить ' + this.selectedPerson.f + ' ' + this.selectedPerson.i + '?'))
+                    this.$store.commit('modal/setMessage', `Вы действительно хотите сохранить ${this.selectedPerson.f} ${this.selectedPerson.i}?`)
 
                     this.$store.commit('modal/setAcceptButton', 'updatePerson')
 

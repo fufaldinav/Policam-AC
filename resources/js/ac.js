@@ -28,7 +28,6 @@ window.Echo = new Echo({
 });
 
 import Vue from 'vue'
-import i18n from './vue-i18n'
 import store from './ac/store'
 
 import AcLayout from './ac/components/AcLayout'
@@ -55,7 +54,6 @@ Object.defineProperty(Vue.prototype, '$bus', {
 window.Ac = new Vue({
     el: '#ac',
     store,
-    i18n,
 
     components: {
         AcLayout, AcNavBar, AcObserver, AcCpFunctionCard, AcCpClasses, AcCpTimetable,

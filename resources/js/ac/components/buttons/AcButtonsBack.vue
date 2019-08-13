@@ -4,7 +4,7 @@
         class="list-group-item list-group-item-info"
         @click="unselectDivisionAndPerson"
     >
-        {{ $t('Назад') }}
+        Назад
     </button>
 </template>
 

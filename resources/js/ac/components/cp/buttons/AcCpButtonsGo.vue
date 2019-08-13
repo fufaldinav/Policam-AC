@@ -1,5 +1,5 @@
 <template>
-    <a :href="url" class="btn btn-primary">{{ $t('Перейти') }}</a>
+    <a :href="url" class="btn btn-primary">Перейти</a>
 </template>
 
 <script>

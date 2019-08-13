@@ -4,7 +4,7 @@
         class="btn btn-danger mb-1"
         @click="sendToServer"
     >
-        <slot>{{ $t('Карта не работает') }}</slot>
+        <slot>Карта не работает</slot>
     </button>
 </template>
 
@@ -33,9 +33,9 @@
                         this.$root.alert(error, 'danger')
                     })
                 } else {
-                    this.$store.commit('modal/setTitle', this.$t('Карта не работает'))
+                    this.$store.commit('modal/setTitle', 'Карта не работает')
 
-                    this.$store.commit('modal/setMessage', this.$t('Необходимо подтвердить действие'))
+                    this.$store.commit('modal/setMessage', 'Необходимо подтвердить действие')
 
                     this.$store.commit('modal/setAcceptButton', 'cardBroke')
 

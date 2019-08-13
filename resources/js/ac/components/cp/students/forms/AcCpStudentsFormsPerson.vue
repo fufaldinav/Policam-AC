@@ -10,7 +10,7 @@
             <div class="form-group col-6">
                 <div class="form-group">
                     <label for="f">
-                        {{ $t('Фамилия') }}
+                        Фамилия
                     </label>
                     <input
                         id="f"
@@ -18,17 +18,17 @@
                         type="text"
                         class="form-control"
                         :class="{ 'is-invalid': checkField('f') === false }"
-                        :placeholder="$t('Фамилия')"
+                        placeholder="Фамилия"
                         :disabled="selectedPerson.id > 0"
                         required
                     >
                     <div class="invalid-feedback">
-                        {{ $t('Поле "Фамилия" является обязательным!') }}
+                        Поле "Фамилия" является обязательным!
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="i">
-                        {{ $t('Имя') }}
+                        Имя
                     </label>
                     <input
                         id="i"
@@ -36,30 +36,30 @@
                         type="text"
                         class="form-control"
                         :class="{ 'is-invalid': checkField('i') === false }"
-                        :placeholder="$t('Имя')"
+                        placeholder="Имя"
                         :disabled="selectedPerson.id > 0"
                         required
                     >
                     <div class="invalid-feedback">
-                        {{ $t('Поле "Имя" является обязательным!') }}
+                        Поле "Имя" является обязательным!
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="o">
-                        {{ $t('Отчество') }}
+                        Отчество
                     </label>
                     <input
                         id="o"
                         v-model="selectedPerson.o"
                         type="text"
                         class="form-control"
-                        :placeholder="$t('Отчество')"
+                        placeholder="Отчество"
                         :disabled="selectedPerson.id > 0"
                     >
                 </div>
                 <div class="form-group">
                     <label for="birthday">
-                        {{ $t('Дата рождения') }}
+                        Дата рождения
                     </label>
                     <input
                         id="birthday"
@@ -67,51 +67,51 @@
                         type="date"
                         class="form-control"
                         :class="{ 'is-invalid': checkField('birthday') === false }"
-                        :placeholder="$t('Дата рождения')"
+                        placeholder="Дата рождения"
                         :disabled="selectedPerson.id > 0"
                         required
                     >
                     <div class="invalid-feedback">
-                        {{ $t('Поле "Дата рождения" является обязательным!') }}
+                        Поле "Дата рождения" является обязательным!
                     </div>
                 </div>
             </div>
         </div>
         <div class="form-group">
             <label for="address">
-                {{ $t('Адрес') }}
+                Адрес
             </label>
             <input
                 id="address"
                 v-model="selectedPerson.address"
                 type="text"
                 class="form-control"
-                :placeholder="$t('Адрес')"
+                placeholder="Адрес"
             >
         </div>
         <div class="form-row">
             <div class="form-group col-6">
                 <label for="phone">
-                    {{ $t('Номер телефона') }}
+                    Номер телефона
                 </label>
                 <input
                     id="phone"
                     v-model="selectedPerson.phone"
                     type="text"
                     class="form-control"
-                    :placeholder="$t('Номер телефона')"
+                    placeholder="Номер телефона"
                 >
             </div>
             <div class="form-group col-6">
                 <label for="uid">
-                    {{ $t('Уникальный номер') }}
+                    Уникальный номер
                 </label>
                 <input
                     id="uid"
                     v-model="selectedPerson.id"
                     type="text"
                     class="form-control"
-                    :placeholder="$t('Уникальный номер')"
+                    placeholder="Уникальный номер"
                     readonly
                 >
             </div>

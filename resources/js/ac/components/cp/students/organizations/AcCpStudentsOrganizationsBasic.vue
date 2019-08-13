@@ -12,7 +12,7 @@
                 class="card-header"
                 :class="isInvalid"
             >
-                {{ $t('Основное образование') }}
+                Основное образование
             </div>
             <ul class="list-group list-group-flush">
                 <li
@@ -26,7 +26,7 @@
                     v-if="isInvalid"
                     class="list-group-item text-danger small"
                 >
-                    {{ $t('Необходимо выбрать как минимум одно образовательное учреждение') }}
+                    Необходимо выбрать как минимум одно образовательное учреждение
                 </li>
             </ul>
         </div>

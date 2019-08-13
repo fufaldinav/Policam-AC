@@ -1,5 +1,4 @@
 import {Division} from '../../classes'
-import i18n from "../../../vue-i18n";
 
 const state = {
     collection: [],
@@ -115,7 +114,7 @@ const actions = {
 
                 commit('clearSelected')
 
-                window.Ac.alert(division.name + ' ' + i18n.t('сохранено') + ' ' + i18n.t('успешно'))
+                window.Ac.alert(`${division.name} сохранено успешно`)
             })
             .catch(error => {
                 if (rootState.debug) console.log(error)
@@ -134,7 +133,7 @@ const actions = {
                 commit('remove', division)
                 commit('clearSelected')
 
-                window.Ac.alert(name + ' ' + i18n.t('удалено') + ' ' + i18n.t('успешно'))
+                window.Ac.alert(`${name} удалено успешно`)
             })
             .catch(error => {
                 if (rootState.debug) console.log(error)

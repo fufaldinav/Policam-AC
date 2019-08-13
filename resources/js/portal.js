@@ -1,7 +1,6 @@
 require('./bootstrap')
 
 import Vue from 'vue'
-import i18n from './vue-i18n'
 import store from './portal/store'
 
 import Vue2TouchEvents from 'vue2-touch-events'
@@ -11,7 +10,6 @@ Vue.use(Vue2TouchEvents)
 window.Ac = new Vue({
     el: '#portal',
     store,
-    i18n,
 
     components: {},
 
