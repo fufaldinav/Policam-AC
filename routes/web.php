@@ -11,7 +11,7 @@ Route::get('observer', 'ObserverController@index')->name('observer');
  * API
  */
 Route::group(['prefix' => 'api', 'as' => 'api.'], function () {
-    Route::get('events/{organizationId}/{count?}', 'ServersController@getEvents')->middleware('role:2,3');
+    Route::get('events/{organizationId}/{count?}', 'ServersController@getEvents')->middleware('role:2,3,6,7,8');
     Route::resource('persons', 'PersonsController')->except(['create', 'edit']);
     Route::resource('photos', 'PhotosController')->only(['store', 'destroy']);
     Route::group(['prefix' => 'divisions', 'as' => 'divisions.'], function () {
@@ -50,8 +50,8 @@ Route::group(['prefix' => 'controllers', 'as' => 'controllers.'], function () {
  */
 Route::group(['prefix' => 'cp', 'as' => 'cp.'], function () {
     Route::get('/', 'UsersController@index')->name('index');
-    Route::get('classes', 'DivisionsController@classes')->name('classes')->middleware('role:2,3');
-    Route::get('persons', 'PersonsController@page')->name('persons')->middleware('role:2,3');
+    Route::get('classes', 'DivisionsController@classes')->name('classes')->middleware('role:2,3,7');
+    Route::get('persons', 'PersonsController@page')->name('persons')->middleware('role:2,3,7');
     Route::get('students', 'UsersController@students')->name('students');
 
 });

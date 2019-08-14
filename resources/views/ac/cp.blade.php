@@ -1,10 +1,11 @@
 @extends('layout')
 
 @section('content')
-    <div class="container-fluid d-flex justify-content-center">
+    <div class="container-fluid justify-content-center">
         <div class="row justify-content-center mt-2">
             <div class="col-12 col-lg-10 col-xl-8">
                 <div class="row">
+                    @if (Auth::user()->hasRole([1, 2, 3, 4, 5, 6]))
                     <div class="col-12 col-md-4 d-flex justify-content-center">
                         <ac-cp-function-card
                             :active="{{ Auth::user()->hasRole([1, 4, 5]) ? 'true' : 'false' }}"
@@ -18,9 +19,10 @@
                     <div class="col-12 col-md-4 d-flex justify-content-center">
                         <ac-cp-function-card
                             :active="{{ Auth::user()->hasRole([1, 2, 3, 4, 5]) ? 'true' : 'false' }}"
-                            :url="'/cp/schedule'"
+                            :url="'/cp/timetable'"
                         >
-                            <template slot="img"><img src="/img/schedule.jpg" class="card-img-top" alt="..."></template>
+                            <template slot="img"><img src="/img/timetable.jpg" class="card-img-top" alt="...">
+                            </template>
                             <template slot="title">{{ __('Расписание') }}</template>
                             <template slot="text">Просмотр и управление расписанием</template>
                         </ac-cp-function-card>
@@ -36,9 +38,10 @@
                             <template slot="text">Просмотр статистики по входам и выходам</template>
                         </ac-cp-function-card>
                     </div>
+                    @endif
                     <div class="col-12 col-md-4 d-flex justify-content-center">
                         <ac-cp-function-card
-                            :active="{{ Auth::user()->hasRole([1, 2, 3, 6]) ? 'true' : 'false' }}"
+                            :active="{{ Auth::user()->hasRole([1, 2, 3, 6, 7, 8]) ? 'true' : 'false' }}"
                             :url="'/observer'"
                         >
                             <template slot="img"><img src="/img/observing.jpg" class="card-img-top" alt="...">
@@ -49,7 +52,7 @@
                     </div>
                     <div class="col-12 col-md-4 d-flex justify-content-center">
                         <ac-cp-function-card
-                            :active="{{ Auth::user()->hasRole([1, 2, 3]) ? 'true' : 'false' }}"
+                            :active="{{ Auth::user()->hasRole([1, 2, 3, 7]) ? 'true' : 'false' }}"
                             :url="'/cp/persons'"
                         >
                             <template slot="img"><img src="/img/personnel.jpg" class="card-img-top" alt="...">
@@ -60,7 +63,7 @@
                     </div>
                     <div class="col-12 col-md-4 d-flex justify-content-center">
                         <ac-cp-function-card
-                            :active="{{ Auth::user()->hasRole([1, 2, 3]) ? 'true' : 'false' }}"
+                            :active="{{ Auth::user()->hasRole([1, 2, 3, 7]) ? 'true' : 'false' }}"
                             :url="'/cp/classes'"
                         >
                             <template slot="img"><img src="/img/divisions.jpg" class="card-img-top" alt="...">

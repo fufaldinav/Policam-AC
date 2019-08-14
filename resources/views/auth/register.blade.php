@@ -99,24 +99,24 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
-                                    <div class="col-md-6 offset-md-3 d-flex justify-content-center">
-                                        <div class="custom-control custom-radio custom-control-inline">
-                                            <input type="radio" id="ac-role4" name="role"
-                                                   class="custom-control-input" value="4" checked>
-                                            <label class="custom-control-label" for="ac-role4">
-                                                {{ __('Родитель') }}
-                                            </label>
-                                        </div>
-                                        <div class="custom-control custom-radio custom-control-inline">
-                                            <input type="radio" id="ac-role5" name="role"
-                                                   class="custom-control-input" value="5">
-                                            <label class="custom-control-label" for="ac-role5">
-                                                {{ __('Ученик') }}
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
+{{--                                <div class="form-group row">--}}
+{{--                                    <div class="col-md-6 offset-md-3 d-flex justify-content-center">--}}
+{{--                                        <div class="custom-control custom-radio custom-control-inline">--}}
+{{--                                            <input type="radio" id="ac-role4" name="role"--}}
+{{--                                                   class="custom-control-input" value="4" checked>--}}
+{{--                                            <label class="custom-control-label" for="ac-role4">--}}
+{{--                                                {{ __('Родитель') }}--}}
+{{--                                            </label>--}}
+{{--                                        </div>--}}
+{{--                                        <div class="custom-control custom-radio custom-control-inline">--}}
+{{--                                            <input type="radio" id="ac-role5" name="role"--}}
+{{--                                                   class="custom-control-input" value="5">--}}
+{{--                                            <label class="custom-control-label" for="ac-role5">--}}
+{{--                                                {{ __('Ученик') }}--}}
+{{--                                            </label>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
                             @endif
 
                             <div class="form-group row mb-0">
