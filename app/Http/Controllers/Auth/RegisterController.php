@@ -95,14 +95,16 @@ class RegisterController extends Controller
 
         if (isset($data['card_code'])) {
             $rc = ReferralCode::where(['card' => $data['card_code']])->first();
-            $rc->user_id = $user->id;
-            $rc->save();
+            if ($rc !== null) {
+                $rc->user_id = $user->id;
+                $rc->save();
+            }
         }
 
-        if (isset($data['role'])) {
-            $role = Role::find($data['role']);
-            $user->roles()->save($role);
-        }
+//        if (isset($data['role'])) {
+//            $role = Role::find($data['role']);
+//            $user->roles()->save($role);
+//        }
 
         return $user;
     }

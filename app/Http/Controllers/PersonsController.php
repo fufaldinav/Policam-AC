@@ -31,7 +31,7 @@ class PersonsController extends Controller
 
     public function page(Request $request)
     {
-        abort_if(! $request->user()->hasRole([1, 2, 3]), 403);
+        abort_if(! $request->user()->hasRole([1, 2, 3, 7]), 403);
 
         $org = $request->user()->organizations()->first();
         if (! $org) {
@@ -43,7 +43,7 @@ class PersonsController extends Controller
 
     public function index(Request $request)
     {
-        abort_if(! $request->user()->hasRole([1, 2, 3]), 403);
+        abort_if(! $request->user()->hasRole([1, 2, 3, 7]), 403);
 
         $persons = $request->user()->persons()->get();
 
@@ -54,7 +54,7 @@ class PersonsController extends Controller
 
     public function show(Request $request, $id)
     {
-        abort_if(! $request->user()->hasRole([1, 2, 3]), 403);
+        abort_if(! $request->user()->hasRole([1, 2, 3, 7]), 403);
 
         $person = $request->user()->persons()->where('persons.id', $id)->first()->load(['photos', 'cards']);
 
@@ -107,7 +107,7 @@ class PersonsController extends Controller
     {
         $user = $request->user();
 
-        abort_if(! $user->hasRole([1, 2, 3, 4, 5]), 403);
+        abort_if(! $user->hasRole([1, 2, 3, 4, 5, 7]), 403);
 
         $person = $request->input('person');
 
@@ -139,7 +139,7 @@ class PersonsController extends Controller
 
         if ($user->hasRole([4, 5])) {
             $person = $user->subscriptions()->where('persons.id', $id)->first();
-        } elseif ($user->hasRole([1, 2, 3])) {
+        } elseif ($user->hasRole([1, 2, 3, 7])) {
             $person = $user->persons()->where('persons.id', $id)->first();
         } else {
             abort(403);
