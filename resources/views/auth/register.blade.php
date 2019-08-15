@@ -88,35 +88,9 @@
                                 </div>
                             </div>
 
-                            @if(isset($rc->card))
-                                <div class="form-group row">
-                                    <label for="card-code"
-                                           class="col-md-4 col-form-label text-md-right">Карта</label>
-
-                                    <div class="col-md-6">
-                                        <input id="card-code" type="text" class="form-control" name="card_code"
-                                               value="{{ $rc->card }}" readonly>
-                                    </div>
-                                </div>
-
-{{--                                <div class="form-group row">--}}
-{{--                                    <div class="col-md-6 offset-md-3 d-flex justify-content-center">--}}
-{{--                                        <div class="custom-control custom-radio custom-control-inline">--}}
-{{--                                            <input type="radio" id="ac-role4" name="role"--}}
-{{--                                                   class="custom-control-input" value="4" checked>--}}
-{{--                                            <label class="custom-control-label" for="ac-role4">--}}
-{{--                                                {{ __('Родитель') }}--}}
-{{--                                            </label>--}}
-{{--                                        </div>--}}
-{{--                                        <div class="custom-control custom-radio custom-control-inline">--}}
-{{--                                            <input type="radio" id="ac-role5" name="role"--}}
-{{--                                                   class="custom-control-input" value="5">--}}
-{{--                                            <label class="custom-control-label" for="ac-role5">--}}
-{{--                                                {{ __('Ученик') }}--}}
-{{--                                            </label>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
+                            @if(isset($referralCode))
+                                <input id="referral-code" type="text" class="form-control" name="referral_code"
+                                       value="{{ $referralCode }}" readonly style="display: none;">
                             @endif
 
                             <div class="form-group row mb-0">

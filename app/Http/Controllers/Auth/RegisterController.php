@@ -53,13 +53,17 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm(string $referralCode = null)
     {
-        if ($referralCode) {
+        if (isset($referralCode)) {
             $rc = ReferralCode::where(['code' => $referralCode, 'user_id' => null])->first();
-        } else {
-            $rc = null;
+
+            if ($rc !== null) {
+                $referralCode = $rc->code;
+            } else {
+                $referralCode = null;
+            }
         }
 
-        return view('auth.register', compact('rc'));
+        return view('auth.register', compact('referralCode'));
     }
 
     /**
@@ -93,8 +97,8 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
         ]);
 
-        if (isset($data['card_code'])) {
-            $rc = ReferralCode::where(['card' => $data['card_code']])->first();
+        if (isset($data['referral_code'])) {
+            $rc = ReferralCode::where(['code' => $data['referral_code'], 'user_id' => null])->first();
             if ($rc !== null) {
                 $rc->user_id = $user->id;
                 $rc->save();

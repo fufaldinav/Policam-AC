@@ -43,7 +43,9 @@ Route::group(['prefix' => 'api', 'as' => 'api.'], function () {
  * Auth
  */
 Auth::routes(['verify' => true]);
-Route::get('reg/{referral_code?}', 'Auth\RegisterController@showRegistrationForm');
+Route::get('reg/{referral_code?}', 'ReferralController@parseLink');
+Route::get('register/{referral_code}', 'Auth\RegisterController@showRegistrationForm');
+Route::get('login/{referral_code}', 'Auth\LoginController@showLoginForm')->middleware('verified');
 /*
  * Cards
  */
