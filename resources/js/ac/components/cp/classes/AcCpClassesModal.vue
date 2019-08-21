@@ -19,29 +19,14 @@
                     >
                         {{ title }}
                     </h5>
-                    <button
-                        type="button"
-                        class="close"
-                        data-dismiss="modal"
-                        aria-label="Close"
-                    >
-                        <span aria-hidden="true">
-                            &times;
-                        </span>
-                    </button>
                 </div>
                 <div class="modal-body">
                     {{ message }}
                 </div>
                 <div class="modal-footer">
-                    <button
-                        type="button"
-                        class="btn btn-secondary"
-                        data-dismiss="modal"
-                    >
-                        Отмена
-                    </button>
-                    <ac-cp-classes-buttons-add v-if="this.$store.state.modal.acceptButton === 'saveDivision'">'Сохранить</ac-cp-classes-buttons-add>
+                    <ac-cp-classes-buttons-cancel></ac-cp-classes-buttons-cancel>
+                    <ac-cp-classes-buttons-add v-if="this.$store.state.modal.acceptButton === 'saveDivision'">Сохранить</ac-cp-classes-buttons-add>
+                    <ac-cp-classes-buttons-save v-if="this.$store.state.modal.acceptButton === 'updateDivision'">Сохранить</ac-cp-classes-buttons-save>
                     <ac-cp-classes-buttons-remove v-if="this.$store.state.modal.acceptButton === 'removeDivision'">Удалить</ac-cp-classes-buttons-remove>
                 </div>
             </div>
@@ -51,6 +36,8 @@
 
 <script>
     import AcCpClassesButtonsAdd from './buttons/AcCpClassesButtonsAdd'
+    import AcCpClassesButtonsCancel from './buttons/AcCpClassesButtonsCancel'
+    import AcCpClassesButtonsSave from './buttons/AcCpClassesButtonsSave'
     import AcCpClassesButtonsRemove from './buttons/AcCpClassesButtonsRemove'
 
     export default {
@@ -58,6 +45,8 @@
 
         components: {
             AcCpClassesButtonsAdd,
+            AcCpClassesButtonsCancel,
+            AcCpClassesButtonsSave,
             AcCpClassesButtonsRemove
         },
 

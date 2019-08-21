@@ -35,7 +35,7 @@ Route::group(['prefix' => 'api', 'as' => 'api.'], function () {
     Route::group(['prefix' => 'divisions', 'as' => 'divisions.'], function () {
         Route::get('{organizationId}/{withPersons?}', 'DivisionsController@getByOrganization');
         Route::post('/', 'DivisionsController@store');
-        Route::put('{id}', 'DivisionsController@update');
+        Route::post('{id}', 'DivisionsController@update');
         Route::delete('{id}', 'DivisionsController@destroy');
     });
 });

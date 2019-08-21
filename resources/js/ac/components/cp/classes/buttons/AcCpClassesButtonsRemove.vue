@@ -25,7 +25,6 @@
 
         methods: {
             deleteDivision() {
-
                 if (this.$store.state.modal.shown) {
                     this.$store.dispatch('divisions/removeSelected')
 
