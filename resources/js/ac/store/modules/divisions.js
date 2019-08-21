@@ -3,12 +3,43 @@ import i18n from "../../../vue-i18n";
 
 const state = {
     collection: [],
-    selected: null
+    selected: null,
+    numberRule: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+    letterRule: ['А', 'Б', 'В', 'Г', 'Д', 'Е', 'И']
 }
 
 const getters = {
     getById: state => id => {
         return state.collection.find(value => value.id === id)
+    },
+
+    findName: state => name => {
+        let division = state.collection.find(division => division.name === name)
+        return division !== undefined
+    },
+
+    checkNumberRule: state => number => {
+        let index = state.numberRule.indexOf(parseInt(number))
+        return index > -1
+    },
+
+    checkLetterRule: state => letter => {
+        let index = state.letterRule.indexOf(letter)
+        return index > -1
+    },
+
+    checkName: (state, getters) => name => {
+        let splittedName = name.split(' ', 2)
+        let number = splittedName[0]
+        let letter = ''
+
+        if (splittedName.length > 1) {
+            letter = splittedName[1].replace(/"/g, '')
+        } else {
+            return false
+        }
+
+        return number !== null && number !== '' && letter !== '' && ! getters.findName(name) && getters.checkNumberRule(number) && getters.checkLetterRule(letter)
     },
 
     sorted: state => {
@@ -60,6 +91,16 @@ const getters = {
 
 const mutations = {
     add(state, division) {
+        state.collection.push(new Division(division))
+    },
+
+    update(state, division) {
+        let id = division.id
+        let oldDivision = state.collection.find(oldDivision => oldDivision.id === id)
+        let index = state.collection.indexOf(oldDivision)
+        if (index > -1) {
+            state.collection.splice(index, 1)
+        }
         state.collection.push(new Division(division))
     },
 
@@ -136,9 +177,29 @@ const actions = {
                 let name = division.name
 
                 commit('remove', division)
+
                 commit('clearSelected')
 
                 window.Ac.alert(name + ' ' + i18n.t('удалено') + ' ' + i18n.t('успешно'))
+            })
+            .catch(error => {
+                if (rootState.debug) console.log(error)
+                window.Ac.alert(error, 'danger')
+            })
+    },
+
+    async updateSelected({state, commit, rootState}) {
+        window.axios.post('/api/divisions/' + state.selected.id, {
+            division: state.selected
+        })
+            .then(response => {
+                let division = response.data
+
+                commit('update', division)
+
+                commit('clearSelected')
+
+                window.Ac.alert(`${division.name} сохранено успешно`)
             })
             .catch(error => {
                 if (rootState.debug) console.log(error)

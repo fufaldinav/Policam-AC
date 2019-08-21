@@ -32,6 +32,7 @@
             >
             </ac-cp-classes-buttons-add>
         </td>
+        <td class="p-1"></td>
     </tr>
 </template>
 
@@ -53,6 +54,7 @@
 
         computed: {
             divisionName() {
+                if (this.classLetter !== null) this.classLetter = this.classLetter.toUpperCase()
                 return `${this.classNumber} "${this.classLetter}"`
             },
 
@@ -71,7 +73,7 @@
             },
 
             saveButtonDisabled() {
-                return this.classNumber === null || this.classNumber === '' || this.classLetter === null || this.classLetter === ''
+                return ! this.$store.getters['divisions/checkName'](this.divisionName)
             }
         }
     }
