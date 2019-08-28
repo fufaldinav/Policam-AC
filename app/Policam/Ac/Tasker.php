@@ -195,7 +195,7 @@ class Tasker
         foreach ($devices as $device) {
             if ($ctrlType == 'Policont')
             {
-                $this->message->setDevice($device);
+                $this->message->addDevice($device);
             }
         }
 
