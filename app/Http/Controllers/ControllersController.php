@@ -67,34 +67,6 @@ class ControllersController extends Controller
     }
 
     /**
-     * Очищает память контроллера
-     *
-     * @param Request $request
-     * @param int $ctrl_id
-     *
-     * @return string
-     */
-    public function clear(Request $request, int $ctrl_id): string
-    {
-        abort_if(!$request->user()->isAdmin(), 403);
-
-        $ctrl = App\Controller::find($ctrl_id);
-
-        $tasker = new Tasker();
-
-        $tasker->clearCards($ctrl->type);
-        $tasker->add($ctrl_id);
-
-        $count = $tasker->send();
-
-        if ($count > 0) {
-            return __('Заданий успешно отправлено: :count', ['count' => $count]);
-        } else {
-            return __('Нет отправленных заданий');
-        }
-    }
-
-    /**
      * Загружает в контроллер все карты
      *
      * @param Request $request
@@ -142,5 +114,34 @@ class ControllersController extends Controller
         $count = $tasker->send();
 
         return __('Заданий успешно отправлено: :count', ['count' => $count]);
+    }
+
+    /**
+     * Очищает память контроллера
+     *
+     * @param Request $request
+     * @param int $ctrl_id
+     * @param int $device
+     *
+     * @return string
+     */
+    public function clear(Request $request, int $ctrl_id, int $device = 0): string
+    {
+        abort_if(!$request->user()->isAdmin(), 403);
+
+        $ctrl = App\Controller::find($ctrl_id);
+
+        $tasker = new Tasker();
+
+        $tasker->clearCards($ctrl->type, [$device]);
+        $tasker->add($ctrl_id);
+
+        $count = $tasker->send();
+
+        if ($count > 0) {
+            return __('Заданий успешно отправлено: :count', ['count' => $count]);
+        } else {
+            return __('Нет отправленных заданий');
+        }
     }
 }
