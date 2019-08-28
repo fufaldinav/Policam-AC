@@ -35,12 +35,11 @@ final class Card implements JsonSerializable
 
     public function jsonSerialize(): array
     {
-        $response = ['card' => $this->card];
+        $response = ['card' => $this->card, 'device' => $this->device];
 
         if ($this->active) {
             $response['flags'] = $this->flags;
             $response['tz'] = $this->tz;
-            $response['device'] = $this->device;
         }
 
         return $response;
