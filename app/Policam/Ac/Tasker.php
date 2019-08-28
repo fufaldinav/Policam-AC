@@ -178,9 +178,10 @@ class Tasker
      * Удаляет все карты из памяти контроллера
      *
      * @param string $ctrlType
+     * @param array $devices
      * @return void
      */
-    public function clearCards(string $ctrlType): void
+    public function clearCards(string $ctrlType, array $devices = [0]): void
     {
         if ($ctrlType == 'Z5RWEB')
         {
@@ -189,6 +190,19 @@ class Tasker
         else
         {
             $this->message = new PolicontOutgoingMessage();
+        }
+
+        foreach ($devices as $code) {
+            if ($ctrlType == 'Z5RWEB')
+            {
+                $card = new Z5RWEBCard($code);
+            }
+            else
+            {
+                $card = new PolicontCard($code);
+            }
+
+            $this->message->addCard($card);
         }
 
         $this->message->setOperation('clear_cards');
