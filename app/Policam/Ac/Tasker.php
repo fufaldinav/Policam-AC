@@ -192,17 +192,11 @@ class Tasker
             $this->message = new PolicontOutgoingMessage();
         }
 
-        foreach ($devices as $code) {
-            if ($ctrlType == 'Z5RWEB')
+        foreach ($devices as $device) {
+            if ($ctrlType == 'Policont')
             {
-                $card = new Z5RWEBCard($code);
+                $this->message->setDevice($device);
             }
-            else
-            {
-                $card = new PolicontCard($code);
-            }
-
-            $this->message->addCard($card);
         }
 
         $this->message->setOperation('clear_cards');
