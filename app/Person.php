@@ -172,9 +172,8 @@ class Person extends Model
 
             $this->cards()->save($card);
 
-            $tasker->addCards([$card->wiegand]);
-
             foreach ($this->controllers as $ctrl) {
+                $tasker->addCards($ctrl->type, [$card->wiegand]);
                 $tasker->add($ctrl->id);
             }
         }
@@ -198,9 +197,8 @@ class Person extends Model
             $card->person_id = 0;
             $card->save();
 
-            $tasker->delCards([$card->wiegand]);
-
             foreach ($this->controllers as $ctrl) {
+                $tasker->delCards($ctrl->type, [$card->wiegand]);
                 $tasker->add($ctrl->id);
             }
         }
@@ -218,9 +216,8 @@ class Person extends Model
             $card->person_id = 0;
             $card->save();
 
-            $tasker->delCards([$card->wiegand]);
-
             foreach ($this->controllers as $ctrl) {
+                $tasker->delCards($ctrl->type, [$card->wiegand]);
                 $tasker->add($ctrl->id);
             }
         }

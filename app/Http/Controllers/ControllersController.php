@@ -78,9 +78,11 @@ class ControllersController extends Controller
     {
         abort_if(!$request->user()->isAdmin(), 403);
 
+        $ctrl = App\Controller::find($ctrl_id);
+
         $tasker = new Tasker();
 
-        $tasker->clearCards();
+        $tasker->clearCards($ctrl->type);
         $tasker->add($ctrl_id);
 
         $count = $tasker->send();
@@ -130,7 +132,7 @@ class ControllersController extends Controller
             | Таким образом сформируем задания на отправку по 10 за раз
             */
             if (($i > 0 && ($i % 10 === 0)) || ($i === ($card_count - 1))) {
-                $tasker->addCards($codes);
+                $tasker->addCards($ctrl->type, $codes);
                 $tasker->add($ctrl_id);
 
                 $codes = [];

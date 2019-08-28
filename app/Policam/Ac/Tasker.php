@@ -19,8 +19,10 @@
 namespace App\Policam\Ac;
 
 use App;
-use App\Policam\Ac\Z5RWEB\OutgoingMessage;
-use App\Policam\Ac\Z5RWEB\Card;
+use App\Policam\Ac\Z5RWEB\OutgoingMessage as Z5RWEBOutgoingMessage;
+use App\Policam\Ac\Z5RWEB\Card as Z5RWEBCard;
+use App\Policam\Ac\Policont\OutgoingMessage as PolicontOutgoingMessage;
+use App\Policam\Ac\Policont\Card  as PolicontCard;
 
 class Tasker
 {
@@ -104,18 +106,33 @@ class Tasker
      * имеется карта с таким-же номером, для этой карты обновляются флаги и
      * временные зоны.
      *
+     * @param string $ctrlType
      * @param string[] $codes Коды карт
      *
      * @return void
      */
-    public function addCards(array $codes): void
+    public function addCards(string $ctrlType, array $codes): void
     {
-        $this->message = new OutgoingMessage();
+        if ($ctrlType == 'Z5RWEB')
+        {
+            $this->message = new Z5RWEBOutgoingMessage();
+        }
+        else
+        {
+            $this->message = new PolicontOutgoingMessage();
+        }
 
         $this->message->setOperation('add_cards');
 
         foreach ($codes as $code) {
-            $card = new Card($code);
+            if ($ctrlType == 'Z5RWEB')
+            {
+                $card = new Z5RWEBCard($code);
+            }
+            else
+            {
+                $card = new PolicontCard($code);
+            }
             $card->setActive();
 
             $this->message->addCard($card);
@@ -125,18 +142,33 @@ class Tasker
     /**
      * Удаляет карты из памяти контроллера
      *
+     * @param string $ctrlType Тип контроллера
      * @param string[] $codes Коды карт
      *
      * @return void
      */
-    public function delCards(array $codes): void
+    public function delCards(string $ctrlType, array $codes): void
     {
-        $this->message = new OutgoingMessage();
+        if ($ctrlType == 'Z5RWEB')
+        {
+            $this->message = new Z5RWEBOutgoingMessage();
+        }
+        else
+        {
+            $this->message = new PolicontOutgoingMessage();
+        }
 
         $this->message->setOperation('del_cards');
 
         foreach ($codes as $code) {
-            $card = new Card($code);
+            if ($ctrlType == 'Z5RWEB')
+            {
+                $card = new Z5RWEBCard($code);
+            }
+            else
+            {
+                $card = new PolicontCard($code);
+            }
 
             $this->message->addCard($card);
         }
@@ -145,11 +177,19 @@ class Tasker
     /**
      * Удаляет все карты из памяти контроллера
      *
+     * @param string $ctrlType
      * @return void
      */
-    public function clearCards(): void
+    public function clearCards(string $ctrlType): void
     {
-        $this->message = new OutgoingMessage();
+        if ($ctrlType == 'Z5RWEB')
+        {
+            $this->message = new Z5RWEBOutgoingMessage();
+        }
+        else
+        {
+            $this->message = new PolicontOutgoingMessage();
+        }
 
         $this->message->setOperation('clear_cards');
     }
