@@ -50,15 +50,15 @@ class CardsController extends Controller
 
         $tasker = new Tasker();
 
-        if ($card->person_id == 0) {
-            $tasker->delCards([$card->wiegand]);
-        } else {
-            $tasker->addCards([$card->wiegand]);
-        }
-
         $ctrls = $request->user()->controllers;
 
         foreach ($ctrls as $ctrl) {
+            if ($card->person_id == 0) {
+                $tasker->delCards($ctrl->type, [$card->wiegand]);
+            } else {
+                $tasker->addCards($ctrl->type, [$card->wiegand]);
+            }
+
             $tasker->add($ctrl->id);
             $tasker->send();
         }
