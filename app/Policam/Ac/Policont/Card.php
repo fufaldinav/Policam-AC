@@ -26,6 +26,7 @@ final class Card implements JsonSerializable
     protected $flags = 32;
     protected $tz = 255;
     protected $active = false;
+    protected $device = 0;
 
     public function __construct(string $code)
     {
@@ -39,6 +40,7 @@ final class Card implements JsonSerializable
         if ($this->active) {
             $response['flags'] = $this->flags;
             $response['tz'] = $this->tz;
+            $response['device'] = $this->device;
         }
 
         return $response;
@@ -47,5 +49,10 @@ final class Card implements JsonSerializable
     public function setActive(): void
     {
         $this->active = true;
+    }
+
+    public function setDevice(int $device): void
+    {
+        $this->device = $device;
     }
 }
