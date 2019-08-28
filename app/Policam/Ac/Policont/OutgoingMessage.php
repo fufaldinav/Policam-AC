@@ -119,4 +119,9 @@ final class OutgoingMessage implements JsonSerializable
     {
         $this->cards[] = $card;
     }
+
+    public function addDevice(int $device): void
+    {
+        $this->devices[] = $device;
+    }
 }
