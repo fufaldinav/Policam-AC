@@ -43,6 +43,7 @@ Route::group(['prefix' => 'controllers', 'as' => 'controllers.'], function () {
     Route::get('get_list', 'ControllersController@getList');
     Route::get('set_door_params/{controller_id}/{open_time}/{?open_control}/{?close_control}', 'ControllersController@setDoorParams');
     Route::get('clear/{controller_id}', 'ControllersController@clear');
+    Route::get('clear/{controller_id}/{device}', 'ControllersController@clear');
     Route::get('reload_cards/{controller_id}', 'ControllersController@reloadCards');
 });
 /*
