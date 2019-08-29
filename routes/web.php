@@ -72,7 +72,7 @@ Route::group(['prefix' => 'cp', 'as' => 'cp.'], function () {
     Route::get('/', 'UsersController@index')->name('index');
     Route::get('classes', 'DivisionsController@classes')->name('classes')->middleware('role:2,3,7');
     Route::get('persons', 'PersonsController@page')->name('persons')->middleware('role:2,3,7');
-    Route::get('statistics', 'UsersController@students')->name('students');
+    Route::get('statistics', 'StatisticsController@index')->name('statistics');
     Route::get('students', 'UsersController@students')->name('students');
     Route::get('timetable', 'TimetableController@page')->name('timetable')->middleware('role:1');
 

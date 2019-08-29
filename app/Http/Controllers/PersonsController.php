@@ -132,10 +132,8 @@ class PersonsController extends Controller
 
     public function destroy(Request $request, int $id): ?int
     {
-        $user = App\User::find($request->user()->id);
+        $user = $request->user();
         $person = null;
-
-        abort_if(! $user, 500);
 
         if ($user->hasRole([4, 5])) {
             $person = $user->subscriptions()->where('persons.id', $id)->first();
