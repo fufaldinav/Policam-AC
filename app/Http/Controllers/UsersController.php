@@ -34,11 +34,33 @@ class UsersController extends Controller
     /**
      * Панель управления
      *
+     * @param Request $request
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index()
+    public function index(Request $request)
     {
+        if (! $request->user()->hasRole()) {
+            return redirect('/postreg');
+        }
+
         return view('ac/cp');
+    }
+
+    /**
+     * Пост регистрация
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function postreg(Request $request)
+    {
+        if ($request->user()->hasRole()) {
+            return redirect('/cp');
+        }
+
+        return view('ac/postreg');
     }
 
     /**

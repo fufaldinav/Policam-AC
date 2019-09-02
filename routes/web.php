@@ -82,6 +82,10 @@ Route::group(['prefix' => 'cp', 'as' => 'cp.'], function () {
  */
 Route::get('dev', 'DevController@index');
 /*
+ * Post registration
+ */
+Route::get('postreg', 'UsersController@postreg');
+/*
  * Server
  */
 Route::post('server', 'ServersController@index');
