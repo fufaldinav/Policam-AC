@@ -91,23 +91,27 @@
                         <div class="card mt-2" style="width: 18rem;">
                             <div class="card-body">
                                 <div class="d-flex">
-                                    <h5 class="mr-auto card-title">{{ student.f }} {{ student.i }} ({{ student.gender == 1 ? 'Д' : 'М'}})</h5>
+                                    <h5 class="mr-auto card-title">{{ student.f }} {{ student.i }} ({{ student.gender ==
+                                        1 ? 'М' : 'Ж'}})</h5>
                                     <button
                                         type="button"
                                         class="close align-self-start"
                                         aria-label="Close"
-                                        @click="removeStudent(student)"
+                                        @click="showConfirmRemoveWindow(student)"
                                     >
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                                 <div class="d-flex">
                                     <p class="mr-auto card-text">{{ student.o }}</p>
-                                    <p class="card-text small">{{ student.birthday }}</p>
+                                    <p class="card-text small">{{ parseDate(student.birthday) }}</p>
+                                </div>
+                                <div class="d-flex justify-content-center">
+                                    <h5>{{ getDivisionName(student.division) }}</h5>
                                 </div>
                                 <button
                                     type="button"
-                                    class="btn btn-warning"
+                                    class="btn btn-warning mt-2"
                                     @click="showEditForm(student)"
                                 >
                                     Редактировать
@@ -134,18 +138,58 @@
                     </button>
                 </div>
             </div>
+            <div v-if="step == 3 && myRoles.indexOf(9) > -1">
+                <div class="text-center"><h3>Регистрируем себя</h3>Отлично, Вы выбрали роль "Сотрудник"</div>
+                <p class="mt-2 px-2 px-xl-5">
+                    Теперь Вам необходимо зарегистрировать свою карту.
+                </p>
+                <p class="mt-2 px-2 px-xl-5">
+                    Нажмите кнопку ниже и Вы увидете форму, где необходимо внести данные.
+                </p>
+                <p class="mt-2 px-2 px-xl-5">
+                    При заполнении будьте предельно внимательны, ошибки недопустимы!
+                </p>
+                <div class="d-flex container-fluid justify-content-center mt-2">
+                    <button
+                        type="button"
+                        class="btn btn-info"
+                        @click="showAddForm()"
+                    >
+                        Зарегистрировать карту
+                    </button>
+                </div>
+                <div class="d-flex container-fluid justify-content-center mt-2">
+                    <button
+                        type="button"
+                        class="btn btn-danger mr-2"
+                        @click="toStep(1)"
+                    >
+                        Назад
+                    </button>
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        :disabled="students.length == 0"
+                        @click="toStep(3)"
+                    >
+                        Продолжить
+                    </button>
+                </div>
+            </div>
         </div>
         <ac-postreg-add-student-form windowType="windowType"></ac-postreg-add-student-form>
+        <ac-postreg-confirm-remove-student></ac-postreg-confirm-remove-student>
     </div>
 </template>
 
 <script>
     import AcPostregAddStudentForm from './AcPostregAddStudentForm'
+    import AcPostregConfirmRemoveStudent from './AcPostregConfirmRemoveStudent'
 
     export default {
         name: "AcPostreg",
 
-        components: {AcPostregAddStudentForm},
+        components: {AcPostregAddStudentForm, AcPostregConfirmRemoveStudent},
 
         computed: {
             step() {
@@ -162,11 +206,21 @@
 
             students() {
                 return this.$store.state.postreg.students
-            }
+            },
+
+            divisions() {
+                return this.$store.getters['postreg/getDivisionsByCard'](this.student.card)
+            },
         },
 
         methods: {
             toStep(step) {
+                if (step === 2 && this.myRoles.indexOf(4) === -1) {
+                    step = 3
+                }
+                if (step === 3 && this.myRoles.indexOf(9) === -1) {
+                    step = 4
+                }
                 this.$store.commit('postreg/toStep', step)
             },
 
@@ -181,7 +235,7 @@
             buttonClass(roleType) {
                 return {
                     'btn-success': this.myRoles.indexOf(roleType) > -1,
-                    'btn-secondary': this.myRoles.indexOf(roleType) == -1
+                    'btn-secondary': this.myRoles.indexOf(roleType) === -1
                 }
             },
 
@@ -196,16 +250,43 @@
                 $('#addStudentForm').modal('show')
             },
 
-            removeStudent(student) {
-                this.$store.commit('postreg/removeStudent', student)
+            showConfirmRemoveWindow(student) {
+                this.$store.commit('postreg/setCurrentStudent', student)
+                $('#confirmRemoveStudent').modal('show')
+            },
+
+            parseDate(dateString) {
+                let date = new Date(dateString)
+                let options = {
+                    year: 'numeric',
+                    month: 'numeric',
+                    day: 'numeric'
+                };
+                return date.toLocaleString("ru", options)
+            },
+
+            getDivisionName(divisionId) {
+                if (divisionId === 0) return 'Класс не выбран'
+                return this.$store.getters['postreg/getDivisionById'](divisionId).name
             }
         },
 
         mounted() {
+            this.$store.dispatch('postreg/loadCards')
+
             $('#addStudentForm').modal({
                 show: false
             })
+            $('#confirmRemoveStudent').modal({
+                show: false
+            })
             $('#addStudentForm').on('hidden.bs.modal', () => {
+                if (this.$store.state.postreg.studentFormType == 'edit') {
+                    this.$store.commit('postreg/revertStudent')
+                }
+                this.$store.commit('postreg/clearCurrentStudent', this.student)
+            })
+            $('#confirmRemoveStudent').on('hidden.bs.modal', () => {
                 this.$store.commit('postreg/clearCurrentStudent', this.student)
             })
         }

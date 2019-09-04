@@ -64,6 +64,9 @@
                             Отчество должно начинаться с большой буквы и содержать только буквы русского алфавита
                         </div>
                     </div>
+                    <div class="container-fluid mb-3">
+                        <p class="text-center">Пол:</p>
+                    </div>
                     <div class="container-fluid justify-content-center d-flex mb-3">
                         <div class="form-check form-check-inline">
                             <input
@@ -72,10 +75,10 @@
                                 type="radio"
                                 name="inlineRadioOptions"
                                 id="student-boy"
-                                value="0"
+                                value="1"
                                 required
                             >
-                            <label class="form-check-label" for="student-boy">Мальчик</label>
+                            <label class="form-check-label" for="student-boy">Мужской</label>
                         </div>
                         <div class="form-check form-check-inline">
                             <input
@@ -84,10 +87,10 @@
                                 type="radio"
                                 name="inlineRadioOptions"
                                 id="student-girl"
-                                value="1"
+                                value="2"
                                 required
                             >
-                            <label class="form-check-label" for="student-girl">Девочка</label>
+                            <label class="form-check-label" for="student-girl">Женский</label>
                         </div>
                     </div>
                     <div class="input-group mb-3">
@@ -103,7 +106,7 @@
                             required
                         >
                     </div>
-                    <div class="input-group">
+                    <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <label class="input-group-text" for="student-card">Карта/браслет</label>
                         </div>
@@ -113,7 +116,7 @@
                             id="student-card"
                             required
                         >
-                            <option disabled value="">Выберите карту...</option>
+                            <option disabled value="0">Выберите карту...</option>
                             <option
                                 v-for="card of cards"
                                 :value="card.id"
@@ -122,17 +125,36 @@
                             </option>
                         </select>
                     </div>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="student-division">Класс</label>
+                        </div>
+                        <select
+                            v-model="student.division"
+                            class="custom-select"
+                            id="student-division"
+                            required
+                        >
+                            <option disabled value="0">Выберите класс...</option>
+                            <option
+                                v-for="division of divisions"
+                                :value="division.id"
+                            >
+                                {{ division.name }}
+                            </option>
+                        </select>
+                    </div>
                 </div>
                 <p
                     v-if="buttonDisabled"
-                    class="text-center"
+                    class="text-center text-danger"
                 >
                     Заполнены не все поля!
                 </p>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Отменить</button>
                     <button
-                        v-if="windowType == 'add'"
+                        v-if="windowType === 'add'"
                         type="button"
                         class="btn btn-primary"
                         :disabled="buttonDisabled"
@@ -141,11 +163,11 @@
                         Добавить
                     </button>
                     <button
-                        v-if="windowType == `edit`"
+                        v-if="windowType === 'edit'"
                         type="button"
                         class="btn btn-primary"
                         :disabled="buttonDisabled"
-                        @click="addStudent()"
+                        @click="saveStudent()"
                     >
                         Сохранить
                     </button>
@@ -168,10 +190,14 @@
                 return this.$store.state.postreg.cards
             },
 
+            divisions() {
+                return this.$store.getters['postreg/getDivisionsByCard'](this.student.card)
+            },
+
             buttonDisabled() {
-                return this.student.f == null || this.student.i == null || this.student.o == null || this.student.gender == null || this.student.birthday == null || this.student.card == null ||
-                    this.student.f == '' || this.student.i == '' || this.student.o == '' || this.student.gender == '' || this.student.birthday == '' || this.student.card == ''
-                || ! this.checkInputForF(this.student.f) || ! this.checkInput(this.student.i) || ! this.checkInput(this.student.o)
+                return this.student.f === null || this.student.i === null || this.student.o === null || this.student.gender === null || this.student.birthday === null || this.student.card === null ||
+                    this.student.f === '' || this.student.i === '' || this.student.o === '' || this.student.gender === '' || this.student.birthday === '' || this.student.card === ''
+                    || ! this.checkInputForF(this.student.f) || ! this.checkInput(this.student.i) || ! this.checkInput(this.student.o) || this.student.division === 0
             },
 
             buttonDisabledTooltip() {
@@ -188,6 +214,11 @@
         methods: {
             addStudent() {
                 this.$store.commit('postreg/addStudent', this.student)
+                $('#addStudentForm').modal('hide')
+            },
+
+            saveStudent() {
+                this.$store.commit('postreg/saveStudent', this.student)
                 $('#addStudentForm').modal('hide')
             },
 
@@ -211,7 +242,7 @@
                 return {
                     'is-invalid': input !== null && input !== '' && ! this.checkInputForF(input) && input.length >= 2
                 }
-            },
+            }
         }
     }
 </script>

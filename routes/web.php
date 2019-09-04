@@ -38,6 +38,8 @@ Route::group(['prefix' => 'api', 'as' => 'api.'], function () {
         Route::post('{id}', 'DivisionsController@update');
         Route::delete('{id}', 'DivisionsController@destroy');
     });
+    Route::get('codes', 'ReferralController@getCodes');
+    Route::get('referral/{organizationId}/{type?}', 'DivisionsController@getForReferral');
 });
 /*
  * Auth

@@ -35,4 +35,11 @@ class ReferralController extends Controller
 
         return view('ac.reg', compact('referralCode'));
     }
+
+    public function getCodes(Request $request)
+    {
+        $referralCodes = $request->user()->referralCodes()->select('id', 'code', 'organization_id')->get();
+
+        return response()->json($referralCodes);
+    }
 }
