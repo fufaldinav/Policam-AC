@@ -64,13 +64,6 @@ class DivisionsController extends Controller
         return response()->json($divisions);
     }
 
-    public function getForReferral(int $organizationId, int $type = 1)
-    {
-        $divisions = App\Division::where(['organization_id' => $organizationId, 'type' => $type])->select('id', 'name', 'organization_id')->get();
-
-        return response()->json($divisions);
-    }
-
     public function store(Request $request)
     {
         $division = App\Division::create($request->input('division'));

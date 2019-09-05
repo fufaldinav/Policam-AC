@@ -3,13 +3,13 @@ import Vue from 'vue'
 const state = {
     loading: true,
     step: 3,
-    myRoles: [9],
+    myRoles: [4, 9],
     roles: [
         {'type': 4, 'name': 'Родитель'},
         {'type': 9, 'name': 'Сотрудник'}
     ],
     currentStudent: {id: 0, f: null, i: null, o: null, gender: null, birthday: null, card: 0, division: 0},
-    oldStudent: {id: 0, f: null, i: null, o: null, gender: null, birthday: null, card: 0, division: 0},
+    studentToUpdate: {id: 0, f: null, i: null, o: null, gender: null, birthday: null, card: 0, division: 0},
     students: [
         {f: 'Иванов', i: 'Пётр', o: 'Сергеевич', gender: 1, birthday: '2010-10-24', card: 2, division: 0},
         {f: 'Иванова', i: 'Лилия', o: 'Сергеевна', gender: 2, birthday: '2011-11-23', card: 3, division: 0}
@@ -17,10 +17,17 @@ const state = {
     cards: [],
     studentFormType: 'add',
     organizations: [],
-    divisions: []
+    divisions: [],
+    user: {id: 0, f: null, i: null, o: null, gender: null, birthday: null, card: 0},
+    userChecked: false
 }
 
 const getters = {
+    getActiveCardsCount: state => {
+        let cards = state.cards.filter(card => card.activated === 0)
+        return cards.length
+    },
+
     getDivisionById: state => divisionId => {
         let div = state.divisions.find(div => div.id === divisionId)
         if (div === undefined) return
@@ -30,9 +37,17 @@ const getters = {
     getDivisionsByCard: state => cardId => {
         let card = state.cards.find(card => card.id === parseInt(cardId, 10))
         if (card === undefined) return []
-        let org = state.organizations.find(org => org === card.organization_id)
+        let org = state.organizations.find(org => org.id === card.organization_id)
         if (org === undefined) return []
-        return state.divisions.filter(div => div.organization_id === org)
+        return state.divisions.filter(div => div.organization_id === org.id)
+    },
+
+    getOrganizationByCard: state => cardId => {
+        let card = state.cards.find(card => card.id === parseInt(cardId, 10))
+        if (card === undefined) return
+        let org = state.organizations.find(org => org.id === card.organization_id)
+        if (org === undefined) return
+        return org
     }
 }
 
@@ -41,10 +56,10 @@ const mutations = {
         state.cards.push(code);
     },
 
-    addOrganization(state, organizationId) {
-        let index = state.organizations.indexOf(organizationId)
+    addOrganization(state, organization) {
+        let index = state.organizations.indexOf(organization)
         if (index === -1) {
-            state.organizations.push(organizationId)
+            state.organizations.push(organization)
         }
     },
 
@@ -88,21 +103,21 @@ const mutations = {
         }
     },
 
-    clearCurrentStudent(state) {
+    clearCurrentStudent(state, commit) {
         state.currentStudent = {f: null, i: null, o: null, gender: null, birthday: null, card: 0, division: 0}
-        state.oldStudent = {f: null, i: null, o: null, gender: null, birthday: null, card: 0, division: 0}
+        state.studentToUpdate = {f: null, i: null, o: null, gender: null, birthday: null, card: 0, division: 0}
     },
 
     revertStudent(state) {
         let index = state.students.indexOf(state.currentStudent)
         if (index > -1) {
-            state.students.splice(index, 1, JSON.parse(JSON.stringify(state.oldStudent)))
+            state.students.splice(index, 1, JSON.parse(JSON.stringify(state.studentToUpdate)))
         }
     },
 
     setCurrentStudent(state, student) {
         state.currentStudent = student
-        state.oldStudent = JSON.parse(JSON.stringify(student))
+        state.studentToUpdate = JSON.parse(JSON.stringify(student))
     },
 
     setStudentFormType(state, type) {
@@ -111,6 +126,17 @@ const mutations = {
 
     changeLoadingState(state, status) {
         state.loading = status
+    },
+
+    setUserCheckedStatus(state, status) {
+        state.userChecked = status
+    },
+
+    setCardActivatedStatus(state, payload) {
+        let card = state.cards.find(card => card.id === payload.cardId)
+        if (card !== undefined) {
+            card.activated = payload.status
+        }
     }
 }
 
@@ -121,10 +147,7 @@ const actions = {
             .then(response => {
                 for (let code of response.data) {
                     commit('addCode', code)
-                    commit('addOrganization', code.organization_id)
-                }
-                for (let organizationId of state.organizations) {
-                    dispatch('loadDivisions', organizationId)
+                    dispatch('loadOrganization', code.organization_id)
                 }
                 commit('changeLoadingState', false)
             })
@@ -136,7 +159,7 @@ const actions = {
 
     async loadDivisions({commit, dispatch, rootState}, organizationId) {
         commit('changeLoadingState', true)
-        window.axios.get('/api/referral/' + organizationId)
+        window.axios.get('/api/referral/divisions/' + organizationId)
             .then(response => {
                 for (let division of response.data) {
                     commit('addDivision', division)
@@ -146,6 +169,22 @@ const actions = {
             .catch(error => {
                 if (rootState.debug) console.log(error)
                 setTimeout(dispatch('loadDivisions'), 2000) //TODO перезапуск при ошибке
+            })
+    },
+
+    async loadOrganization({commit, dispatch, rootState}, organizationId) {
+        commit('changeLoadingState', true)
+        window.axios.get('/api/referral/organization/' + organizationId)
+            .then(response => {
+                for (let organization of response.data) {
+                    commit('addOrganization', organization)
+                    dispatch('loadDivisions', organization.id)
+                }
+                commit('changeLoadingState', false)
+            })
+            .catch(error => {
+                if (rootState.debug) console.log(error)
+                setTimeout(dispatch('loadOrganization'), 2000) //TODO перезапуск при ошибке
             })
     }
 }
