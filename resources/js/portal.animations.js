@@ -97,7 +97,6 @@ $(document).ready(function () {
             $(".main-product-item-5").hide("slow");
             $(".main-product-item-6").hide("slow");
             $(".main-product-item-7").hide("slow");
-            $(".main-product-item-8").hide("slow");
         }
         return false;
     });
@@ -110,7 +109,6 @@ $(document).ready(function () {
             $(".main-product-item-5").hide("slow");
             $(".main-product-item-6").hide("slow");
             $(".main-product-item-7").hide("slow");
-            $(".main-product-item-8").hide("slow");
         }
         return false;
     });
@@ -123,7 +121,6 @@ $(document).ready(function () {
             $(".main-product-item-5").hide("slow");
             $(".main-product-item-6").hide("slow");
             $(".main-product-item-7").hide("slow");
-            $(".main-product-item-8").hide("slow");
         }
         return false;
     });
@@ -136,7 +133,6 @@ $(document).ready(function () {
             $(".main-product-item-5").hide("slow");
             $(".main-product-item-6").hide("slow");
             $(".main-product-item-7").hide("slow");
-            $(".main-product-item-8").hide("slow");
         }
         return false;
     });
@@ -149,7 +145,6 @@ $(document).ready(function () {
             $(".main-product-item-4").hide("slow");
             $(".main-product-item-6").hide("slow");
             $(".main-product-item-7").hide("slow");
-            $(".main-product-item-8").hide("slow");
         }
         return false;
     });
@@ -162,7 +157,6 @@ $(document).ready(function () {
             $(".main-product-item-4").hide("slow");
             $(".main-product-item-5").hide("slow");
             $(".main-product-item-7").hide("slow");
-            $(".main-product-item-8").hide("slow");
         }
         return false;
     });
@@ -175,22 +169,7 @@ $(document).ready(function () {
             $(".main-product-item-4").hide("slow");
             $(".main-product-item-5").hide("slow");
             $(".main-product-item-6").hide("slow");
-            $(".main-product-item-8").hide("slow");
         }
         return false;
     });
-    $(".main-products-item-8").click(function () {
-        if ($(".main-product-item-8").is(":hidden")) {
-            $(".main-product-item-8").show("slow");
-            $(".main-product-item-1").hide("slow");
-            $(".main-product-item-2").hide("slow");
-            $(".main-product-item-3").hide("slow");
-            $(".main-product-item-4").hide("slow");
-            $(".main-product-item-5").hide("slow");
-            $(".main-product-item-6").hide("slow");
-            $(".main-product-item-7").hide("slow");
-        }
-        return false;
-    });
-
 });

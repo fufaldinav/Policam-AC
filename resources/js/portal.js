@@ -4,6 +4,8 @@ import Vue from 'vue'
 import store from './portal/store'
 
 import Vue2TouchEvents from 'vue2-touch-events'
+import PortalHistory from './portal/components/PortalHistory'
+import PortalProductsContent from './portal/components/PortalProductsContent'
 
 Vue.use(Vue2TouchEvents)
 
@@ -11,7 +13,7 @@ window.Ac = new Vue({
     el: '#portal',
     store,
 
-    components: {},
+    components: {PortalHistory, PortalProductsContent},
 
     data: {
         bus: new Vue({}),

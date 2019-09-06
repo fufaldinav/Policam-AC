@@ -2,8 +2,8 @@ import Vue from 'vue'
 
 const state = {
     loading: true,
-    step: 3,
-    myRoles: [4, 9],
+    step: 0,
+    myRoles: [],
     roles: [
         {'type': 4, 'name': 'Родитель'},
         {'type': 9, 'name': 'Сотрудник'}
