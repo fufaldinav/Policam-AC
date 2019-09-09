@@ -1,10 +1,10 @@
 new WOW().init();
 
-$("body").on('click', '[href*="#"]', function (e) {
-    var fixed_offset = 100;
-    $('html,body').stop().animate({scrollTop: $(this.hash).offset().top - fixed_offset}, 1000);
-    e.preventDefault();
-});
+// $("body").on('click', '[href*="#"]', function (e) {
+//     var fixed_offset = 100;
+//     $('html,body').stop().animate({scrollTop: $(this.hash).offset().top - fixed_offset}, 1000);
+//     e.preventDefault();
+// });
 
 $(document).ready(function () {
     // $(".owl-products").owlCarousel({
@@ -86,90 +86,3 @@ const promise = video.play()
 if (promise !== null) {
     promise.catch(() => video.play())
 }
-
-$(document).ready(function () {
-    $(".main-products-item-1").click(function () {
-        if ($(".main-product-item-1").is(":hidden")) {
-            $(".main-product-item-1").show("slow");
-            $(".main-product-item-2").hide("slow");
-            $(".main-product-item-3").hide("slow");
-            $(".main-product-item-4").hide("slow");
-            $(".main-product-item-5").hide("slow");
-            $(".main-product-item-6").hide("slow");
-            $(".main-product-item-7").hide("slow");
-        }
-        return false;
-    });
-    $(".main-products-item-2").click(function () {
-        if ($(".main-product-item-2").is(":hidden")) {
-            $(".main-product-item-2").show("slow");
-            $(".main-product-item-1").hide("slow");
-            $(".main-product-item-3").hide("slow");
-            $(".main-product-item-4").hide("slow");
-            $(".main-product-item-5").hide("slow");
-            $(".main-product-item-6").hide("slow");
-            $(".main-product-item-7").hide("slow");
-        }
-        return false;
-    });
-    $(".main-products-item-3").click(function () {
-        if ($(".main-product-item-3").is(":hidden")) {
-            $(".main-product-item-3").show("slow");
-            $(".main-product-item-1").hide("slow");
-            $(".main-product-item-2").hide("slow");
-            $(".main-product-item-4").hide("slow");
-            $(".main-product-item-5").hide("slow");
-            $(".main-product-item-6").hide("slow");
-            $(".main-product-item-7").hide("slow");
-        }
-        return false;
-    });
-    $(".main-products-item-4").click(function () {
-        if ($(".main-product-item-4").is(":hidden")) {
-            $(".main-product-item-4").show("slow");
-            $(".main-product-item-1").hide("slow");
-            $(".main-product-item-2").hide("slow");
-            $(".main-product-item-3").hide("slow");
-            $(".main-product-item-5").hide("slow");
-            $(".main-product-item-6").hide("slow");
-            $(".main-product-item-7").hide("slow");
-        }
-        return false;
-    });
-    $(".main-products-item-5").click(function () {
-        if ($(".main-product-item-5").is(":hidden")) {
-            $(".main-product-item-5").show("slow");
-            $(".main-product-item-1").hide("slow");
-            $(".main-product-item-2").hide("slow");
-            $(".main-product-item-3").hide("slow");
-            $(".main-product-item-4").hide("slow");
-            $(".main-product-item-6").hide("slow");
-            $(".main-product-item-7").hide("slow");
-        }
-        return false;
-    });
-    $(".main-products-item-6").click(function () {
-        if ($(".main-product-item-6").is(":hidden")) {
-            $(".main-product-item-6").show("slow");
-            $(".main-product-item-1").hide("slow");
-            $(".main-product-item-2").hide("slow");
-            $(".main-product-item-3").hide("slow");
-            $(".main-product-item-4").hide("slow");
-            $(".main-product-item-5").hide("slow");
-            $(".main-product-item-7").hide("slow");
-        }
-        return false;
-    });
-    $(".main-products-item-7").click(function () {
-        if ($(".main-product-item-7").is(":hidden")) {
-            $(".main-product-item-7").show("slow");
-            $(".main-product-item-1").hide("slow");
-            $(".main-product-item-2").hide("slow");
-            $(".main-product-item-3").hide("slow");
-            $(".main-product-item-4").hide("slow");
-            $(".main-product-item-5").hide("slow");
-            $(".main-product-item-6").hide("slow");
-        }
-        return false;
-    });
-});

@@ -3149,8 +3149,8 @@ header {
 }
 
 .header-nav ul li {
-    padding: 0 16px;
-    border-left: 1px solid rgba(255, 255, 255, .4)
+    border-left: 1px solid rgba(255, 255, 255, .4);
+    padding: 0 16px
 }
 
 .header-logo img {
@@ -3173,6 +3173,7 @@ header {
 }
 
 .header-menu-btn {
+    display: none;
     border-left: none !important
 }
 
@@ -3477,13 +3478,6 @@ header {
 .main-products-bg {
     max-width: 700px;
     position: relative;
-    left: 120px
-}
-
-.main-products-bg-second {
-    max-width: 700px;
-    position: absolute;
-    right: -35%
 }
 
 .main-products-items {
@@ -3984,6 +3978,10 @@ footer .footer-policy a {
         padding: 0 14px
     }
 
+    .header-nav .header-logo {
+        border-left: none
+    }
+
     .header-catalog {
         margin-left: 10px;
         width: 915px
@@ -4002,7 +4000,7 @@ footer .footer-policy a {
     }
 
     .main-products-bg {
-        left: -80px
+        max-width: 600px;
     }
 
     .main-news-content .main-news-1, .main-news-content .main-news-2 {
@@ -4050,6 +4048,14 @@ footer .footer-policy a {
 
     .header-nav ul .header-menu-main-3 {
         right: 85px
+    }
+
+    .header-nav .header-logo {
+        border-left: 1px solid rgba(255, 255, 255, .4)
+    }
+
+    .header-menu-btn {
+        display: block
     }
 
     .header-catalog {
@@ -4112,7 +4118,7 @@ footer .footer-policy a {
     }
 
     .main-products-bg {
-        left: -90px
+        max-width: 500px;
     }
 
     .main-product-item-content-txt {
@@ -4147,7 +4153,7 @@ footer .footer-policy a {
 
     .main-news-content .main-other-news {
         height: 548px;
-        width: 180px
+        width: 240px
     }
 
     .main-news-content .main-other-news-item-end {
@@ -4210,10 +4216,6 @@ footer .footer-policy a {
 
     .main-products-items .main-products-item .main-products-item-link img {
         max-width: 26px
-    }
-
-    .main-products-bg-second {
-        display: none
     }
 
     .main-products-content {
@@ -4286,11 +4288,6 @@ footer .footer-policy a {
         display: none
     }
 
-    .main-news-content .main-news-2 {
-        margin: auto;
-        left: -15%
-    }
-
     .main-news-content .main-news-2 .main-button-link {
         left: 22%
     }
@@ -4351,14 +4348,12 @@ footer .footer-policy a {
         width: 45px
     }
 
-    .main-products-items {
-        display: block;
-        margin: 20px 0
+    .main-products-items .main-products-item .main-products-item-link img {
+        max-width: 26px
     }
 
-    .main-products-items .main-products-item .main-products-item-link img {
-        max-width: 26px;
-        margin: 20px
+    .main-products-items .main-products-item {
+        margin: auto 0.25rem
     }
 
     .main-product-info .owl-stage .main-product-item .main-product-item-content {
@@ -4367,7 +4362,6 @@ footer .footer-policy a {
     }
 
     .main-products-bg {
-        left: -5%;
         max-width: 440px
     }
 

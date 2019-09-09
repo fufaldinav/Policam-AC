@@ -38,9 +38,6 @@
                         <li>
                             <a href="{{ route('pages.entry', ['id' => 2]) }}">Системы видеонаблюдения и видеорегистраторы</a>
                         </li>
-                        <li>
-                            <a href="{{ route('pages.entry', ['id' => 3]) }}">Программное обеспечение для детских садов и школ</a>
-                        </li>
                     </ul>
                 </div>
                 <div class="col-sm-3">
@@ -74,11 +71,8 @@
                         <a class="social-item" href="https://vk.com/policam66" target="_blank">
                             <i class="fa fa-vk" aria-hidden="true"></i>
                         </a>
-                        <a class="social-item" href="https://facebook.com/policam66" target="_blank">
-                            <i class="fa fa-facebook" aria-hidden="true"></i>
-                        </a>
-                        <a class="social-item" href="https://youtube.com/policam66" target="_blank">
-                            <i class="fa fa-youtube" aria-hidden="true"></i>
+                        <a class="social-item" href="mailto:ixbit@mail.ru" target="_blank">
+                            <i class="fa fa-at" aria-hidden="true"></i>
                         </a>
                     </div>
                 </div>
