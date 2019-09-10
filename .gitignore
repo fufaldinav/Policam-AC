@@ -27,8 +27,8 @@ _ide_helper.php
 .phpstorm.meta.php
 
 /public/mix-manifest.json
-/public/js/*.js
-/public/css/*.css
-/public/fonts/*
+/public/js
+/public/css
+/public/fonts
 /public/photos
 /public/images

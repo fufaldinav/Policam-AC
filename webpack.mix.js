@@ -30,7 +30,10 @@ mix.js('resources/js/ac.js', 'public/js')
         'resources/libs/owlCarousel/css/owl.carousel.min.css',
         'resources/libs/owlCarousel/css/owl.theme.default.min.css',
     ], 'public/css/portal.animations.css')
+    .styles([
+        'resources/css/main.css',
+    ], 'public/css/main.css')
     .sass('resources/libs/fontAwesome/scss/font-awesome.scss', 'public/css/fonts.css')
     .version()
     .disableNotifications()
-    .browserSync('192.168.1.8');
+    .browserSync('192.168.88.8');
