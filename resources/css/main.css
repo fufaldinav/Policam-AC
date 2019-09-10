@@ -3143,7 +3143,6 @@ header {
     display: -ms-inline-flexbox;
     display: inline-flex;
     list-style: none;
-    padding-left: 0;
     padding: 7px 57px;
     margin-bottom: 0
 }
@@ -3151,6 +3150,10 @@ header {
 .header-nav ul li {
     border-left: 1px solid rgba(255, 255, 255, .4);
     padding: 0 16px
+}
+
+.header-nav .header-logo {
+    border-left: none
 }
 
 .header-logo img {
@@ -3366,8 +3369,7 @@ header {
     box-sizing: border-box;
     padding: 9.5px 20px 9px 20px;
     margin: 15px 0;
-    position: relative;
-    top: 28px
+    position: relative
 }
 
 .main-button-link a {
@@ -4114,7 +4116,7 @@ footer .footer-policy a {
 
     .main-product-info .main-product-item .main-product-item-content .main-product-text {
         font-size: 10px;
-        width: 215px
+        width: 245px
     }
 
     .main-products-bg {
@@ -4122,7 +4124,7 @@ footer .footer-policy a {
     }
 
     .main-product-item-content-txt {
-        left: 16%
+        left: 10%
     }
 
     .main-button-link a {
