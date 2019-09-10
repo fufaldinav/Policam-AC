@@ -1,14 +1,14 @@
 <template>
     <div class="container-fluid">
         <div v-if="loading">
-            <ac-loading></ac-loading>
+            <loading></loading>
         </div>
         <div
             v-else
             class="row justify-content-center p-2 pt-lg-4"
         >
             <div class="col-12 col-lg-8 col-xl-6 bg-white shadow-sm rounded p-2">
-                <div v-if="step == 0">
+                <div v-if="step === 0">
                     <div class="text-center"><h3>Приветствуем!</h3>Вы успешно зарегистрировались на нашем портале.</div>
                     <p class="mt-2 px-2 px-xl-5">
                         Осталось совсем немного и Вы сможете продолжить работу. Всего пару шагов. Просим
@@ -25,7 +25,7 @@
                         </button>
                     </div>
                 </div>
-                <div v-if="step == 1">
+                <div v-if="step === 1">
                     <div class="text-center"><h3>Выбор роли</h3>Нам нужно знать, для чего вы здесь :)</div>
                     <p class="mt-2 px-2 px-xl-5">
                         Важно понимать, зачем Вы здесь, быть может, Вы родитель и хотите записать своего ребёнка в школу
@@ -64,14 +64,14 @@
                         <button
                             type="button"
                             class="btn btn-primary"
-                            :disabled="myRoles.length == 0"
+                            :disabled="myRoles.length === 0"
                             @click="toStep(2)"
                         >
                             Продолжить
                         </button>
                     </div>
                 </div>
-                <div v-if="step == 2 && myRoles.indexOf(4) > -1">
+                <div v-if="step === 2 && myRoles.indexOf(4) > -1">
                     <div class="text-center"><h3>Регистрируем детей</h3>Отлично, Вы выбрали роль "Родитель"</div>
                     <p class="mt-2 px-2 px-xl-5">
                         Теперь Вам необходимо добавить всех Ваших детей.
@@ -99,9 +99,9 @@
                             <div class="card mt-2" style="width: 18rem;">
                                 <div class="card-body">
                                     <div class="d-flex">
-                                        <h5 class="mr-auto card-title">{{ student.f }} {{ student.i }} ({{
-                                            student.gender ==
-                                            1 ? 'М' : 'Ж'}})</h5>
+                                        <h5 class="mr-auto card-title">
+                                            {{ student.f }} {{ student.i }} ({{student.gender === 1 ? 'М' : 'Ж'}})
+                                        </h5>
                                         <button
                                             type="button"
                                             class="close align-self-start"
@@ -140,14 +140,14 @@
                         <button
                             type="button"
                             class="btn btn-primary"
-                            :disabled="students.length == 0"
+                            :disabled="students.length === 0"
                             @click="toStep(3)"
                         >
                             Продолжить
                         </button>
                     </div>
                 </div>
-                <div v-if="step == 3 && myRoles.indexOf(9) > -1">
+                <div v-if="step === 3 && myRoles.indexOf(9) > -1">
                     <div class="text-center"><h3>Регистрируем себя</h3>Отлично, Вы выбрали роль "Сотрудник"</div>
                     <p class="mt-2 px-2 px-xl-5">
                         Теперь Вам необходимо зарегистрировать свою карту.
@@ -187,23 +187,23 @@
                     </div>
                 </div>
             </div>
-            <ac-postreg-add-student-form windowType="windowType"></ac-postreg-add-student-form>
-            <ac-postreg-confirm-remove-student></ac-postreg-confirm-remove-student>
-            <ac-postreg-card-registration-form></ac-postreg-card-registration-form>
+            <postreg-add-student-form windowType="windowType"></postreg-add-student-form>
+            <postreg-confirm-remove-student></postreg-confirm-remove-student>
+            <postreg-card-registration-form></postreg-card-registration-form>
         </div>
     </div>
 </template>
 
 <script>
-    import AcLoading from '../AcLoading'
-    import AcPostregAddStudentForm from './AcPostregAddStudentForm'
-    import AcPostregConfirmRemoveStudent from './AcPostregConfirmRemoveStudent'
-    import AcPostregCardRegistrationForm from './AcPostregCardRegistrationForm'
+    import Loading from './Loading'
+    import PostregAddStudentForm from './PostregAddStudentForm'
+    import PostregConfirmRemoveStudent from './PostregConfirmRemoveStudent'
+    import PostregCardRegistrationForm from './PostregCardRegistrationForm'
 
     export default {
         name: "AcPostreg",
 
-        components: {AcLoading, AcPostregAddStudentForm, AcPostregConfirmRemoveStudent, AcPostregCardRegistrationForm},
+        components: {Loading, PostregAddStudentForm, PostregConfirmRemoveStudent, PostregCardRegistrationForm},
 
         computed: {
             loading() {
@@ -311,7 +311,10 @@
                 if (this.$store.state.postreg.studentFormType === 'edit') {
                     this.$store.commit('postreg/revertStudent')
                     if (this.$store.state.postreg.currentStudent.card !== this.$store.state.postreg.studentToUpdate.card) {
-                        this.$store.commit('postreg/setCardActivatedStatus', {cardId: this.$store.state.postreg.studentToUpdate.card, status: 0})
+                        this.$store.commit('postreg/setCardActivatedStatus', {
+                            cardId: this.$store.state.postreg.studentToUpdate.card,
+                            status: 0
+                        })
                     }
                 }
                 this.$store.commit('postreg/clearCurrentStudent', this.student)

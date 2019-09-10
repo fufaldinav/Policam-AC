@@ -29,7 +29,7 @@
 
 <script>
     export default {
-        name: "AcPostregConfirmRemoveStudent",
+        name: "PostregConfirmRemoveStudent",
 
         computed: {
             student() {

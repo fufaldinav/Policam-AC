@@ -48,22 +48,6 @@ class UsersController extends Controller
     }
 
     /**
-     * Пост регистрация
-     *
-     * @param Request $request
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function postreg(Request $request)
-    {
-        if ($request->user()->hasRole()) {
-            return redirect('/cp');
-        }
-
-        return view('ac/postreg');
-    }
-
-    /**
      * Панель управления
      *
      * @param Request $request

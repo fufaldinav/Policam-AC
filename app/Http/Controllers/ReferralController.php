@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class ReferralController extends Controller
 {
@@ -33,7 +32,23 @@ class ReferralController extends Controller
             }
         }
 
-        return view('ac.reg', compact('referralCode'));
+        return view('postreg.reg', compact('referralCode'));
+    }
+
+    /**
+     * Пост регистрация
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function postreg(Request $request)
+    {
+        if ($request->user()->hasRole()) {
+            return redirect('/cp');
+        }
+
+        return view('postreg/index');
     }
 
     public function getCodes(Request $request)

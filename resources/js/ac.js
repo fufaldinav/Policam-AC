@@ -40,7 +40,6 @@ import AcCpStudents from './ac/components/cp/students/AcCpStudents'
 import AcCpTimetable from './ac/components/cp/timetable/AcCpTimetable'
 import AcOrganizationsDropdownMenu from './ac/components/AcOrganizationsDropdownMenu'
 import AcAlert from './ac/components/AcAlert'
-import AcPostreg from './ac/components/postreg/AcPostreg'
 
 import Vue2TouchEvents from 'vue2-touch-events'
 
@@ -58,7 +57,7 @@ window.Ac = new Vue({
 
     components: {
         AcLayout, AcNavBar, AcObserver, AcCpFunctionCard, AcCpClasses, AcCpTimetable,
-        AcCpStudents, AcCpPersons, AcOrganizationsDropdownMenu, AcAlert, AcPostreg
+        AcCpStudents, AcCpPersons, AcOrganizationsDropdownMenu, AcAlert
     },
 
     data: {

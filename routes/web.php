@@ -44,6 +44,7 @@ Route::group(['prefix' => 'api', 'as' => 'api.'], function () {
  * Auth
  */
 Auth::routes(['verify' => true]);
+Route::get('logout', 'Auth\LoginController@logout');
 Route::get('reg/{referral_code?}', 'ReferralController@parseLink');
 Route::get('register/{referral_code}', 'Auth\RegisterController@showRegistrationForm');
 Route::get('login/{referral_code}', 'Auth\LoginController@showLoginForm')->middleware('verified');
@@ -85,7 +86,7 @@ Route::get('dev', 'DevController@index');
 /*
  * Post registration
  */
-Route::get('postreg', 'UsersController@postreg');
+Route::get('postreg', 'ReferralController@postreg');
 /*
  * Server
  */

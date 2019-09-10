@@ -1,11 +1,10 @@
 <template>
-    <div class="modal fade" id="cardRegistrationForm" tabindex="-1" role="dialog"
-         aria-labelledby="cardRegistrationFormTitle"
+    <div class="modal fade" id="addStudentForm" tabindex="-1" role="dialog" aria-labelledby="addStudentFormTitle"
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="cardRegistrationFormTitle">Регистрация карты</h5>
+                    <h5 class="modal-title" id="addStudentFormTitle">Добавление ребёнка</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -13,16 +12,16 @@
                 <div class="modal-body">
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="user-f">Фамилия</span>
+                            <span class="input-group-text" id="student-f">Фамилия</span>
                         </div>
                         <input
-                            v-model="user.f"
+                            v-model="student.f"
                             type="text"
                             class="form-control"
-                            :class="checkInputForFClass(user.f)"
+                            :class="checkInputForFClass(student.f)"
                             placeholder="Например, Иванов"
                             aria-label="Фамилия"
-                            aria-describedby="user-f"
+                            aria-describedby="student-f"
                             required
                         >
                         <div class="invalid-feedback">
@@ -31,16 +30,16 @@
                     </div>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="user-i">Имя</span>
+                            <span class="input-group-text" id="student-i">Имя</span>
                         </div>
                         <input
-                            v-model="user.i"
+                            v-model="student.i"
                             type="text"
                             class="form-control"
-                            :class="checkInputClass(user.i)"
+                            :class="checkInputClass(student.i)"
                             placeholder="Например, Иван"
                             aria-label="Имя"
-                            aria-describedby="user-i"
+                            aria-describedby="student-i"
                             required
                         >
                         <div class="invalid-feedback">
@@ -49,16 +48,16 @@
                     </div>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="user-o">Отчество</span>
+                            <span class="input-group-text" id="student-o">Отчество</span>
                         </div>
                         <input
-                            v-model="user.o"
+                            v-model="student.o"
                             type="text"
                             class="form-control"
-                            :class="checkInputClass(user.o)"
+                            :class="checkInputClass(student.o)"
                             placeholder="Например, Иванович"
                             aria-label="Отчество"
-                            aria-describedby="user-o"
+                            aria-describedby="student-o"
                             required
                         >
                         <div class="invalid-feedback">
@@ -71,36 +70,36 @@
                     <div class="container-fluid justify-content-center d-flex mb-3">
                         <div class="form-check form-check-inline">
                             <input
-                                v-model="user.gender"
+                                v-model="student.gender"
                                 class="form-check-input"
                                 type="radio"
                                 name="inlineRadioOptions"
-                                id="user-boy"
+                                id="student-boy"
                                 value="1"
                                 required
                             >
-                            <label class="form-check-label" for="user-boy">Мужской</label>
+                            <label class="form-check-label" for="student-boy">Мужской</label>
                         </div>
                         <div class="form-check form-check-inline">
                             <input
-                                v-model="user.gender"
+                                v-model="student.gender"
                                 class="form-check-input"
                                 type="radio"
                                 name="inlineRadioOptions"
-                                id="user-girl"
+                                id="student-girl"
                                 value="2"
                                 required
                             >
-                            <label class="form-check-label" for="user-girl">Женский</label>
+                            <label class="form-check-label" for="student-girl">Женский</label>
                         </div>
                     </div>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <label class="input-group-text" for="user-birthday">Дата рождения</label>
+                            <label class="input-group-text" for="student-birthday">Дата рождения</label>
                         </div>
                         <input
-                            v-model="user.birthday"
-                            id="user-birthday"
+                            v-model="student.birthday"
+                            id="student-birthday"
                             type="date"
                             class="form-control"
                             placeholder="Например, 24.10.2010"
@@ -108,22 +107,23 @@
                         >
                     </div>
                     <div
-                        v-if="activeCardsCount > 0 || user.card > 0"
+                        v-if="activeCardsCount > 0 || student.card > 0"
                         class="input-group mb-3"
                     >
                         <div class="input-group-prepend">
-                            <label class="input-group-text" for="user-card">Карта/браслет</label>
+                            <label class="input-group-text" for="student-card">Карта/браслет</label>
                         </div>
                         <select
-                            v-model="user.card"
+                            v-model="student.card"
                             class="custom-select"
-                            id="user-card"
+                            id="student-card"
                             required
                         >
                             <option disabled value="0">Выберите карту...</option>
                             <option
                                 v-for="card of cards"
-                                v-if="card.activated === 0 || user.card === card.id"
+                                v-if="card.activated === 0 || student.card === card.id"
+                                :key="card.id"
                                 :value="card.id"
                             >
                                 {{ card.code }}
@@ -136,19 +136,24 @@
                     >
                         NO CARDS
                     </div>
-                    <div class="input-group mb-3">
+                    <div class="input-group">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="user-organization">Организация</span>
+                            <label class="input-group-text" for="student-division">Класс</label>
                         </div>
-                        <input
-                            type="text"
-                            class="form-control bg-white"
-                            placeholder="Организация..."
-                            aria-label="Организация"
-                            aria-describedby="user-organization"
-                            :value="organization"
-                            readonly
+                        <select
+                            v-model="student.division"
+                            class="custom-select"
+                            id="student-division"
+                            required
                         >
+                            <option disabled value="0">Выберите класс...</option>
+                            <option
+                                v-for="division of divisions"
+                                :value="division.id"
+                            >
+                                {{ division.name }}
+                            </option>
+                        </select>
                     </div>
                 </div>
                 <p
@@ -160,10 +165,20 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Отменить</button>
                     <button
+                        v-if="windowType === 'add'"
                         type="button"
                         class="btn btn-primary"
                         :disabled="buttonDisabled"
-                        @click="saveUserProfile()"
+                        @click="addStudent()"
+                    >
+                        Добавить
+                    </button>
+                    <button
+                        v-if="windowType === 'edit'"
+                        type="button"
+                        class="btn btn-primary"
+                        :disabled="buttonDisabled"
+                        @click="saveStudent()"
                     >
                         Сохранить
                     </button>
@@ -175,17 +190,11 @@
 
 <script>
     export default {
-        name: "AcPostregCardRegistrationForm",
+        name: "PostregAddStudentForm",
 
         computed: {
-            user() {
-                return this.$store.state.postreg.user
-            },
-
-            organization() {
-                let org = this.$store.getters['postreg/getOrganizationByCard'](this.user.card)
-                if (org === undefined) return 'Неизвестная организация'
-                return org.name
+            student() {
+                return this.$store.state.postreg.currentStudent
             },
 
             cards() {
@@ -196,10 +205,14 @@
                 return this.$store.getters['postreg/getActiveCardsCount']
             },
 
+            divisions() {
+                return this.$store.getters['postreg/getDivisionsByCard'](this.student.card)
+            },
+
             buttonDisabled() {
-                return this.user.f === null || this.user.i === null || this.user.o === null || this.user.gender === null || this.user.birthday === null || this.user.card === null ||
-                    this.user.f === '' || this.user.i === '' || this.user.o === '' || this.user.gender === '' || this.user.birthday === '' || this.user.card === ''
-                    || ! this.checkInputForF(this.user.f) || ! this.checkInput(this.user.i) || ! this.checkInput(this.user.o)
+                return this.student.f === null || this.student.i === null || this.student.o === null || this.student.gender === null || this.student.birthday === null || this.student.card === null ||
+                    this.student.f === '' || this.student.i === '' || this.student.o === '' || this.student.gender === '' || this.student.birthday === '' || this.student.card === ''
+                    || ! this.checkInputForF(this.student.f) || ! this.checkInput(this.student.i) || ! this.checkInput(this.student.o) || this.student.division === 0
             },
 
             buttonDisabledTooltip() {
@@ -214,9 +227,16 @@
         },
 
         methods: {
-            saveUserProfile() {
-                this.$store.commit('postreg/setUserCheckedStatus', true)
-                $('#cardRegistrationForm').modal('hide')
+            addStudent() {
+                this.$store.commit('postreg/addStudent', this.student)
+                this.$store.commit('postreg/setCardActivatedStatus', {cardId: this.student.card, status: 1})
+                $('#addStudentForm').modal('hide')
+            },
+
+            saveStudent() {
+                this.$store.commit('postreg/saveStudent', this.student)
+                this.$store.commit('postreg/setCardActivatedStatus', {cardId: this.student.card, status: 1})
+                $('#addStudentForm').modal('hide')
             },
 
             checkInputForF(input) {
