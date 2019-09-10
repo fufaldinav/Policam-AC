@@ -19,8 +19,15 @@
                         <li>
                             <a href="{{ url('/') }}#mainProducts">Решения</a>
                         </li>
-                        <li>
-                            <a href="{{ route('portal.services') }}">Услуги</a>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" href="#" id="servicesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Услуги
+                            </a>
+                            <div class="dropdown-menu rounded-0" aria-labelledby="servicesDropdown" style="background-color: #003854;">
+                                <a class="dropdown-item" href="{{ route('pages.entry', ['id' => 7]) }}">Видеонаблюдение</a>
+                                <a class="dropdown-item" href="{{ route('pages.entry', ['id' => 8]) }}">СКУД</a>
+                                <a class="dropdown-item" href="{{ route('pages.entry', ['id' => 9]) }}">Разработка ПО</a>
+                            </div>
                         </li>
                         <li>
                             <a href="{{ url('/') }}#mainProducts">История успеха</a>

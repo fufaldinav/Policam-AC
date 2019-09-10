@@ -11,8 +11,15 @@
                         <li class="header-mobile-menu-item">
                             <a href="{{ url('/') }}#mainHistory">ИСТОРИЯ УСПЕХА</a>
                         </li>
-                        <li class="header-mobile-menu-item">
-                            <a href="{{ route('portal.services') }}">УСЛУГИ</a>
+                        <li class="header-mobile-menu-item dropdown">
+                            <a class="dropdown-toggle" href="#" id="servicesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                УСЛУГИ
+                            </a>
+                            <div class="dropdown-menu bg-white rounded-0" aria-labelledby="servicesDropdown">
+                                <a class="dropdown-item border-0" href="{{ route('pages.entry', ['id' => 7]) }}">Видеонаблюдение</a>
+                                <a class="dropdown-item border-0" href="{{ route('pages.entry', ['id' => 8]) }}">СКУД</a>
+                                <a class="dropdown-item border-0" href="{{ route('pages.entry', ['id' => 9]) }}">Разработка ПО</a>
+                            </div>
                         </li>
                         <li class="header-mobile-menu-item">
                             <a href="{{ route('portal.support') }}">ПОДДЕРЖКА</a>
@@ -42,8 +49,15 @@
                 <li class="header-menu-item">
                     <a href="{{ url('/') }}#mainHistory">ИСТОРИЯ УСПЕХА</a>
                 </li>
-                <li class="header-menu-item">
-                    <a href="{{ route('portal.services') }}">УСЛУГИ</a>
+                <li class="header-menu-item dropdown">
+                    <a class="dropdown-toggle" href="#" id="servicesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        УСЛУГИ
+                    </a>
+                    <div class="dropdown-menu bg-primary rounded-0" aria-labelledby="servicesDropdown">
+                        <a class="dropdown-item" href="{{ route('pages.entry', ['id' => 7]) }}">Видеонаблюдение</a>
+                        <a class="dropdown-item" href="{{ route('pages.entry', ['id' => 8]) }}">СКУД</a>
+                        <a class="dropdown-item" href="{{ route('pages.entry', ['id' => 9]) }}">Разработка ПО</a>
+                    </div>
                 </li>
                 <li class="header-menu-item">
                     <a href="{{ route('portal.support') }}">ПОДДЕРЖКА</a>
