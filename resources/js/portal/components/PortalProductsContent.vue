@@ -1,0 +1,283 @@
+<template>
+    <div class="section-main">
+        <div class="main-products" id="mainProducts">
+            <div class="container">
+                <div class="main-products-header wow fadeInUp" data-wow-duration="2s">
+                    <div class="main-products-items">
+                        <template v-for="solution of solutions">
+                            <div
+                                :class="'main-products-item main-products-item-' + solution.id"
+                                @click="showProduct(solution.id)"
+                            >
+                                <div class="main-products-item-link">
+                                    <img :src="solution.icon"
+                                         :alt="solution.title">
+                                </div>
+                            </div>
+                            <div class="main-products-item">
+                                <img
+                                    v-if="solution.id < solutions.length"
+                                    :src="MainProductLine"
+                                    class="main-products-item-line">
+                            </div>
+                        </template>
+                    </div>
+                    <div
+                        class="main-products-content"
+                        v-touch:swipe.left="swipeLeftHandler"
+                        v-touch:swipe.right="swipeRightHandler"
+                    >
+                        <div class="container">
+                            <div class="main-product-info wow fadeInRight" data-wow-duration="2s">
+                                <div
+                                    v-for="solution of solutions"
+                                    :class="'main-product-item main-product-item-' + solution.id"
+                                >
+                                    <div class="row justify-content-center main-product-item-content">
+                                        <div class="col-12 col-sm-6">
+                                            <img
+                                                :src="solution.img"
+                                                :alt="solution.title"
+                                                class="main-products-bg fadeIn" data-wow-duration="2s"
+                                                :class="wowClass(solution.id)"
+                                            >
+                                        </div>
+                                        <div class="col-12 col-sm-6 main-product-item-content-txt">
+                                            <p class="main-product-small-title">Готовые решения</p>
+                                            <h3 class="main-product-title" v-html="parseTitle(solution.title)"></h3>
+                                            <div class="main-product-line"></div>
+                                            <p class="main-product-text" v-html="solution.text"></p>
+                                            <span class="main-button-link">
+                                    <a
+                                        href=""
+                                        @click.prevent="showDetails(solution)"
+                                    >
+                                        Подробнее
+                                    </a>
+                                </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="productDetails" tabindex="-1" role="dialog"
+                         aria-labelledby="productDetailsTitle"
+                         aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                            <div class="modal-content rounded-0 shadow-lg" style="border: 0;">
+                                <div class="modal-header">
+                                    <h5 class="modal-title text-left" id="productDetailsTitle">{{ detailsWindow.title
+                                        }}</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body text-justify portal-text-indent" v-html="detailsWindow.text"></div>
+                                <div class="modal-body"><img class="w-100" :src="detailsWindow.img"></div>
+                                <div class="modal-body text-justify" v-html="detailsWindow.details"></div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    import MainProductsBgSecond from '../../../../public/img/templates/main-products/main-products-bg-second.png'
+    import GosStruktury from '../../../../public/img/templates/main-products/gos_struktury.jpg'
+    import ObrazovatelnyeUchrezhdenia
+        from '../../../../public/img/templates/main-products/obrazovatelnye-uchrezhdenia.jpg'
+    import ZhilyeKomplexy from '../../../../public/img/templates/main-products/zhilye-komplexy.jpg'
+    import RoznichnayaTorgovlya from '../../../../public/img/templates/main-products/roznichnaya-torgovlya.jpg'
+    import TransportILogikistika from '../../../../public/img/templates/main-products/transport-i-logikistika.jpg'
+    import Zavod from '../../../../public/img/templates/main-products/zavod.jpg'
+    import Kottedzh from '../../../../public/img/templates/main-products/kottedzh.jpg'
+    import MainProduct1 from '../../../../public/img/templates/main-products/main-product-1.png'
+    import MainProduct2 from '../../../../public/img/templates/main-products/main-product-2.png'
+    import MainProduct4 from '../../../../public/img/templates/main-products/main-product-4.png'
+    import MainProduct5 from '../../../../public/img/templates/main-products/main-product-5.png'
+    import MainProduct6 from '../../../../public/img/templates/main-products/main-product-6.png'
+    import MainProduct7 from '../../../../public/img/templates/main-products/main-product-7.png'
+    import MainProduct8 from '../../../../public/img/templates/main-products/main-product-8.png'
+    import MainProductLine from '../../../../public/img/templates/main-products/main-product-line.png'
+
+    export default {
+        name: "PortalProductsContent",
+
+        data() {
+            return {
+                solutionToShow: 1,
+                MainProductsBgSecond,
+                MainProductLine,
+                solutions: [
+                    {
+                        id: 1,
+                        title: 'ГОСУДАРСТВЕННЫЕ УЧРЕЖДЕНИЯ',
+                        img: GosStruktury,
+                        icon: MainProduct5,
+                        text: 'Установка информационных систем безопасности в рамках государственных регламентов с использованием сертифицированного оборудования и учетом специфики деятельности учреждения.',
+                        details: '<p class="portal-text-indent">Наши решения для муниципальной инфраструктуры любой сложности:</p>' +
+                            '<p class="text-left">1. СКУД — домофоны, турникеты, шлагбаумы, электронные замки, ворота, калитки</p>' +
+                            '<p class="text-left">2. Системы видеонаблюдения — проектирование, монтаж, техническое обслуживание</p>' +
+                            '<p class="text-left">3. Удобные решения для «Безопасного Города» — организация вывода видеосигнала на пульт ЕДДС с муниципальных объектов, единая картографическая платформа, возможностью онлайн-просмотра, работой с видеоархивами и видеоаналитикой.</p>' +
+                            '<p class="text-left">4. Разработка и монтаж:</p>' +
+                            '<ul><li>видеосистем с большим количеством территориально разделенных камер;</li>' +
+                            '<li>информационных сетей;</li>' +
+                            '<li>локальной телефонии (SIP) и телефонии через интернет.</li></ul>' +
+                            '<p class="portal-text-indent">Мы также занимаемся сервисным ТО видеосистем, серверного оборудования, компьютеров СКУД, шлагбаумов, а также оперативной техподдержкой для быстрого устранения неисправностей.</p>'
+                    },
+                    {
+                        id: 2,
+                        title: 'ОБРАЗОВАТЕЛЬНЫЕ УЧРЕЖДЕНИЯ',
+                        img: ObrazovatelnyeUchrezhdenia,
+                        icon: MainProduct2,
+                        text: 'Полный комплекс автоматизированных систем охраны и контроля: спокойны родители, дети в безопасности.',
+                        details: '<ul><li>Системы видеонаблюдения — позволяют осуществлять 100% контроль за прилегающей территорией, коридорами, входными группами, общей дисциплиной и сохранностью имущества.</li>' +
+                            '<li>Такие системы, как СКУД и «Цифровая школа» — оптимальный способ снизить количество прогулов и опозданий, улучшить посещаемость и качество знаний.</li></ul>' +
+                            '<p class="portal-text-indent">Теперь родители полностью уверены в безопасности детей, а школьный рейтинг за счет роста показателей взлетит вверх.</p>' +
+                            '<p class="portal-text-indent">Мы занимаемся разработкой и монтажом информационных сетей, администрированием (в т.ч. и удаленным) и сервисным ТО видеосистем, серверного оборудования, компьютеров СКУД, шлагбаумов, а также оперативной техподдержкой для быстрого устранения неисправностей.</p>'
+                    },
+                    {
+                        id: 3,
+                        title: 'ЖИЛЫЕ КОМПЛЕКСЫ',
+                        img: ZhilyeKomplexy,
+                        icon: MainProduct1,
+                        text: 'Продуманные до мелочей и функциональные системы безопасности жилых домов различной конфигурации. Современные цифровые технологии с минимальным «человеческим фактором»: Умный двор, Умный подъезд, Умный дом.',
+                        details: '<ul><li>Видеонаблюдение — для обеспечения безопасности подъездов, лифтов, придомовой территории, детских площадок, парковок и стоянок.</li>' +
+                            '<li>Система видеоаналитики — понятный функционал с возможностью добавления опций: облачное хранение данных (гарантия их сохранности) и другое.</li>' +
+                            '<li>Домофонные системы с определением лиц, связи с консьержем, удаленным открытием двери с телефона.</li>' +
+                            '<li>Охранные системы — датчики движения, открытия дверей, контроль работы котлов, датчики подтопления и прочее.</li>' +
+                            '<li>СКУД — шлагбаумы\\ворота для внутридомовой территории, калитки, удаленное управление со смартфона, а также дистанционное управление лифтом</li></ul>' +
+                            '<p class="portal-text-indent">Мы занимаемся разработкой и монтажом информационных сетей, администрированием (в т.ч. и удаленным) и сервисным ТО видеосистем, серверного оборудования, компьютеров СКУД, шлагбаумов, а также оперативной техподдержкой для быстрого устранения неисправностей.</p>'
+                    },
+                    {
+                        id: 4,
+                        title: 'РОЗНИЧНАЯ ТОРГОВЛЯ',
+                        img: RoznichnayaTorgovlya,
+                        icon: MainProduct8,
+                        text: 'Понятные и функциональные системы безопасности, для обеспечения надежной защиты персонала, ценного имущества и оборудования, а также товаров. Возможность не только снизить риски краж и хищений, но и систематизировать аналитическую работу для решения задач маркетинга.',
+                        details: '<p class="text-left">1. Системы видеонаблюдения — для предотвращения, выявления и расследование краж и противоправных действий, контроля соблюдения персоналом рабочих регламентов, выявления нарушений, мошенничества и краж на кассах.</p>' +
+                            '<p class="text-left">2. Видео-аналитика для маркетингового анализа: тепловая карта — горячие, холодные зоны, вычисление постоянных покупателей, возрастных параметров покупателей, настроение покупателей на кассе.</p>' +
+                            '<p class="text-left">3. Помощь в логистике — расчет заполнения полок магазина, цифровая тележка, график остатков на складе и на полках, количество мест для парковки и остаток времени, а также контроль зон выгрузки</p>' +
+                            '<p class="portal-text-indent">Мы занимаемся разработкой и монтажом информационных сетей, администрированием (в т.ч. и удаленным) и сервисным ТО видеосистем, серверного оборудования, компьютеров СКУД, шлагбаумов, а также оперативной техподдержкой для быстрого устранения неисправностей.</p>'
+                    },
+                    {
+                        id: 5,
+                        title: 'ТРАНСПОРТ И ЛОГИСТИКА',
+                        img: TransportILogikistika,
+                        icon: MainProduct6,
+                        text: 'Предлагаем комплексные решения для обеспечения мер безопасности на транспорте и пассажирских предприятиях. Теперь под контролем будет не только автопарк, но и объекты транспортной инфраструктуры.',
+                        details: '<ul><li>Организация WiFi в транспорте и внедрение автотранспорта в систему «Безопасный город»</li>' +
+                            '<li>Отчетность о потреблении топлива, пройденном расстоянии, холостой работе двигателя, остановках, СКУД в автобусах, датчики ДТП.</li>' +
+                            '<li>Видеонаблюдение — система непрерывной передачи данных диспетчеру на экран, автоматическая выгрузка данных при потере связи с интернетом и последующем возобновлением.</li></ul>' +
+                            '<p class="portal-text-indent">Мы занимаемся разработкой и монтажом информационных сетей, администрированием (в т.ч. и удаленным) и сервисным ТО видеосистем, серверного оборудования, компьютеров СКУД, шлагбаумов, а также оперативной техподдержкой для быстрого устранения неисправностей.</p>'
+                    },
+                    {
+                        id: 6,
+                        title: 'ПРОИЗВОДСТВЕННЫЕ КОМПАНИИ',
+                        img: Zavod,
+                        icon: MainProduct4,
+                        text: 'Высококачественные сертифицированные системы промышленной связи и безопасности для объектов строительства и различных отраслей промышленности.',
+                        details: '<p class="portal-text-indent">Мы реализуем оборудование оперативно-диспетчерской и громкоговорящей связи, систем контроля, управления и оповещения, систем технологического и общего видеонаблюдения, сетевой инфраструктуры.</p>' +
+                            '<ul><li>Видеонаблюдение — для предотвращения, выявления и расследования краж и иных противоправных действий.</li>' +
+                            '<li>Системы учет и контроля рабочего времени персонала и контроля за соблюдением персоналом рабочих регламентов</li>' +
+                            '<li>СКУД — домофоны, турникеты, шлагбаумы, электронные замки, ворота, калитки.</li></ul>' +
+                            '<p class="portal-text-indent">Наши основные задачи — разработка и монтаж информационных сетей, администрирование (в т.ч. и удаленным) и сервисное ТО видеосистем, серверного оборудования, компьютеров СКУД, шлагбаумов, а также оперативная техподдержка для быстрого устранения неисправностей.</p>'
+                    },
+                    {
+                        id: 7,
+                        title: 'ЧАСТНЫЕ ДОМОВЛАДЕНИЯ',
+                        img: Kottedzh,
+                        icon: MainProduct7,
+                        text: 'Продуманные до мелочей и функциональные системы безопасности жилых домов различной конфигурации. Современные цифровые технологии с минимальным «человеческим фактором»: Умный двор, Умный подъезд, Умный дом.',
+                        details: '<ul><li>Видеонаблюдение — для обеспечения безопасности подъездов, лифтов, придомовой территории, детских площадок, парковок и стоянок.</li>' +
+                            '<li>Система видеоаналитики — понятный функционал с возможностью добавления опций: облачное хранение данных (гарантия их сохранности) и другое.</li>' +
+                            '<li>Домофонные системы с определением лиц, связи с консьержем, удаленным открытием двери с телефона.</li>' +
+                            '<li>Охранные системы — датчики движения, открытия дверей, контроль работы котлов, датчики подтопления и прочее.</li>' +
+                            '<li>СКУД — шлагбаумы\\ворота для внутридомовой территории, калитки, удаленное управление со смартфона, а также дистанционное управление лифтом</li></ul>' +
+                            '<p class="portal-text-indent">Мы занимаемся разработкой и монтажом информационных сетей, администрированием (в т.ч. и удаленным) и сервисным ТО видеосистем, серверного оборудования, компьютеров СКУД, шлагбаумов, а также оперативной техподдержкой для быстрого устранения неисправностей.</p>'
+                    },
+                ],
+                detailsWindow: {id: 0, title: '', img: null, text: '', details: ''}
+            }
+        },
+
+        methods: {
+            wowClass(id) {
+                if (id === 1) return 'wow'
+            },
+
+            showDetails(solution) {
+                this.detailsWindow = solution
+                $('#productDetails').modal('show')
+            },
+
+            parseTitle(title) {
+                let arr = title.split(' ')
+                let result = ''
+                for (let i = 0; i < arr.length; i++) {
+                    result += arr[i]
+                    if (i < arr.length - 1) {
+                        result += '<br>'
+                    }
+                }
+                return result
+            },
+
+            showProduct(id) {
+                let length = this.solutions.length
+
+                if ($(".main-product-item-" + id).is(":hidden")) {
+                    $(".main-product-item-" + id).show("slow")
+                    this.solutionToShow = id
+                    for (let i = 1; i <= length; i++) {
+                        if (id !== i) {
+                            $(".main-product-item-" + i).hide("slow")
+                        }
+                    }
+                }
+            },
+
+            swipeLeftHandler() {
+                let solutionToShow = this.solutionToShow + 1
+
+                if (solutionToShow > this.solutions.length) {
+                    solutionToShow = 1
+                }
+
+                this.showProduct(solutionToShow)
+            },
+
+            swipeRightHandler() {
+                let solutionToShow = this.solutionToShow - 1
+
+                if (solutionToShow === 0) {
+                    solutionToShow = this.solutions.length
+                }
+
+                this.showProduct(solutionToShow)
+            }
+        },
+
+        mounted() {
+            $('#productDetails').modal({
+                show: false
+            })
+
+            $(document).on('hidden.bs.modal', '#productDetails', function () {
+                this.detailsWindow = {id: 0, title: '', img: null, text: '', details: ''}
+            })
+        }
+    }
+</script>
+
+<style scoped>
+
+</style>

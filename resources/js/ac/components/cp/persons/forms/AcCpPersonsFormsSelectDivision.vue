@@ -1,7 +1,7 @@
 <template>
     <div>
         <label for="division">
-            {{ $t('Подразделение') }}
+            Подразделение
         </label>
         <select
             id="division"
@@ -9,7 +9,7 @@
             v-model="selectedPersonDivision"
             :disabled="selectedPerson.id === null || selectedPerson.id === 0"
         >
-            <option value="null" disabled>{{ $t('Выбирете подразделение') }}</option>
+            <option value="null" disabled>Выбирете подразделение</option>
             <option
                 v-for="division of divisions"
                 :value="division.id"

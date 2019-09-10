@@ -149,12 +149,12 @@ class User extends Model implements
      *
      * @return bool
      */
-    public function hasRole($role)
+    public function hasRole($role = null): bool
     {
         $roles = $this->belongsToMany('App\Role')->withTimestamps();
         if (is_array($role)) {
             $roles = $roles->whereIn('roles.type', $role)->get();
-        } else {
+        } elseif (isset($role)) {
             $roles = $roles->where(['roles.type' => $role])->get();
         }
         return $roles->count() > 0;

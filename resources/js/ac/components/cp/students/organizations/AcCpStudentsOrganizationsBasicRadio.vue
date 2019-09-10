@@ -10,7 +10,7 @@
             :disabled="selectedPerson.id > 0"
         >
         <label class="custom-control-label" :for="'org' + org.id">
-            {{ $t('Школа №')}}{{ org.name}}
+            Школа № {{ org.name }}
         </label>
     </div>
 </template>

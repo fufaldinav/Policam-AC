@@ -1,0 +1,51 @@
+// Fonts
+
+// Variables
+@import 'variables';
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+
+.news-entry {
+    height: 4rem;
+}
+
+a.news-entry:link, a.news-entry:hover, a.news-entry:visited, a.news-entry:active {
+    text-decoration: none;
+}
+
+.news-entry-date {
+    color: #fff;
+}
+
+.news-entry-header {
+    color: #000;
+}
+
+.news-img {
+    max-width: 360px;
+    float: left;
+    margin: 0 10px 2px 0;
+}
+
+.pages-img {
+    max-width: 480px;
+    float: left;
+    margin: 0 10px 2px 0;
+}
+
+@media (max-width: 576px) {
+    .pages-img {
+        max-width: 200px !important;
+        float: left;
+        margin: 0 10px 2px 0;
+    }
+}
+
+.owl-carousel .owl-stage {
+    display: flex;
+    align-items: center;
+}
+
+.portal-text-indent {
+    text-indent: 1.5rem;
+}

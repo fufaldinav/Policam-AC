@@ -1,5 +1,4 @@
 import {Division} from '../../classes'
-import i18n from "../../../vue-i18n";
 
 const state = {
     collection: [],
@@ -10,7 +9,7 @@ const state = {
 
 const getters = {
     getById: state => id => {
-        return state.collection.find(value => value.id === id)
+        return state.collection.find(division => division.id === id)
     },
 
     findName: state => name => {
@@ -118,9 +117,7 @@ const mutations = {
     },
 
     addPerson(state, relation) {
-        let division = state.collection.find((value) => {
-            if (value.id === relation.divisionId) return true
-        })
+        let division = state.collection.find(division => division.id === relation.divisionId)
         if (division === undefined) return
         let index = division.persons.indexOf(relation.personId)
         if (index === -1) {
@@ -129,9 +126,7 @@ const mutations = {
     },
 
     removePerson(state, relation) {
-        let division = state.collection.find((value) => {
-            if (value.id === relation.divisionId) return true
-        })
+        let division = state.collection.find(division => division.id === relation.divisionId)
         if (division === undefined) return
         let index = division.persons.indexOf(relation.personId)
         if (index > -1) {
@@ -160,7 +155,7 @@ const actions = {
 
                 commit('clearSelected')
 
-                window.Ac.alert(division.name + ' ' + i18n.t('сохранено') + ' ' + i18n.t('успешно'))
+                window.Ac.alert(`${division.name} сохранено успешно`)
             })
             .catch(error => {
                 if (rootState.debug) console.log(error)
@@ -180,7 +175,7 @@ const actions = {
 
                 commit('clearSelected')
 
-                window.Ac.alert(name + ' ' + i18n.t('удалено') + ' ' + i18n.t('успешно'))
+                window.Ac.alert(`${name} удалено успешно`)
             })
             .catch(error => {
                 if (rootState.debug) console.log(error)

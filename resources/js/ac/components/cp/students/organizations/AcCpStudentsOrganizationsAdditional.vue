@@ -8,7 +8,7 @@
             class="card w-100"
         >
             <div class="card-header">
-                {{ $t('Дополнительное образование') }}
+                Дополнительное образование
             </div>
             <ul class="list-group list-group-flush">
                 <li

@@ -4,7 +4,7 @@
         class="list-group-item list-group-item-success"
         @click="selectPerson"
     >
-        {{ $t('Добавить') }}
+        Добавить
     </button>
 </template>
 

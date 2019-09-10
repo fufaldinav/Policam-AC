@@ -17,9 +17,9 @@
                         <p class="card-text">
                             <small>{{ person.o }}</small>
                         </p>
-                        <p class="card-text">{{ $t('Дата рождения')}}: {{ person.birthday }}</p>
-                        <p v-if="person.address" class="card-text">{{ $t('Адрес')}}: {{ person.address }}</p>
-                        <p v-if="person.phone" class="card-text">{{ $t('Номер телефона')}}: {{ person.phone }}</p>
+                        <p class="card-text">Дата рождения: {{ person.birthday }}</p>
+                        <p v-if="person.address" class="card-text">Адрес: {{ person.address }}</p>
+                        <p v-if="person.phone" class="card-text">Номер телефона: {{ person.phone }}</p>
                     </div>
                 </div>
             </div>

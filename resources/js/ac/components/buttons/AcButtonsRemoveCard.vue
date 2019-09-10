@@ -4,7 +4,7 @@
         class="btn btn-danger"
         @click="removeCard"
     >
-        <slot>{{ $t('Удалить') }}</slot>
+        <slot>Удалить</slot>
     </button>
 </template>
 
@@ -28,9 +28,9 @@
                 } else {
                     this.$store.commit('cards/setRemovable', this.removableCard)
 
-                    this.$store.commit('modal/setTitle', this.$t('Удаление'))
+                    this.$store.commit('modal/setTitle', 'Удаление')
 
-                    this.$store.commit('modal/setMessage', this.$t('Вы действительно хотите удалить карту?'))
+                    this.$store.commit('modal/setMessage', 'Вы действительно хотите удалить карту?')
 
                     this.$store.commit('modal/setAcceptButton', 'removeCard')
 

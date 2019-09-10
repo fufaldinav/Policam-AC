@@ -14,6 +14,7 @@ import messenger from './modules/messenger'
 import modal from './modules/modal'
 import organizations from './modules/organizations'
 import persons from './modules/persons'
+import timetable from './modules/timetable'
 
 Vue.use(Vuex)
 
@@ -37,6 +38,7 @@ export default new Vuex.Store({
         modal,
         messenger,
         organizations,
-        persons
+        persons,
+        timetable
     }
 })

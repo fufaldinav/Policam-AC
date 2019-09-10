@@ -1,5 +1,5 @@
 <template>
-    <a href="" class="btn btn-secondary disabled">{{ $t('Недоступно') }}</a>
+    <a href="" class="btn btn-secondary disabled">Недоступно</a>
 </template>
 
 <script>

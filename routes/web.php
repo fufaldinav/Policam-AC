@@ -2,7 +2,23 @@
 /*
  * Home Page
  */
-Route::redirect('/', 'cp');
+Route::get('/', 'PortalController@index');
+/*
+ * Portal
+ */
+Route::group(['as' => 'portal.'], function () {
+    Route::get('portal', 'PortalController@index')->name('index');
+    Route::get('support', 'PortalController@support')->name('support');
+    Route::get('contacts', 'PortalController@support')->name('contacts');
+    Route::get('news', 'PortalController@news')->name('news');
+    Route::get('news/{id?}', 'NewsController@getEntry')->name('news.entry');
+});/*
+ * Pages
+ */
+Route::group(['prefix' => 'pages', 'as' => 'pages.'], function () {
+    Route::get('/', 'PagesController@index')->name('index');
+    Route::get('{id}', 'PagesController@getEntry')->name('entry');
+});
 /*
  * Observer
  */
@@ -20,13 +36,18 @@ Route::group(['prefix' => 'api', 'as' => 'api.'], function () {
         Route::post('{id}', 'DivisionsController@update');
         Route::delete('{id}', 'DivisionsController@destroy');
     });
+    Route::get('codes', 'ReferralController@getCodes');
+    Route::get('referral/divisions/{organizationId}/{type?}', 'ReferralController@getDivisions');
+    Route::get('referral/organization/{organizationId}', 'ReferralController@getOrganization');
 });
 /*
  * Auth
  */
 Auth::routes(['verify' => true]);
-Route::get('reg', 'Auth\RegisterController@showRegistrationForm');
-Route::get('reg/{?referral_code}', 'Auth\RegisterController@showRegistrationForm');
+Route::get('logout', 'Auth\LoginController@logout');
+Route::get('reg/{referral_code?}', 'ReferralController@parseLink');
+Route::get('register/{referral_code}', 'Auth\RegisterController@showRegistrationForm');
+Route::get('login/{referral_code}', 'Auth\LoginController@showLoginForm')->middleware('verified');
 /*
  * Cards
  */
@@ -53,7 +74,7 @@ Route::group(['prefix' => 'cp', 'as' => 'cp.'], function () {
     Route::get('/', 'UsersController@index')->name('index');
     Route::get('classes', 'DivisionsController@classes')->name('classes')->middleware('role:2,3,7');
     Route::get('persons', 'PersonsController@page')->name('persons')->middleware('role:2,3,7');
-    Route::get('statistics', 'UsersController@students')->name('students');
+    Route::get('statistics', 'StatisticsController@index')->name('statistics');
     Route::get('students', 'UsersController@students')->name('students');
     Route::get('timetable', 'TimetableController@page')->name('timetable')->middleware('role:1');
 
@@ -63,10 +84,18 @@ Route::group(['prefix' => 'cp', 'as' => 'cp.'], function () {
  */
 Route::get('dev', 'DevController@index');
 /*
+ * Post registration
+ */
+Route::get('postreg', 'ReferralController@postreg');
+/*
  * Server
  */
 Route::post('server', 'ServersController@index');
 Route::post('policont', 'ServersController@policont');
+/*
+ * Stream
+ */
+Route::get('stream', 'StreamController@index');
 /*
  * Users
  */

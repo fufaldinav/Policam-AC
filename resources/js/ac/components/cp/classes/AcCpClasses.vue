@@ -11,8 +11,8 @@
                 <table class="container-fluid table-striped table-hover">
                     <thead>
                     <tr>
-                        <th>{{ $t('Номер') }}</th>
-                        <th>{{ $t('Литера') }}</th>
+                        <th>Номер</th>
+                        <th>Литера</th>
                         <th></th>
                     </tr>
                     </thead>

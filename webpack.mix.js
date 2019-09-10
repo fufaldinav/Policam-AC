@@ -11,12 +11,30 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js')
+mix.js('resources/js/ac.js', 'public/js')
+    .js('resources/js/portal.js', 'public/js')
+    .js('resources/js/postreg.js', 'public/js')
     .extract()
     .scripts([
         'resources/js/ac/notification.js',
         'resources/js/ac/push.js',
     ], 'public/js/scripts.js')
-    .sass('resources/sass/app.scss', 'public/css')
+    .scripts([
+        'resources/libs/owlCarousel/js/owl.carousel.js',
+        'resources/libs/wowJs/wow.min.js',
+        'resources/js/portal.animations.js',
+    ], 'public/js/portal.animations.js')
+    .sass('resources/sass/ac.scss', 'public/css')
+    .sass('resources/sass/portal.scss', 'public/css')
+    .styles([
+        'resources/libs/animate/animate.css',
+        'resources/libs/owlCarousel/css/owl.carousel.min.css',
+        'resources/libs/owlCarousel/css/owl.theme.default.min.css',
+    ], 'public/css/portal.animations.css')
+    .styles([
+        'resources/css/main.css',
+    ], 'public/css/main.css')
+    .sass('resources/libs/fontAwesome/scss/font-awesome.scss', 'public/css/fonts.css')
     .version()
-    .disableNotifications();
+    .disableNotifications()
+    .browserSync('192.168.88.8');
