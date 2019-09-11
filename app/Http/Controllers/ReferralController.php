@@ -65,11 +65,15 @@ class ReferralController extends Controller
         return response()->json($divisions);
     }
 
-    public function getOrganization(int $organizationId)
+    public function getOrganizations(int $organizationId = null)
     {
-        $organization = App\Organization::where(['id' => $organizationId])->select('id', 'name')->get();
+        if (isset($organizationId)) {
+            $organizations = App\Organization::where(['id' => $organizationId, 'type' => 1])->select('id', 'name')->get();
+        } else {
+            $organizations = App\Organization::where(['type' => 1])->select('id', 'name')->get();
+        }
 
-        return response()->json($organization);
+        return response()->json($organizations);
     }
 
     public function getReferral(string $code)

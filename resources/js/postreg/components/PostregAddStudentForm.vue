@@ -185,6 +185,29 @@
                         <p class="text-center">Школа: {{ organization.name }}</p>
                     </div>
                     <div
+                        v-if="student.code > 0 && organization === undefined && ! organizationsLoading"
+                        class="input-group mb-3"
+                    >
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="student-organization">Школа</label>
+                        </div>
+                        <select
+                            v-model="organizationManuallySelected"
+                            class="custom-select"
+                            id="student-organization"
+                            required
+                        >
+                            <option disabled value="0">Выберите школу...</option>
+                            <option
+                                v-for="organization of organizations"
+                                :key="organization.id"
+                                :value="organization.id"
+                            >
+                                {{ organization.name }}
+                            </option>
+                        </select>
+                    </div>
+                    <div
                         v-if="divisions.length > 0"
                         class="input-group"
                     >
@@ -248,7 +271,9 @@
                 codeManualInput: false,
                 codeManuallyEntered: null,
                 codeChecking: false,
-                codeReceived: null
+                codeReceived: null,
+                organizationManuallySelected: null,
+                organizationsLoading: false
             }
         },
 
@@ -267,6 +292,10 @@
 
             organization() {
                 return this.$store.getters['postreg/getOrganizationByCode'](this.student.code)
+            },
+
+            organizations() {
+                return this.$store.state.postreg.organizations
             },
 
             divisions() {
@@ -361,6 +390,38 @@
             saveCode() {
                 this.$store.commit('postreg/addCode', this.codeReceived)
                 this.student.code = this.codeReceived.id
+                this.organizationsLoading = true
+                this.$store.dispatch('postreg/loadOrganization', this.codeReceived.organization_id)
+                    .then(response => {
+                        if (response.length > 0) {
+                            for (let organization of response) {
+                                this.$store.commit('postreg/addOrganization', organization)
+                                this.$store.dispatch('postreg/loadDivisions', organization.id)
+                                    .then(response => {
+                                        for (let division of response) {
+                                            this.$store.commit('postreg/addDivision', division)
+                                        }
+                                    })
+                                    .catch(error => {
+                                        if (this.$store.state.debug) console.log(error)
+                                    })
+                            }
+                        } else {
+                            this.$store.dispatch('postreg/loadOrganizations')
+                                .then(response => {
+                                    for (let organization of response) {
+                                        this.$store.commit('postreg/addOrganization', organization)
+                                    }
+                                })
+                                .catch(error => {
+                                    if (this.$store.state.debug) console.log(error)
+                                })
+                        }
+                        this.organizationsLoading = false
+                    })
+                    .catch(error => {
+                        if (this.$store.state.debug) console.log(error)
+                    })
                 this.codeManuallyEntered = null
                 this.codeReceived = null
                 this.codeManualInput = false

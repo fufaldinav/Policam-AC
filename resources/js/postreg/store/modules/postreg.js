@@ -151,8 +151,25 @@ const actions = {
                 for (let code of response.data) {
                     commit('addCode', code)
                     dispatch('loadOrganization', code.organization_id)
+                        .then(response => {
+                            for (let organization of response) {
+                                commit('addOrganization', organization)
+                                dispatch('loadDivisions', organization.id)
+                                    .then(response => {
+                                        for (let division of response) {
+                                            commit('addDivision', division)
+                                        }
+                                        commit('changeLoadingState', false)
+                                    })
+                                    .catch(error => {
+                                        if (rootState.debug) console.log(error)
+                                    })
+                            }
+                        })
+                        .catch(error => {
+                            if (rootState.debug) console.log(error)
+                        })
                 }
-                commit('changeLoadingState', false)
             })
             .catch(error => {
                 if (rootState.debug) console.log(error)
@@ -160,35 +177,40 @@ const actions = {
             })
     },
 
-    async loadDivisions({commit, dispatch, rootState}, organizationId) {
-        commit('changeLoadingState', true)
-        window.axios.get('/api/referral/divisions/' + organizationId)
-            .then(response => {
-                for (let division of response.data) {
-                    commit('addDivision', division)
-                }
-                commit('changeLoadingState', false)
-            })
-            .catch(error => {
-                if (rootState.debug) console.log(error)
-                setTimeout(dispatch('loadDivisions'), 2000) //TODO перезапуск при ошибке
-            })
+    async loadOrganization({commit, dispatch, rootState}, organizationId) {
+        return new Promise((resolve, reject) => {
+            window.axios.get('/api/referral/organizations/' + organizationId)
+                .then(response => {
+                    resolve(response.data)
+                })
+                .catch(error => {
+                    reject(error)
+                })
+        })
     },
 
-    async loadOrganization({commit, dispatch, rootState}, organizationId) {
-        commit('changeLoadingState', true)
-        window.axios.get('/api/referral/organization/' + organizationId)
-            .then(response => {
-                for (let organization of response.data) {
-                    commit('addOrganization', organization)
-                    dispatch('loadDivisions', organization.id)
-                }
-                commit('changeLoadingState', false)
-            })
-            .catch(error => {
-                if (rootState.debug) console.log(error)
-                setTimeout(dispatch('loadOrganization'), 2000) //TODO перезапуск при ошибке
-            })
+    async loadOrganizations({commit, dispatch, rootState},) {
+        return new Promise((resolve, reject) => {
+            window.axios.get('/api/referral/organizations')
+                .then(response => {
+                    resolve(response.data)
+                })
+                .catch(error => {
+                    reject(error)
+                })
+        })
+    },
+
+    async loadDivisions({commit, dispatch, rootState}, organizationId) {
+        return new Promise((resolve, reject) => {
+            window.axios.get('/api/referral/divisions/' + organizationId)
+                .then(response => {
+                    resolve(response.data)
+                })
+                .catch(error => {
+                    reject(error)
+                })
+        })
     },
 
     async getReferral({rootState}, code) {

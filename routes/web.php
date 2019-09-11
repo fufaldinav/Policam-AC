@@ -38,7 +38,7 @@ Route::group(['prefix' => 'api', 'as' => 'api.'], function () {
     });
     Route::get('codes', 'ReferralController@getCodes');
     Route::get('referral/divisions/{organizationId}/{type?}', 'ReferralController@getDivisions');
-    Route::get('referral/organization/{organizationId}', 'ReferralController@getOrganization');
+    Route::get('referral/organizations/{organizationId?}', 'ReferralController@getOrganizations');
     Route::get('referral/checkcode/{cardCode}', 'ReferralController@getReferral');
 });
 /*
