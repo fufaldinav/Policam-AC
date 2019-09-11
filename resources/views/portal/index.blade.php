@@ -13,7 +13,7 @@
                 <div class="row justify-content-center">
                     <div class="banner-line"></div>
                 </div>
-                <p>Распознавание голоса, синтез речи,<br>запись и анализ, идентификация лица<br>и голоса.</p>
+                <p>PSIM. Системы контроля<br>и управления доступом<br>и видеонаблюдение.</p>
             </div>
         </div>
     </div>
