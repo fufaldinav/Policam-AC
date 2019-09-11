@@ -41,7 +41,7 @@ class UsersController extends Controller
     public function index(Request $request)
     {
         if (! $request->user()->hasRole()) {
-            abort(403);
+            return redirect('/postreg');
         }
 
         return view('ac/cp');
