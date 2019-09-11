@@ -11,6 +11,9 @@
                         <li class="header-mobile-menu-item">
                             <a href="{{ url('/') }}#mainHistory">ИСТОРИЯ УСПЕХА</a>
                         </li>
+                        <li class="header-mobile-menu-item">
+                            <a href="{{ route('pages.entry', ['id' => 10]) }}">ВАКАНСИИ</a>
+                        </li>
                         <li class="header-mobile-menu-item dropdown">
                             <a class="dropdown-toggle" href="#" id="servicesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 УСЛУГИ
@@ -48,6 +51,9 @@
                 </li>
                 <li class="header-menu-item">
                     <a href="{{ url('/') }}#mainHistory">ИСТОРИЯ УСПЕХА</a>
+                </li>
+                <li class="header-menu-item">
+                    <a href="{{ route('pages.entry', ['id' => 10]) }}">ВАКАНСИИ</a>
                 </li>
                 <li class="header-menu-item dropdown">
                     <a class="dropdown-toggle" href="#" id="servicesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
