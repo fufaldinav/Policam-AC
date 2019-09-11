@@ -1,14 +1,14 @@
 <template>
     <div class="nav-item">
         <div v-if="organizations.length === 1">
-            <a class="navbar-brand" href="" @click.prevent>{{ organizationName(currentOrganization) }}</a>
+            <a class="navbar-brand" href="" @click.prevent>{{ currentOrganization.name }}</a>
         </div>
         <div
             v-else-if="organizations.length > 0"
             class="nav-item dropdown"
         >
             <a class="navbar-brand dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
-               aria-expanded="false">{{ organizationName(currentOrganization) }}</a>
+               aria-expanded="false">{{ currentOrganization.name }}</a>
             <div class="dropdown-menu">
                 <a
                     v-for="org in organizations"
@@ -17,7 +17,7 @@
                     class="dropdown-item"
                     @click.prevent="changeOrganization(org)"
                 >
-                    {{ organizationName(org) }}
+                    {{ org.name }}
                 </a>
             </div>
         </div>
@@ -43,14 +43,7 @@
         },
 
         methods: {
-            organizationName(org) {
-                if (org.type === 1) {
-                    return `Школа ${org.name}`
-                }
-                return org.name
-            },
-
-            changeOrganization(org) {
+                changeOrganization(org) {
                 this.$store.commit('persons/clearSelected')
                 this.$store.commit('divisions/clearSelected')
                 this.$store.dispatch('messenger/unsubscribe')
