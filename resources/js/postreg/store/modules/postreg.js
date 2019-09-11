@@ -2,30 +2,30 @@ import Vue from 'vue'
 
 const state = {
     loading: true,
-    step: 0,
-    myRoles: [],
+    step: 2,
+    myRoles: [4, 9],
     roles: [
         {'type': 4, 'name': 'Родитель'},
         {'type': 9, 'name': 'Сотрудник'}
     ],
-    currentStudent: {id: 0, f: null, i: null, o: null, gender: null, birthday: null, card: 0, division: 0},
-    studentToUpdate: {id: 0, f: null, i: null, o: null, gender: null, birthday: null, card: 0, division: 0},
+    currentStudent: {id: 0, f: null, i: null, o: null, gender: null, birthday: null, code: 0, division: 0},
+    studentToUpdate: {id: 0, f: null, i: null, o: null, gender: null, birthday: null, code: 0, division: 0},
     students: [
-        {f: 'Иванов', i: 'Пётр', o: 'Сергеевич', gender: 1, birthday: '2010-10-24', card: 2, division: 0},
-        {f: 'Иванова', i: 'Лилия', o: 'Сергеевна', gender: 2, birthday: '2011-11-23', card: 3, division: 0}
+        {f: 'Иванов', i: 'Пётр', o: 'Сергеевич', gender: 1, birthday: '2010-10-24', code: 0, division: 0},
+        {f: 'Иванова', i: 'Лилия', o: 'Сергеевна', gender: 2, birthday: '2011-11-23', code: 0, division: 0}
     ],
-    cards: [],
+    codes: [],
     studentFormType: 'add',
     organizations: [],
     divisions: [],
-    user: {id: 0, f: null, i: null, o: null, gender: null, birthday: null, card: 0},
+    user: {id: 0, f: null, i: null, o: null, gender: null, birthday: null, code: 0},
     userChecked: false
 }
 
 const getters = {
-    getActiveCardsCount: state => {
-        let cards = state.cards.filter(card => card.activated === 0)
-        return cards.length
+    getActiveCodesCount: state => {
+        let codes = state.codes.filter(code => code.activated === 0)
+        return codes.length
     },
 
     getDivisionById: state => divisionId => {
@@ -34,18 +34,18 @@ const getters = {
         return div
     },
 
-    getDivisionsByCard: state => cardId => {
-        let card = state.cards.find(card => card.id === parseInt(cardId, 10))
-        if (card === undefined) return []
-        let org = state.organizations.find(org => org.id === card.organization_id)
+    getDivisionsByCode: state => codeId => {
+        let code = state.codes.find(code => code.id === parseInt(codeId, 10))
+        if (code === undefined) return []
+        let org = state.organizations.find(org => org.id === code.organization_id)
         if (org === undefined) return []
         return state.divisions.filter(div => div.organization_id === org.id)
     },
 
-    getOrganizationByCard: state => cardId => {
-        let card = state.cards.find(card => card.id === parseInt(cardId, 10))
-        if (card === undefined) return
-        let org = state.organizations.find(org => org.id === card.organization_id)
+    getOrganizationByCode: state => codeId => {
+        let code = state.codes.find(code => code.id === parseInt(codeId, 10))
+        if (code === undefined) return
+        let org = state.organizations.find(org => org.id === code.organization_id)
         if (org === undefined) return
         return org
     }
@@ -53,12 +53,15 @@ const getters = {
 
 const mutations = {
     addCode(state, code) {
-        state.cards.push(code);
+        let ref = state.codes.find(ref => (ref.id === code.id))
+        if (ref === undefined) {
+            state.codes.push(code)
+        }
     },
 
     addOrganization(state, organization) {
-        let index = state.organizations.indexOf(organization)
-        if (index === -1) {
+        let org = state.organizations.find(org => (org.id === organization.id))
+        if (org === undefined) {
             state.organizations.push(organization)
         }
     },
@@ -104,8 +107,8 @@ const mutations = {
     },
 
     clearCurrentStudent(state, commit) {
-        state.currentStudent = {f: null, i: null, o: null, gender: null, birthday: null, card: 0, division: 0}
-        state.studentToUpdate = {f: null, i: null, o: null, gender: null, birthday: null, card: 0, division: 0}
+        state.currentStudent = {f: null, i: null, o: null, gender: null, birthday: null, code: 0, division: 0}
+        state.studentToUpdate = {f: null, i: null, o: null, gender: null, birthday: null, code: 0, division: 0}
     },
 
     revertStudent(state) {
@@ -132,16 +135,16 @@ const mutations = {
         state.userChecked = status
     },
 
-    setCardActivatedStatus(state, payload) {
-        let card = state.cards.find(card => card.id === payload.cardId)
-        if (card !== undefined) {
-            card.activated = payload.status
+    setCodeActivatedStatus(state, payload) {
+        let code = state.codes.find(code => code.id === payload.codeId)
+        if (code !== undefined) {
+            code.activated = payload.status
         }
     }
 }
 
 const actions = {
-    async loadCards({state, commit, dispatch, rootState}) {
+    async loadCodes({state, commit, dispatch, rootState}) {
         commit('changeLoadingState', true)
         window.axios.get('/api/codes')
             .then(response => {
@@ -153,7 +156,7 @@ const actions = {
             })
             .catch(error => {
                 if (rootState.debug) console.log(error)
-                setTimeout(dispatch('loadCards'), 2000) //TODO перезапуск при ошибке
+                setTimeout(dispatch('loadCodes'), 2000) //TODO перезапуск при ошибке
             })
     },
 
@@ -186,6 +189,18 @@ const actions = {
                 if (rootState.debug) console.log(error)
                 setTimeout(dispatch('loadOrganization'), 2000) //TODO перезапуск при ошибке
             })
+    },
+
+    async getReferral({rootState}, code) {
+        return new Promise((resolve, reject) => {
+            window.axios.get('/api/referral/checkcode/' + code)
+                .then(response => {
+                    resolve(response.data)
+                })
+                .catch(error => {
+                    reject(error)
+                })
+        })
     }
 }
 

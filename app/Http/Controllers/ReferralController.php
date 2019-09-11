@@ -71,4 +71,15 @@ class ReferralController extends Controller
 
         return response()->json($organization);
     }
+
+    public function getReferral(string $code)
+    {
+        $referral = App\ReferralCode::where(['code' => $code])->select('id', 'code', 'organization_id', 'activated')->first();
+
+        if (! $referral) {
+            return 0;
+        }
+
+        return response()->json($referral);
+    }
 }

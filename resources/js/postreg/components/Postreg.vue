@@ -80,7 +80,10 @@
                         Нажмите кнопку ниже и Вы увидете форму, где необходимо внести данные.
                     </p>
                     <p class="mt-2 px-2 px-xl-5">
-                        При заполнении будьте предельно внимательны, ошибки недопустимы!
+                        На этом этапе необходимо выбрать, в каком классе учится Ваш ребенок. Дополнительное образование мы выберем на следующем шаге.
+                    </p>
+                    <p class="mt-2 px-2 px-xl-5">
+                        <b>Внимание!</b> При заполнении будьте предельно внимательны, ошибки недопустимы!
                     </p>
                     <div class="d-flex container-fluid justify-content-center mt-2">
                         <button
@@ -91,12 +94,16 @@
                             Добавить ученика
                         </button>
                     </div>
-                    <div class="container-fluid row">
+                    <div class="container-fluid row mt-3">
                         <div
                             v-for="student of students"
                             class="d-flex col-12 justify-content-center"
                         >
-                            <div class="card mt-2" style="width: 18rem;">
+                            <div
+                                :class="bgClass(student)"
+                                class="card mt-2 rounded-0 border-0 shadow-sm"
+                                style="width: 18rem;"
+                            >
                                 <div class="card-body">
                                     <div class="d-flex">
                                         <h5 class="mr-auto card-title">
@@ -120,7 +127,7 @@
                                     </div>
                                     <button
                                         type="button"
-                                        class="btn btn-warning mt-2"
+                                        class="btn btn-warning mt-2 shadow-sm"
                                         @click="showEditForm(student)"
                                     >
                                         Редактировать
@@ -129,7 +136,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="d-flex container-fluid justify-content-center mt-2">
+                    <div class="d-flex container-fluid justify-content-center mt-3">
                         <button
                             type="button"
                             class="btn btn-danger mr-2"
@@ -227,7 +234,7 @@
             },
 
             divisions() {
-                return this.$store.getters['postreg/getDivisionsByCard'](this.student.card)
+                return this.$store.getters['postreg/getDivisionsByCode'](this.student.code)
             },
 
             userChecked() {
@@ -294,6 +301,12 @@
             getDivisionName(divisionId) {
                 if (divisionId === 0) return 'Класс не выбран'
                 return this.$store.getters['postreg/getDivisionById'](divisionId).name
+            },
+
+            bgClass(student) {
+                if (student.gender === null) return
+                if (student.gender === 1) return 'postreg-bg-men'
+                if (student.gender === 2) return 'postreg-bg-women'
             }
         },
 
@@ -310,9 +323,9 @@
             $(document).on('hidden.bs.modal', '#addStudentForm', () => {
                 if (this.$store.state.postreg.studentFormType === 'edit') {
                     this.$store.commit('postreg/revertStudent')
-                    if (this.$store.state.postreg.currentStudent.card !== this.$store.state.postreg.studentToUpdate.card) {
-                        this.$store.commit('postreg/setCardActivatedStatus', {
-                            cardId: this.$store.state.postreg.studentToUpdate.card,
+                    if (this.$store.state.postreg.currentStudent.code !== this.$store.state.postreg.studentToUpdate.code) {
+                        this.$store.commit('postreg/setCodeActivatedStatus', {
+                            codeId: this.$store.state.postreg.studentToUpdate.code,
                             status: 0
                         })
                     }
@@ -323,7 +336,7 @@
                 this.$store.commit('postreg/clearCurrentStudent', this.student)
             })
 
-            this.$store.dispatch('postreg/loadCards')
+            this.$store.dispatch('postreg/loadCodes')
         }
     }
 </script>

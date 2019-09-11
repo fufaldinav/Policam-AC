@@ -108,25 +108,25 @@
                         >
                     </div>
                     <div
-                        v-if="activeCardsCount > 0 || user.card > 0"
+                        v-if="activeCodesCount > 0 || user.code > 0"
                         class="input-group mb-3"
                     >
                         <div class="input-group-prepend">
-                            <label class="input-group-text" for="user-card">Карта/браслет</label>
+                            <label class="input-group-text" for="user-code">Карта/браслет</label>
                         </div>
                         <select
-                            v-model="user.card"
+                            v-model="user.code"
                             class="custom-select"
-                            id="user-card"
+                            id="user-code"
                             required
                         >
                             <option disabled value="0">Выберите карту...</option>
                             <option
-                                v-for="card of cards"
-                                v-if="card.activated === 0 || user.card === card.id"
-                                :value="card.id"
+                                v-for="code of codes"
+                                v-if="code.activated === 0 || user.code === code.id"
+                                :value="code.id"
                             >
-                                {{ card.code }}
+                                {{ code.code }}
                             </option>
                         </select>
                     </div>
@@ -183,22 +183,22 @@
             },
 
             organization() {
-                let org = this.$store.getters['postreg/getOrganizationByCard'](this.user.card)
+                let org = this.$store.getters['postreg/getOrganizationByCode'](this.user.code)
                 if (org === undefined) return 'Неизвестная организация'
                 return org.name
             },
 
-            cards() {
-                return this.$store.state.postreg.cards
+            codes() {
+                return this.$store.state.postreg.codes
             },
 
-            activeCardsCount() {
-                return this.$store.getters['postreg/getActiveCardsCount']
+            activeCodesCount() {
+                return this.$store.getters['postreg/getActiveCodesCount']
             },
 
             buttonDisabled() {
-                return this.user.f === null || this.user.i === null || this.user.o === null || this.user.gender === null || this.user.birthday === null || this.user.card === null ||
-                    this.user.f === '' || this.user.i === '' || this.user.o === '' || this.user.gender === '' || this.user.birthday === '' || this.user.card === ''
+                return this.user.f === null || this.user.i === null || this.user.o === null || this.user.gender === null || this.user.birthday === null || this.user.code === null ||
+                    this.user.f === '' || this.user.i === '' || this.user.o === '' || this.user.gender === '' || this.user.birthday === '' || this.user.code === ''
                     || ! this.checkInputForF(this.user.f) || ! this.checkInput(this.user.i) || ! this.checkInput(this.user.o)
             },
 

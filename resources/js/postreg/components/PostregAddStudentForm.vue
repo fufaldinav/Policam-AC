@@ -106,37 +106,88 @@
                             required
                         >
                     </div>
-                    <div
-                        v-if="activeCardsCount > 0 || student.card > 0"
-                        class="input-group mb-3"
-                    >
+                    <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <label class="input-group-text" for="student-card">Карта/браслет</label>
+                            <label class="input-group-text" for="student-code">Карта/браслет</label>
                         </div>
                         <select
-                            v-model="student.card"
+                            v-if="(activeCodesCount > 0 || student.code > 0) && ! codeManualInput"
+                            v-model="student.code"
                             class="custom-select"
-                            id="student-card"
+                            id="student-code"
                             required
                         >
                             <option disabled value="0">Выберите карту...</option>
                             <option
-                                v-for="card of cards"
-                                v-if="card.activated === 0 || student.card === card.id"
-                                :key="card.id"
-                                :value="card.id"
+                                v-for="code of codes"
+                                v-if="code.activated === 0 || student.code === code.id"
+                                :key="code.id"
+                                :value="code.id"
                             >
-                                {{ card.code }}
+                                {{ code.code }}
                             </option>
                         </select>
+                        <input
+                            v-else
+                            v-model="codeToCheck"
+                            id="student-code"
+                            type="text"
+                            class="form-control"
+                            placeholder="Номер с карты/браслета"
+                            required
+                        >
+                    </div>
+                    <div class="container-fluid mb-3 d-flex justify-content-end">
+                        <button
+                            v-if="! codeManualInput && activeCodesCount > 0"
+                            type="button"
+                            class="btn btn-warning"
+                            @click="codeManualInput = true"
+                        >
+                            Ручной ввод карты
+                        </button>
+                        <button
+                            v-if="codeManualInput && activeCodesCount > 0"
+                            type="button"
+                            class="btn btn-secondary mr-2"
+                            @click="codeManualInput = false"
+                        >
+                            Отмена
+                        </button>
+                        <button
+                            v-if="(codeManualInput || activeCodesCount === 0) && codeReceived === null"
+                            type="button"
+                            class="btn btn-primary"
+                            :disabled="checkButtonDisabled"
+                            @click="checkCodeCode"
+                        >
+                            <template v-if="codeChecking">
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Проверка...
+                            </template>
+                            <template v-else>
+                                Проверить код
+                            </template>
+                        </button>
+                        <button
+                            v-if="(codeManualInput || activeCodesCount === 0) && codeReceived !== null"
+                            type="button"
+                            class="btn btn-primary"
+                            @click="saveCode"
+                        >
+                            Сохранить
+                        </button>
                     </div>
                     <div
-                        v-else
-                        class="input-group mb-3"
+                        v-if="organization !== undefined"
+                        class="container-fluid mb-3"
                     >
-                        NO CARDS
+                        <p class="text-center">Школа: {{ organization.name }}</p>
                     </div>
-                    <div class="input-group">
+                    <div
+                        v-if="divisions.length > 0"
+                        class="input-group"
+                    >
                         <div class="input-group-prepend">
                             <label class="input-group-text" for="student-division">Класс</label>
                         </div>
@@ -192,26 +243,39 @@
     export default {
         name: "PostregAddStudentForm",
 
+        data() {
+            return {
+                codeManualInput: false,
+                codeManuallyEntered: null,
+                codeChecking: false,
+                codeReceived: null
+            }
+        },
+
         computed: {
             student() {
                 return this.$store.state.postreg.currentStudent
             },
 
-            cards() {
-                return this.$store.state.postreg.cards
+            codes() {
+                return this.$store.state.postreg.codes
             },
 
-            activeCardsCount() {
-                return this.$store.getters['postreg/getActiveCardsCount']
+            activeCodesCount() {
+                return this.$store.getters['postreg/getActiveCodesCount']
+            },
+
+            organization() {
+                return this.$store.getters['postreg/getOrganizationByCode'](this.student.code)
             },
 
             divisions() {
-                return this.$store.getters['postreg/getDivisionsByCard'](this.student.card)
+                return this.$store.getters['postreg/getDivisionsByCode'](this.student.code)
             },
 
             buttonDisabled() {
-                return this.student.f === null || this.student.i === null || this.student.o === null || this.student.gender === null || this.student.birthday === null || this.student.card === null ||
-                    this.student.f === '' || this.student.i === '' || this.student.o === '' || this.student.gender === '' || this.student.birthday === '' || this.student.card === ''
+                return this.student.f === null || this.student.i === null || this.student.o === null || this.student.gender === null || this.student.birthday === null || this.student.code === null ||
+                    this.student.f === '' || this.student.i === '' || this.student.o === '' || this.student.gender === '' || this.student.birthday === '' || this.student.code === ''
                     || ! this.checkInputForF(this.student.f) || ! this.checkInput(this.student.i) || ! this.checkInput(this.student.o) || this.student.division === 0
             },
 
@@ -223,19 +287,37 @@
 
             windowType() {
                 return this.$store.state.postreg.studentFormType
+            },
+
+            codeToCheck: {
+                get() {
+                    if (this.codeManuallyEntered === null) {
+                        return ''
+                    }
+                    return this.codeManuallyEntered
+                },
+
+                set(code) {
+                    this.codeReceived = null
+                    this.codeManuallyEntered = code
+                }
+            },
+
+            checkButtonDisabled() {
+                return this.codeManuallyEntered === null || this.codeManuallyEntered === '' || this.codeChecking
             }
         },
 
         methods: {
             addStudent() {
                 this.$store.commit('postreg/addStudent', this.student)
-                this.$store.commit('postreg/setCardActivatedStatus', {cardId: this.student.card, status: 1})
+                this.$store.commit('postreg/setCodeActivatedStatus', {codeId: this.student.code, status: 1})
                 $('#addStudentForm').modal('hide')
             },
 
             saveStudent() {
                 this.$store.commit('postreg/saveStudent', this.student)
-                this.$store.commit('postreg/setCardActivatedStatus', {cardId: this.student.card, status: 1})
+                this.$store.commit('postreg/setCodeActivatedStatus', {codeId: this.student.code, status: 1})
                 $('#addStudentForm').modal('hide')
             },
 
@@ -259,6 +341,29 @@
                 return {
                     'is-invalid': input !== null && input !== '' && ! this.checkInputForF(input) && input.length >= 2
                 }
+            },
+
+            checkCodeCode() {
+                this.codeChecking = true
+                this.$store.dispatch('postreg/getReferral', this.codeManuallyEntered)
+                    .then(response => {
+                        if (response !== 0) {
+                            this.codeReceived = response
+                        }
+                        this.codeChecking = false
+                    })
+                    .catch(error => {
+                        if (this.$store.state.debug) console.log(error)
+                        this.codeChecking = false
+                    })
+            },
+
+            saveCode() {
+                this.$store.commit('postreg/addCode', this.codeReceived)
+                this.student.code = this.codeReceived.id
+                this.codeManuallyEntered = null
+                this.codeReceived = null
+                this.codeManualInput = false
             }
         }
     }
