@@ -97,6 +97,7 @@
                     <div class="container-fluid row mt-3">
                         <div
                             v-for="student of students"
+                            :key="student.id"
                             class="d-flex col-12 justify-content-center"
                         >
                             <div
@@ -123,7 +124,7 @@
                                         <p class="card-text small">{{ parseDate(student.birthday) }}</p>
                                     </div>
                                     <div class="d-flex justify-content-center">
-                                        <h5>{{ getDivisionName(student.division) }}</h5>
+                                        <h5>{{ getOrganizationName(student.organization) }}{{ getDivisionName(student.division) }}</h5>
                                     </div>
                                     <button
                                         type="button"
@@ -229,12 +230,12 @@
                 return this.$store.state.postreg.roles
             },
 
-            students() {
-                return this.$store.state.postreg.students
+            student() {
+                return this.$store.state.postreg.currentStudent
             },
 
-            divisions() {
-                return this.$store.getters['postreg/getDivisionsByCode'](this.student.code)
+            students() {
+                return this.$store.state.postreg.students
             },
 
             userChecked() {
@@ -269,6 +270,7 @@
             },
 
             showAddForm() {
+                this.student.id = this.$store.getters['postreg/studentsCount'] + 1
                 this.$store.commit('postreg/setStudentFormType', 'add')
                 $('#addStudentForm').modal('show')
             },
@@ -296,6 +298,11 @@
                     day: 'numeric'
                 };
                 return date.toLocaleString("ru", options)
+            },
+
+            getOrganizationName(organizationId) {
+                if (organizationId === 0) return ''
+                return this.$store.getters['postreg/getOrganizationById'](organizationId).name + ' - '
             },
 
             getDivisionName(divisionId) {
@@ -326,7 +333,7 @@
                     if (this.$store.state.postreg.currentStudent.code !== this.$store.state.postreg.studentToUpdate.code) {
                         this.$store.commit('postreg/setCodeActivatedStatus', {
                             codeId: this.$store.state.postreg.studentToUpdate.code,
-                            status: 0
+                            activated: 0
                         })
                     }
                 }

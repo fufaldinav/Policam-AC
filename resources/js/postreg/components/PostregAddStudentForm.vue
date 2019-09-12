@@ -115,6 +115,7 @@
                             v-model="student.code"
                             class="custom-select"
                             id="student-code"
+                            @change="student.division = 0"
                             required
                         >
                             <option disabled value="0">Выберите карту...</option>
@@ -133,29 +134,34 @@
                             id="student-code"
                             type="text"
                             class="form-control"
+                            :class="{'is-invalid': codeIsInvalid}"
                             placeholder="Номер с карты/браслета"
+                            @focus="codeManualInput = true"
                             required
                         >
+                        <div class="invalid-feedback text-center">
+                            Код занят или не найден
+                        </div>
                     </div>
                     <div class="container-fluid mb-3 d-flex justify-content-end">
                         <button
-                            v-if="! codeManualInput && activeCodesCount > 0"
+                            v-if="! codeManualInput && (activeCodesCount > 0 || student.code > 0)"
                             type="button"
                             class="btn btn-warning"
-                            @click="codeManualInput = true"
+                            @click="activateManualInput"
                         >
                             Ручной ввод карты
                         </button>
                         <button
-                            v-if="codeManualInput && activeCodesCount > 0"
+                            v-if="codeManualInput"
                             type="button"
                             class="btn btn-secondary mr-2"
-                            @click="codeManualInput = false"
+                            @click="deactivateManualInput"
                         >
                             Отмена
                         </button>
                         <button
-                            v-if="(codeManualInput || activeCodesCount === 0) && codeReceived === null"
+                            v-if="codeManualInput && codeReceived === null"
                             type="button"
                             class="btn btn-primary"
                             :disabled="checkButtonDisabled"
@@ -185,16 +191,17 @@
                         <p class="text-center">Школа: {{ organization.name }}</p>
                     </div>
                     <div
-                        v-if="student.code > 0 && organization === undefined && ! organizationsLoading"
+                        v-if="student.code > 0 && organization === undefined && ! loading"
                         class="input-group mb-3"
                     >
                         <div class="input-group-prepend">
                             <label class="input-group-text" for="student-organization">Школа</label>
                         </div>
                         <select
-                            v-model="organizationManuallySelected"
+                            v-model="student.organization"
                             class="custom-select"
                             id="student-organization"
+                            @change="loadDivisions($event)"
                             required
                         >
                             <option disabled value="0">Выберите школу...</option>
@@ -237,7 +244,13 @@
                     Заполнены не все поля!
                 </p>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отменить</button>
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-dismiss="modal"
+                    >
+                        Отменить
+                    </button>
                     <button
                         v-if="windowType === 'add'"
                         type="button"
@@ -269,11 +282,13 @@
         data() {
             return {
                 codeManualInput: false,
-                codeManuallyEntered: null,
+                codeManuallyEntered: '',
                 codeChecking: false,
                 codeReceived: null,
-                organizationManuallySelected: null,
-                organizationsLoading: false
+                codeIsInvalid: false,
+                oldCode: 0,
+                oldOrganization: 0,
+                loading: false
             }
         },
 
@@ -299,12 +314,26 @@
             },
 
             divisions() {
-                return this.$store.getters['postreg/getDivisionsByCode'](this.student.code)
+                let organizationId = 0
+
+                if (this.student.organization > 0) {
+                    organizationId = this.student.organization
+                } else {
+                    let organization = this.$store.getters['postreg/getOrganizationByCode'](this.student.code)
+
+                    if (organization === undefined) {
+                        return []
+                    } else {
+                        organizationId = organization.id
+                    }
+                }
+
+                return this.$store.getters['postreg/getDivisionsByOrg'](organizationId)
             },
 
             buttonDisabled() {
-                return this.student.f === null || this.student.i === null || this.student.o === null || this.student.gender === null || this.student.birthday === null || this.student.code === null ||
-                    this.student.f === '' || this.student.i === '' || this.student.o === '' || this.student.gender === '' || this.student.birthday === '' || this.student.code === ''
+                return this.student.f === null || this.student.i === null || this.student.o === null || this.student.gender === null || this.student.birthday === null || this.student.code === 0 ||
+                    this.student.f === '' || this.student.i === '' || this.student.o === '' || this.student.gender === '' || this.student.birthday === ''
                     || ! this.checkInputForF(this.student.f) || ! this.checkInput(this.student.i) || ! this.checkInput(this.student.o) || this.student.division === 0
             },
 
@@ -320,33 +349,36 @@
 
             codeToCheck: {
                 get() {
-                    if (this.codeManuallyEntered === null) {
-                        return ''
-                    }
                     return this.codeManuallyEntered
                 },
 
                 set(code) {
                     this.codeReceived = null
+                    this.codeIsInvalid = false
+                    this.codeManualInput = true
                     this.codeManuallyEntered = code
                 }
             },
 
             checkButtonDisabled() {
-                return this.codeManuallyEntered === null || this.codeManuallyEntered === '' || this.codeChecking
+                return this.codeManuallyEntered === '' || this.codeChecking
             }
         },
 
         methods: {
             addStudent() {
+                this.student.gender = parseInt(this.student.gender, 10)
                 this.$store.commit('postreg/addStudent', this.student)
-                this.$store.commit('postreg/setCodeActivatedStatus', {codeId: this.student.code, status: 1})
+                this.$store.commit('postreg/setCodeActivatedStatus', {codeId: this.student.code, activated: 1})
                 $('#addStudentForm').modal('hide')
             },
 
             saveStudent() {
+                if (typeof this.student.gender === 'string') {
+                    this.student.gender = parseInt(this.student.gender, 10)
+                }
                 this.$store.commit('postreg/saveStudent', this.student)
-                this.$store.commit('postreg/setCodeActivatedStatus', {codeId: this.student.code, status: 1})
+                this.$store.commit('postreg/setCodeActivatedStatus', {codeId: this.student.code, activated: 1})
                 $('#addStudentForm').modal('hide')
             },
 
@@ -376,7 +408,9 @@
                 this.codeChecking = true
                 this.$store.dispatch('postreg/getReferral', this.codeManuallyEntered)
                     .then(response => {
-                        if (response !== 0) {
+                        if (response === 0) {
+                            this.codeIsInvalid = true
+                        } else {
                             this.codeReceived = response
                         }
                         this.codeChecking = false
@@ -390,7 +424,7 @@
             saveCode() {
                 this.$store.commit('postreg/addCode', this.codeReceived)
                 this.student.code = this.codeReceived.id
-                this.organizationsLoading = true
+                this.loading = true
                 this.$store.dispatch('postreg/loadOrganization', this.codeReceived.organization_id)
                     .then(response => {
                         if (response.length > 0) {
@@ -417,14 +451,49 @@
                                     if (this.$store.state.debug) console.log(error)
                                 })
                         }
-                        this.organizationsLoading = false
+                        this.loading = false
                     })
                     .catch(error => {
                         if (this.$store.state.debug) console.log(error)
                     })
-                this.codeManuallyEntered = null
+                this.codeManuallyEntered = ''
                 this.codeReceived = null
                 this.codeManualInput = false
+            },
+
+            activateManualInput() {
+                this.oldCode = this.student.code
+                this.student.code = 0
+                this.oldOrganization = this.student.organization
+                this.student.organization = 0
+                this.codeManualInput = true
+            },
+
+            deactivateManualInput() {
+                this.student.code = this.oldCode
+                this.oldCode = 0
+                this.codeManuallyEntered = ''
+                this.codeIsInvalid = false
+                this.student.organization = this.oldOrganization
+                this.oldOrganization = 0
+                this.codeManualInput = false
+            },
+
+            loadDivisions(event) {
+                this.student.division = 0
+                let organizationId = parseInt(event.target.value, 10)
+
+                if (this.$store.getters['postreg/getDivisionsByOrg'](organizationId).length > 0) return
+
+                this.$store.dispatch('postreg/loadDivisions', organizationId)
+                    .then(response => {
+                        for (let division of response) {
+                            this.$store.commit('postreg/addDivision', division)
+                        }
+                    })
+                    .catch(error => {
+                        if (this.$store.state.debug) console.log(error)
+                    })
             }
         }
     }

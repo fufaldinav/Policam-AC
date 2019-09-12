@@ -8,17 +8,14 @@ const state = {
         {'type': 4, 'name': 'Родитель'},
         {'type': 9, 'name': 'Сотрудник'}
     ],
-    currentStudent: {id: 0, f: null, i: null, o: null, gender: null, birthday: null, code: 0, division: 0},
-    studentToUpdate: {id: 0, f: null, i: null, o: null, gender: null, birthday: null, code: 0, division: 0},
-    students: [
-        {f: 'Иванов', i: 'Пётр', o: 'Сергеевич', gender: 1, birthday: '2010-10-24', code: 0, division: 0},
-        {f: 'Иванова', i: 'Лилия', o: 'Сергеевна', gender: 2, birthday: '2011-11-23', code: 0, division: 0}
-    ],
+    currentStudent: {id: 0, f: null, i: null, o: null, gender: null, birthday: null, code: 0, organization: 0, division: 0},
+    studentToUpdate: {id: 0, f: null, i: null, o: null, gender: null, birthday: null, code: 0, organization: 0, division: 0},
+    students: [],
     codes: [],
     studentFormType: 'add',
     organizations: [],
     divisions: [],
-    user: {id: 0, f: null, i: null, o: null, gender: null, birthday: null, code: 0},
+    user: {id: 0, f: null, i: null, o: null, gender: null, birthday: null, code: 0, organization: 0, division: 0},
     userChecked: false
 }
 
@@ -34,12 +31,14 @@ const getters = {
         return div
     },
 
-    getDivisionsByCode: state => codeId => {
-        let code = state.codes.find(code => code.id === parseInt(codeId, 10))
-        if (code === undefined) return []
-        let org = state.organizations.find(org => org.id === code.organization_id)
-        if (org === undefined) return []
-        return state.divisions.filter(div => div.organization_id === org.id)
+    getDivisionsByOrg: state => orgId => {
+        return state.divisions.filter(div => div.organization_id === orgId)
+    },
+
+    getOrganizationById: state => organizationId => {
+        let org = state.organizations.find(org => org.id === organizationId)
+        if (org === undefined) return
+        return org
     },
 
     getOrganizationByCode: state => codeId => {
@@ -48,7 +47,11 @@ const getters = {
         let org = state.organizations.find(org => org.id === code.organization_id)
         if (org === undefined) return
         return org
-    }
+    },
+
+    studentsCount: state => {
+        return state.students.length
+    },
 }
 
 const mutations = {
@@ -107,8 +110,8 @@ const mutations = {
     },
 
     clearCurrentStudent(state, commit) {
-        state.currentStudent = {f: null, i: null, o: null, gender: null, birthday: null, code: 0, division: 0}
-        state.studentToUpdate = {f: null, i: null, o: null, gender: null, birthday: null, code: 0, division: 0}
+        state.currentStudent = {id: 0, f: null, i: null, o: null, gender: null, birthday: null, code: 0, organization: 0, division: 0}
+        state.studentToUpdate = {id: 0, f: null, i: null, o: null, gender: null, birthday: null, code: 0, organization: 0, division: 0}
     },
 
     revertStudent(state) {
@@ -138,7 +141,7 @@ const mutations = {
     setCodeActivatedStatus(state, payload) {
         let code = state.codes.find(code => code.id === payload.codeId)
         if (code !== undefined) {
-            code.activated = payload.status
+            code.activated = payload.activated
         }
     }
 }
@@ -165,10 +168,16 @@ const actions = {
                                         if (rootState.debug) console.log(error)
                                     })
                             }
+                            if (response.length === 0) {
+                                commit('changeLoadingState', false)
+                            }
                         })
                         .catch(error => {
                             if (rootState.debug) console.log(error)
                         })
+                }
+                if (response.data.length === 0) {
+                    commit('changeLoadingState', false)
                 }
             })
             .catch(error => {
