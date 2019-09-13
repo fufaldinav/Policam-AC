@@ -39,6 +39,7 @@
 
         methods: {
             removeStudent() {
+                this.$store.commit('postreg/setCodeActivatedStatus', {codeId: this.student.code, activated: 0})
                 this.$store.commit('postreg/removeStudent', this.student)
                 $('#confirmRemoveStudent').modal('hide')
             }

@@ -2,33 +2,61 @@ import Vue from 'vue'
 
 const state = {
     loading: true,
-    step: 2,
+    step: 3,
     myRoles: [4, 9],
     roles: [
         {'type': 4, 'name': 'Родитель'},
         {'type': 9, 'name': 'Сотрудник'}
     ],
-    currentStudent: {id: 0, f: null, i: null, o: null, gender: null, birthday: null, code: 0, organization: 0, division: 0},
-    studentToUpdate: {id: 0, f: null, i: null, o: null, gender: null, birthday: null, code: 0, organization: 0, division: 0},
+    currentStudent: {
+        id: 0,
+        f: null,
+        i: null,
+        o: null,
+        gender: null,
+        birthday: null,
+        code: 0,
+        organization: 0,
+        division: 0
+    },
+    studentToUpdate: {
+        id: 0,
+        f: null,
+        i: null,
+        o: null,
+        gender: null,
+        birthday: null,
+        code: 0,
+        organization: 0,
+        division: 0
+    },
     students: [],
     codes: [],
     studentFormType: 'add',
     organizations: [],
     divisions: [],
-    user: {id: 0, f: null, i: null, o: null, gender: null, birthday: null, code: 0, organization: 0, division: 0},
+    user: {id: 0, f: 'Ав', i: 'Ав', o: 'Ав', gender: 1, birthday: '2019-01-22', code: 0, organization: 0},
     userChecked: false
 }
 
 const getters = {
+    getCodeById: state => codeId => {
+        return state.codes.find(code => code.id === codeId)
+    },
+
     getActiveCodesCount: state => {
         let codes = state.codes.filter(code => code.activated === 0)
         return codes.length
     },
 
+    checkCodeActivity: state => code => {
+        let ref = state.codes.find(ref => ref.code === code)
+        if (ref === undefined) return false
+        return ref.activated
+    },
+
     getDivisionById: state => divisionId => {
-        let div = state.divisions.find(div => div.id === divisionId)
-        if (div === undefined) return
-        return div
+        return state.divisions.find(div => div.id === divisionId)
     },
 
     getDivisionsByOrg: state => orgId => {
@@ -36,9 +64,7 @@ const getters = {
     },
 
     getOrganizationById: state => organizationId => {
-        let org = state.organizations.find(org => org.id === organizationId)
-        if (org === undefined) return
-        return org
+        return state.organizations.find(org => org.id === organizationId)
     },
 
     getOrganizationByCode: state => codeId => {
@@ -110,8 +136,28 @@ const mutations = {
     },
 
     clearCurrentStudent(state, commit) {
-        state.currentStudent = {id: 0, f: null, i: null, o: null, gender: null, birthday: null, code: 0, organization: 0, division: 0}
-        state.studentToUpdate = {id: 0, f: null, i: null, o: null, gender: null, birthday: null, code: 0, organization: 0, division: 0}
+        state.currentStudent = {
+            id: 0,
+            f: null,
+            i: null,
+            o: null,
+            gender: null,
+            birthday: null,
+            code: 0,
+            organization: 0,
+            division: 0
+        }
+        state.studentToUpdate = {
+            id: 0,
+            f: null,
+            i: null,
+            o: null,
+            gender: null,
+            birthday: null,
+            code: 0,
+            organization: 0,
+            division: 0
+        }
     },
 
     revertStudent(state) {

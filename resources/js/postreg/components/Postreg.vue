@@ -80,7 +80,8 @@
                         Нажмите кнопку ниже и Вы увидете форму, где необходимо внести данные.
                     </p>
                     <p class="mt-2 px-2 px-xl-5">
-                        На этом этапе необходимо выбрать, в каком классе учится Ваш ребенок. Дополнительное образование мы выберем на следующем шаге.
+                        На этом этапе необходимо выбрать, в каком классе учится Ваш ребенок. Дополнительное образование
+                        мы выберем на следующем шаге.
                     </p>
                     <p class="mt-2 px-2 px-xl-5">
                         <b>Внимание!</b> При заполнении будьте предельно внимательны, ошибки недопустимы!
@@ -124,7 +125,8 @@
                                         <p class="card-text small">{{ parseDate(student.birthday) }}</p>
                                     </div>
                                     <div class="d-flex justify-content-center">
-                                        <h5>{{ getOrganizationName(student.organization) }}{{ getDivisionName(student.division) }}</h5>
+                                        <h5>{{ getOrganizationName(student.organization) }}{{
+                                            getDivisionName(student.division) }}</h5>
                                     </div>
                                     <button
                                         type="button"
@@ -167,6 +169,31 @@
                     <p class="mt-2 px-2 px-xl-5">
                         При заполнении будьте предельно внимательны, ошибки недопустимы!
                     </p>
+                    <div
+                        v-if="userChecked"
+                        class="container-fluid row mt-3"
+                    >
+                        <div class="d-flex col-12 justify-content-center">
+                            <div
+                                :class="bgClass(user)"
+                                class="card mt-2 rounded-0 border-0 shadow-sm"
+                                style="width: 18rem;"
+                            >
+                                <div class="card-body">
+                                    <h5 class="mr-auto card-title">
+                                        {{ user.f }} {{ user.i }} ({{user.gender === 1 ? 'М' : 'Ж'}})
+                                    </h5>
+                                    <div class="d-flex">
+                                        <p class="mr-auto card-text">{{ user.o }}</p>
+                                        <p class="card-text small">{{ parseDate(user.birthday) }}</p>
+                                    </div>
+                                    <div class="d-flex justify-content-center">
+                                        <h5>{{ getOrganizationName(user.organization) }}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="d-flex container-fluid justify-content-center mt-2">
                         <button
                             type="button"
@@ -238,6 +265,10 @@
                 return this.$store.state.postreg.students
             },
 
+            user() {
+                return this.$store.state.postreg.user
+            },
+
             userChecked() {
                 return this.$store.state.postreg.userChecked
             }
@@ -302,12 +333,17 @@
 
             getOrganizationName(organizationId) {
                 if (organizationId === 0) return ''
-                return this.$store.getters['postreg/getOrganizationById'](organizationId).name + ' - '
+                return this.$store.getters['postreg/getOrganizationById'](organizationId).name
             },
 
             getDivisionName(divisionId) {
-                if (divisionId === 0) return 'Класс не выбран'
-                return this.$store.getters['postreg/getDivisionById'](divisionId).name
+                let name =  ' - '
+                if (divisionId === 0) {
+                    name += 'Класс не выбран'
+                } else {
+                    name += this.$store.getters['postreg/getDivisionById'](divisionId).name
+                }
+                return name
             },
 
             bgClass(student) {

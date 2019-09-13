@@ -112,18 +112,22 @@
                         </div>
                         <select
                             v-if="(activeCodesCount > 0 || student.code > 0) && ! codeManualInput"
-                            v-model="student.code"
                             class="custom-select"
                             id="student-code"
-                            @change="student.division = 0"
+                            @change.prevent="codeChanged($event)"
                             required
                         >
-                            <option disabled value="0">Выберите карту...</option>
+                            <option
+                                disabled
+                                :selected="student.code === 0"
+                                value="0">
+                                Выберите карту...
+                            </option>
                             <option
                                 v-for="code of codes"
-                                v-if="code.activated === 0 || student.code === code.id"
                                 :key="code.id"
                                 :value="code.id"
+                                :disabled="code.activated === 1 && student.code !== code.id"
                             >
                                 {{ code.code }}
                             </option>
@@ -178,7 +182,7 @@
                         <button
                             v-if="(codeManualInput || activeCodesCount === 0) && codeReceived !== null"
                             type="button"
-                            class="btn btn-primary"
+                            class="btn btn-success"
                             @click="saveCode"
                         >
                             Сохранить
@@ -368,6 +372,7 @@
                 this.student.gender = parseInt(this.student.gender, 10)
                 this.$store.commit('postreg/addStudent', this.student)
                 this.$store.commit('postreg/setCodeActivatedStatus', {codeId: this.student.code, activated: 1})
+                this.$store.commit('postreg/setCodeActivatedStatus', {codeId: this.oldCode, activated: 0})
                 $('#addStudentForm').modal('hide')
             },
 
@@ -377,6 +382,7 @@
                 }
                 this.$store.commit('postreg/saveStudent', this.student)
                 this.$store.commit('postreg/setCodeActivatedStatus', {codeId: this.student.code, activated: 1})
+                this.$store.commit('postreg/setCodeActivatedStatus', {codeId: this.oldCode, activated: 0})
                 $('#addStudentForm').modal('hide')
             },
 
@@ -402,58 +408,40 @@
                 }
             },
 
+            codeChanged(event) {
+                this.student.division = 0
+                this.oldCode = this.student.code
+                this.student.code = parseInt(event.target.value, 10)
+                this.loadOrganizations(this.student.code)
+            },
+
             checkCodeCode() {
                 this.codeChecking = true
-                this.$store.dispatch('postreg/getReferral', this.codeManuallyEntered)
-                    .then(response => {
-                        if (response === 0) {
-                            this.codeIsInvalid = true
-                        } else {
-                            this.codeReceived = response
-                        }
-                        this.codeChecking = false
-                    })
-                    .catch(error => {
-                        if (this.$store.state.debug) console.log(error)
-                        this.codeChecking = false
-                    })
+                if (this.$store.getters['postreg/checkCodeActivity'](this.codeManuallyEntered)) {
+                    this.codeIsInvalid = true
+                    this.codeChecking = false
+                } else {
+                    this.$store.dispatch('postreg/getReferral', this.codeManuallyEntered)
+                        .then(response => {
+                            if (response === 0) {
+                                this.codeIsInvalid = true
+                            } else {
+                                this.codeReceived = response
+                            }
+                            this.codeChecking = false
+                        })
+                        .catch(error => {
+                            if (this.$store.state.debug) console.log(error)
+                            this.codeChecking = false
+                        })
+                }
             },
 
             saveCode() {
                 this.$store.commit('postreg/addCode', this.codeReceived)
                 this.student.code = this.codeReceived.id
-                this.loading = true
-                this.$store.dispatch('postreg/loadOrganization', this.codeReceived.organization_id)
-                    .then(response => {
-                        if (response.length > 0) {
-                            for (let organization of response) {
-                                this.$store.commit('postreg/addOrganization', organization)
-                                this.$store.dispatch('postreg/loadDivisions', organization.id)
-                                    .then(response => {
-                                        for (let division of response) {
-                                            this.$store.commit('postreg/addDivision', division)
-                                        }
-                                    })
-                                    .catch(error => {
-                                        if (this.$store.state.debug) console.log(error)
-                                    })
-                            }
-                        } else {
-                            this.$store.dispatch('postreg/loadOrganizations')
-                                .then(response => {
-                                    for (let organization of response) {
-                                        this.$store.commit('postreg/addOrganization', organization)
-                                    }
-                                })
-                                .catch(error => {
-                                    if (this.$store.state.debug) console.log(error)
-                                })
-                        }
-                        this.loading = false
-                    })
-                    .catch(error => {
-                        if (this.$store.state.debug) console.log(error)
-                    })
+                this.$store.commit('postreg/setCodeActivatedStatus', {codeId: this.oldCode, activated: 0})
+                this.loadOrganizations(this.student.code)
                 this.codeManuallyEntered = ''
                 this.codeReceived = null
                 this.codeManualInput = false
@@ -475,6 +463,55 @@
                 this.student.organization = this.oldOrganization
                 this.oldOrganization = 0
                 this.codeManualInput = false
+            },
+
+            loadOrganizations(codeId) {
+                this.loading = true
+
+                let code = this.$store.getters['postreg/getCodeById'](codeId)
+                if (code === undefined) {
+                    this.loading = false
+                    return
+                }
+
+                if (code.organization_id === 0) {
+                    this.$store.dispatch('postreg/loadOrganizations')
+                        .then(response => {
+                            for (let organization of response) {
+                                this.$store.commit('postreg/addOrganization', organization)
+                            }
+                        })
+                        .catch(error => {
+                            if (this.$store.state.debug) console.log(error)
+                        })
+                        .finally(() => {
+                            this.loading = false
+                        })
+                } else if (this.$store.getters['postreg/getOrganizationById'](code.organization_id) === undefined) {
+                    this.$store.dispatch('postreg/loadOrganization', code.organization_id)
+                        .then(response => {
+                            for (let organization of response) {
+                                this.$store.commit('postreg/addOrganization', organization)
+                                this.$store.dispatch('postreg/loadDivisions', organization.id)
+                                    .then(response => {
+                                        for (let division of response) {
+                                            this.$store.commit('postreg/addDivision', division)
+                                        }
+                                    })
+                                    .catch(error => {
+                                        if (this.$store.state.debug) console.log(error)
+                                    })
+                            }
+                        })
+                        .catch(error => {
+                            if (this.$store.state.debug) console.log(error)
+                        })
+                        .finally(() => {
+                            this.loading = false
+                        })
+                } else {
+                    this.loading = false
+                }
             },
 
             loadDivisions(event) {
