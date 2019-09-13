@@ -314,19 +314,17 @@
             },
 
             divisions() {
-                let organizationId = 0
-
-                if (this.student.organization > 0) {
-                    organizationId = this.student.organization
-                } else {
+                if (this.student.organization === 0) {
                     let organization = this.$store.getters['postreg/getOrganizationByCode'](this.student.code)
 
                     if (organization === undefined) {
                         return []
                     } else {
-                        organizationId = organization.id
+                        this.student.organization = organization.id
                     }
                 }
+
+                let organizationId = this.student.organization
 
                 return this.$store.getters['postreg/getDivisionsByOrg'](organizationId)
             },
