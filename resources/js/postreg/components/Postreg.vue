@@ -19,7 +19,7 @@
                         <button
                             type="button"
                             class="btn btn-primary"
-                            @click="toStep(1)"
+                            @click="toStepForward(1)"
                         >
                             Продолжить
                         </button>
@@ -57,7 +57,7 @@
                         <button
                             type="button"
                             class="btn btn-danger mr-2"
-                            @click="toStep(0)"
+                            @click="toStepForward(0)"
                         >
                             Назад
                         </button>
@@ -65,7 +65,7 @@
                             type="button"
                             class="btn btn-primary"
                             :disabled="myRoles.length === 0"
-                            @click="toStep(2)"
+                            @click="toStepForward(2)"
                         >
                             Продолжить
                         </button>
@@ -143,7 +143,7 @@
                         <button
                             type="button"
                             class="btn btn-danger mr-2"
-                            @click="toStep(1)"
+                            @click="toStepForward(1)"
                         >
                             Назад
                         </button>
@@ -151,13 +151,32 @@
                             type="button"
                             class="btn btn-primary"
                             :disabled="students.length === 0"
-                            @click="toStep(3)"
+                            @click="toStepForward(3)"
                         >
                             Продолжить
                         </button>
                     </div>
                 </div>
-                <div v-if="step === 3 && myRoles.indexOf(9) > -1">
+                <div v-if="step === 3 && myRoles.indexOf(4) > -1 && students.length > 0">
+                    <div class="d-flex container-fluid justify-content-center mt-3">
+                        <button
+                            type="button"
+                            class="btn btn-danger mr-2"
+                            @click="toStepForward(2)"
+                        >
+                            Назад
+                        </button>
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            :disabled="students.length === 0"
+                            @click="toStepForward(4)"
+                        >
+                            Продолжить
+                        </button>
+                    </div>
+                </div>
+                <div v-if="step === 4 && myRoles.indexOf(9) > -1">
                     <div class="text-center"><h3>Регистрируем себя</h3>Отлично, Вы выбрали роль "Сотрудник"</div>
                     <p class="mt-2 px-2 px-xl-5">
                         Теперь Вам необходимо зарегистрировать свою карту.
@@ -200,14 +219,14 @@
                             class="btn btn-info"
                             @click="showRegistrationForm()"
                         >
-                            Заполнить анкету
+                            {{ editButtonName }}
                         </button>
                     </div>
                     <div class="d-flex container-fluid justify-content-center mt-2">
                         <button
                             type="button"
                             class="btn btn-danger mr-2"
-                            @click="toStep(1)"
+                            @click="toStepBack(3)"
                         >
                             Назад
                         </button>
@@ -215,7 +234,7 @@
                             type="button"
                             class="btn btn-primary"
                             :disabled="! userChecked"
-                            @click="toStep(3)"
+                            @click="toStepForward(5)"
                         >
                             Продолжить
                         </button>
@@ -271,16 +290,31 @@
 
             userChecked() {
                 return this.$store.state.postreg.userChecked
+            },
+
+            editButtonName() {
+                if (this.userChecked) {
+                    return 'Редактировать анкету'
+                } else {
+                    return 'Заполнить анкету'
+                }
             }
         },
 
         methods: {
-            toStep(step) {
+            toStepForward(step) {
                 if (step === 2 && this.myRoles.indexOf(4) === -1) {
-                    step = 3
-                }
-                if (step === 3 && this.myRoles.indexOf(9) === -1) {
                     step = 4
+                }
+                if (step === 4 && this.myRoles.indexOf(9) === -1) {
+                    step = 5
+                }
+                this.$store.commit('postreg/toStep', step)
+            },
+
+            toStepBack(step) {
+                if (step === 3 && (this.myRoles.indexOf(4) === -1 || this.students.length === 0)) {
+                    step = 2
                 }
                 this.$store.commit('postreg/toStep', step)
             },
@@ -332,14 +366,14 @@
             },
 
             getOrganizationName(organizationId) {
-                if (organizationId === 0) return ''
+                if (organizationId === 0) return 'Н/Д'
                 return this.$store.getters['postreg/getOrganizationById'](organizationId).name
             },
 
             getDivisionName(divisionId) {
                 let name =  ' - '
                 if (divisionId === 0) {
-                    name += 'Класс не выбран'
+                    name += 'Н/Д'
                 } else {
                     name += this.$store.getters['postreg/getDivisionById'](divisionId).name
                 }
@@ -379,7 +413,7 @@
                 this.$store.commit('postreg/clearCurrentStudent', this.student)
             })
 
-            this.$store.dispatch('postreg/loadCodes')
+            this.$store.dispatch('postreg/loadUserInfo')
         }
     }
 </script>

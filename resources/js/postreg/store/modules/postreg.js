@@ -2,8 +2,8 @@ import Vue from 'vue'
 
 const state = {
     loading: true,
-    step: 3,
-    myRoles: [4, 9],
+    step: 0,
+    myRoles: [],
     roles: [
         {'type': 4, 'name': 'Родитель'},
         {'type': 9, 'name': 'Сотрудник'}
@@ -17,6 +17,7 @@ const state = {
         birthday: null,
         code: 0,
         organization: 0,
+        additionalOrganizations: [],
         division: 0
     },
     studentToUpdate: {
@@ -28,14 +29,28 @@ const state = {
         birthday: null,
         code: 0,
         organization: 0,
+        additionalOrganizations: [],
         division: 0
     },
-    students: [],
+    students: [
+        // {
+        //     id: 0,
+        //     f: 'Фуфалдин',
+        //     i: 'Артём',
+        //     o: 'Вячеславович',
+        //     gender: 1,
+        //     birthday: '2019-06-24',
+        //     code: 2,
+        //     organization: 1,
+        //     additionalOrganizations: [],
+        //     division: 9
+        // }
+    ],
     codes: [],
     studentFormType: 'add',
     organizations: [],
     divisions: [],
-    user: {id: 0, f: 'Ав', i: 'Ав', o: 'Ав', gender: 1, birthday: '2019-01-22', code: 0, organization: 0},
+    user: {id: null, f: null, i: null, o: null, gender: null, birthday: null, code: 0, organization: 0},
     userChecked: false
 }
 
@@ -81,6 +96,12 @@ const getters = {
 }
 
 const mutations = {
+    setUserInfo(state, user) {
+        state.user.id = user.id
+        state.user.f = user.last_name
+        state.user.i = user.name
+    },
+
     addCode(state, code) {
         let ref = state.codes.find(ref => (ref.id === code.id))
         if (ref === undefined) {
@@ -135,7 +156,7 @@ const mutations = {
         }
     },
 
-    clearCurrentStudent(state, commit) {
+    clearCurrentStudent(state) {
         state.currentStudent = {
             id: 0,
             f: null,
@@ -145,6 +166,7 @@ const mutations = {
             birthday: null,
             code: 0,
             organization: 0,
+            additionalOrganizations: [],
             division: 0
         }
         state.studentToUpdate = {
@@ -156,6 +178,7 @@ const mutations = {
             birthday: null,
             code: 0,
             organization: 0,
+            additionalOrganizations: [],
             division: 0
         }
     },
@@ -193,48 +216,56 @@ const mutations = {
 }
 
 const actions = {
-    async loadCodes({state, commit, dispatch, rootState}) {
+    async loadUserInfo({commit, dispatch, rootState}) {
         commit('changeLoadingState', true)
-        window.axios.get('/api/codes')
+        window.axios.get('/api/user')
             .then(response => {
-                for (let code of response.data) {
-                    commit('addCode', code)
-                    dispatch('loadOrganization', code.organization_id)
-                        .then(response => {
-                            for (let organization of response) {
-                                commit('addOrganization', organization)
-                                dispatch('loadDivisions', organization.id)
-                                    .then(response => {
-                                        for (let division of response) {
-                                            commit('addDivision', division)
-                                        }
+                commit('setUserInfo', response.data)
+                dispatch('loadCodes')
+                    .then(response => {
+                        for (let code of response) {
+                            if (code.organization_id === 0) continue
+                            commit('addCode', code)
+                            dispatch('loadOrganization', {organizationId: code.organization_id})
+                                .then(response => {
+                                    for (let organization of response) {
+                                        commit('addOrganization', organization)
+                                        dispatch('loadDivisions', organization.id)
+                                            .then(response => {
+                                                for (let division of response) {
+                                                    commit('addDivision', division)
+                                                }
+                                                commit('changeLoadingState', false)
+                                            })
+                                            .catch(error => {
+                                                if (rootState.debug) console.log(error)
+                                            })
+                                    }
+                                    if (response.length === 0) {
                                         commit('changeLoadingState', false)
-                                    })
-                                    .catch(error => {
-                                        if (rootState.debug) console.log(error)
-                                    })
-                            }
-                            if (response.length === 0) {
-                                commit('changeLoadingState', false)
-                            }
-                        })
-                        .catch(error => {
-                            if (rootState.debug) console.log(error)
-                        })
-                }
-                if (response.data.length === 0) {
-                    commit('changeLoadingState', false)
-                }
+                                    }
+                                })
+                                .catch(error => {
+                                    if (rootState.debug) console.log(error)
+                                })
+                        }
+                        if (response.length === 0) {
+                            commit('changeLoadingState', false)
+                        }
+                    })
+                    .catch(error => {
+                        if (rootState.debug) console.log(error)
+                    })
             })
             .catch(error => {
                 if (rootState.debug) console.log(error)
-                setTimeout(dispatch('loadCodes'), 2000) //TODO перезапуск при ошибке
+                setTimeout(dispatch('loadUserInfo'), 2000) //TODO перезапуск при ошибке
             })
     },
 
-    async loadOrganization({commit, dispatch, rootState}, organizationId) {
+    async loadCodes({commit, dispatch, rootState}) {
         return new Promise((resolve, reject) => {
-            window.axios.get('/api/referral/organizations/' + organizationId)
+            window.axios.get('/api/codes/')
                 .then(response => {
                     resolve(response.data)
                 })
@@ -244,9 +275,24 @@ const actions = {
         })
     },
 
-    async loadOrganizations({commit, dispatch, rootState},) {
+    async loadOrganization({commit, dispatch, rootState}, payload) {
+        if (payload.type === undefined) {
+            payload.type = 0
+        }
         return new Promise((resolve, reject) => {
-            window.axios.get('/api/referral/organizations')
+            window.axios.get('/api/referral/organizations/' + payload.type + '/' + payload.organizationId)
+                .then(response => {
+                    resolve(response.data)
+                })
+                .catch(error => {
+                    reject(error)
+                })
+        })
+    },
+
+    async loadOrganizations({commit, dispatch, rootState}, type = 1) {
+        return new Promise((resolve, reject) => {
+            window.axios.get('/api/referral/organizations/' + type)
                 .then(response => {
                     resolve(response.data)
                 })

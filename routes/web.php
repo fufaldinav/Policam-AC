@@ -36,9 +36,10 @@ Route::group(['prefix' => 'api', 'as' => 'api.'], function () {
         Route::post('{id}', 'DivisionsController@update');
         Route::delete('{id}', 'DivisionsController@destroy');
     });
+    Route::get('user', 'ReferralController@getUserInfo');
     Route::get('codes', 'ReferralController@getCodes');
     Route::get('referral/divisions/{organizationId}/{type?}', 'ReferralController@getDivisions');
-    Route::get('referral/organizations/{organizationId?}', 'ReferralController@getOrganizations');
+    Route::get('referral/organizations/{type}/{organizationId?}', 'ReferralController@getOrganizations');
     Route::get('referral/checkcode/{cardCode}', 'ReferralController@getReferral');
 });
 /*

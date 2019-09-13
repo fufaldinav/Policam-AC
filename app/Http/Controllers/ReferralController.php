@@ -51,6 +51,13 @@ class ReferralController extends Controller
         return view('postreg/index');
     }
 
+    public function getUserInfo(Request $request)
+    {
+        $user = App\User::where('id', $request->user()->id)->select('id', 'name', 'last_name')->first();
+
+        return response()->json($user);
+    }
+
     public function getCodes(Request $request)
     {
         $referralCodes = $request->user()->referralCodes()->select('id', 'code', 'organization_id', 'activated')->get();
@@ -65,12 +72,14 @@ class ReferralController extends Controller
         return response()->json($divisions);
     }
 
-    public function getOrganizations(int $organizationId = null)
+    public function getOrganizations(int $type, int $organizationId = null)
     {
         if (isset($organizationId)) {
-            $organizations = App\Organization::where(['id' => $organizationId, 'type' => 1])->select('id', 'name')->get();
+            $organizations = App\Organization::where('id', $organizationId)->select('id', 'name')->get();
+        } else if ($type > 0) {
+            $organizations = App\Organization::where('type', $type)->select('id', 'name')->get();
         } else {
-            $organizations = App\Organization::where(['type' => 1])->select('id', 'name')->get();
+            $organizations = App\Organization::where('type', '<>', 0)->select('id', 'name')->get();
         }
 
         return response()->json($organizations);
