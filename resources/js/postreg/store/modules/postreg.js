@@ -1,8 +1,26 @@
-import Vue from 'vue'
+function naturalCompare(a, b) {
+    let ax = [], bx = []
+
+    a.replace(/(\d+)|(\D+)/g, function (_, $1, $2) {
+        ax.push([$1 || Infinity, $2 || ''])
+    })
+    b.replace(/(\d+)|(\D+)/g, function (_, $1, $2) {
+        bx.push([$1 || Infinity, $2 || ''])
+    })
+
+    while (ax.length && bx.length) {
+        let an = ax.shift()
+        let bn = bx.shift()
+        let nn = (an[0] - bn[0]) || an[1].localeCompare(bn[1])
+        if (nn) return nn
+    }
+
+    return ax.length - bx.length
+}
 
 const state = {
     loading: true,
-    step: 0,
+    step: 5,
     myRoles: [],
     roles: [
         {'type': 4, 'name': 'Родитель'},
@@ -32,20 +50,7 @@ const state = {
         additionalOrganizations: [],
         division: 0
     },
-    students: [
-        // {
-        //     id: 0,
-        //     f: 'Фуфалдин',
-        //     i: 'Артём',
-        //     o: 'Вячеславович',
-        //     gender: 1,
-        //     birthday: '2019-06-24',
-        //     code: 2,
-        //     organization: 1,
-        //     additionalOrganizations: [],
-        //     division: 9
-        // }
-    ],
+    students: [],
     codes: [],
     studentFormType: 'add',
     organizations: [],
@@ -93,6 +98,40 @@ const getters = {
     studentsCount: state => {
         return state.students.length
     },
+
+    getSortedDivisionsByOrg: state => orgId => {
+        state.divisions.sort((a, b) => {
+            if (a.type < b.type) return -1
+            if (a.type > b.type) return 1
+            let sortByName = naturalCompare(a.name, b.name)
+            if (sortByName !== 0) return sortByName
+            return 0
+        })
+
+        return state.divisions.filter(div => div.organization_id === orgId)
+    },
+
+    getSortedOrganizations: state => {
+        return state.organizations.sort((a, b) => {
+            if (a.type < b.type) return -1
+            if (a.type > b.type) return 1
+            let sortByName = naturalCompare(a.name, b.name)
+            if (sortByName !== 0) return sortByName
+            return 0
+        })
+    },
+
+    getSortedStudents: state => {
+        return state.students.sort((a, b) => {
+            if (a.f < b.f) return -1
+            if (a.f > b.f) return 1
+            if (a.i < b.i) return -1
+            if (a.i > b.i) return 1
+            if (a.o < b.o) return -1
+            if (a.o > b.o) return 1
+            return 0
+        })
+    }
 }
 
 const mutations = {
@@ -120,6 +159,13 @@ const mutations = {
         let div = state.divisions.find(div => (div.id === division.id))
         if (div === undefined) {
             state.divisions.push(division)
+        }
+    },
+
+    addAdditionalOrganization(state, ao) {
+        let org = state.organizations.find(org => (org.id === ao.id))
+        if (org === undefined) {
+            state.additionalOrganizations.push(ao)
         }
     },
 
@@ -156,6 +202,11 @@ const mutations = {
         }
     },
 
+    setCurrentStudent(state, student) {
+        state.currentStudent = student
+        state.studentToUpdate = JSON.parse(JSON.stringify(student))
+    },
+
     clearCurrentStudent(state) {
         state.currentStudent = {
             id: 0,
@@ -188,11 +239,6 @@ const mutations = {
         if (index > -1) {
             state.students.splice(index, 1, JSON.parse(JSON.stringify(state.studentToUpdate)))
         }
-    },
-
-    setCurrentStudent(state, student) {
-        state.currentStudent = student
-        state.studentToUpdate = JSON.parse(JSON.stringify(student))
     },
 
     setStudentFormType(state, type) {
@@ -317,6 +363,22 @@ const actions = {
     async getReferral({rootState}, code) {
         return new Promise((resolve, reject) => {
             window.axios.get('/api/referral/checkcode/' + code)
+                .then(response => {
+                    resolve(response.data)
+                })
+                .catch(error => {
+                    reject(error)
+                })
+        })
+    },
+
+    async sendDataToServer({state}) {
+        return new Promise((resolve, reject) => {
+            window.axios.post('/api/referral/data', {
+                myRoles: state.myRoles,
+                students: state.students,
+                user: state.user
+            })
                 .then(response => {
                     resolve(response.data)
                 })

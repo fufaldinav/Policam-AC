@@ -208,13 +208,13 @@
                             id="student-organization"
                             required
                         >
-                            <option disabled value="0">Выберите школу...</option>
+                            <option disabled value="0">Выберите организацию...</option>
                             <option
                                 v-for="organization of organizations"
                                 :key="organization.id"
                                 :value="organization.id"
                             >
-                                {{ organization.name }}
+                                {{ organization.name }}, {{ organization.address }}
                             </option>
                         </select>
                     </div>
@@ -276,10 +276,11 @@
                 let org = this.$store.getters['postreg/getOrganizationByCode'](this.user.code)
                 if (org === undefined) return
                 this.user.organization = org.id
+                return org
             },
 
             organizations() {
-                return this.$store.state.postreg.organizations
+                return this.$store.getters['postreg/getSortedOrganizations']
             },
 
             activeCodesCount() {
@@ -290,12 +291,6 @@
                 return this.user.f === null || this.user.i === null || this.user.o === null || this.user.gender === null || this.user.birthday === null || this.user.code === 0 ||
                     this.user.f === '' || this.user.i === '' || this.user.o === '' || this.user.gender === '' || this.user.birthday === ''
                     || ! this.checkInputForF(this.user.f) || ! this.checkInput(this.user.i) || ! this.checkInput(this.user.o) || this.user.organization === 0
-            },
-
-            buttonDisabledTooltip() {
-                if (this.buttonDisabled) {
-                    return 'Введены не все поля'
-                }
             },
 
             codeToCheck: {

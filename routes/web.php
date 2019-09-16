@@ -41,6 +41,7 @@ Route::group(['prefix' => 'api', 'as' => 'api.'], function () {
     Route::get('referral/divisions/{organizationId}/{type?}', 'ReferralController@getDivisions');
     Route::get('referral/organizations/{type}/{organizationId?}', 'ReferralController@getOrganizations');
     Route::get('referral/checkcode/{cardCode}', 'ReferralController@getReferral');
+    Route::post('referral/data', 'ReferralController@parseData');
 });
 /*
  * Auth

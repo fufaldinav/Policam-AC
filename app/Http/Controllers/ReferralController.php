@@ -75,11 +75,11 @@ class ReferralController extends Controller
     public function getOrganizations(int $type, int $organizationId = null)
     {
         if (isset($organizationId)) {
-            $organizations = App\Organization::where('id', $organizationId)->select('id', 'name')->get();
+            $organizations = App\Organization::where('id', $organizationId)->select('id', 'name', 'address', 'type')->get();
         } else if ($type > 0) {
-            $organizations = App\Organization::where('type', $type)->select('id', 'name')->get();
+            $organizations = App\Organization::where('type', $type)->select('id', 'name', 'address', 'type')->get();
         } else {
-            $organizations = App\Organization::where('type', '<>', 0)->select('id', 'name')->get();
+            $organizations = App\Organization::where('type', '<>', 0)->select('id', 'name', 'address', 'type')->get();
         }
 
         return response()->json($organizations);
@@ -94,5 +94,10 @@ class ReferralController extends Controller
         }
 
         return response()->json($referral);
+    }
+
+    public function parseData(Request $request)
+    {
+        return response()->json($request->input('myRoles'));
     }
 }

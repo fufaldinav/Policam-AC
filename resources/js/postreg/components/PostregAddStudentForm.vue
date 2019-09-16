@@ -127,7 +127,8 @@
                                 v-for="code of codes"
                                 :key="code.id"
                                 :value="code.id"
-                                :disabled="code.activated === 1 && student.code !== code.id"
+                                :disabled="code.activated === 1 && student.code !== code.id && studentToUpdate.code !== code.id"
+                                :selected="student.code === code.id"
                             >
                                 {{ code.code }}
                             </option>
@@ -211,10 +212,11 @@
                             <option disabled value="0">Выберите школу...</option>
                             <option
                                 v-for="organization of organizations"
+                                v-if="organization.type === 1"
                                 :key="organization.id"
                                 :value="organization.id"
                             >
-                                {{ organization.name }}
+                                {{ organization.name }}, {{ organization.address }}
                             </option>
                         </select>
                     </div>
@@ -301,6 +303,10 @@
                 return this.$store.state.postreg.currentStudent
             },
 
+            studentToUpdate() {
+                return this.$store.state.postreg.studentToUpdate
+            },
+
             codes() {
                 return this.$store.state.postreg.codes
             },
@@ -314,7 +320,7 @@
             },
 
             organizations() {
-                return this.$store.state.postreg.organizations
+                return this.$store.getters['postreg/getSortedOrganizations']
             },
 
             divisions() {
@@ -330,7 +336,7 @@
 
                 let organizationId = this.student.organization
 
-                return this.$store.getters['postreg/getDivisionsByOrg'](organizationId)
+                return this.$store.getters['postreg/getSortedDivisionsByOrg'](organizationId)
             },
 
             buttonDisabled() {
@@ -372,7 +378,9 @@
                 this.student.gender = parseInt(this.student.gender, 10)
                 this.$store.commit('postreg/addStudent', this.student)
                 this.$store.commit('postreg/setCodeActivatedStatus', {codeId: this.student.code, activated: 1})
-                this.$store.commit('postreg/setCodeActivatedStatus', {codeId: this.oldCode, activated: 0})
+                if (this.student.code !== this.oldCode) {
+                    this.$store.commit('postreg/setCodeActivatedStatus', {codeId: this.oldCode, activated: 0})
+                }
                 $('#addStudentForm').modal('hide')
             },
 
@@ -382,7 +390,9 @@
                 }
                 this.$store.commit('postreg/saveStudent', this.student)
                 this.$store.commit('postreg/setCodeActivatedStatus', {codeId: this.student.code, activated: 1})
-                this.$store.commit('postreg/setCodeActivatedStatus', {codeId: this.oldCode, activated: 0})
+                if (this.student.code !== this.oldCode) {
+                    this.$store.commit('postreg/setCodeActivatedStatus', {codeId: this.oldCode, activated: 0})
+                }
                 $('#addStudentForm').modal('hide')
             },
 
@@ -428,10 +438,11 @@
                             } else {
                                 this.codeReceived = response
                             }
-                            this.codeChecking = false
                         })
                         .catch(error => {
                             if (this.$store.state.debug) console.log(error)
+                        })
+                        .finally(() => {
                             this.codeChecking = false
                         })
                 }
