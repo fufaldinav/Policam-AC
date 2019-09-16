@@ -214,7 +214,7 @@
                                 :key="organization.id"
                                 :value="organization.id"
                             >
-                                {{ organization.name }}, {{ organization.address }}
+                                {{ organizationFullName(organization) }}
                             </option>
                         </select>
                     </div>
@@ -423,7 +423,7 @@
                             this.loading = false
                         })
                 } else if (this.$store.getters['postreg/getOrganizationById'](code.organization_id) === undefined) {
-                    this.$store.dispatch('postreg/loadOrganization', code.organization_id)
+                    this.$store.dispatch('postreg/loadOrganization', {organizationId: code.organization_id})
                         .then(response => {
                             for (let organization of response) {
                                 this.$store.commit('postreg/addOrganization', organization)
@@ -442,6 +442,14 @@
                 } else {
                     this.loading = false
                 }
+            },
+
+            organizationFullName(organization) {
+                let fullName = organization.name
+                if (organization.address !== null) {
+                    fullName += ', ' + organization.address
+                }
+                return fullName
             }
         }
     }

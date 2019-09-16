@@ -216,7 +216,7 @@
                                 :key="organization.id"
                                 :value="organization.id"
                             >
-                                {{ organization.name }}, {{ organization.address }}
+                                {{ organizationFullName(organization) }}
                             </option>
                         </select>
                     </div>
@@ -540,6 +540,14 @@
                     .catch(error => {
                         if (this.$store.state.debug) console.log(error)
                     })
+            },
+
+            organizationFullName(organization) {
+                let fullName = organization.name
+                if (organization.address !== null) {
+                    fullName += ', ' + organization.address
+                }
+                return fullName
             }
         }
     }

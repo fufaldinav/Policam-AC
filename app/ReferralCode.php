@@ -31,7 +31,7 @@ class ReferralCode extends Model
         'code', 'card', 'user_id'
     ];
 
-    public function users() {
-        return $this->belongsToMany('App\User')->withTimestamps();
+    public function user() {
+        return $this->belongsTo('App\User')->withTimestamps();
     }
 }

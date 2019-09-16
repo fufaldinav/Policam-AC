@@ -157,7 +157,7 @@ class ReferralController extends Controller
             $person->divisions()->save($division);
 
             foreach ($student['additionalOrganizations'] as $org) {
-                $organization = App\Organization::find($org);
+                $organization = App\Organization::find($org['id']);
 
                 $emptyDivision = $organization->divisions()->where('type', 0)->first();
 
