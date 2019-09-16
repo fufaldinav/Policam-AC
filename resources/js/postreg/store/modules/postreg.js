@@ -20,7 +20,7 @@ function naturalCompare(a, b) {
 
 const state = {
     loading: true,
-    step: 5,
+    step: 0,
     myRoles: [],
     roles: [
         {'type': 4, 'name': 'Родитель'},
