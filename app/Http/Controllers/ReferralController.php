@@ -98,6 +98,73 @@ class ReferralController extends Controller
 
     public function parseData(Request $request)
     {
-        return response()->json($request->input('myRoles'));
+        $user = $request->user();
+        $myRoles = $request->input('myRoles');
+        $students = $request->input('students');
+        $userData = $request->input('user');
+
+        foreach ($myRoles as $roleId) {
+            $role = App\Role::find($roleId);
+
+            $user->roles()->save($role);
+
+            if ($roleId === 9) {
+                $person = App\Person::create([
+                    'f' => $userData['f'],
+                    'i' => $userData['i'],
+                    'o' => $userData['o'],
+                    'gender' => $userData['gender'],
+                    'type' => 2,
+                    'birthday' => $userData['birthday']
+                ]);
+
+                $rc = App\ReferralCode::find($userData['code']);
+
+                $card = App\Card::firstOrCreate([
+                    'wiegand' => $rc->card
+                ]);
+
+                $person->cards()->save($card);
+
+                $organization = App\Organization::find($userData['organization']);
+
+                $emptyDivision = $organization->divisions()->where('type', 0)->first();
+
+                $person->divisions()->save($emptyDivision);
+            }
+        }
+
+        foreach ($students as $student) {
+            $person = App\Person::create([
+                'f' => $student['f'],
+                'i' => $student['i'],
+                'o' => $student['o'],
+                'gender' => $student['gender'],
+                'type' => 1,
+                'birthday' => $student['birthday']
+            ]);
+
+            $rc = App\ReferralCode::find($student['code']);
+
+            $card = App\Card::firstOrCreate([
+                'wiegand' => $rc->card
+            ]);
+
+            $person->cards()->save($card);
+
+            $division = App\Division::find($student['division']);
+
+            $person->divisions()->save($division);
+
+            foreach ($student['additionalOrganizations'] as $org) {
+                $organization = App\Organization::find($org);
+
+                $emptyDivision = $organization->divisions()->where('type', 0)->first();
+
+                $person->divisions()->save($emptyDivision);
+            }
+        }
+
+        return response()->json();
     }
 }
