@@ -50,12 +50,20 @@
                                 </div>
                             </div>
                         </div>
-
                         @if(isset($referralCode))
                             <input id="referral-code" type="text" class="form-control" name="referral_code"
                                    value="{{ $referralCode }}" readonly style="display: none;">
                         @endif
-
+                        @if ($errors->has('g-recaptcha-response'))
+                            <div class="d-flex justify-content-center mb-2">
+                                <p class="text-danger">
+                                        <strong>{{ $errors->first('g-recaptcha-response') }}</strong>
+                                    </p>
+                            </div>
+                        @endif
+                        <div class="d-flex justify-content-center mb-2">
+                            {!! NoCaptcha::display() !!}
+                        </div>
                         <div class="form-group row mb-0">
                             <div class="col-md-8 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
