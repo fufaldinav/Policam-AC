@@ -88,7 +88,7 @@ const actions = {
         window.axios.get('/api/codes/' + organizationId)
             .then(response => {
                 for (let rc of response.data) {
-                    //
+                    commit('rc/add', rc, {root: true})
                 }
                 commit('changeLoadingState', false)
             })

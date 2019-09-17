@@ -1,4 +1,4 @@
-<template xmlns:v-touch="http://www.w3.org/1999/xhtml">
+<template>
     <div class="container-fluid">
         <div v-if="loading">
             <ac-loading></ac-loading>

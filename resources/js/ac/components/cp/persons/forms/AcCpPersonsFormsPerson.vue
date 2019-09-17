@@ -53,8 +53,10 @@
                         v-model="selectedPerson.o"
                         type="text"
                         class="form-control"
+                        :class="{ 'is-invalid': checkField('o') === false }"
                         placeholder="Отчество"
                         :disabled="selectedPerson.id === null"
+                        required
                     >
                 </div>
                 <div class="form-group">
@@ -77,9 +79,39 @@
                 </div>
             </div>
         </div>
+        <div class="form-row d-flex justify-content-center">
+            <div class="form-check form-check-inline">
+                Пол:
+            </div>
+            <div class="form-check form-check-inline">
+                <input
+                    v-model="selectedPerson.gender"
+                    class="form-check-input"
+                    type="radio"
+                    name="gender"
+                    id="gender-m"
+                    value="1"
+                    :disabled="selectedPerson.id === null"
+                >
+                <label class="form-check-label" for="gender-m">Мужской</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input
+                    v-model="selectedPerson.gender"
+                    class="form-check-input"
+                    type="radio"
+                    name="gender"
+                    id="gender-w"
+                    value="2"
+                    :disabled="selectedPerson.id === null"
+                >
+                <label class="form-check-label" for="gender-w">Женский</label>
+            </div>
+        </div>
         <div class="form-row">
             <div class="form-group col-4 col-sm-3">
-                <ac-cp-persons-forms-select-division v-if="selectedOrganization.type === 1"></ac-cp-persons-forms-select-division>
+                <ac-cp-persons-forms-select-division
+                    v-if="selectedOrganization !== null && selectedOrganization.type === 1"></ac-cp-persons-forms-select-division>
             </div>
             <div class="form-group col-8 col-sm-9">
                 <label for="address">
@@ -123,12 +155,7 @@
                 >
             </div>
         </div>
-        <div v-if="selectedPerson.id !== null" class="form-row">
-            <div class="form-group col-6">
-            </div>
-            <div class="form-group col-6">
-            </div>
-        </div>
+        <ac-cp-persons-forms-person-r-c v-if="selectedPerson.id !== null"></ac-cp-persons-forms-person-r-c>
         <div class="form-row">
             <div class="form-group">
                 <ac-buttons-save-person
@@ -153,6 +180,7 @@
 </template>
 
 <script>
+    import AcCpPersonsFormsPersonRC from './AcCpPersonsFormsPersonRC'
     import AcCpPersonsFormsPersonPhoto from './AcCpPersonsFormsPersonPhoto'
     import AcCpPersonsFormsSelectDivision from './AcCpPersonsFormsSelectDivision'
     import AcButtonsCancel from '../../../buttons/AcButtonsCancel'
@@ -169,14 +197,21 @@
                 errors: {
                     f: false,
                     i: false,
+                    o: false,
                     birthday: false
                 }
             }
         },
 
         components: {
-            AcCpPersonsFormsPersonPhoto, AcCpPersonsFormsSelectDivision, AcButtonsCancel, AcButtonsRemovePerson,
-            AcButtonsSavePerson, AcButtonsUpdatePerson, AcCpPersonsFormsModal
+            AcCpPersonsFormsPersonRC,
+            AcCpPersonsFormsPersonPhoto,
+            AcCpPersonsFormsSelectDivision,
+            AcButtonsCancel,
+            AcButtonsRemovePerson,
+            AcButtonsSavePerson,
+            AcButtonsUpdatePerson,
+            AcCpPersonsFormsModal
         },
 
         computed: {
@@ -189,7 +224,7 @@
             },
 
             hasErrors() {
-                return this.errors.f || this.errors.i || this.errors.birthday
+                return this.errors.f || this.errors.i || this.errors.o || this.errors.birthday
             }
         },
 
