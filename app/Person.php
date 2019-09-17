@@ -51,7 +51,7 @@ class Person extends Model
      * @var array
      */
     protected $fillable = [
-        'f', 'i', 'o', 'type', 'birthday', 'address', 'phone',
+        'f', 'i', 'o', 'gender', 'type', 'birthday', 'address', 'phone', 'referral_id',
     ];
 
     /**
@@ -113,6 +113,11 @@ class Person extends Model
     public function photos()
     {
         return $this->hasMany('App\Photo');
+    }
+
+    public function referral()
+    {
+        return $this->belongsTo('App\ReferralCode');
     }
 
     public function users()

@@ -37,4 +37,4 @@ mix.js('resources/js/ac.js', 'public/js')
     .sass('resources/libs/fontAwesome/scss/font-awesome.scss', 'public/css/fonts.css')
     .version()
     .disableNotifications()
-    .browserSync('192.168.1.8');
+    .browserSync('192.168.88.8');

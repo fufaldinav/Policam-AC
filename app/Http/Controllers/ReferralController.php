@@ -120,6 +120,8 @@ class ReferralController extends Controller
 
                 $rc = App\ReferralCode::find($userData['code']);
 
+                $rc->persons()->save($person);
+
                 $card = App\Card::firstOrCreate([
                     'wiegand' => $rc->card
                 ]);
@@ -145,6 +147,8 @@ class ReferralController extends Controller
             ]);
 
             $rc = App\ReferralCode::find($student['code']);
+
+            $rc->persons()->save($person);
 
             $card = App\Card::firstOrCreate([
                 'wiegand' => $rc->card
