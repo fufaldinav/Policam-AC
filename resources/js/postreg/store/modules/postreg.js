@@ -1,4 +1,22 @@
-import Vue from 'vue'
+function naturalCompare(a, b) {
+    let ax = [], bx = []
+
+    a.replace(/(\d+)|(\D+)/g, function (_, $1, $2) {
+        ax.push([$1 || Infinity, $2 || ''])
+    })
+    b.replace(/(\d+)|(\D+)/g, function (_, $1, $2) {
+        bx.push([$1 || Infinity, $2 || ''])
+    })
+
+    while (ax.length && bx.length) {
+        let an = ax.shift()
+        let bn = bx.shift()
+        let nn = (an[0] - bn[0]) || an[1].localeCompare(bn[1])
+        if (nn) return nn
+    }
+
+    return ax.length - bx.length
+}
 
 const state = {
     loading: true,
@@ -8,57 +26,131 @@ const state = {
         {'type': 4, 'name': 'Родитель'},
         {'type': 9, 'name': 'Сотрудник'}
     ],
-    currentStudent: {id: 0, f: null, i: null, o: null, gender: null, birthday: null, card: 0, division: 0},
-    studentToUpdate: {id: 0, f: null, i: null, o: null, gender: null, birthday: null, card: 0, division: 0},
-    students: [
-        {f: 'Иванов', i: 'Пётр', o: 'Сергеевич', gender: 1, birthday: '2010-10-24', card: 2, division: 0},
-        {f: 'Иванова', i: 'Лилия', o: 'Сергеевна', gender: 2, birthday: '2011-11-23', card: 3, division: 0}
-    ],
-    cards: [],
+    currentStudent: {
+        id: 0,
+        f: null,
+        i: null,
+        o: null,
+        gender: null,
+        birthday: null,
+        code: 0,
+        organization: 0,
+        additionalOrganizations: [],
+        division: 0
+    },
+    studentToUpdate: {
+        id: 0,
+        f: null,
+        i: null,
+        o: null,
+        gender: null,
+        birthday: null,
+        code: 0,
+        organization: 0,
+        additionalOrganizations: [],
+        division: 0
+    },
+    students: [],
+    codes: [],
     studentFormType: 'add',
     organizations: [],
     divisions: [],
-    user: {id: 0, f: null, i: null, o: null, gender: null, birthday: null, card: 0},
+    user: {id: null, f: null, i: null, o: null, gender: null, birthday: null, code: 0, organization: 0},
     userChecked: false
 }
 
 const getters = {
-    getActiveCardsCount: state => {
-        let cards = state.cards.filter(card => card.activated === 0)
-        return cards.length
+    getCodeById: state => codeId => {
+        return state.codes.find(code => code.id === codeId)
+    },
+
+    getActiveCodesCount: state => {
+        let codes = state.codes.filter(code => code.activated === 0)
+        return codes.length
+    },
+
+    checkCodeActivity: state => code => {
+        let ref = state.codes.find(ref => ref.code === code)
+        if (ref === undefined) return false
+        return ref.activated
     },
 
     getDivisionById: state => divisionId => {
-        let div = state.divisions.find(div => div.id === divisionId)
-        if (div === undefined) return
-        return div
+        return state.divisions.find(div => div.id === divisionId)
     },
 
-    getDivisionsByCard: state => cardId => {
-        let card = state.cards.find(card => card.id === parseInt(cardId, 10))
-        if (card === undefined) return []
-        let org = state.organizations.find(org => org.id === card.organization_id)
-        if (org === undefined) return []
-        return state.divisions.filter(div => div.organization_id === org.id)
+    getDivisionsByOrg: state => orgId => {
+        return state.divisions.filter(div => div.organization_id === orgId)
     },
 
-    getOrganizationByCard: state => cardId => {
-        let card = state.cards.find(card => card.id === parseInt(cardId, 10))
-        if (card === undefined) return
-        let org = state.organizations.find(org => org.id === card.organization_id)
+    getOrganizationById: state => organizationId => {
+        return state.organizations.find(org => org.id === organizationId)
+    },
+
+    getOrganizationByCode: state => codeId => {
+        let code = state.codes.find(code => code.id === parseInt(codeId, 10))
+        if (code === undefined) return
+        let org = state.organizations.find(org => org.id === code.organization_id)
         if (org === undefined) return
         return org
+    },
+
+    studentsCount: state => {
+        return state.students.length
+    },
+
+    getSortedDivisionsByOrg: state => orgId => {
+        state.divisions.sort((a, b) => {
+            if (a.type < b.type) return -1
+            if (a.type > b.type) return 1
+            let sortByName = naturalCompare(a.name, b.name)
+            if (sortByName !== 0) return sortByName
+            return 0
+        })
+
+        return state.divisions.filter(div => div.organization_id === orgId)
+    },
+
+    getSortedOrganizations: state => {
+        return state.organizations.sort((a, b) => {
+            if (a.type < b.type) return -1
+            if (a.type > b.type) return 1
+            let sortByName = naturalCompare(a.name, b.name)
+            if (sortByName !== 0) return sortByName
+            return 0
+        })
+    },
+
+    getSortedStudents: state => {
+        return state.students.sort((a, b) => {
+            if (a.f < b.f) return -1
+            if (a.f > b.f) return 1
+            if (a.i < b.i) return -1
+            if (a.i > b.i) return 1
+            if (a.o < b.o) return -1
+            if (a.o > b.o) return 1
+            return 0
+        })
     }
 }
 
 const mutations = {
+    setUserInfo(state, user) {
+        state.user.id = user.id
+        state.user.f = user.last_name
+        state.user.i = user.name
+    },
+
     addCode(state, code) {
-        state.cards.push(code);
+        let ref = state.codes.find(ref => (ref.id === code.id))
+        if (ref === undefined) {
+            state.codes.push(code)
+        }
     },
 
     addOrganization(state, organization) {
-        let index = state.organizations.indexOf(organization)
-        if (index === -1) {
+        let org = state.organizations.find(org => (org.id === organization.id))
+        if (org === undefined) {
             state.organizations.push(organization)
         }
     },
@@ -67,6 +159,13 @@ const mutations = {
         let div = state.divisions.find(div => (div.id === division.id))
         if (div === undefined) {
             state.divisions.push(division)
+        }
+    },
+
+    addAdditionalOrganization(state, ao) {
+        let org = state.organizations.find(org => (org.id === ao.id))
+        if (org === undefined) {
+            state.additionalOrganizations.push(ao)
         }
     },
 
@@ -103,9 +202,36 @@ const mutations = {
         }
     },
 
-    clearCurrentStudent(state, commit) {
-        state.currentStudent = {f: null, i: null, o: null, gender: null, birthday: null, card: 0, division: 0}
-        state.studentToUpdate = {f: null, i: null, o: null, gender: null, birthday: null, card: 0, division: 0}
+    setCurrentStudent(state, student) {
+        state.currentStudent = student
+        state.studentToUpdate = JSON.parse(JSON.stringify(student))
+    },
+
+    clearCurrentStudent(state) {
+        state.currentStudent = {
+            id: 0,
+            f: null,
+            i: null,
+            o: null,
+            gender: null,
+            birthday: null,
+            code: 0,
+            organization: 0,
+            additionalOrganizations: [],
+            division: 0
+        }
+        state.studentToUpdate = {
+            id: 0,
+            f: null,
+            i: null,
+            o: null,
+            gender: null,
+            birthday: null,
+            code: 0,
+            organization: 0,
+            additionalOrganizations: [],
+            division: 0
+        }
     },
 
     revertStudent(state) {
@@ -113,11 +239,6 @@ const mutations = {
         if (index > -1) {
             state.students.splice(index, 1, JSON.parse(JSON.stringify(state.studentToUpdate)))
         }
-    },
-
-    setCurrentStudent(state, student) {
-        state.currentStudent = student
-        state.studentToUpdate = JSON.parse(JSON.stringify(student))
     },
 
     setStudentFormType(state, type) {
@@ -132,60 +253,139 @@ const mutations = {
         state.userChecked = status
     },
 
-    setCardActivatedStatus(state, payload) {
-        let card = state.cards.find(card => card.id === payload.cardId)
-        if (card !== undefined) {
-            card.activated = payload.status
+    setCodeActivatedStatus(state, payload) {
+        let code = state.codes.find(code => code.id === payload.codeId)
+        if (code !== undefined) {
+            code.activated = payload.activated
         }
     }
 }
 
 const actions = {
-    async loadCards({state, commit, dispatch, rootState}) {
+    async loadUserInfo({commit, dispatch, rootState}) {
         commit('changeLoadingState', true)
-        window.axios.get('/api/codes')
+        window.axios.get('/api/user')
             .then(response => {
-                for (let code of response.data) {
-                    commit('addCode', code)
-                    dispatch('loadOrganization', code.organization_id)
-                }
-                commit('changeLoadingState', false)
+                commit('setUserInfo', response.data)
+                dispatch('loadCodes')
+                    .then(response => {
+                        for (let code of response) {
+                            if (code.organization_id === 0) continue
+                            commit('addCode', code)
+                            dispatch('loadOrganization', {organizationId: code.organization_id})
+                                .then(response => {
+                                    for (let organization of response) {
+                                        commit('addOrganization', organization)
+                                        dispatch('loadDivisions', organization.id)
+                                            .then(response => {
+                                                for (let division of response) {
+                                                    commit('addDivision', division)
+                                                }
+                                                commit('changeLoadingState', false)
+                                            })
+                                            .catch(error => {
+                                                if (rootState.debug) console.log(error)
+                                            })
+                                    }
+                                    if (response.length === 0) {
+                                        commit('changeLoadingState', false)
+                                    }
+                                })
+                                .catch(error => {
+                                    if (rootState.debug) console.log(error)
+                                })
+                        }
+                        if (response.length === 0) {
+                            commit('changeLoadingState', false)
+                        }
+                    })
+                    .catch(error => {
+                        if (rootState.debug) console.log(error)
+                    })
             })
             .catch(error => {
                 if (rootState.debug) console.log(error)
-                setTimeout(dispatch('loadCards'), 2000) //TODO перезапуск при ошибке
+                setTimeout(dispatch('loadUserInfo'), 2000) //TODO перезапуск при ошибке
             })
+    },
+
+    async loadCodes({commit, dispatch, rootState}) {
+        return new Promise((resolve, reject) => {
+            window.axios.get('/api/codes/')
+                .then(response => {
+                    resolve(response.data)
+                })
+                .catch(error => {
+                    reject(error)
+                })
+        })
+    },
+
+    async loadOrganization({commit, dispatch, rootState}, payload) {
+        if (payload.type === undefined) {
+            payload.type = 0
+        }
+        return new Promise((resolve, reject) => {
+            window.axios.get('/api/referral/organizations/' + payload.type + '/' + payload.organizationId)
+                .then(response => {
+                    resolve(response.data)
+                })
+                .catch(error => {
+                    reject(error)
+                })
+        })
+    },
+
+    async loadOrganizations({commit, dispatch, rootState}, type = 1) {
+        return new Promise((resolve, reject) => {
+            window.axios.get('/api/referral/organizations/' + type)
+                .then(response => {
+                    resolve(response.data)
+                })
+                .catch(error => {
+                    reject(error)
+                })
+        })
     },
 
     async loadDivisions({commit, dispatch, rootState}, organizationId) {
-        commit('changeLoadingState', true)
-        window.axios.get('/api/referral/divisions/' + organizationId)
-            .then(response => {
-                for (let division of response.data) {
-                    commit('addDivision', division)
-                }
-                commit('changeLoadingState', false)
-            })
-            .catch(error => {
-                if (rootState.debug) console.log(error)
-                setTimeout(dispatch('loadDivisions'), 2000) //TODO перезапуск при ошибке
-            })
+        return new Promise((resolve, reject) => {
+            window.axios.get('/api/referral/divisions/' + organizationId)
+                .then(response => {
+                    resolve(response.data)
+                })
+                .catch(error => {
+                    reject(error)
+                })
+        })
     },
 
-    async loadOrganization({commit, dispatch, rootState}, organizationId) {
-        commit('changeLoadingState', true)
-        window.axios.get('/api/referral/organization/' + organizationId)
-            .then(response => {
-                for (let organization of response.data) {
-                    commit('addOrganization', organization)
-                    dispatch('loadDivisions', organization.id)
-                }
-                commit('changeLoadingState', false)
+    async getReferral({rootState}, code) {
+        return new Promise((resolve, reject) => {
+            window.axios.get('/api/referral/checkcode/' + code)
+                .then(response => {
+                    resolve(response.data)
+                })
+                .catch(error => {
+                    reject(error)
+                })
+        })
+    },
+
+    async sendDataToServer({state}) {
+        return new Promise((resolve, reject) => {
+            window.axios.post('/api/referral/data', {
+                myRoles: state.myRoles,
+                students: state.students,
+                user: state.user
             })
-            .catch(error => {
-                if (rootState.debug) console.log(error)
-                setTimeout(dispatch('loadOrganization'), 2000) //TODO перезапуск при ошибке
-            })
+                .then(response => {
+                    resolve(response.data)
+                })
+                .catch(error => {
+                    reject(error)
+                })
+        })
     }
 }
 

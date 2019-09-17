@@ -51,6 +51,13 @@ class ReferralController extends Controller
         return view('postreg/index');
     }
 
+    public function getUserInfo(Request $request)
+    {
+        $user = App\User::where('id', $request->user()->id)->select('id', 'name', 'last_name')->first();
+
+        return response()->json($user);
+    }
+
     public function getCodes(Request $request)
     {
         $referralCodes = $request->user()->referralCodes()->select('id', 'code', 'organization_id', 'activated')->get();
@@ -65,10 +72,103 @@ class ReferralController extends Controller
         return response()->json($divisions);
     }
 
-    public function getOrganization(int $organizationId)
+    public function getOrganizations(int $type, int $organizationId = null)
     {
-        $organization = App\Organization::where(['id' => $organizationId])->select('id', 'name')->get();
+        if (isset($organizationId)) {
+            $organizations = App\Organization::where('id', $organizationId)->select('id', 'name', 'address', 'type')->get();
+        } else if ($type > 0) {
+            $organizations = App\Organization::where('type', $type)->select('id', 'name', 'address', 'type')->get();
+        } else {
+            $organizations = App\Organization::where('type', '<>', 0)->select('id', 'name', 'address', 'type')->get();
+        }
 
-        return response()->json($organization);
+        return response()->json($organizations);
+    }
+
+    public function getReferral(string $code)
+    {
+        $referral = App\ReferralCode::where(['code' => $code])->select('id', 'code', 'organization_id', 'activated')->first();
+
+        if (! $referral) {
+            return 0;
+        }
+
+        return response()->json($referral);
+    }
+
+    public function parseData(Request $request)
+    {
+        $user = $request->user();
+        $myRoles = $request->input('myRoles');
+        $students = $request->input('students');
+        $userData = $request->input('user');
+
+        foreach ($myRoles as $roleId) {
+            $role = App\Role::find($roleId);
+
+            $user->roles()->save($role);
+
+            if ($roleId === 9) {
+                $person = App\Person::create([
+                    'f' => $userData['f'],
+                    'i' => $userData['i'],
+                    'o' => $userData['o'],
+                    'gender' => $userData['gender'],
+                    'type' => 2,
+                    'birthday' => $userData['birthday']
+                ]);
+
+                $rc = App\ReferralCode::find($userData['code']);
+
+                $rc->persons()->save($person);
+
+                $card = App\Card::firstOrCreate([
+                    'wiegand' => $rc->card
+                ]);
+
+                $person->cards()->save($card);
+
+                $organization = App\Organization::find($userData['organization']);
+
+                $emptyDivision = $organization->divisions()->where('type', 0)->first();
+
+                $person->divisions()->save($emptyDivision);
+            }
+        }
+
+        foreach ($students as $student) {
+            $person = App\Person::create([
+                'f' => $student['f'],
+                'i' => $student['i'],
+                'o' => $student['o'],
+                'gender' => $student['gender'],
+                'type' => 1,
+                'birthday' => $student['birthday']
+            ]);
+
+            $rc = App\ReferralCode::find($student['code']);
+
+            $rc->persons()->save($person);
+
+            $card = App\Card::firstOrCreate([
+                'wiegand' => $rc->card
+            ]);
+
+            $person->cards()->save($card);
+
+            $division = App\Division::find($student['division']);
+
+            $person->divisions()->save($division);
+
+            foreach ($student['additionalOrganizations'] as $org) {
+                $organization = App\Organization::find($org['id']);
+
+                $emptyDivision = $organization->divisions()->where('type', 0)->first();
+
+                $person->divisions()->save($emptyDivision);
+            }
+        }
+
+        return response()->json();
     }
 }

@@ -41,7 +41,7 @@ class UsersController extends Controller
     public function index(Request $request)
     {
         if (! $request->user()->hasRole()) {
-            abort(403);
+            return redirect('/postreg');
         }
 
         return view('ac/cp');
@@ -56,7 +56,7 @@ class UsersController extends Controller
      */
     public function students(Request $request)
     {
-        abort_if(! $request->user()->hasRole([1, 3, 4]), 403);
+        abort_if(! $request->user()->isAdmin(), 403);
 
         return view('ac/students');
     }
@@ -125,13 +125,14 @@ class UsersController extends Controller
     /**
      * Возвращает организации по типу
      *
+     * @param Request $request
      * @param int $type
      *
      * @return array
      */
-    public function getOrganizationsByType(int $type)
+    public function getOrganizationsByType(Request $request, int $type)
     {
-        return App\Organization::where('type', $type)->orderBy('name')->get();
+        return $request->user()->organizations->where('type', $type)->orderBy('name')->get();
     }
 
     /**

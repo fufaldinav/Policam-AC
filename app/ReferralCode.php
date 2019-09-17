@@ -28,10 +28,16 @@ use Illuminate\Database\Eloquent\Model;
 class ReferralCode extends Model
 {
     protected $fillable = [
-        'code', 'card', 'user_id'
+        'code', 'card', 'user_id', 'organization_id', 'activated',
     ];
 
-    public function users() {
-        return $this->belongsToMany('App\User')->withTimestamps();
+    public function persons()
+    {
+        return $this->hasMany('App\Person');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo('App\User')->withTimestamps();
     }
 }
