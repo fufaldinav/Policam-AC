@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddColumnToPersonsTable extends Migration
+class AddColumnReferralCodeIdToPersonsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddColumnToPersonsTable extends Migration
     public function up()
     {
         Schema::table('persons', function (Blueprint $table) {
-            $table->tinyInteger('gender')->after('o')->nullable();
+            $table->unsignedInteger('referral_code_id')->after('phone')->nullable()->index();
         });
     }
 
@@ -26,7 +26,7 @@ class AddColumnToPersonsTable extends Migration
     public function down()
     {
         Schema::table('persons', function (Blueprint $table) {
-            $table->dropColumn('gender');
+            $table->dropColumn('referral_code_id');
         });
     }
 }
