@@ -56,7 +56,7 @@ class DivisionsController extends Controller
         }
 
         if ($withPersons > 0) {
-            $divisions->load(['persons.cards', 'persons.photos']);
+            $divisions->load(['persons.photos']);
         }
 
         abort_if(! $divisions, 403);

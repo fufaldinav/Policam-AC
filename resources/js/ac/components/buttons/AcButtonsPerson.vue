@@ -23,7 +23,7 @@
 
         computed: {
             noCards() {
-                return this.person.cards.length === 0
+                // return this.person.cards.length === 0
             }
         },
 

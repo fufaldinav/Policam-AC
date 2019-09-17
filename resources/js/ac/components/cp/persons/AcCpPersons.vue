@@ -75,14 +75,15 @@
 
         created() {
             this.$store.dispatch('loader/loadDivisions', {organizationId: 0, withPersons: 1})
+            this.$store.dispatch('loader/loadReferralCodes')
         },
 
         mounted() {
             this.$bus.$on('EventReceived', e => {
                 if (e.event.event === 2 || e.event.event === 3) {
-                    if (this.$store.state.cards.manualInput === false ){
-                        this.$store.commit('cards/setLast', e.card)
-                    }
+                    // if (this.$store.state.cards.manualInput === false ){
+                    //     this.$store.commit('cards/setLast', e.card)
+                    // }
                 }
             })
             this.$bus.$on('ControllerConnected', e => {

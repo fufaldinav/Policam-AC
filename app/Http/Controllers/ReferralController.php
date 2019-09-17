@@ -65,6 +65,19 @@ class ReferralController extends Controller
         return response()->json($referralCodes);
     }
 
+    public function getCodesByOrganization(Request $request, int $organizationId)
+    {
+        if ($organizationId > 0) {
+            $organization = $request->user()->organizations->where('id', $organizationId)->first();
+        } else {
+            $organization = $request->user()->organizations->first();
+        }
+
+        $referralCodes = $organization->referralCodes()->select('id', 'code', 'organization_id', 'activated')->get();
+
+        return response()->json($referralCodes);
+    }
+
     public function getDivisions(int $organizationId, int $type = 1)
     {
         $divisions = App\Division::where(['organization_id' => $organizationId, 'type' => $type])->select('id', 'name', 'organization_id')->get();

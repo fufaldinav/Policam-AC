@@ -1,14 +1,16 @@
-import {Card, Photo} from './'
+import {Photo} from './'
 
 export function Person(data) {
     this.id = null
     this.f = null
     this.i = null
     this.o = null
+    this.gender = null
     this.type = 1
     this.birthday = null
     this.address = null
     this.phone = null
+    this.referral_code_id = null
     this.divisions = []
     this.divisionsToDelete = []
     this.organizations = {basic: null, additional: []}
@@ -19,18 +21,10 @@ export function Person(data) {
         }
     }
 
-    this.cards = []
-    this.cardsToDelete = []
     this.photos = []
     this.photosToDelete = []
     this.users = []
     this.usersToDelete = []
-
-    if (data.cards !== undefined) {
-        for (let card of data.cards) {
-            this.cards.push(new Card(card))
-        }
-    }
 
     if (data.photos !== undefined) {
         for (let photo of data.photos) {

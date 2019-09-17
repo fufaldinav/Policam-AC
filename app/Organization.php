@@ -75,6 +75,11 @@ class Organization extends Model
         return $this->hasManyDeep('App\Person', ['App\Division', 'division_person']);
     }
 
+    public function referralCodes()
+    {
+        return $this->hasMany('App\ReferralCode');
+    }
+
     public function users()
     {
         return $this->belongsToMany('App\User')->withTimestamps();

@@ -125,10 +125,8 @@
         </div>
         <div v-if="selectedPerson.id !== null" class="form-row">
             <div class="form-group col-6">
-                <ac-cp-persons-forms-cards></ac-cp-persons-forms-cards>
             </div>
             <div class="form-group col-6">
-                <ac-cp-persons-forms-last-card></ac-cp-persons-forms-last-card>
             </div>
         </div>
         <div class="form-row">
@@ -155,8 +153,6 @@
 </template>
 
 <script>
-    import AcCpPersonsFormsCards from './AcCpPersonsFormsCards'
-    import AcCpPersonsFormsLastCard from './AcCpPersonsFormsLastCard'
     import AcCpPersonsFormsPersonPhoto from './AcCpPersonsFormsPersonPhoto'
     import AcCpPersonsFormsSelectDivision from './AcCpPersonsFormsSelectDivision'
     import AcButtonsCancel from '../../../buttons/AcButtonsCancel'
@@ -179,9 +175,8 @@
         },
 
         components: {
-            AcCpPersonsFormsCards, AcCpPersonsFormsLastCard, AcCpPersonsFormsPersonPhoto,
-            AcCpPersonsFormsSelectDivision, AcButtonsCancel, AcButtonsRemovePerson, AcButtonsSavePerson,
-            AcButtonsUpdatePerson, AcCpPersonsFormsModal
+            AcCpPersonsFormsPersonPhoto, AcCpPersonsFormsSelectDivision, AcButtonsCancel, AcButtonsRemovePerson,
+            AcButtonsSavePerson, AcButtonsUpdatePerson, AcCpPersonsFormsModal
         },
 
         computed: {

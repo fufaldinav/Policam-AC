@@ -31,6 +31,11 @@ class ReferralCode extends Model
         'code', 'card', 'user_id', 'organization_id', 'activated',
     ];
 
+    public function organization()
+    {
+        return $this->belongsTo('App\Organization');
+    }
+
     public function persons()
     {
         return $this->hasMany('App\Person');

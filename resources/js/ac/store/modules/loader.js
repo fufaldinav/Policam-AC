@@ -83,14 +83,12 @@ const actions = {
             })
     },
 
-    async loadReferralCodes({commit, dispatch, rootState}) {
+    async loadReferralCodes({commit, dispatch, rootState}, organizationId = 0) {
         commit('changeLoadingState', true)
-        window.axios.get('/users/referral_codes')
+        window.axios.get('/api/codes/' + organizationId)
             .then(response => {
-                for (let card of response.data) {
-                    let code = parseInt(card.code)
-                    let wiegand = ('000000000000' + code.toString(16).toUpperCase()).slice(-12)
-                    commit('cards/addReferralCard', {wiegand: wiegand}, {root: true})
+                for (let rc of response.data) {
+                    //
                 }
                 commit('changeLoadingState', false)
             })

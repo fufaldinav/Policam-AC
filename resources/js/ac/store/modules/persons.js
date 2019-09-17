@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import {Card, Person, Photo} from '../../classes'
+import {Person, Photo} from '../../classes'
 
 const state = {
     collection: {},
@@ -45,20 +45,6 @@ const mutations = {
 
     setManually(state, status = true) {
         state.manually = status
-    },
-
-    addCard(state, card) {
-        state.selected.cards.push(new Card(card))
-    },
-
-    removeCard(state, card) {
-        let index = state.selected.cards.indexOf(card)
-        if (index > -1) {
-            if (state.selected.id > 0) {
-                state.selected.cardsToDelete.push(card)
-            }
-            state.selected.cards.splice(index, 1)
-        }
     },
 
     addPhoto(state, photo) {

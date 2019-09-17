@@ -145,16 +145,16 @@
                                         >
                                     </div>
                                 </div>
-                                <div
-                                    v-if="selectedPerson.cards.length > 0 && selectedManually"
-                                    class="form-row"
-                                >
-                                    <div class="form-group col-6 col-sm-12">
-                                        <ac-observer-buttons-card-forgot></ac-observer-buttons-card-forgot>
-                                        <ac-observer-buttons-card-lost></ac-observer-buttons-card-lost>
-                                        <ac-observer-buttons-card-broke></ac-observer-buttons-card-broke>
-                                    </div>
-                                </div>
+<!--                                <div-->
+<!--                                    v-if="selectedPerson.cards.length > 0 && selectedManually"-->
+<!--                                    class="form-row"-->
+<!--                                >-->
+<!--                                    <div class="form-group col-6 col-sm-12">-->
+<!--                                        <ac-observer-buttons-card-forgot></ac-observer-buttons-card-forgot>-->
+<!--                                        <ac-observer-buttons-card-lost></ac-observer-buttons-card-lost>-->
+<!--                                        <ac-observer-buttons-card-broke></ac-observer-buttons-card-broke>-->
+<!--                                    </div>-->
+<!--                                </div>-->
                             </form>
                         </div>
                     </div>

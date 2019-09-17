@@ -115,7 +115,7 @@ class Person extends Model
         return $this->hasMany('App\Photo');
     }
 
-    public function referral()
+    public function referralCode()
     {
         return $this->belongsTo('App\ReferralCode');
     }

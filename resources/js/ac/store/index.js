@@ -5,7 +5,6 @@ import actions from './actions'
 import mutations from './mutations'
 
 import bp from './modules/breakpoint'
-import cards from './modules/cards'
 import cp from './modules/cp'
 import divisions from './modules/divisions'
 import history from './modules/history'
@@ -30,7 +29,6 @@ export default new Vuex.Store({
 
     modules: {
         bp,
-        cards,
         cp,
         divisions,
         history,
