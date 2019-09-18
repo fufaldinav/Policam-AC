@@ -168,10 +168,6 @@
                     :disabled="hasErrors"
                 >
                 </ac-buttons-update-person>
-                <ac-buttons-remove-person
-                    v-if="selectedPerson.id > 0"
-                >
-                </ac-buttons-remove-person>
                 <ac-buttons-cancel v-if="selectedPerson.id !== null"></ac-buttons-cancel>
             </div>
         </div>

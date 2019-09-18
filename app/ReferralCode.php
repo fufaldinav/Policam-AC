@@ -27,8 +27,22 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ReferralCode extends Model
 {
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
         'code', 'card', 'user_id', 'organization_id', 'activated',
+    ];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'card',
     ];
 
     public function organization()

@@ -44,9 +44,21 @@ const mutations = {
 }
 
 const actions = {
-    async getReferral({rootState}, code) {
+    async checkReferral({rootState}, code) {
         return new Promise((resolve, reject) => {
             window.axios.get('/api/referral/checkcode/' + code)
+                .then(response => {
+                    resolve(response.data)
+                })
+                .catch(error => {
+                    reject(error)
+                })
+        })
+    },
+
+    async activateReferral({rootState}, code) {
+        return new Promise((resolve, reject) => {
+            window.axios.get('/api/referral/activate/' + code)
                 .then(response => {
                     resolve(response.data)
                 })

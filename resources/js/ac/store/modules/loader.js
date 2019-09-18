@@ -45,6 +45,9 @@ const actions = {
                         for (let person of division.persons) {
                             person.divisions = [division.id]
                             dispatch('persons/add', person, {root: true})
+                            if (person.referral_code !== null) {
+                                commit('rc/add', person.referral_code, {root: true})
+                            }
                         }
                     }
                     commit('divisions/add', division, {root: true})
@@ -68,7 +71,7 @@ const actions = {
                         divisions.push(division.id)
                         if (division.organization.type === 1) {
                             person.organizations.basic = division.organization.id
-                        } else if (division.organization.type === 2) {
+                        } else {
                             person.organizations.additional.push(division.organization.id)
                         }
                     }
@@ -83,20 +86,20 @@ const actions = {
             })
     },
 
-    async loadReferralCodes({commit, dispatch, rootState}, organizationId = 0) {
-        commit('changeLoadingState', true)
-        window.axios.get('/api/codes/' + organizationId)
-            .then(response => {
-                for (let rc of response.data) {
-                    commit('rc/add', rc, {root: true})
-                }
-                commit('changeLoadingState', false)
-            })
-            .catch(error => {
-                if (rootState.debug) console.log(error)
-                setTimeout(dispatch('loadReferralCodes'), 2000) //TODO перезапуск при ошибке
-            })
-    }
+    // async loadReferralCodes({commit, dispatch, rootState}, organizationId = 0) {
+    //     commit('changeLoadingState', true)
+    //     window.axios.get('/api/codes/' + organizationId)
+    //         .then(response => {
+    //             for (let rc of response.data) {
+    //                 commit('rc/add', rc, {root: true})
+    //             }
+    //             commit('changeLoadingState', false)
+    //         })
+    //         .catch(error => {
+    //             if (rootState.debug) console.log(error)
+    //             setTimeout(dispatch('loadReferralCodes'), 2000) //TODO перезапуск при ошибке
+    //         })
+    // }
 }
 
 export default {

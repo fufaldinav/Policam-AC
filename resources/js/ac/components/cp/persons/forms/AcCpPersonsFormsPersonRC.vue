@@ -7,16 +7,20 @@
             <div class="row">
                 <div class="col-12 col-md-5 pr-md-1 mb-2">
                     <input
-                        v-if="! codeManualInput"
+                        v-if="selectedPerson.referral_code !== null && ! codeManualInput"
                         id="rc"
-                        :value="RCCode(selectedPersonRC)"
+                        :value="selectedPerson.referral_code.code"
                         type="text"
                         class="form-control"
+                        :class="rcActivatedClass"
                         placeholder="Номер карты"
                         disabled
                     >
+                    <div class="valid-feedback text-center">
+                        Код активирован!
+                    </div>
                     <input
-                        v-else
+                        v-if="selectedPerson.referral_code === null || codeManualInput"
                         id="rcToCheck"
                         v-model="codeToCheck"
                         type="text"
@@ -30,14 +34,22 @@
                 </div>
                 <div class="col-12 col-md-7 pl-md-0">
                     <button
-                        v-if="RCActivated(selectedPersonRC) === 0 && ! codeManualInput"
+                        v-if="selectedPerson.referral_code !== null && selectedPerson.referral_code.activated === 0 && ! codeManualInput"
                         type="button"
                         class="btn btn-success"
+                        @click="activateRC"
+                        :disabled="codeActivation"
                     >
-                        Подтвердить
+                        <template v-if="codeActivation">
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Проверка...
+                        </template>
+                        <template v-else>
+                            Подтвердить
+                        </template>
                     </button>
                     <button
-                        v-if="! codeManualInput"
+                        v-if="selectedPerson.referral_code !== null && ! codeManualInput"
                         type="button"
                         class="btn btn-primary"
                         @click="activateManualInput"
@@ -45,7 +57,7 @@
                         Редактировать
                     </button>
                     <button
-                        v-if="codeManualInput && codeReceived === null"
+                        v-if="(selectedPerson.referral_code === null && codeReceived === null ) || (codeManualInput && codeReceived === null)"
                         type="button"
                         class="btn btn-primary"
                         :disabled="checkButtonDisabled"
@@ -89,12 +101,14 @@
 
         data() {
             return {
+                codeActivation: false,
+                codeActivationFailed: false,
                 codeManualInput: false,
                 codeManuallyEntered: '',
                 codeChecking: false,
                 codeReceived: null,
                 codeIsInvalid: false,
-                oldCode: 0
+                oldCode: null
             }
         },
 
@@ -103,10 +117,11 @@
                 return this.$store.state.persons.selected
             },
 
-            selectedPersonRC() {
-                let rcId = this.selectedPerson.referral_code_id
-                if (rcId === null) return
-                return this.$store.getters['rc/getById'](rcId)
+            rcActivatedClass() {
+              return {
+                  'is-valid': this.selectedPerson.referral_code.activated === 1,
+                  'is-invalid': this.codeActivationFailed
+              }
             },
 
             codeToCheck: {
@@ -128,19 +143,29 @@
         },
 
         methods: {
-            RCCode(rc) {
-                if (rc !== undefined) return rc.code
-            },
-
-            RCActivated(rc) {
-                if (rc !== undefined) return rc.activated
+            activateRC() {
+                this.codeActivation = true
+                this.$store.dispatch('rc/activateReferral', this.selectedPerson.referral_code.code)
+                    .then(response => {
+                        if (response === 0) {
+                            this.codeActivationFailed = true
+                        } else {
+                            this.selectedPerson.referral_code.activated = 1
+                        }
+                    })
+                    .catch(error => {
+                        if (this.$store.state.debug) console.log(error)
+                    })
+                    .finally(() => {
+                        this.codeActivation = false
+                    })
             },
 
             checkRCCode() {
                 this.codeChecking = true
                 let rc = this.$store.getters['rc/getByCode'](this.codeManuallyEntered)
                 if (rc === undefined) {
-                    this.$store.dispatch('rc/getReferral', this.codeManuallyEntered)
+                    this.$store.dispatch('rc/checkReferral', this.codeManuallyEntered)
                         .then(response => {
                             if (response === 0) {
                                 this.codeIsInvalid = true
@@ -159,26 +184,28 @@
                     this.codeChecking = false
                 } else {
                     this.codeReceived = rc
+                    this.codeChecking = false
                 }
             },
 
             saveCode() {
                 this.$store.commit('rc/add', this.codeReceived)
-                this.selectedPerson.referral_code_id = this.codeReceived.id
+                this.selectedPerson.referral_code = new ReferralCode(this.codeReceived)
+                this.oldCode = null
                 this.codeManuallyEntered = ''
                 this.codeReceived = null
                 this.codeManualInput = false
             },
 
             activateManualInput() {
-                this.oldCode = this.selectedPerson.referral_code_id
-                this.selectedPerson.referral_code_id = 0
+                this.oldCode = this.selectedPerson.referral_code
+                this.selectedPerson.referral_code = null
                 this.codeManualInput = true
             },
 
             deactivateManualInput() {
-                this.selectedPerson.referral_code_id = this.oldCode
-                this.oldCode = 0
+                this.selectedPerson.referral_code = this.oldCode
+                this.oldCode = null
                 this.codeManuallyEntered = ''
                 this.codeIsInvalid = false
                 this.codeManualInput = false

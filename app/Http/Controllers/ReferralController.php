@@ -98,11 +98,24 @@ class ReferralController extends Controller
         return response()->json($organizations);
     }
 
+    public function activateReferral(string $code)
+    {
+        $referral = App\ReferralCode::where(['code' => $code])->first();
+
+        if (is_null($referral)) {
+            return 0;
+        } else if ($referral->activated) {
+            return 0;
+        }
+
+        return 1;
+    }
+
     public function getReferral(string $code)
     {
         $referral = App\ReferralCode::where(['code' => $code])->select('id', 'code', 'organization_id', 'activated')->first();
 
-        if (! $referral) {
+        if (is_null($referral)) {
             return 0;
         }
 

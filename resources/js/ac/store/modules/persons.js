@@ -31,7 +31,7 @@ const mutations = {
 
     clearCollection(state) {
         for (let person in state.collection) {
-            Vue.delete(state.collection, person.id)
+            Vue.delete(state.collection, person)
         }
     },
 
@@ -71,7 +71,7 @@ const actions = {
         }
     },
 
-    async saveSelected({state, commit, rootState}) {
+    async saveSelected({state, commit, rootState, rootGetters}) {
         window.axios.post('/api/persons', {
             person: state.selected
         })
@@ -80,8 +80,10 @@ const actions = {
                 let divisions = []
 
                 for (let division of person.divisions) {
-                    let id = division.id
-                    divisions.push(id)
+                    let div = rootGetters['divisions/getById'](division.id)
+                    if (div !== undefined) {
+                        divisions.push(div.id)
+                    }
                 }
 
                 person.divisions = divisions
@@ -102,7 +104,7 @@ const actions = {
             })
     },
 
-    async updateSelected({state, commit, rootState}) {
+    async updateSelected({state, commit, rootState, rootGetters}) {
         window.axios.put('/api/persons/' + state.selected.id, {
             person: state.selected
         })
@@ -111,8 +113,10 @@ const actions = {
                 let divisions = []
 
                 for (let division of person.divisions) {
-                    let id = division.id
-                    divisions.push(id)
+                    let div = rootGetters['divisions/getById'](division.id)
+                    if (div !== undefined) {
+                        divisions.push(div.id)
+                    }
                 }
 
                 person.divisions = divisions

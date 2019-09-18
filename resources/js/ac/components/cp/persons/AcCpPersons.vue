@@ -75,7 +75,6 @@
 
         created() {
             this.$store.dispatch('loader/loadDivisions', {organizationId: 0, withPersons: 1})
-            this.$store.dispatch('loader/loadReferralCodes')
         },
 
         mounted() {
