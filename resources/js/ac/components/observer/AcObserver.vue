@@ -256,7 +256,16 @@
         },
 
         created() {
-            this.$store.dispatch('loader/loadDivisions', {organizationId: 0, withPersons: 1})
+            this.$bus.$on('OrgSelected', orgId => {
+                this.$store.commit('persons/clearSelected')
+                this.$store.commit('divisions/clearSelected')
+                this.$store.dispatch('messenger/unsubscribe')
+                this.$store.dispatch('messenger/subscribe')
+                this.$store.dispatch('loader/loadDivisions', {
+                    organizationId: orgId,
+                    withPersons: this.$store.state.personsMustBeLoaded
+                })
+            })
         },
 
         beforeMount() {
@@ -287,6 +296,7 @@
         beforeDestroy() {
             this.$bus.$off('EventReceived')
             this.$bus.$off('ControllerConnected')
+            this.$bus.$off('OrgSelected')
         }
     }
 </script>

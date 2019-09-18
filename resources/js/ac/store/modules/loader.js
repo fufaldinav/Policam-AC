@@ -44,6 +44,7 @@ const actions = {
                     if (params.withPersons > 0) {
                         for (let person of division.persons) {
                             person.divisions = [division.id]
+                            // if (person.referral_code !== null && person.referral_code.organization_id === )
                             dispatch('persons/add', person, {root: true})
                             if (person.referral_code !== null) {
                                 commit('rc/add', person.referral_code, {root: true})
