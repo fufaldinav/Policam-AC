@@ -156,7 +156,14 @@ class ReferralController extends Controller
 
                 $organization = App\Organization::find($userData['organization']);
 
-                $emptyDivision = $organization->divisions()->where('type', 0)->first();
+                if ($organization->type === 1) {
+                    $emptyDivision = $organization->divisions()->where('type', 2)->first();
+                    if (is_null($emptyDivision)) {
+                        $emptyDivision = $organization->divisions()->where('type', 0)->first();
+                    }
+                } else {
+                    $emptyDivision = $organization->divisions()->where('type', 0)->first();
+                }
 
                 $person->divisions()->save($emptyDivision);
             }
