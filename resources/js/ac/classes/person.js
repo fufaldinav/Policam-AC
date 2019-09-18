@@ -20,10 +20,10 @@ export function Person(data) {
         }
     }
 
-    if (data.referral_code !== null) {
+    if (data.referral_code !== undefined && data.referral_code !== null) {
         this.referral_code = new ReferralCode(data.referral_code)
     } else {
-        this.referral_code = null
+        this.referral_code = new ReferralCode({})
     }
 
     this.photos = []

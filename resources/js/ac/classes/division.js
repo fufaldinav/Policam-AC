@@ -14,7 +14,7 @@ export function Division(data) {
 
     if (data.persons !== undefined) {
         for (let person of data.persons) {
-            this.persons.push(person.id)
+            this.persons.push(person)
         }
     }
 }

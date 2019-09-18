@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import {Person, Photo} from '../../classes'
+import {Person, Photo, ReferralCode} from '../../classes'
 
 const state = {
     collection: {},

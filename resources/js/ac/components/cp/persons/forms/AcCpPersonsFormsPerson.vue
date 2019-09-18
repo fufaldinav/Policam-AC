@@ -19,7 +19,7 @@
                         class="form-control"
                         :class="{ 'is-invalid': checkField('f') === false }"
                         placeholder="Фамилия"
-                        :disabled="selectedPerson.id === null"
+                        :disabled="formDisabled"
                         required
                     >
                     <div class="invalid-feedback">
@@ -37,7 +37,7 @@
                         class="form-control"
                         :class="{ 'is-invalid': checkField('i') === false }"
                         placeholder="Имя"
-                        :disabled="selectedPerson.id === null"
+                        :disabled="formDisabled"
                         required
                     >
                     <div class="invalid-feedback">
@@ -55,7 +55,7 @@
                         class="form-control"
                         :class="{ 'is-invalid': checkField('o') === false }"
                         placeholder="Отчество"
-                        :disabled="selectedPerson.id === null"
+                        :disabled="formDisabled"
                         required
                     >
                 </div>
@@ -70,7 +70,7 @@
                         class="form-control"
                         :class="{ 'is-invalid': checkField('birthday') === false }"
                         placeholder="Дата рождения"
-                        :disabled="selectedPerson.id === null"
+                        :disabled="formDisabled"
                         required
                     >
                     <div class="invalid-feedback">
@@ -91,7 +91,7 @@
                     name="gender"
                     id="gender-m"
                     value="1"
-                    :disabled="selectedPerson.id === null"
+                    :disabled="formDisabled"
                 >
                 <label class="form-check-label" for="gender-m">Мужской</label>
             </div>
@@ -103,7 +103,7 @@
                     name="gender"
                     id="gender-w"
                     value="2"
-                    :disabled="selectedPerson.id === null"
+                    :disabled="formDisabled"
                 >
                 <label class="form-check-label" for="gender-w">Женский</label>
             </div>
@@ -111,7 +111,7 @@
         <div class="form-row">
             <div class="form-group col-4 col-sm-3">
                 <ac-cp-persons-forms-select-division
-                    v-if="selectedOrganization !== null && selectedOrganization.type === 1"></ac-cp-persons-forms-select-division>
+                    v-if="selectedOrganization !== null"></ac-cp-persons-forms-select-division>
             </div>
             <div class="form-group col-8 col-sm-9">
                 <label for="address">
@@ -123,7 +123,7 @@
                     type="text"
                     class="form-control"
                     placeholder="Адрес"
-                    :disabled="selectedPerson.id === null"
+                    :disabled="formDisabled"
                 >
             </div>
         </div>
@@ -138,7 +138,7 @@
                     type="text"
                     class="form-control"
                     placeholder="Номер телефона"
-                    :disabled="selectedPerson.id === null"
+                    :disabled="formDisabled"
                 >
             </div>
             <div class="form-group col-6">
@@ -221,6 +221,10 @@
 
             hasErrors() {
                 return this.errors.f || this.errors.i || this.errors.o || this.errors.birthday
+            },
+
+            formDisabled() {
+                return this.selectedPerson.referral_code.organization_id !== this.selectedOrganization.id && this.selectedPerson.id !== 0
             }
         },
 

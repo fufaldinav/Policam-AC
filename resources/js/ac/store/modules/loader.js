@@ -40,22 +40,27 @@ const actions = {
         window.axios.get(`/api/divisions/${organizationId}/${withPersons}`)
             .then(response => {
                 for (let division of response.data) {
+                    let persons = []
                     if (withPersons > 0) {
                         for (let person of division.persons) {
                             person.divisions = [division.id]
-                            dispatch('persons/add', person, {root: true})
-                            if (person.referral_code !== null) {
-                                commit('rc/add', person.referral_code, {root: true})
+                            if (person.referral_code === null || person.referral_code.organization_id === organizationId || person.referral_code.activated === 1) {
+                                dispatch('persons/add', person, {root: true})
+                                if (person.referral_code !== null) {
+                                    commit('rc/add', person.referral_code, {root: true})
+                                }
+                                persons.push(person.id)
                             }
                         }
                     }
+                    division.persons = persons
                     commit('divisions/add', division, {root: true})
                 }
                 commit('changeLoadingState', false)
             })
             .catch(error => {
                 if (rootState.debug) console.log(error)
-                setTimeout(dispatch('loadDivisions', withPersons), 2000) //TODO перезапуск при ошибке
+                // setTimeout(dispatch('loadDivisions', withPersons), 2000) //TODO перезапуск при ошибке
             })
     },
 
