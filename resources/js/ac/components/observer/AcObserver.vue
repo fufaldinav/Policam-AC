@@ -261,10 +261,7 @@
                 this.$store.commit('divisions/clearSelected')
                 this.$store.dispatch('messenger/unsubscribe')
                 this.$store.dispatch('messenger/subscribe')
-                this.$store.dispatch('loader/loadDivisions', {
-                    organizationId: orgId,
-                    withPersons: this.$store.state.personsMustBeLoaded
-                })
+                this.$store.dispatch('loader/loadDivisions', this.$store.state.personsMustBeLoaded)
             })
         },
 
