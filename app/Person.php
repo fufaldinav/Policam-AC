@@ -178,11 +178,7 @@ class Person extends Model
         $tasker = new Tasker();
 
         foreach ($cards as $card) {
-            $card = Card::firstOrCreate(['wiegand' => $card['wiegand']]);
-
-            if ($card->person_id > 0) {
-                continue;
-            }
+            $card = Card::firstOrCreate(['wiegand' => $card]);
 
             $this->cards()->save($card);
 
@@ -202,7 +198,7 @@ class Person extends Model
         $tasker = new Tasker();
 
         foreach ($cards as $card) {
-            $card = Card::find($card['id']);
+            $card = Card::where(['wiegand' => $card])->first();
 
             if (! $card) {
                 continue;

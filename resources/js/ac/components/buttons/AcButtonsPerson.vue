@@ -5,7 +5,7 @@
         @click="selectPerson"
     >
         {{ person.f }} {{ person.i }}
-        <span v-if="noRCorNoActivated" class="badge badge-pill" :class="{'badge-danger': noRCorNoActivated}">
+        <span v-if="RCDeactivated" class="badge badge-pill badge-danger">
             !
         </span>
     </button>
@@ -25,10 +25,10 @@
         },
 
         computed: {
-            noRCorNoActivated() {
-                if (this.person.referral_code === null) {
-                    return true
-                }
+            /**
+             * @return {boolean}
+             */
+            RCDeactivated() {
                 return this.person.referral_code.activated === 0
             }
         },

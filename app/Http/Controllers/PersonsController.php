@@ -70,10 +70,8 @@ class PersonsController extends Controller
 
         abort_if(! $user, 500);
 
-       if ($user->hasRole([1, 2, 3, 7])) {
+        if ($user->hasRole([1, 2, 3, 7])) {
             $personOnUpdate = $user->persons()->where('persons.id', $id)->first();
-        } else {
-            abort(403);
         }
 
         abort_if(! $personOnUpdate, 403);
@@ -81,31 +79,53 @@ class PersonsController extends Controller
         $person = $request->input('person');
 
         $rc = $person['referral_code'];
-
-//        $cards = $person['cards'];
         $divisions = $person['divisions'];
         $photos = $person['photos'];
-
-//        $cardsToDelete = $person['cardsToDelete'];
         $divisionsToDelete = $person['divisionsToDelete'];
         $photosToDelete = $person['photosToDelete'];
 
         $personOnUpdate->update($request->input('person'));
 
-        if (isset($rc)) {
+        $cardsToAdd = [];
+        $cardsToDelete = [];
+
+        if (isset($rc['id'])) {
             $rcOnUpdate = App\ReferralCode::find($rc['id']);
             $rcOnUpdate->activated = $rc['activated'];
+
+            $oldRC = $personOnUpdate->referralCode;
+
+            if (isset($oldRC)) {
+                if ($rcOnUpdate->id !== $oldRC->id) {
+                    $oldRC->activated = 0;
+                    $cardsToDelete[] = $oldRC->card;
+                    $oldRC->save();
+                }
+            }
+
+            if ($rcOnUpdate->activated === 1) {
+                $cardsToAdd[] = $rcOnUpdate->card;
+            } else {
+                $cardsToDelete[] = $rcOnUpdate->card;
+            }
+
             $rcOnUpdate->save();
-            //TODO удаление старого ключа
             $rcOnUpdate->persons()->save($personOnUpdate);
+        } else if (isset($oldRC)) {
+            $oldRC->activated = 0;
+            $cardsToDelete[] = $oldRC->card;
+            $oldRC->save();
+
+            $personOnUpdate->referral_code_id = null;
+            $personOnUpdate->save();
         }
 
         $personOnUpdate->attachDivisions($divisions)
-//            ->attachCards($cards)
+            ->attachCards($cardsToAdd)
             ->attachPhotos($photos);
 
         $personOnUpdate->detachDivisions($divisionsToDelete)
-//            ->detachCards($cardsToDelete)
+            ->detachCards($cardsToDelete)
             ->detachPhotos($photosToDelete);
 
         return response()->json($personOnUpdate->load(['divisions', 'photos', 'referralCode', 'users']));
@@ -120,29 +140,28 @@ class PersonsController extends Controller
         $person = $request->input('person');
 
         $rc = $person['referral_code'];
-//        $cards = $person['cards'];
         $divisions = $person['divisions'];
         $photos = $person['photos'];
-//        $organizations = $person['organizations'];
 
         $person = App\Person::create($person);
 
-        if (isset($rc)) {
+        $cardsToAdd = [];
+
+        if (isset($rc['id'])) {
             $rcOnUpdate = App\ReferralCode::find($rc['id']);
             $rcOnUpdate->activated = $rc['activated'];
+
+            if ($rcOnUpdate->activated === 1) {
+                $cardsToAdd[] = $rcOnUpdate->card;
+            }
+
             $rcOnUpdate->save();
-            //TODO удаление старого ключа
             $rcOnUpdate->persons()->save($person);
         }
 
         $person->attachDivisions($divisions)
-//            ->attachCards($cards)
+            ->attachCards($cardsToAdd)
             ->attachPhotos($photos);
-//            ->attachOrganizations($organizations);
-
-//        if ($user->hasRole([4])) {
-//            $person->attachSubscribers([$user->id]);
-//        }
 
         return response()->json($person->load(['divisions', 'photos', 'referralCode', 'users']));
     }
@@ -154,18 +173,18 @@ class PersonsController extends Controller
 
         if ($user->hasRole([1, 2, 3, 7])) {
             $person = $user->persons()->where('persons.id', $id)->first();
-        } else {
-            abort(403);
         }
 
         abort_if(! $person, 403);
 
         $rc = $person->referralCode;
-        $rc->activated = 0;
-        $rc->save();
+        if (isset($rc)) {
+            $rc->activated = 0;
+            $rc->save();
+        }
 
         $person->detachAllDivisions()
-//            ->detachAllCards()
+            ->detachAllCards()
             ->detachAllPhotos()
             ->detachAllSubscribers();
 
