@@ -131,6 +131,7 @@
                 },
 
                 set(code) {
+                    this.codeActivationFailed = false
                     this.codeReceived = null
                     this.codeIsInvalid = false
                     this.codeManualInput = true
@@ -147,7 +148,7 @@
             },
 
             formDisabled() {
-                return this.selectedPerson.referral_code.organization_id !== this.selectedOrganization.id && this.selectedPerson.id !== 0
+                return this.selectedPerson.referral_code.organization_id !== this.selectedOrganization.id && this.selectedPerson.id !== 0 && ! this.codeActivationFailed
             }
         },
 
@@ -156,7 +157,7 @@
                 this.codeActivation = true
                 this.$store.dispatch('rc/activateReferral', this.selectedPerson.referral_code.code)
                     .then(response => {
-                        if (response === 0) {
+                        if (response === 0 || response.activated === 1 || response.organization_id !== this.selectedOrganization.id) {
                             this.codeActivationFailed = true
                         } else {
                             this.selectedPerson.referral_code.activated = 1

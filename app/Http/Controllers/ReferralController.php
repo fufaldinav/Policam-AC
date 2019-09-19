@@ -102,11 +102,9 @@ class ReferralController extends Controller
 
         if (is_null($referral)) {
             return 0;
-        } else if ($referral->activated) {
-            return 0;
         }
 
-        return 1;
+        return response()->json($referral);
     }
 
     public function getReferral(string $code)

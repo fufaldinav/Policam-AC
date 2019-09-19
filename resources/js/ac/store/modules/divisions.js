@@ -85,6 +85,12 @@ const getters = {
             if (personA.o > personB.o) return 1
             return 0
         })
+    },
+
+    getWithPerson: state => personId => {
+        return state.collection.filter(division => {
+            return division.persons.find(person => person === personId) !== undefined
+        })
     }
 }
 
@@ -94,13 +100,11 @@ const mutations = {
     },
 
     update(state, division) {
-        let id = division.id
-        let oldDivision = state.collection.find(oldDivision => oldDivision.id === id)
+        let oldDivision = state.collection.find(oldDivision => oldDivision.id === division.id)
         let index = state.collection.indexOf(oldDivision)
         if (index > -1) {
-            state.collection.splice(index, 1)
+            state.collection.splice(index, 1, new Division(division))
         }
-        state.collection.push(new Division(division))
     },
 
     remove(state, division) {
