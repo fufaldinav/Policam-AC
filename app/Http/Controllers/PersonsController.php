@@ -160,6 +160,10 @@ class PersonsController extends Controller
 
         abort_if(! $person, 403);
 
+        $rc = $person->referralCode;
+        $rc->activated = 0;
+        $rc->save();
+
         $person->detachAllDivisions()
 //            ->detachAllCards()
             ->detachAllPhotos()
