@@ -119,12 +119,21 @@ class PersonsController extends Controller
 
         $person = $request->input('person');
 
+        $rc = $person['referral_code'];
 //        $cards = $person['cards'];
         $divisions = $person['divisions'];
         $photos = $person['photos'];
 //        $organizations = $person['organizations'];
 
         $person = App\Person::create($person);
+
+        if (isset($rc)) {
+            $rcOnUpdate = App\ReferralCode::find($rc['id']);
+            $rcOnUpdate->activated = $rc['activated'];
+            $rcOnUpdate->save();
+            //TODO удаление старого ключа
+            $rcOnUpdate->persons()->save($person);
+        }
 
         $person->attachDivisions($divisions)
 //            ->attachCards($cards)
@@ -135,7 +144,7 @@ class PersonsController extends Controller
 //            $person->attachSubscribers([$user->id]);
 //        }
 
-        return response()->json($person->load(['cards', 'divisions', 'photos', 'users']));
+        return response()->json($person->load(['divisions', 'photos', 'referralCode', 'users']));
     }
 
     public function destroy(Request $request, int $id): ?int
@@ -143,9 +152,7 @@ class PersonsController extends Controller
         $user = $request->user();
         $person = null;
 
-        if ($user->hasRole([4, 5])) {
-            $person = $user->subscriptions()->where('persons.id', $id)->first();
-        } elseif ($user->hasRole([1, 2, 3, 7])) {
+        if ($user->hasRole([1, 2, 3, 7])) {
             $person = $user->persons()->where('persons.id', $id)->first();
         } else {
             abort(403);
@@ -154,7 +161,7 @@ class PersonsController extends Controller
         abort_if(! $person, 403);
 
         $person->detachAllDivisions()
-            ->detachAllCards()
+//            ->detachAllCards()
             ->detachAllPhotos()
             ->detachAllSubscribers();
 
