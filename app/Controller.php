@@ -43,6 +43,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Controller whereSn($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Controller whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Controller whereUpdatedAt($value)
+ * @property-read int|null $cameras_count
+ * @property-read int|null $notifications_count
+ * @property-read int|null $tasks_count
  */
 class Controller extends Model
 {

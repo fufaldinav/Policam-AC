@@ -29,6 +29,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Card wherePersonId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Card whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Card whereWiegand($value)
+ * @property-read int|null $events_count
  */
 class Card extends Model
 {

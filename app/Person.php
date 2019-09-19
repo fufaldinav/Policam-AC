@@ -38,6 +38,15 @@ use Staudenmeir\EloquentHasManyDeep\HasRelationships;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Person wherePhone($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Person whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Person whereUpdatedAt($value)
+ * @property int|null $gender
+ * @property int|null $referral_code_id
+ * @property-read int|null $cards_count
+ * @property-read int|null $divisions_count
+ * @property-read int|null $photos_count
+ * @property-read \App\ReferralCode|null $referralCode
+ * @property-read int|null $users_count
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Person whereGender($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Person whereReferralCodeId($value)
  */
 class Person extends Model
 {

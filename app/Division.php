@@ -25,6 +25,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Division whereOrganizationId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Division whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Division whereUpdatedAt($value)
+ * @property-read int|null $persons_count
  */
 class Division extends Model
 {

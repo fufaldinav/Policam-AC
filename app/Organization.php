@@ -28,6 +28,11 @@ use Staudenmeir\EloquentHasManyDeep\HasRelationships;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Organization whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Organization whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Organization whereUpdatedAt($value)
+ * @property-read int|null $controllers_count
+ * @property-read int|null $divisions_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\ReferralCode[] $referralCodes
+ * @property-read int|null $referral_codes_count
+ * @property-read int|null $users_count
  */
 class Organization extends Model
 {

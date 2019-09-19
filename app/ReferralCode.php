@@ -24,6 +24,14 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\ReferralCode whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\ReferralCode whereUserId($value)
  * @mixin \Eloquent
+ * @property int $organization_id
+ * @property int $activated
+ * @property-read \App\Organization $organization
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Person[] $persons
+ * @property-read int|null $persons_count
+ * @property-read \App\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\ReferralCode whereActivated($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\ReferralCode whereOrganizationId($value)
  */
 class ReferralCode extends Model
 {
@@ -66,6 +74,6 @@ class ReferralCode extends Model
 
     public function user()
     {
-        return $this->belongsTo('App\User')->withTimestamps();
+        return $this->belongsTo('App\User');
     }
 }
