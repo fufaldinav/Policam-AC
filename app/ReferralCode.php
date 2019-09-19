@@ -45,6 +45,15 @@ class ReferralCode extends Model
         'card',
     ];
 
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'activated' => 'integer',
+    ];
+
     public function organization()
     {
         return $this->belongsTo('App\Organization');

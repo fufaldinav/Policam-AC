@@ -10,29 +10,27 @@ class ReferralController extends Controller
     public function parseLink(Request $request, int $referralCode = null)
     {
         if (isset($referralCode)) {
-            $rc = App\ReferralCode::where(['code' => $referralCode, 'user_id' => null])->first();
+            $rc = App\ReferralCode::where(['code' => $referralCode, 'user_id' => null, 'activated' => 0])->first();
 
-            if ($rc !== null) {
-                $referralCode = $rc->code;
-            } else {
-                $referralCode = null;
-            }
-        }
+            if (isset($rc)) {
+                if ($request->user()) {
+                    if (isset($request->user()->email_verified_at)) {
+                        $rc->user_id = $request->user()->id;
+                        $rc->save();
 
-        if ($request->user()) {
-            if ($request->user()->email_verified_at !== null) {
-                if (isset($rc)) {
-                    $rc->user_id = $request->user()->id;
-                    $rc->save();
+                        return redirect('cp');
+                    } else {
+                        return view('auth.verify');
+                    }
+                } else {
+                    return view('postreg.reg', compact('referralCode'));
                 }
-
-                return redirect('cp');
             } else {
-                return view('auth.verify');
+                return view('postreg.codeAlreadyActivated', compact('referralCode'));
             }
+        } else {
+            return view('postreg.enterCode');
         }
-
-        return view('postreg.reg', compact('referralCode'));
     }
 
     /**

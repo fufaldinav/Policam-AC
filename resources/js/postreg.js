@@ -4,6 +4,7 @@ import Vue from 'vue'
 import store from './postreg/store'
 
 import Vue2TouchEvents from 'vue2-touch-events'
+import EnterCode from './postreg/components/EnterCode'
 import Postreg from './postreg/components/Postreg'
 
 Vue.use(Vue2TouchEvents)
@@ -19,7 +20,7 @@ window.Ac = new Vue({
     store,
 
     components: {
-        Postreg
+        EnterCode, Postreg
     },
 
     data: {
