@@ -51,6 +51,12 @@ use Staudenmeir\EloquentHasManyDeep\HasRelationships;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereUpdatedAt($value)
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\ReferralCode[] $referralCodes
+ * @property-read int|null $notifications_count
+ * @property-read int|null $organizations_count
+ * @property-read int|null $referral_codes_count
+ * @property-read int|null $roles_count
+ * @property-read int|null $subscriptions_count
+ * @property-read int|null $tokens_count
  */
 class User extends Model implements
     AuthenticatableContract,

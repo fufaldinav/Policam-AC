@@ -10,29 +10,27 @@ class ReferralController extends Controller
     public function parseLink(Request $request, int $referralCode = null)
     {
         if (isset($referralCode)) {
-            $rc = App\ReferralCode::where(['code' => $referralCode, 'user_id' => null])->first();
+            $rc = App\ReferralCode::where(['code' => $referralCode, 'user_id' => null, 'activated' => 0])->first();
 
-            if ($rc !== null) {
-                $referralCode = $rc->code;
-            } else {
-                $referralCode = null;
-            }
-        }
+            if (isset($rc)) {
+                if ($request->user()) {
+                    if (isset($request->user()->email_verified_at)) {
+                        $rc->user_id = $request->user()->id;
+                        $rc->save();
 
-        if ($request->user()) {
-            if ($request->user()->email_verified_at !== null) {
-                if (isset($rc)) {
-                    $rc->user_id = $request->user()->id;
-                    $rc->save();
+                        return redirect('cp');
+                    } else {
+                        return view('auth.verify');
+                    }
+                } else {
+                    return view('postreg.reg', compact('referralCode'));
                 }
-
-                return redirect('cp');
             } else {
-                return view('auth.verify');
+                return view('postreg.codeAlreadyActivated', compact('referralCode'));
             }
+        } else {
+            return view('postreg.enterCode');
         }
-
-        return view('postreg.reg', compact('referralCode'));
     }
 
     /**
@@ -65,6 +63,19 @@ class ReferralController extends Controller
         return response()->json($referralCodes);
     }
 
+    public function getCodesByOrganization(Request $request, int $organizationId)
+    {
+        if ($organizationId > 0) {
+            $organization = $request->user()->organizations->where('id', $organizationId)->first();
+        } else {
+            $organization = $request->user()->organizations->first();
+        }
+
+        $referralCodes = $organization->referralCodes()->select('id', 'code', 'organization_id', 'activated')->get();
+
+        return response()->json($referralCodes);
+    }
+
     public function getDivisions(int $organizationId, int $type = 1)
     {
         $divisions = App\Division::where(['organization_id' => $organizationId, 'type' => $type])->select('id', 'name', 'organization_id')->get();
@@ -85,11 +96,24 @@ class ReferralController extends Controller
         return response()->json($organizations);
     }
 
+    public function activateReferral(string $code)
+    {
+        $referral = App\ReferralCode::where(['code' => $code])->first();
+
+        if (is_null($referral)) {
+            return 0;
+        } else if ($referral->activated) {
+            return 0;
+        }
+
+        return 1;
+    }
+
     public function getReferral(string $code)
     {
         $referral = App\ReferralCode::where(['code' => $code])->select('id', 'code', 'organization_id', 'activated')->first();
 
-        if (! $referral) {
+        if (is_null($referral)) {
             return 0;
         }
 
@@ -130,7 +154,14 @@ class ReferralController extends Controller
 
                 $organization = App\Organization::find($userData['organization']);
 
-                $emptyDivision = $organization->divisions()->where('type', 0)->first();
+                if ($organization->type === 1) {
+                    $emptyDivision = $organization->divisions()->where('type', 2)->first();
+                    if (is_null($emptyDivision)) {
+                        $emptyDivision = $organization->divisions()->where('type', 0)->first();
+                    }
+                } else {
+                    $emptyDivision = $organization->divisions()->where('type', 0)->first();
+                }
 
                 $person->divisions()->save($emptyDivision);
             }

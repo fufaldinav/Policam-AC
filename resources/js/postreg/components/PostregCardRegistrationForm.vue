@@ -363,10 +363,11 @@
                             } else {
                                 this.codeReceived = response
                             }
-                            this.codeChecking = false
                         })
                         .catch(error => {
                             if (this.$store.state.debug) console.log(error)
+                        })
+                        .finally(() => {
                             this.codeChecking = false
                         })
                 }

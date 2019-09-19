@@ -1,4 +1,4 @@
-<template xmlns:v-touch="http://www.w3.org/1999/xhtml">
+<template>
     <transition
         name="ac-menu-slide"
         enter-class="ac-menu-slide-enter"
@@ -39,7 +39,6 @@
 </template>
 
 <script>
-    import {mapState} from 'vuex'
     import AcCpPersonsButtonsAdd from './buttons/AcCpPersonsButtonsAdd'
     import AcButtonsBack from '../../buttons/AcButtonsBack'
     import AcButtonsPerson from '../../buttons/AcButtonsPerson'
@@ -65,15 +64,21 @@
                 return this.$store.getters['divisions/sorted']
             },
 
+            selectedDivision() {
+                return this.$store.state.divisions.selected
+            },
+
             selectedDivisionPersons() {
                 return this.$store.getters['divisions/selectedSortedPersons']
             },
 
-            ...mapState({
-                selectedDivision: state => state.divisions.selected,
-                persons: state => state.persons.collection,
-                breakpoint: state => state.bp.current
-            })
+            persons() {
+                return this.$store.state.persons.collection
+            },
+
+            breakpoint() {
+                return this.$store.state.bp.current
+            }
         },
 
         methods: {

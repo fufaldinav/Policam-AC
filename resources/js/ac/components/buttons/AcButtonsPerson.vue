@@ -5,7 +5,7 @@
         @click="selectPerson"
     >
         {{ person.f }} {{ person.i }}
-        <span v-if="noCards" class="badge badge-pill" :class="{'badge-danger': noCards}">
+        <span v-if="RCDeactivated" class="badge badge-pill badge-danger">
             !
         </span>
     </button>
@@ -18,12 +18,18 @@
         name: "AcButtonsPerson",
 
         props: {
-            person: Object
+            person: {
+                type: Object,
+                required: true
+            }
         },
 
         computed: {
-            noCards() {
-                return this.person.cards.length === 0
+            /**
+             * @return {boolean}
+             */
+            RCDeactivated() {
+                return this.person.referral_code.activated === 0
             }
         },
 

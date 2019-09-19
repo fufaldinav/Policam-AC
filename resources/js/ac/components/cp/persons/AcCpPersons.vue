@@ -1,4 +1,4 @@
-<template xmlns:v-touch="http://www.w3.org/1999/xhtml">
+<template>
     <div class="container-fluid">
         <div v-if="loading">
             <ac-loading></ac-loading>
@@ -74,25 +74,35 @@
         },
 
         created() {
-            this.$store.dispatch('loader/loadDivisions', {organizationId: 0, withPersons: 1})
+            this.$bus.$on('OrgSelected', orgId => {
+                this.$store.commit('persons/clearSelected')
+                this.$store.commit('divisions/clearSelected')
+                this.$store.dispatch('messenger/unsubscribe')
+                this.$store.dispatch('messenger/subscribe')
+                this.$store.dispatch('loader/loadDivisions', this.$store.state.personsMustBeLoaded)
+            })
         },
 
         mounted() {
             this.$bus.$on('EventReceived', e => {
                 if (e.event.event === 2 || e.event.event === 3) {
-                    if (this.$store.state.cards.manualInput === false ){
-                        this.$store.commit('cards/setLast', e.card)
-                    }
+                    // if (this.$store.state.cards.manualInput === false ){
+                    //     this.$store.commit('cards/setLast', e.card)
+                    // }
                 }
             })
             this.$bus.$on('ControllerConnected', e => {
                 if (this.$store.state.debug) console.log('Контроллер ID: ' + e.controller_id + ' вышел на связь')
+            })
+            this.$bus.$on('OrganizationChanged', e => {
+                console.log(e)
             })
         },
 
         beforeDestroy() {
             this.$bus.$off('EventReceived')
             this.$bus.$off('ControllerConnected')
+            this.$bus.$off('OrgSelected')
         }
     }
 </script>

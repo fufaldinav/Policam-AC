@@ -1,10 +1,11 @@
-import {Card, Photo} from './'
+import {Photo, ReferralCode} from './'
 
 export function Person(data) {
     this.id = null
     this.f = null
     this.i = null
     this.o = null
+    this.gender = null
     this.type = 1
     this.birthday = null
     this.address = null
@@ -19,18 +20,16 @@ export function Person(data) {
         }
     }
 
-    this.cards = []
-    this.cardsToDelete = []
+    if (data.referral_code !== undefined && data.referral_code !== null) {
+        this.referral_code = new ReferralCode(data.referral_code)
+    } else {
+        this.referral_code = new ReferralCode({})
+    }
+
     this.photos = []
     this.photosToDelete = []
     this.users = []
     this.usersToDelete = []
-
-    if (data.cards !== undefined) {
-        for (let card of data.cards) {
-            this.cards.push(new Card(card))
-        }
-    }
 
     if (data.photos !== undefined) {
         for (let photo of data.photos) {

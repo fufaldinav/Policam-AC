@@ -59,7 +59,16 @@
             this.$store.commit('timetable/setCurrentWeek', currentWeek)
 
             this.$store.commit('setPersonsShouldNotBeLoaded')
-            this.$store.dispatch('loader/loadDivisions', {organizationId: 0, withPersons: 0})
+            this.$bus.$on('OrgSelected', orgId => {
+                this.$store.commit('divisions/clearSelected')
+                this.$store.dispatch('messenger/unsubscribe')
+                this.$store.dispatch('messenger/subscribe')
+                this.$store.dispatch('loader/loadDivisions', this.$store.state.personsMustBeLoaded)
+            })
+        },
+
+        beforeDestroy() {
+            this.$bus.$off('OrgSelected')
         }
     }
 </script>

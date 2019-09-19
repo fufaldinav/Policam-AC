@@ -66,68 +66,104 @@ class PersonsController extends Controller
     public function update(Request $request, $id)
     {
         $user = App\User::find($request->user()->id);
-        $onUpdatePerson = null;
+        $personOnUpdate = null;
 
         abort_if(! $user, 500);
 
-        if ($user->hasRole([4, 5])) {
-            $onUpdatePerson = $user->subscriptions()->where('persons.id', $id)->first();
-        } elseif ($user->hasRole([1, 2, 3])) {
-            $onUpdatePerson = $user->persons()->where('persons.id', $id)->first();
-        } else {
-            abort(403);
+        if ($user->hasRole([1, 2, 3, 7])) {
+            $personOnUpdate = $user->persons()->where('persons.id', $id)->first();
         }
 
-        abort_if(! $onUpdatePerson, 403);
+        abort_if(! $personOnUpdate, 403);
 
         $person = $request->input('person');
 
-        $cards = $person['cards'];
+        $rc = $person['referral_code'];
         $divisions = $person['divisions'];
         $photos = $person['photos'];
-
-        $cardsToDelete = $person['cardsToDelete'];
         $divisionsToDelete = $person['divisionsToDelete'];
         $photosToDelete = $person['photosToDelete'];
 
-        $onUpdatePerson->update($request->input('person'));
+        $personOnUpdate->update($request->input('person'));
 
-        $onUpdatePerson->attachDivisions($divisions)
-            ->attachCards($cards)
+        $cardsToAdd = [];
+        $cardsToDelete = [];
+
+        if (isset($rc['id'])) {
+            $rcOnUpdate = App\ReferralCode::find($rc['id']);
+            $rcOnUpdate->activated = $rc['activated'];
+
+            $oldRC = $personOnUpdate->referralCode;
+
+            if (isset($oldRC)) {
+                if ($rcOnUpdate->id !== $oldRC->id) {
+                    $oldRC->activated = 0;
+                    $cardsToDelete[] = $oldRC->card;
+                    $oldRC->save();
+                }
+            }
+
+            if ($rcOnUpdate->activated === 1) {
+                $cardsToAdd[] = $rcOnUpdate->card;
+            } else {
+                $cardsToDelete[] = $rcOnUpdate->card;
+            }
+
+            $rcOnUpdate->save();
+            $rcOnUpdate->persons()->save($personOnUpdate);
+        } else if (isset($oldRC)) {
+            $oldRC->activated = 0;
+            $cardsToDelete[] = $oldRC->card;
+            $oldRC->save();
+
+            $personOnUpdate->referral_code_id = null;
+            $personOnUpdate->save();
+        }
+
+        $personOnUpdate->attachDivisions($divisions)
+            ->attachCards($cardsToAdd)
             ->attachPhotos($photos);
 
-        $onUpdatePerson->detachDivisions($divisionsToDelete)
+        $personOnUpdate->detachDivisions($divisionsToDelete)
             ->detachCards($cardsToDelete)
             ->detachPhotos($photosToDelete);
 
-        return response()->json($onUpdatePerson->load(['cards', 'divisions', 'photos', 'users']));
+        return response()->json($personOnUpdate->load(['divisions', 'photos', 'referralCode', 'users']));
     }
 
     public function store(Request $request)
     {
         $user = $request->user();
 
-        abort_if(! $user->hasRole([1, 2, 3, 4, 5, 7]), 403);
+        abort_if(! $user->hasRole([1, 2, 3, 7]), 403);
 
         $person = $request->input('person');
 
-        $cards = $person['cards'];
+        $rc = $person['referral_code'];
         $divisions = $person['divisions'];
         $photos = $person['photos'];
-        $organizations = $person['organizations'];
 
         $person = App\Person::create($person);
 
-        $person->attachDivisions($divisions)
-            ->attachCards($cards)
-            ->attachPhotos($photos)
-            ->attachOrganizations($organizations);
+        $cardsToAdd = [];
 
-        if ($user->hasRole([4])) {
-            $person->attachSubscribers([$user->id]);
+        if (isset($rc['id'])) {
+            $rcOnUpdate = App\ReferralCode::find($rc['id']);
+            $rcOnUpdate->activated = $rc['activated'];
+
+            if ($rcOnUpdate->activated === 1) {
+                $cardsToAdd[] = $rcOnUpdate->card;
+            }
+
+            $rcOnUpdate->save();
+            $rcOnUpdate->persons()->save($person);
         }
 
-        return response()->json($person->load(['cards', 'divisions', 'photos', 'users']));
+        $person->attachDivisions($divisions)
+            ->attachCards($cardsToAdd)
+            ->attachPhotos($photos);
+
+        return response()->json($person->load(['divisions', 'photos', 'referralCode', 'users']));
     }
 
     public function destroy(Request $request, int $id): ?int
@@ -135,15 +171,17 @@ class PersonsController extends Controller
         $user = $request->user();
         $person = null;
 
-        if ($user->hasRole([4, 5])) {
-            $person = $user->subscriptions()->where('persons.id', $id)->first();
-        } elseif ($user->hasRole([1, 2, 3, 7])) {
+        if ($user->hasRole([1, 2, 3, 7])) {
             $person = $user->persons()->where('persons.id', $id)->first();
-        } else {
-            abort(403);
         }
 
         abort_if(! $person, 403);
+
+        $rc = $person->referralCode;
+        if (isset($rc)) {
+            $rc->activated = 0;
+            $rc->save();
+        }
 
         $person->detachAllDivisions()
             ->detachAllCards()

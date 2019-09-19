@@ -145,16 +145,16 @@
                                         >
                                     </div>
                                 </div>
-                                <div
-                                    v-if="selectedPerson.cards.length > 0 && selectedManually"
-                                    class="form-row"
-                                >
-                                    <div class="form-group col-6 col-sm-12">
-                                        <ac-observer-buttons-card-forgot></ac-observer-buttons-card-forgot>
-                                        <ac-observer-buttons-card-lost></ac-observer-buttons-card-lost>
-                                        <ac-observer-buttons-card-broke></ac-observer-buttons-card-broke>
-                                    </div>
-                                </div>
+<!--                                <div-->
+<!--                                    v-if="selectedPerson.cards.length > 0 && selectedManually"-->
+<!--                                    class="form-row"-->
+<!--                                >-->
+<!--                                    <div class="form-group col-6 col-sm-12">-->
+<!--                                        <ac-observer-buttons-card-forgot></ac-observer-buttons-card-forgot>-->
+<!--                                        <ac-observer-buttons-card-lost></ac-observer-buttons-card-lost>-->
+<!--                                        <ac-observer-buttons-card-broke></ac-observer-buttons-card-broke>-->
+<!--                                    </div>-->
+<!--                                </div>-->
                             </form>
                         </div>
                     </div>
@@ -256,7 +256,13 @@
         },
 
         created() {
-            this.$store.dispatch('loader/loadDivisions', {organizationId: 0, withPersons: 1})
+            this.$bus.$on('OrgSelected', orgId => {
+                this.$store.commit('persons/clearSelected')
+                this.$store.commit('divisions/clearSelected')
+                this.$store.dispatch('messenger/unsubscribe')
+                this.$store.dispatch('messenger/subscribe')
+                this.$store.dispatch('loader/loadDivisions', this.$store.state.personsMustBeLoaded)
+            })
         },
 
         beforeMount() {
@@ -287,6 +293,7 @@
         beforeDestroy() {
             this.$bus.$off('EventReceived')
             this.$bus.$off('ControllerConnected')
+            this.$bus.$off('OrgSelected')
         }
     }
 </script>

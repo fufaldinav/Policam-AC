@@ -5,7 +5,6 @@ import actions from './actions'
 import mutations from './mutations'
 
 import bp from './modules/breakpoint'
-import cards from './modules/cards'
 import cp from './modules/cp'
 import divisions from './modules/divisions'
 import history from './modules/history'
@@ -14,6 +13,7 @@ import messenger from './modules/messenger'
 import modal from './modules/modal'
 import organizations from './modules/organizations'
 import persons from './modules/persons'
+import rc from './modules/rc'
 import timetable from './modules/timetable'
 
 Vue.use(Vuex)
@@ -30,7 +30,6 @@ export default new Vuex.Store({
 
     modules: {
         bp,
-        cards,
         cp,
         divisions,
         history,
@@ -39,6 +38,7 @@ export default new Vuex.Store({
         messenger,
         organizations,
         persons,
+        rc,
         timetable
     }
 })

@@ -144,7 +144,7 @@ class UsersController extends Controller
      */
     public function getPersons(Request $request)
     {
-        return $request->user()->subscriptions->load(['cards', 'divisions.organization', 'photos', 'users']);
+        return $request->user()->subscriptions->load(['divisions.organization', 'photos', 'users']);
     }
 
     /**

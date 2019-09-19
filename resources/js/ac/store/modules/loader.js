@@ -30,30 +30,37 @@ const actions = {
             })
     },
 
-    async loadDivisions({commit, dispatch, rootState}, params) {
+    async loadDivisions({commit, dispatch, rootState}, withPersons) {
         commit('changeLoadingState', true)
-        if (params.organizationId > 0) {
-            commit('divisions/clearCollection', null, {root: true})
-        }
-        if (params.withPersons > 0) {
+        commit('divisions/clearCollection', null, {root: true})
+        if (withPersons > 0) {
             commit('persons/clearCollection', null, {root: true})
         }
-        window.axios.get(`/api/divisions/${params.organizationId}/${params.withPersons}`)
+        let organizationId = rootState.organizations.selected.id
+        window.axios.get(`/api/divisions/${organizationId}/${withPersons}`)
             .then(response => {
                 for (let division of response.data) {
-                    if (params.withPersons > 0) {
+                    let persons = []
+                    if (withPersons > 0) {
                         for (let person of division.persons) {
                             person.divisions = [division.id]
-                            dispatch('persons/add', person, {root: true})
+                            if (person.referral_code === null || person.referral_code.organization_id === organizationId || person.referral_code.activated === 1) {
+                                dispatch('persons/add', person, {root: true})
+                                if (person.referral_code !== null) {
+                                    commit('rc/add', person.referral_code, {root: true})
+                                }
+                                persons.push(person.id)
+                            }
                         }
                     }
+                    division.persons = persons
                     commit('divisions/add', division, {root: true})
                 }
                 commit('changeLoadingState', false)
             })
             .catch(error => {
                 if (rootState.debug) console.log(error)
-                setTimeout(dispatch('loadDivisions', params), 2000) //TODO перезапуск при ошибке
+                // setTimeout(dispatch('loadDivisions', withPersons), 2000) //TODO перезапуск при ошибке
             })
     },
 
@@ -68,7 +75,7 @@ const actions = {
                         divisions.push(division.id)
                         if (division.organization.type === 1) {
                             person.organizations.basic = division.organization.id
-                        } else if (division.organization.type === 2) {
+                        } else {
                             person.organizations.additional.push(division.organization.id)
                         }
                     }
@@ -83,22 +90,20 @@ const actions = {
             })
     },
 
-    async loadReferralCodes({commit, dispatch, rootState}) {
-        commit('changeLoadingState', true)
-        window.axios.get('/users/referral_codes')
-            .then(response => {
-                for (let card of response.data) {
-                    let code = parseInt(card.code)
-                    let wiegand = ('000000000000' + code.toString(16).toUpperCase()).slice(-12)
-                    commit('cards/addReferralCard', {wiegand: wiegand}, {root: true})
-                }
-                commit('changeLoadingState', false)
-            })
-            .catch(error => {
-                if (rootState.debug) console.log(error)
-                setTimeout(dispatch('loadReferralCodes'), 2000) //TODO перезапуск при ошибке
-            })
-    }
+    // async loadReferralCodes({commit, dispatch, rootState}, organizationId = 0) {
+    //     commit('changeLoadingState', true)
+    //     window.axios.get('/api/codes/' + organizationId)
+    //         .then(response => {
+    //             for (let rc of response.data) {
+    //                 commit('rc/add', rc, {root: true})
+    //             }
+    //             commit('changeLoadingState', false)
+    //         })
+    //         .catch(error => {
+    //             if (rootState.debug) console.log(error)
+    //             setTimeout(dispatch('loadReferralCodes'), 2000) //TODO перезапуск при ошибке
+    //         })
+    // }
 }
 
 export default {

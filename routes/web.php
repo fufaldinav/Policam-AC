@@ -36,12 +36,16 @@ Route::group(['prefix' => 'api', 'as' => 'api.'], function () {
         Route::post('{id}', 'DivisionsController@update');
         Route::delete('{id}', 'DivisionsController@destroy');
     });
+    Route::group(['prefix' => 'referral', 'as' => 'referral.'], function () {
+        Route::get('divisions/{organizationId}/{type?}', 'ReferralController@getDivisions');
+        Route::get('organizations/{type}/{organizationId?}', 'ReferralController@getOrganizations');
+        Route::get('activate/{cardCode}', 'ReferralController@activateReferral')->middleware('role:2,3,7');
+        Route::get('checkcode/{cardCode}', 'ReferralController@getReferral');
+        Route::post('data', 'ReferralController@parseData');
+    });
     Route::get('user', 'ReferralController@getUserInfo');
     Route::get('codes', 'ReferralController@getCodes');
-    Route::get('referral/divisions/{organizationId}/{type?}', 'ReferralController@getDivisions');
-    Route::get('referral/organizations/{type}/{organizationId?}', 'ReferralController@getOrganizations');
-    Route::get('referral/checkcode/{cardCode}', 'ReferralController@getReferral');
-    Route::post('referral/data', 'ReferralController@parseData');
+    Route::get('codes/{organizationId}', 'ReferralController@getCodesByOrganization');
 });
 /*
  * Auth

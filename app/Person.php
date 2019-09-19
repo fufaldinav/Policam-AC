@@ -38,6 +38,15 @@ use Staudenmeir\EloquentHasManyDeep\HasRelationships;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Person wherePhone($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Person whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Person whereUpdatedAt($value)
+ * @property int|null $gender
+ * @property int|null $referral_code_id
+ * @property-read int|null $cards_count
+ * @property-read int|null $divisions_count
+ * @property-read int|null $photos_count
+ * @property-read \App\ReferralCode|null $referralCode
+ * @property-read int|null $users_count
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Person whereGender($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Person whereReferralCodeId($value)
  */
 class Person extends Model
 {
@@ -115,7 +124,7 @@ class Person extends Model
         return $this->hasMany('App\Photo');
     }
 
-    public function referral()
+    public function referralCode()
     {
         return $this->belongsTo('App\ReferralCode');
     }
@@ -169,11 +178,7 @@ class Person extends Model
         $tasker = new Tasker();
 
         foreach ($cards as $card) {
-            $card = Card::firstOrCreate(['wiegand' => $card['wiegand']]);
-
-            if ($card->person_id > 0) {
-                continue;
-            }
+            $card = Card::firstOrCreate(['wiegand' => $card]);
 
             $this->cards()->save($card);
 
@@ -193,7 +198,7 @@ class Person extends Model
         $tasker = new Tasker();
 
         foreach ($cards as $card) {
-            $card = Card::find($card['id']);
+            $card = Card::where(['wiegand' => $card])->first();
 
             if (! $card) {
                 continue;

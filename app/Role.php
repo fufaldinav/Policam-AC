@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $type
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Role whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Role whereType($value)
+ * @property-read int|null $users_count
  */
 class Role extends Model
 {

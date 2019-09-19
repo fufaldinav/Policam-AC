@@ -23,10 +23,10 @@
         methods: {
             removeCard() {
                 if (this.$store.state.modal.shown) {
-                    this.$store.commit('persons/removeCard', this.$store.state.cards.removable)
+                    // this.$store.commit('persons/removeCard', this.$store.state.cards.removable)
                     this.$store.dispatch('modal/close')
                 } else {
-                    this.$store.commit('cards/setRemovable', this.removableCard)
+                    // this.$store.commit('cards/setRemovable', this.removableCard)
 
                     this.$store.commit('modal/setTitle', 'Удаление')
 

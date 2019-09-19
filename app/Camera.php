@@ -23,6 +23,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Card whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Card whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Card whereUpdatedAt($value)
+ * @property-read int|null $controllers_count
+ * @property-read int|null $snapshots_count
  */
 class Camera extends Model
 {

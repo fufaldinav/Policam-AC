@@ -38,18 +38,13 @@
             }
         },
 
-        created() {
+        mounted() {
             this.$store.dispatch('loader/loadOrganizations')
         },
 
         methods: {
-                changeOrganization(org) {
-                this.$store.commit('persons/clearSelected')
-                this.$store.commit('divisions/clearSelected')
-                this.$store.dispatch('messenger/unsubscribe')
+            changeOrganization(org) {
                 this.$store.commit('organizations/setSelected', org)
-                this.$store.dispatch('messenger/subscribe')
-                this.$store.dispatch('loader/loadDivisions', {organizationId: org.id, withPersons: this.$store.state.personsMustBeLoaded})
             }
         },
     }
