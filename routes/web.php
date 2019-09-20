@@ -91,6 +91,7 @@ Route::group(['prefix' => 'cp', 'as' => 'cp.'], function () {
  */
 Route::get('dev', 'DevController@index');
 Route::get('dev/import', 'DevController@parseImportFile');
+Route::get('dev/export/{organizationId}', 'DevController@createExportFile');
 /*
  * Post registration
  */

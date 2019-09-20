@@ -88,4 +88,25 @@ class DevController extends Controller
 
         return response($response)->header('Content-Type', 'text/plain');
     }
+
+    public function createExportFile(Request $request, int $organizationId)
+    {
+        abort_if(! $request->user()->isAdmin(), 403);
+
+        $response = '';
+
+        $organization = App\Organization::find($organizationId);
+
+        abort_if(! $organization, 403);
+
+        foreach ($organization->divisions as $division) {
+            foreach ($division->persons as $person) {
+                $rc = $person->referralCode;
+
+                $response .= $person->f . ',' . $person->i . ',' . $person->o . ',' . $person->gender . ',' . $person->birthday . ',' . $person->type . ',' . $rc->code . ',' . $organization->name . ',' . $division->name . PHP_EOL;
+            }
+        }
+
+        Storage::disk('local')->put('export.csv', $response);
+    }
 }
