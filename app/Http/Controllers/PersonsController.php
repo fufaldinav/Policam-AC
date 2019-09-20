@@ -120,7 +120,7 @@ class PersonsController extends Controller
             $personOnUpdate->save();
         }
 
-        return response()->json($personOnUpdate->load(['divisions', 'photos', 'referralCode', 'users']));
+        return response()->json($personOnUpdate->load(['divisions', 'photos', 'referralCode']));
     }
 
     public function store(Request $request)
@@ -132,7 +132,7 @@ class PersonsController extends Controller
         $person = $request->input('person');
 
         $rc = $person['referral_code'];
-        $division = $person['divisions'];
+        $division = $person['division'];
         $photos = $person['photos'];
 
         $person = App\Person::create($person);
@@ -152,7 +152,7 @@ class PersonsController extends Controller
             $rcOnUpdate->persons()->save($person);
         }
 
-        return response()->json($person->load(['divisions', 'photos', 'referralCode', 'users']));
+        return response()->json($person->load(['divisions', 'photos', 'referralCode']));
     }
 
     public function destroy(Request $request, int $id): ?int

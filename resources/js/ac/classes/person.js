@@ -11,6 +11,7 @@ export function Person(data) {
     this.address = null
     this.phone = null
     this.division = null
+    this.organization_id = 0
 
     for (let k in data) {
         if (this.hasOwnProperty(k)) {

@@ -225,7 +225,7 @@
             },
 
             formDisabled() {
-                return this.selectedPerson.referral_code.organization_id !== this.selectedOrganization.id && this.selectedPerson.id !== 0
+                return this.selectedPerson.organization_id !== this.selectedOrganization.id && this.selectedPerson.id !== 0
             }
         },
 
