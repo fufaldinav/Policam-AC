@@ -60,7 +60,7 @@ class Person extends Model
      * @var array
      */
     protected $fillable = [
-        'f', 'i', 'o', 'gender', 'type', 'birthday', 'address', 'phone', 'organization_id', 'referral_id',
+        'f', 'i', 'o', 'gender', 'type', 'birthday', 'address', 'phone', 'organization_id', 'referral_code_id',
     ];
 
     /**
@@ -152,7 +152,7 @@ class Person extends Model
             return $division->persons->contains($this);
         });
 
-        $this->divisions()->attach($div->id);
+        $this->divisions()->syncWithoutDetaching($div->id);
         if (isset($oldDiv)) {
             $this->divisions()->detach($oldDiv->id);
         }

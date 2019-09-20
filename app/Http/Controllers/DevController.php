@@ -20,6 +20,7 @@ namespace App\Http\Controllers;
 
 use App;
 use Illuminate\Http\Request;
+use Storage;
 
 class DevController extends Controller
 {
@@ -48,6 +49,42 @@ class DevController extends Controller
         }
 
         $response = print_r($persons, true);
+
+        return response($response)->header('Content-Type', 'text/plain');
+    }
+
+    public function parseImportFile(Request $request)
+    {
+        abort_if(! $request->user()->isAdmin(), 403);
+
+        $contents = Storage::disk('local')->get('import.csv');
+
+        $response = '';
+
+        foreach(preg_split("/((\r?\n)|(\r\n?))/", $contents) as $line) {
+            $params = explode(',', $line);
+
+            $organization = App\Organization::where('name', $params[7])->first();
+            $division = $organization->divisions->where('name', $params[8])->first();
+            if (is_null($division)) {
+                $division = App\Division::create(['name' => $params[8], 'type' => $params[5], 'organization_id' => $organization->id]);
+            }
+            $rc = App\ReferralCode::where('code', $params[6])->first();
+
+            $person = App\Person::firstOrCreate([
+                'f' => $params[0],
+                'i' => $params[1],
+                'o' => $params[2] ?? null,
+                'gender' => $params[3] !== '' ? $params[3] : null,
+                'birthday' => $params[4],
+                'type' => $params[5],
+                'organization_id' => $organization->id,
+                'referral_code_id' => $rc->id
+            ]);
+
+            $person->divisions()->syncWithoutDetaching([$division->id]);
+        }
+
 
         return response($response)->header('Content-Type', 'text/plain');
     }

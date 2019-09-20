@@ -90,6 +90,7 @@ Route::group(['prefix' => 'cp', 'as' => 'cp.'], function () {
  * Development
  */
 Route::get('dev', 'DevController@index');
+Route::get('dev/import', 'DevController@parseImportFile');
 /*
  * Post registration
  */
