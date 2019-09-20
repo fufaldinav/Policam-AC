@@ -60,7 +60,7 @@ class Person extends Model
      * @var array
      */
     protected $fillable = [
-        'f', 'i', 'o', 'gender', 'type', 'birthday', 'address', 'phone', 'referral_id',
+        'f', 'i', 'o', 'gender', 'type', 'birthday', 'address', 'phone', 'organization_id', 'referral_id',
     ];
 
     /**
@@ -148,7 +148,9 @@ class Person extends Model
         });
 
         $this->divisions()->attach($div->id);
-        $this->divisions()->detach($oldDiv->id);
+        if (isset($oldDiv)) {
+            $this->divisions()->detach($oldDiv->id);
+        }
 
         return $div;
     }
