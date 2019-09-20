@@ -103,7 +103,7 @@ class DevController extends Controller
             foreach ($division->persons as $person) {
                 $rc = $person->referralCode;
 
-                $response .= $person->f . ',' . $person->i . ',' . $person->o . ',' . $person->gender . ',' . $person->birthday . ',' . $person->type . ',' . $rc->code ?? null . ',' . $organization->name . ',' . $division->name . PHP_EOL;
+                $response .= $person->f . ',' . $person->i . ',' . $person->o . ',' . $person->gender . ',' . $person->birthday . ',' . $person->type . ',' . $rc ? $rc->code : null . ',' . $organization->name . ',' . $division->name . PHP_EOL;
             }
         }
 
