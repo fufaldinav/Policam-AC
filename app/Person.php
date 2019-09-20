@@ -109,6 +109,11 @@ class Person extends Model
         return $this->belongsToMany('App\Division')->withTimestamps();
     }
 
+    public function organization()
+    {
+        return $this->belongsTo('App\Organization');
+    }
+
     public function organizations()
     {
         return $this->hasManyDeep(

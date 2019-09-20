@@ -77,7 +77,7 @@ class Organization extends Model
 
     public function persons()
     {
-        return $this->hasManyDeep('App\Person', ['App\Division', 'division_person']);
+        return $this->hasMany('App\Person');
     }
 
     public function referralCodes()
