@@ -53,10 +53,8 @@
                         v-model="selectedPerson.o"
                         type="text"
                         class="form-control"
-                        :class="{ 'is-invalid': checkField('o') === false }"
                         placeholder="Отчество"
                         :disabled="formDisabled"
-                        required
                     >
                 </div>
                 <div class="form-group">
@@ -221,7 +219,7 @@
             },
 
             hasErrors() {
-                return this.errors.f || this.errors.i || this.errors.o || this.errors.birthday
+                return this.errors.f || this.errors.i || this.errors.birthday
             },
 
             formDisabled() {
