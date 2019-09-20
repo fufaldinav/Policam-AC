@@ -79,15 +79,15 @@ class PersonsController extends Controller
         $person = $request->input('person');
 
         $rc = $person['referral_code'];
-        $divisions = $person['divisions'];
+        $division = $person['division'];
         $photos = $person['photos'];
-        $divisionsToDelete = $person['divisionsToDelete'];
         $photosToDelete = $person['photosToDelete'];
 
         $personOnUpdate->update($request->input('person'));
 
-        $cardsToAdd = [];
-        $cardsToDelete = [];
+        $personOnUpdate->attachPhotos($photos)->detachPhotos($photosToDelete);
+
+        $division = $personOnUpdate->moveToDivision($division);
 
         if (isset($rc['id'])) {
             $rcOnUpdate = App\ReferralCode::find($rc['id']);
@@ -98,37 +98,29 @@ class PersonsController extends Controller
             if (isset($oldRC)) {
                 if ($rcOnUpdate->id !== $oldRC->id) {
                     $oldRC->activated = 0;
-                    $cardsToDelete[] = $oldRC->card;
+                    $personOnUpdate->detachCard($oldRC->card, $division->organization_id);
                     $oldRC->save();
                 }
             }
 
             if ($rcOnUpdate->activated === 1) {
-                $cardsToAdd[] = $rcOnUpdate->card;
+                $personOnUpdate->attachCard($rcOnUpdate->card, $division->organization_id);
             } else {
-                $cardsToDelete[] = $rcOnUpdate->card;
+                $personOnUpdate->detachCard($rcOnUpdate->card, $division->organization_id);
             }
 
             $rcOnUpdate->save();
             $rcOnUpdate->persons()->save($personOnUpdate);
         } else if (isset($oldRC)) {
             $oldRC->activated = 0;
-            $cardsToDelete[] = $oldRC->card;
+            $personOnUpdate->detachCard($oldRC->card, $division->organization_id);
             $oldRC->save();
 
             $personOnUpdate->referral_code_id = null;
             $personOnUpdate->save();
         }
 
-        $personOnUpdate->attachDivisions($divisions)
-            ->attachCards($cardsToAdd)
-            ->attachPhotos($photos);
-
-        $personOnUpdate->detachDivisions($divisionsToDelete)
-            ->detachCards($cardsToDelete)
-            ->detachPhotos($photosToDelete);
-
-        return response()->json($personOnUpdate->load(['divisions', 'photos', 'referralCode', 'users']));
+        return response()->json($personOnUpdate->load(['divisions', 'photos', 'referralCode']));
     }
 
     public function store(Request $request)
@@ -140,30 +132,27 @@ class PersonsController extends Controller
         $person = $request->input('person');
 
         $rc = $person['referral_code'];
-        $divisions = $person['divisions'];
+        $division = $person['division'];
         $photos = $person['photos'];
 
         $person = App\Person::create($person);
 
-        $cardsToAdd = [];
+        $division = $person->moveToDivision($division);
+        $person->attachPhotos($photos);
 
         if (isset($rc['id'])) {
             $rcOnUpdate = App\ReferralCode::find($rc['id']);
             $rcOnUpdate->activated = $rc['activated'];
 
             if ($rcOnUpdate->activated === 1) {
-                $cardsToAdd[] = $rcOnUpdate->card;
+                $person->attachCard($rcOnUpdate->card, $division->organization_id);
             }
 
             $rcOnUpdate->save();
             $rcOnUpdate->persons()->save($person);
         }
 
-        $person->attachDivisions($divisions)
-            ->attachCards($cardsToAdd)
-            ->attachPhotos($photos);
-
-        return response()->json($person->load(['divisions', 'photos', 'referralCode', 'users']));
+        return response()->json($person->load(['divisions', 'photos', 'referralCode']));
     }
 
     public function destroy(Request $request, int $id): ?int

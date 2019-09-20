@@ -17,7 +17,7 @@
         methods: {
             selectPerson() {
                 let division = this.$store.state.divisions.selected
-                let person = new Person({id: 0, divisions: [division.id]})
+                let person = new Person({id: 0, division: division.id, organization_id: this.$store.state.organizations.selected.id})
                 this.$store.commit('persons/setSelected', person)
                 this.$store.commit('cp/showForm')
             }

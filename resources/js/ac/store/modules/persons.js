@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import {Person, Photo, ReferralCode} from '../../classes'
+import {Person, Photo} from '../../classes'
 
 const state = {
     collection: {},
@@ -63,36 +63,24 @@ const mutations = {
 }
 
 const actions = {
-    add({state, commit}, person) {
-        if (state.collection.hasOwnProperty(person.id)) {
-            state.collection[person.id].divisions = [...state.collection[person.id].divisions, ...person.divisions]
-        } else {
-            commit('add', person)
-        }
-    },
-
     async saveSelected({state, commit, rootState, rootGetters}) {
         window.axios.post('/api/persons', {
             person: state.selected
         })
             .then(response => {
                 let person = response.data
-                let divisions = []
 
                 for (let division of person.divisions) {
                     let div = rootGetters['divisions/getById'](division.id)
                     if (div !== undefined) {
-                        divisions.push(div.id)
+                        person.division = div.id
+                        break;
                     }
                 }
 
-                person.divisions = divisions
-
                 commit('add', person)
 
-                for (let id of divisions) {
-                    commit('divisions/addPerson', {divisionId: id, personId: person.id}, {root: true})
-                }
+                commit('divisions/addPerson', {divisionId: person.division, personId: person.id}, {root: true})
 
                 commit('clearSelected')
 
@@ -110,26 +98,24 @@ const actions = {
         })
             .then(response => {
                 let person = response.data
-                let divisions = []
 
                 for (let division of person.divisions) {
                     let div = rootGetters['divisions/getById'](division.id)
                     if (div !== undefined) {
-                        divisions.push(div.id)
+                        person.division = div.id
+                        break;
                     }
                 }
 
-                person.divisions = divisions
-
                 commit('update', new Person(person))
 
-                for (let id of divisions) {
-                    commit('divisions/addPerson', {divisionId: id, personId: person.id}, {root: true})
+                let oldDivisions = rootGetters['divisions/getWithPerson'](person.id)
+
+                for (let oldDiv of oldDivisions) {
+                    commit('divisions/removePerson', {divisionId: oldDiv.id, personId: person.id}, {root: true})
                 }
 
-                for (let id of state.selected.divisionsToDelete) {
-                    commit('divisions/removePerson', {divisionId: id, personId: person.id}, {root: true})
-                }
+                commit('divisions/addPerson', {divisionId: person.division, personId: person.id}, {root: true})
 
                 commit('clearSelected')
 
@@ -141,14 +127,16 @@ const actions = {
             })
     },
 
-    async removeSelected({state, commit, rootState}) {
+    async removeSelected({state, commit, rootState, rootGetters}) {
         window.axios.delete('/api/persons/' + state.selected.id)
             .then(response => {
                 let id = response.data
                 let person = state.collection[id]
 
-                for (let division of person.divisions) {
-                    commit('divisions/removePerson', {divisionId: division, personId: person.id}, {root: true})
+                let oldDivisions = rootGetters['divisions/getWithPerson'](person.id)
+
+                for (let oldDiv of oldDivisions) {
+                    commit('divisions/removePerson', {divisionId: oldDiv.id, personId: person.id}, {root: true})
                 }
 
                 let fullName = person.f + ' ' + person.i

@@ -60,7 +60,7 @@ class Person extends Model
      * @var array
      */
     protected $fillable = [
-        'f', 'i', 'o', 'gender', 'type', 'birthday', 'address', 'phone', 'referral_id',
+        'f', 'i', 'o', 'gender', 'type', 'birthday', 'address', 'phone', 'organization_id', 'referral_id',
     ];
 
     /**
@@ -109,6 +109,11 @@ class Person extends Model
         return $this->belongsToMany('App\Division')->withTimestamps();
     }
 
+    public function organization()
+    {
+        return $this->belongsTo('App\Organization');
+    }
+
     public function organizations()
     {
         return $this->hasManyDeep(
@@ -134,58 +139,47 @@ class Person extends Model
         return $this->belongsToMany('App\User')->withTimestamps();
     }
 
-    public function attachDivisions(array $divisions): self
+    public function moveToDivision(int $divisionId): Division
     {
-        foreach ($divisions as $divisionId) {
-            $div = Division::find($divisionId);
+        $div = Division::find($divisionId);
 
-            if (! $div) {
-                continue;
-            }
-
-            $this->divisions()->syncWithoutDetaching($div->id);
+        if ($this->divisions->contains($div)) {
+            return $div;
         }
 
-        return $this;
-    }
 
-    public function detachDivisions(array $divisions): self
-    {
-        foreach ($divisions as $divisionId) {
-            $div = Division::find($divisionId);
+        $oldDiv = $div->organization->divisions->first(function ($division) {
+            return $division->persons->contains($this);
+        });
 
-            if (! $div) {
-                continue;
-            }
-
-            $this->divisions()->detach($div->id);
+        $this->divisions()->attach($div->id);
+        if (isset($oldDiv)) {
+            $this->divisions()->detach($oldDiv->id);
         }
 
-        return $this;
+        return $div;
     }
 
     public function detachAllDivisions(): self
     {
-        foreach ($this->divisions as $div) {
-            $this->divisions()->detach($div->id);
-        }
+        $this->divisions()->detach();
 
         return $this;
     }
 
-    public function attachCards(array $cards): self
+    public function attachCard(string $card, int $organizationId): self
     {
         $tasker = new Tasker();
 
-        foreach ($cards as $card) {
-            $card = Card::firstOrCreate(['wiegand' => $card]);
+        $card = Card::firstOrCreate(['wiegand' => $card]);
 
-            $this->cards()->save($card);
+        $this->cards()->save($card);
 
-            foreach ($this->controllers as $ctrl) {
-                $tasker->addCards($ctrl->type, [$card->wiegand]);
-                $tasker->add($ctrl->id);
-            }
+        $organization = Organization::find($organizationId);
+
+        foreach ($organization->controllers as $ctrl) {
+            $tasker->addCards($ctrl->type, [$card->wiegand]);
+            $tasker->add($ctrl->id);
         }
 
         $tasker->send();
@@ -193,24 +187,24 @@ class Person extends Model
         return $this;
     }
 
-    public function detachCards(array $cards): self
+    public function detachCard(string $card, int $organizationId): self
     {
         $tasker = new Tasker();
 
-        foreach ($cards as $card) {
-            $card = Card::where(['wiegand' => $card])->first();
+        $card = Card::where(['wiegand' => $card])->first();
 
-            if (! $card) {
-                continue;
-            }
+        if (! $card) {
+            return $this;
+        }
 
-            $card->person_id = 0;
-            $card->save();
+        $card->person_id = 0;
+        $card->save();
 
-            foreach ($this->controllers as $ctrl) {
-                $tasker->delCards($ctrl->type, [$card->wiegand]);
-                $tasker->add($ctrl->id);
-            }
+        $organization = Organization::find($organizationId);
+
+        foreach ($organization->controllers as $ctrl) {
+            $tasker->delCards($ctrl->type, [$card->wiegand]);
+            $tasker->add($ctrl->id);
         }
 
         $tasker->send();

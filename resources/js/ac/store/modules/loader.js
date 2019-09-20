@@ -43,9 +43,9 @@ const actions = {
                     let persons = []
                     if (withPersons > 0) {
                         for (let person of division.persons) {
-                            person.divisions = [division.id]
+                            person.division = division.id
                             if (person.referral_code === null || person.referral_code.organization_id === organizationId || person.referral_code.activated === 1) {
-                                dispatch('persons/add', person, {root: true})
+                                commit('persons/add', person, {root: true})
                                 if (person.referral_code !== null) {
                                     commit('rc/add', person.referral_code, {root: true})
                                 }

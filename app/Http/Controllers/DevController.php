@@ -31,7 +31,23 @@ class DevController extends Controller
 
     public function index(Request $request)
     {
-        $response = print_r('some data', true);
+        abort_if(! $request->user()->isAdmin(), 403);
+
+        $persons = App\Person::whereIn('type', [1, 2])->get();
+
+        foreach ($persons as $person) {
+            $divs = $person->divisions;
+            foreach ($divs as $div) {
+                if (isset($div)) {
+                    $org = $div->organization;
+                    if ($org->type === 1) {
+                        $org->persons()->save($person);
+                    }
+                }
+            }
+        }
+
+        $response = print_r($persons, true);
 
         return response($response)->header('Content-Type', 'text/plain');
     }

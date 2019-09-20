@@ -10,9 +10,8 @@ export function Person(data) {
     this.birthday = null
     this.address = null
     this.phone = null
-    this.divisions = []
-    this.divisionsToDelete = []
-    this.organizations = {basic: null, additional: []}
+    this.division = null
+    this.organization_id = 0
 
     for (let k in data) {
         if (this.hasOwnProperty(k)) {
@@ -20,7 +19,7 @@ export function Person(data) {
         }
     }
 
-    if (data.referral_code !== undefined && data.referral_code !== null) {
+    if (data.photos !== undefined && data.referral_code !== null) {
         this.referral_code = new ReferralCode(data.referral_code)
     } else {
         this.referral_code = new ReferralCode({})
@@ -28,18 +27,10 @@ export function Person(data) {
 
     this.photos = []
     this.photosToDelete = []
-    this.users = []
-    this.usersToDelete = []
 
     if (data.photos !== undefined) {
         for (let photo of data.photos) {
             this.photos.push(new Photo(photo))
-        }
-    }
-
-    if (data.users !== undefined) {
-        for (let user of data.users) {
-            this.users.push(user.id)
         }
     }
 }
