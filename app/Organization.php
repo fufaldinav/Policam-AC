@@ -33,6 +33,7 @@ use Staudenmeir\EloquentHasManyDeep\HasRelationships;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\ReferralCode[] $referralCodes
  * @property-read int|null $referral_codes_count
  * @property-read int|null $users_count
+ * @property-read int|null $persons_count
  */
 class Organization extends Model
 {

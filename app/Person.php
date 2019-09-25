@@ -47,6 +47,9 @@ use Staudenmeir\EloquentHasManyDeep\HasRelationships;
  * @property-read int|null $users_count
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Person whereGender($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Person whereReferralCodeId($value)
+ * @property int $organization_id
+ * @property-read \App\Organization $organization
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Person whereOrganizationId($value)
  */
 class Person extends Model
 {

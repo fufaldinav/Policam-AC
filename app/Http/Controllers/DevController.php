@@ -122,4 +122,28 @@ class DevController extends Controller
 
         Storage::disk('local')->put('export.csv', $response);
     }
+
+    public function parseImportSl0File(Request $request)
+    {
+        abort_if(! $request->user()->isAdmin(), 403);
+
+        $contents = Storage::disk('local')->get('import_sl0.csv');
+
+        $response = '';
+
+        foreach(preg_split("/((\r?\n)|(\r\n?))/", $contents) as $line) {
+            $params = explode(',', $line);
+
+            $rc = App\ReferralCode::where('code', $params[0])->first();
+            if (is_null($rc)) {
+                $response .= $params[0] . PHP_EOL;
+                continue;
+            }
+
+            $rc->sl0 = $params[1];
+            $rc->save();
+        }
+
+        return response($response)->header('Content-Type', 'text/plain');
+    }
 }

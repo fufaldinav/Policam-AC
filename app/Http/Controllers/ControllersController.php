@@ -30,53 +30,18 @@ class ControllersController extends Controller
         $this->middleware('verified');
     }
 
-    public function getList(Request $request)
-    {
-        $controllers = $request->user()->controllers;
-
-        return response()->json($controllers);
-    }
-
-    /**
-     * Устанавливает параметры открытия двери
-     *
-     * @param Request $request
-     * @param int $ctrl_id
-     * @param int $open
-     * @param int $open_control
-     * @param int $close_control
-     *
-     * @return string
-     */
-    public function setDoorParams(Request $request, int $ctrl_id, int $open, int $open_control = 30, int $close_control = 30): string
-    {
-        abort_if(!$request->user()->isAdmin(), 403);
-
-        $tasker = new Tasker();
-
-        $tasker->setDoorParams($open, $open_control, $close_control);
-        $tasker->add($ctrl_id);
-
-        $count = $tasker->send();
-
-        if ($count > 0) {
-            return __('Заданий успешно отправлено: :count', ['count' => $count]);
-        } else {
-            return __('Нет отправленных заданий');
-        }
-    }
-
     /**
      * Загружает в контроллер все карты
      *
      * @param Request $request
      * @param int $ctrl_id
+     * @param bool $sl0
      *
      * @return string
      */
-    public function reloadCards(Request $request, int $ctrl_id): string
+    public function reloadCards(Request $request, int $ctrl_id, bool $sl0 = false): string
     {
-        abort_if(!$request->user()->isAdmin(), 403);
+        abort_if(! $request->user()->isAdmin(), 403);
 
         $ctrl = App\Controller::find($ctrl_id);
 
@@ -88,7 +53,13 @@ class ControllersController extends Controller
             $rc = $person->referralCode;
             if (isset($rc)) {
                 if ($rc->activated === 1) {
-                    $card = App\Card::firstOrCreate(['wiegand' => $rc->card]);
+                    if ($sl0 && isset($rc->sl0)) {
+                        $card = App\Card::firstOrCreate(['wiegand' => $rc->sl0]);
+                    } else if (! $sl0) {
+                        $card = App\Card::firstOrCreate(['wiegand' => $rc->card]);
+                    } else {
+                        continue;
+                    }
                     $person->cards()->save($card);
                     $cards[] = $card;
                 }
@@ -123,6 +94,42 @@ class ControllersController extends Controller
         return __('Заданий успешно отправлено: :count', ['count' => $count]);
     }
 
+    public function getList(Request $request)
+    {
+        $controllers = $request->user()->controllers;
+
+        return response()->json($controllers);
+    }
+
+    /**
+     * Устанавливает параметры открытия двери
+     *
+     * @param Request $request
+     * @param int $ctrl_id
+     * @param int $open
+     * @param int $open_control
+     * @param int $close_control
+     *
+     * @return string
+     */
+    public function setDoorParams(Request $request, int $ctrl_id, int $open, int $open_control = 30, int $close_control = 30): string
+    {
+        abort_if(! $request->user()->isAdmin(), 403);
+
+        $tasker = new Tasker();
+
+        $tasker->setDoorParams($open, $open_control, $close_control);
+        $tasker->add($ctrl_id);
+
+        $count = $tasker->send();
+
+        if ($count > 0) {
+            return __('Заданий успешно отправлено: :count', ['count' => $count]);
+        } else {
+            return __('Нет отправленных заданий');
+        }
+    }
+
     /**
      * Очищает память контроллера
      *
@@ -134,7 +141,7 @@ class ControllersController extends Controller
      */
     public function clear(Request $request, int $ctrl_id, int $device = 0): string
     {
-        abort_if(!$request->user()->isAdmin(), 403);
+        abort_if(! $request->user()->isAdmin(), 403);
 
         $ctrl = App\Controller::find($ctrl_id);
 
