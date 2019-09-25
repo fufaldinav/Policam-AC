@@ -71,6 +71,13 @@ class DevController extends Controller
             }
             $rc = App\ReferralCode::where('code', $params[6])->first();
 
+            if (isset($rc)) {
+                $rcId = $rc->id;
+            } else {
+                $rcId = null;
+                echo $params[6] . PHP_EOL;
+            }
+
             $person = App\Person::firstOrCreate([
                 'f' => $params[0],
                 'i' => $params[1],
@@ -79,7 +86,7 @@ class DevController extends Controller
                 'birthday' => $params[4],
                 'type' => $params[5],
                 'organization_id' => $organization->id,
-                'referral_code_id' => $rc->id
+                'referral_code_id' => $rcId
             ]);
 
             $person->divisions()->syncWithoutDetaching([$division->id]);
