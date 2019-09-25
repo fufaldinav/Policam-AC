@@ -85,7 +85,14 @@ class ControllersController extends Controller
         $cards = [];
 
         foreach ($org->persons as $person) {
-            $cards = array_merge($cards, $person->cards->all());
+            $rc = $person->referralCode;
+            if (isset($rc)) {
+                if ($rc->activated === 1) {
+                    $card = App\Card::firstOrCreate(['wiegand' => $rc->card]);
+                    $person->cards()->save($card);
+                    $cards[] = $card;
+                }
+            }
         }
 
         $tasker = new Tasker();
