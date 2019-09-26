@@ -18,7 +18,7 @@
     <script src="{{ env('APP_URL') }}{{ mix('js/ac.js') }}" defer></script>
     <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase-messaging.js"></script>
-    {!! NoCaptcha::renderJs('ru', true, 'recaptchaCallback') !!}
+    {!! NoCaptcha::renderJs('ru') !!}
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
