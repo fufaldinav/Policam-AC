@@ -19,7 +19,6 @@ const actions = {
                     commit('organizations/add', org, {root: true})
                     if (rootState.organizations.selected === null) {
                         commit('organizations/setSelected', rootState.organizations.collection[0], {root: true})
-                        dispatch('messenger/subscribe', null, {root: true})
                     }
                 }
                 commit('changeLoadingState', false)
