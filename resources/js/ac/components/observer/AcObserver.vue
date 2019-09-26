@@ -197,8 +197,8 @@
             },
 
             selectedPersonDivision() {
-                if (this.selectedPerson.divisions.length === 0) return null
-                let divisionId = this.selectedPerson.divisions[0]
+                if (this.selectedPerson.division === null) return null
+                let divisionId = this.selectedPerson.division
                 return this.$store.getters['divisions/getById'](divisionId)
             },
 
