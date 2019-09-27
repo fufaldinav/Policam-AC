@@ -72,7 +72,7 @@
                     <a href="{{ route('portal.news') }}">НОВОСТИ</a>
                 </li>
                 <li class="header-menu-main header-menu-main-1">
-                    <a href="mailto:ixbit@mail.ru" target="_blank">
+                    <a href="mailto:info@policam.ru" target="_blank">
                         <i class="fa fa-envelope-o" aria-hidden="true"></i>
                     </a>
                 </li>

@@ -78,7 +78,7 @@
                         <a class="social-item" href="https://vk.com/policam66" target="_blank">
                             <i class="fa fa-vk" aria-hidden="true"></i>
                         </a>
-                        <a class="social-item" href="mailto:ixbit@mail.ru" target="_blank">
+                        <a class="social-item" href="mailto:info@policam.ru" target="_blank">
                             <i class="fa fa-at" aria-hidden="true"></i>
                         </a>
                     </div>
