@@ -25,9 +25,7 @@
                                 <dt class="col-4">Телефон:</dt>
                                 <dd class="col-8">+7 (343) 777 888 7</dd>
                                 <dt class="col-4">E-mail:</dt>
-                                <dd class="col-8">ixbit@mail.ru</dd>
-                                <dt class="col-4">Отдел продаж:</dt>
-                                <dd class="col-8">+7 (343) 777 888 7</dd>
+                                <dd class="col-8">info@policam.ru</dd>
                                 <dt class="col-4">Отдел техподдержки:</dt>
                                 <dd class="col-8">+7 (343) 777 888 7</dd>
                             </dl>
