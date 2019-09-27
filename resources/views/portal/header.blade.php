@@ -25,7 +25,7 @@
                             </div>
                         </li>
                         <li class="header-mobile-menu-item">
-                            <a href="{{ route('portal.support') }}">ПОДДЕРЖКА</a>
+                            <a href="{{ route('portal.contacts') }}">КОНТАКТЫ</a>
                         </li>
                         <li class="header-mobile-menu-item">
                             <a href="{{ route('portal.news') }}">НОВОСТИ</a>
@@ -66,7 +66,7 @@
                     </div>
                 </li>
                 <li class="header-menu-item">
-                    <a href="{{ route('portal.support') }}">ПОДДЕРЖКА</a>
+                    <a href="{{ route('portal.contacts') }}">КОНТАКТЫ</a>
                 </li>
                 <li class="header-menu-item">
                     <a href="{{ route('portal.news') }}">НОВОСТИ</a>

@@ -8,8 +8,7 @@ Route::get('/', 'PortalController@index');
  */
 Route::group(['as' => 'portal.'], function () {
     Route::get('portal', 'PortalController@index')->name('index');
-    Route::get('support', 'PortalController@support')->name('support');
-    Route::get('contacts', 'PortalController@support')->name('contacts');
+    Route::get('contacts', 'PortalController@contacts')->name('contacts');
     Route::get('news', 'PortalController@news')->name('news');
     Route::get('news/{id?}', 'NewsController@getEntry')->name('news.entry');
 });/*

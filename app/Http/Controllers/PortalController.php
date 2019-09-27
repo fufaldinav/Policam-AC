@@ -21,9 +21,9 @@ class PortalController extends Controller
         return view('portal.services');
     }
 
-    public function support()
+    public function contacts()
     {
-        return view('portal.support');
+        return view('portal.contacts');
     }
 
     public function news()
