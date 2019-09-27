@@ -33,7 +33,7 @@
                             <a href="{{ url('/') }}#mainProducts">История успеха</a>
                         </li>
                         <li>
-                            <a href="{{ route('portal.support') }}">Поддержка</a>
+                            <a href="{{ route('portal.contacts') }}">Контакты</a>
                         </li>
                     </ul>
                 </div>
