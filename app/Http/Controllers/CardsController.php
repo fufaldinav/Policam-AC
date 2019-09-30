@@ -54,9 +54,9 @@ class CardsController extends Controller
 
         foreach ($ctrls as $ctrl) {
             if ($card->person_id == 0) {
-                $tasker->delCards($ctrl->type, [$card->wiegand]);
+                $tasker->delCards($ctrl, [$card->wiegand]);
             } else {
-                $tasker->addCards($ctrl->type, [$card->wiegand]);
+                $tasker->addCards($ctrl, [$card->wiegand]);
             }
 
             $tasker->add($ctrl->id);

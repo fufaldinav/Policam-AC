@@ -22,7 +22,7 @@ use App;
 use App\Policam\Ac\Z5RWEB\OutgoingMessage as Z5RWEBOutgoingMessage;
 use App\Policam\Ac\Z5RWEB\Card as Z5RWEBCard;
 use App\Policam\Ac\Policont\OutgoingMessage as PolicontOutgoingMessage;
-use App\Policam\Ac\Policont\Card  as PolicontCard;
+use App\Policam\Ac\Policont\Card as PolicontCard;
 
 class Tasker
 {
@@ -93,7 +93,7 @@ class Tasker
      */
     public function setDoorParams(int $open, int $open_control = 30, int $close_control = 30): void
     {
-        $this->message = new OutgoingMessage();
+        $this->message = new PolicontOutgoingMessage();
 
         $this->message->setOperation('set_door_params');
         $this->message->setOpenTime($open);
@@ -106,14 +106,21 @@ class Tasker
      * имеется карта с таким-же номером, для этой карты обновляются флаги и
      * временные зоны.
      *
-     * @param string $ctrlType
+     * @param App\Controller $ctrl
      * @param string[] $codes Коды карт
+     * @param array $devices
      *
      * @return void
      */
-    public function addCards(string $ctrlType, array $codes): void
+    public function addCards(App\Controller $ctrl, array $codes, array $devices = []): void
     {
-        if ($ctrlType == 'Z5RWEB')
+        if (count($devices) === 0) {
+            for ($i = 0; $i < $ctrl->devices; $i++) {
+                $devices[] = $i;
+            }
+        }
+
+        if ($ctrl->type == 'Z5RWEB')
         {
             $this->message = new Z5RWEBOutgoingMessage();
         }
@@ -125,7 +132,7 @@ class Tasker
         $this->message->setOperation('add_cards');
 
         foreach ($codes as $code) {
-            if ($ctrlType == 'Z5RWEB')
+            if ($ctrl->type == 'Z5RWEB')
             {
                 $card = new Z5RWEBCard($code);
             }
@@ -135,6 +142,13 @@ class Tasker
             }
             $card->setActive();
 
+            foreach ($devices as $device) {
+                if ($ctrl->type == 'Policont')
+                {
+                    $card->addDevice($device);
+                }
+            }
+
             $this->message->addCard($card);
         }
     }
@@ -142,14 +156,21 @@ class Tasker
     /**
      * Удаляет карты из памяти контроллера
      *
-     * @param string $ctrlType Тип контроллера
+     * @param App\Controller $ctrl
      * @param string[] $codes Коды карт
+     * @param array $devices
      *
      * @return void
      */
-    public function delCards(string $ctrlType, array $codes): void
+    public function delCards(App\Controller $ctrl, array $codes, array $devices = []): void
     {
-        if ($ctrlType == 'Z5RWEB')
+        if (count($devices) === 0) {
+            for ($i = 0; $i < $ctrl->devices; $i++) {
+                $devices[] = $i;
+            }
+        }
+
+        if ($ctrl->type == 'Z5RWEB')
         {
             $this->message = new Z5RWEBOutgoingMessage();
         }
@@ -161,13 +182,20 @@ class Tasker
         $this->message->setOperation('del_cards');
 
         foreach ($codes as $code) {
-            if ($ctrlType == 'Z5RWEB')
+            if ($ctrl->type == 'Z5RWEB')
             {
                 $card = new Z5RWEBCard($code);
             }
             else
             {
                 $card = new PolicontCard($code);
+            }
+
+            foreach ($devices as $device) {
+                if ($ctrl->type == 'Policont')
+                {
+                    $card->addDevice($device);
+                }
             }
 
             $this->message->addCard($card);
@@ -177,13 +205,19 @@ class Tasker
     /**
      * Удаляет все карты из памяти контроллера
      *
-     * @param string $ctrlType
+     * @param App\Controller $ctrl
      * @param array $devices
      * @return void
      */
-    public function clearCards(string $ctrlType, array $devices = [0]): void
+    public function clearCards(App\Controller $ctrl, array $devices = []): void
     {
-        if ($ctrlType == 'Z5RWEB')
+        if (count($devices) === 0) {
+            for ($i = 0; $i < $ctrl->devices; $i++) {
+                $devices[] = $i;
+            }
+        }
+
+        if ($ctrl->type == 'Z5RWEB')
         {
             $this->message = new Z5RWEBOutgoingMessage();
         }
@@ -193,7 +227,7 @@ class Tasker
         }
 
         foreach ($devices as $device) {
-            if ($ctrlType == 'Policont')
+            if ($ctrl->type == 'Policont')
             {
                 $this->message->addDevice($device);
             }

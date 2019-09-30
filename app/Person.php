@@ -181,7 +181,7 @@ class Person extends Model
         $organization = Organization::find($organizationId);
 
         foreach ($organization->controllers as $ctrl) {
-            $tasker->addCards($ctrl->type, [$card->wiegand]);
+            $tasker->addCards($ctrl, [$card->wiegand]);
             $tasker->add($ctrl->id);
         }
 
@@ -206,7 +206,7 @@ class Person extends Model
         $organization = Organization::find($organizationId);
 
         foreach ($organization->controllers as $ctrl) {
-            $tasker->delCards($ctrl->type, [$card->wiegand]);
+            $tasker->delCards($ctrl, [$card->wiegand]);
             $tasker->add($ctrl->id);
         }
 
@@ -224,7 +224,7 @@ class Person extends Model
             $card->save();
 
             foreach ($this->controllers as $ctrl) {
-                $tasker->delCards($ctrl->type, [$card->wiegand]);
+                $tasker->delCards($ctrl, [$card->wiegand]);
                 $tasker->add($ctrl->id);
             }
         }
