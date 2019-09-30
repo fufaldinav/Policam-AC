@@ -46,6 +46,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read int|null $cameras_count
  * @property-read int|null $notifications_count
  * @property-read int|null $tasks_count
+ * @property int $devices
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Controller whereDevices($value)
  */
 class Controller extends Model
 {
@@ -55,7 +57,7 @@ class Controller extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'sn', 'type', 'fw', 'conn_fw', 'mode', 'ip', 'active', 'online', 'last_conn', 'organization_id',
+        'name', 'sn', 'type', 'fw', 'conn_fw', 'mode', 'ip', 'active', 'online', 'last_conn', 'devices', 'organization_id',
     ];
 
     /**
@@ -77,6 +79,7 @@ class Controller extends Model
         'active' => 'integer',
         'online' => 'integer',
         'last_conn' => 'datetime',
+        'devices' => 'integer',
         'organization_id' => 'integer',
     ];
 

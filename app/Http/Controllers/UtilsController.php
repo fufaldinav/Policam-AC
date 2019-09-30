@@ -93,7 +93,7 @@ class UtilsController extends Controller
             unset($card);
 
             foreach ($person->controllers as $ctrl) {
-                $tasker->delCards($ctrl->type, $cards_to_delete);
+                $tasker->delCards($ctrl, $cards_to_delete);
                 $tasker->add($ctrl->id);
             }
 

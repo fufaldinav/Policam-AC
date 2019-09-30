@@ -79,10 +79,10 @@ class ControllersController extends Controller
             |                          в) это последний проход
             | 2. Очистим список кодов карт на отправку
             |
-            | Таким образом сформируем задания на отправку по 10 за раз
+            | Таким образом сформируем задания на отправку по 5 за раз
             */
-            if (($i > 0 && ($i % 10 === 0)) || ($i === ($card_count - 1))) {
-                $tasker->addCards($ctrl->type, $codes);
+            if (($i > 0 && ($i % 5 === 0)) || ($i === ($card_count - 1))) {
+                $tasker->addCards($ctrl, $codes);
                 $tasker->add($ctrl_id);
 
                 $codes = [];
@@ -139,15 +139,20 @@ class ControllersController extends Controller
      *
      * @return string
      */
-    public function clear(Request $request, int $ctrl_id, int $device = 0): string
+    public function clear(Request $request, int $ctrl_id, int $device = null): string
     {
         abort_if(! $request->user()->isAdmin(), 403);
+
+        $devices = [];
+        if (isset($device)) {
+            $devices[] = $device;
+        }
 
         $ctrl = App\Controller::find($ctrl_id);
 
         $tasker = new Tasker();
 
-        $tasker->clearCards($ctrl->type, [$device]);
+        $tasker->clearCards($ctrl, $devices);
         $tasker->add($ctrl_id);
 
         $count = $tasker->send();
