@@ -75,18 +75,6 @@
                                                 readonly
                                             >
                                         </div>
-                                        <div class="form-group">
-                                            <label for="birthday">
-                                                Дата рождения
-                                            </label>
-                                            <input
-                                                id="birthday"
-                                                v-model="selectedPerson.birthday"
-                                                type="date"
-                                                class="form-control"
-                                                readonly
-                                            >
-                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-row">
