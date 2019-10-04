@@ -157,7 +157,7 @@
                 this.codeActivation = true
                 this.$store.dispatch('rc/activateReferral', this.selectedPerson.referral_code.code)
                     .then(response => {
-                        if (response === 0 || response.activated === 1 || response.organization_id !== this.selectedOrganization.id) {
+                        if (response === 0 || response.activated === 1 || (response.organization_id !== this.selectedOrganization.id && response.organization_id !== 0)) {
                             this.codeActivationFailed = true
                         } else {
                             this.selectedPerson.referral_code.activated = 1
