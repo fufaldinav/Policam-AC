@@ -21,6 +21,7 @@ namespace App\Policam\Ac\Policont;
 use App;
 use App\Events\ControllerConnected;
 use App\Events\EventReceived;
+use App\Events\PingReceived;
 use Carbon\Carbon;
 
 final class Request
@@ -114,7 +115,7 @@ final class Request
              | Пинг от контроллера
              */
             elseif ($message->operation === 'ping') {
-                //do nothing
+                event(new PingReceived($ctrl->id, $message->devices ?? []));
             }
             /*
              | Cобытия на контроллере

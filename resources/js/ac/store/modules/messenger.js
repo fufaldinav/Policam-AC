@@ -31,6 +31,10 @@ const actions = {
                     commit('add', e)
                     window.Ac.$bus.$emit('ControllerConnected', e)
                 })
+                .listen('PingReceived', e => {
+                    commit('add', e)
+                    window.Ac.$bus.$emit('PingReceived', e)
+                })
         }
     },
 
