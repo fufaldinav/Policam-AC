@@ -115,7 +115,7 @@ final class Request
              | Пинг от контроллера
              */
             elseif ($message->operation === 'ping') {
-                event(new PingReceived($ctrl->id, $message->devices ?? []));
+                event(new PingReceived($ctrl->id, $message->devices));
             }
             /*
              | Cобытия на контроллере
