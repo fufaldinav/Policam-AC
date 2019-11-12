@@ -92,6 +92,7 @@ Route::get('dev', 'DevController@index');
 Route::get('dev/import', 'DevController@parseImportFile');
 Route::get('dev/export/{organizationId}', 'DevController@createExportFile');
 Route::get('dev/import_sl0', 'DevController@parseImportSl0File');
+Route::get('dev/panel/{organizationId}/{sl0?}', 'DevController@generateImportString');
 /*
  * Post registration
  */

@@ -146,4 +146,59 @@ class DevController extends Controller
 
         return response($response)->header('Content-Type', 'text/plain');
     }
+
+    public function generateImportString(Request $request, int $organizationId, bool $sl0 = false)
+    {
+        abort_if(! $request->user()->isAdmin(), 403);
+
+        $organization = App\Organization::find($organizationId);
+
+        abort_if(! $organization, 403);
+
+        $importString = '{"AccessControlCard":[';
+        $importStringLength = strlen($importString);
+
+        foreach ($organization->divisions as $division) {
+            foreach ($division->persons as $person) {
+                $rc = $person->referralCode;
+
+                if (isset($rc)) {
+                    if ($rc->activated === 1) {
+                        $cardName = $rc->code; //TODO урезание
+
+                        if (substr($cardName, 0, 4) === '0000') {
+                            $cardName = substr($cardName, -5);
+                        } else {
+                            $cardName = substr($cardName, 4, 5);
+                        }
+
+                        $cardNo = '';
+                        if ($sl0 && isset($rc->sl0)) {
+                            $cardNo = $rc->sl0; //TODO урезать до 4 байт
+                        } else if (! $sl0) {
+                            $cardNo = $rc->card; //TODO урезать до 4 байт
+                        } else {
+                            continue;
+                        }
+
+                        $cardNo = substr($cardNo, -8);
+
+                        $importString .= '{"CardName":"';
+                        $importString .= $cardName;
+                        $importString .= '","CardNo":"';
+                        $importString .= $cardNo;
+                        $importString .= '","CardStatus":0,"CardType":0,"UserID":"9901"},';
+                    }
+                }
+            }
+        }
+
+        if ($importStringLength < strlen($importString)) {
+            $importString = substr($importString, 0, -1);
+        }
+
+        $importString .= ']}';
+
+        echo $importString;
+    }
 }
