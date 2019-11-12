@@ -50,7 +50,6 @@ final class Request
 
         $response = new Response();
 
-        $type = $this->request->type;
         $sn = $this->request->sn;
         $messages = $this->request->messages;
 
@@ -115,7 +114,9 @@ final class Request
              | Пинг от контроллера
              */
             elseif ($message->operation === 'ping') {
-                event(new PingReceived($ctrl->id, $message->devices));
+                if (isset($message->devices)) {
+                    event(new PingReceived($ctrl->id, $message->devices));
+                }
             }
             /*
              | Cобытия на контроллере
