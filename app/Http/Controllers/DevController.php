@@ -61,7 +61,7 @@ class DevController extends Controller
 
         $response = '';
 
-        foreach(preg_split("/((\r?\n)|(\r\n?))/", $contents) as $line) {
+        foreach (preg_split("/((\r?\n)|(\r\n?))/", $contents) as $line) {
             $params = explode(',', $line);
 
             $organization = App\Organization::where('name', $params[7])->first();
@@ -131,7 +131,7 @@ class DevController extends Controller
 
         $response = '';
 
-        foreach(preg_split("/((\r?\n)|(\r\n?))/", $contents) as $line) {
+        foreach (preg_split("/((\r?\n)|(\r\n?))/", $contents) as $line) {
             $params = explode(',', $line);
 
             $rc = App\ReferralCode::firstOrCreate(['code' => $params[0], 'card' => $params[1]]);
@@ -149,7 +149,7 @@ class DevController extends Controller
 
     public function generateImportString(Request $request, int $organizationId, bool $sl0 = false)
     {
-        if ($request->user()->id !== 179 && $request->user()->id !== 83 && $request->user()->isAdmin()) {
+        if ($request->user()->id !== 179 && $request->user()->id !== 83 && ! $request->user()->isAdmin()) {
             abort(403);
         }
 
