@@ -50,6 +50,11 @@ final class Request
 
         $response = new Response();
 
+        if (is_null($this->request->sn)) {
+            \Log::debug($this->request);
+            return null;
+        }
+
         $sn = $this->request->sn;
         $messages = $this->request->messages;
 
