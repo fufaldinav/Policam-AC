@@ -38,22 +38,16 @@ final class Request
      *
      * @return string|null Сообщение в формате JSON или NULL,
      *                     если сообщение от неизвестного контроллера
-     * @throws \Exception
      */
     public function handle(): ?string
     {
-        if (is_null($this->request)) {
+        if (! is_object($this->request)) {
             return null;
         }
 
         $datetime = Carbon::now()->toDateTimeString();
 
         $response = new Response();
-
-        if (! is_object($this->request)) {
-            \Log::debug($this->request);
-            return null;
-        }
 
         $sn = $this->request->sn;
         $messages = $this->request->messages;
