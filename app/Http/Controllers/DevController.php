@@ -20,6 +20,7 @@ namespace App\Http\Controllers;
 
 use App;
 use Illuminate\Http\Request;
+use phpDocumentor\Reflection\Types\Object_;
 use Storage;
 
 class DevController extends Controller
@@ -157,50 +158,35 @@ class DevController extends Controller
 
         abort_if(! $organization, 403);
 
-        $importString = '{"AccessControlCard":[';
-        $importStringLength = strlen($importString);
+        $obj = new \stdClass();
+        $obj->AccessControlCard = [];
 
         foreach ($organization->divisions as $division) {
-            foreach ($division->persons as $person) {
+            foreach ($division->persons()->whereNotNull('referral_code_id')->get() as $person) {
                 $rc = $person->referralCode;
 
-                if (isset($rc)) {
-                    if ($rc->activated === 1) {
-                        $cardName = $rc->code; //TODO урезание
+                if ($rc->activated === 1) {
+                    $card = new \stdClass();
+                    $card->CardName = substr($rc->code, -10);
 
-                        if (substr($cardName, 0, 4) === '0000') {
-                            $cardName = substr($cardName, -5);
-                        } else {
-                            $cardName = substr($cardName, 4, 5);
-                        }
-
-                        $cardNo = '';
-                        if ($sl0 && isset($rc->sl0)) {
-                            $cardNo = $rc->sl0; //TODO урезать до 4 байт
-                        } else if (! $sl0) {
-                            $cardNo = $rc->card; //TODO урезать до 4 байт
-                        } else {
-                            continue;
-                        }
-
-                        $cardNo = substr($cardNo, -8);
-
-                        $importString .= '{"CardName":"';
-                        $importString .= $cardName;
-                        $importString .= '","CardNo":"';
-                        $importString .= $cardNo;
-                        $importString .= '","CardStatus":0,"CardType":0,"UserID":"9901"},';
+                    if ($sl0 && isset($rc->sl0)) {
+                        $card->CardNo = $rc->sl0;
+                    } else if (! $sl0) {
+                        $card->CardNo = $rc->card;
+                    } else {
+                        continue;
                     }
+
+                    $card->CardNo = substr($card->CardNo, -8);
+                    $card->CardStatus = 0;
+                    $card->CardType = 0;
+                    $card->UserID = '9901';
+
+                    $obj->AccessControlCard[] = $card;
                 }
             }
         }
 
-        if ($importStringLength < strlen($importString)) {
-            $importString = substr($importString, 0, -1);
-        }
-
-        $importString .= ']}';
-
-        echo $importString;
+        echo json_encode($obj);
     }
 }
