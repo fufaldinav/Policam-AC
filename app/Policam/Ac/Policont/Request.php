@@ -50,7 +50,7 @@ final class Request
 
         $response = new Response();
 
-        if (is_null($this->request->sn)) {
+        if (! is_object($this->request)) {
             \Log::debug($this->request);
             return null;
         }
