@@ -79,11 +79,9 @@ final class Request
                 $out_message = new OutgoingMessage();
                 $out_message->setOperation('set_active');
                 $out_message->setActive($ctrl->active);
-                $out_message->setOnline($ctrl->online);
                 $response->addMessage($out_message);
 
                 $ctrl->fw = $message->fw;
-                $ctrl->conn_fw = $message->conn_fw;
                 $ctrl->ip = $message->controller_ip;
 
                 $ctrl->save();

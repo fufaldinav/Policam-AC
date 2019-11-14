@@ -85,11 +85,6 @@ final class OutgoingMessage implements JsonSerializable
         $this->active = $active;
     }
 
-    public function setOnline(int $online): void
-    {
-        $this->online = $online;
-    }
-
     public function setGranted(int $granted): void
     {
         $this->granted = $granted;
