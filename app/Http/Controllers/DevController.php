@@ -177,7 +177,13 @@ class DevController extends Controller
                         continue;
                     }
 
-                    $card->CardNo = substr($card->CardNo, -8);
+                    $byte1 = substr($card->CardNo, -8, 2);
+                    $byte2 = substr($card->CardNo, -6, 2);
+                    $byte3 = substr($card->CardNo, -4, 2);
+                    $byte4 = substr($card->CardNo, -2);
+
+                    $card->CardNo = $byte4 . $byte3 . $byte2 . $byte1;
+
                     $card->CardStatus = 0;
                     $card->CardType = 0;
                     $card->UserID = '9901';
