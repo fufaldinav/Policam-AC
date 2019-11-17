@@ -84,6 +84,10 @@ final class Request
                 $ctrl->fw = $message->fw;
                 $ctrl->ip = $message->controller_ip;
 
+                if (isset($message->devices)) {
+                    $ctrl->devices = $message->devices;
+                }
+
                 $ctrl->save();
             }
             /*
