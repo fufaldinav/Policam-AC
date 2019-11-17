@@ -120,31 +120,24 @@ class Tasker
             }
         }
 
-        if ($ctrl->type == 'Z5RWEB')
-        {
+        if ($ctrl->type == 'Z5RWEB') {
             $this->message = new Z5RWEBOutgoingMessage();
-        }
-        else
-        {
+        } else {
             $this->message = new PolicontOutgoingMessage();
         }
 
         $this->message->setOperation('add_cards');
 
         foreach ($codes as $code) {
-            if ($ctrl->type == 'Z5RWEB')
-            {
+            if ($ctrl->type == 'Z5RWEB') {
                 $card = new Z5RWEBCard($code);
-            }
-            else
-            {
+            } else {
                 $card = new PolicontCard($code);
             }
             $card->setActive();
 
             foreach ($devices as $device) {
-                if ($ctrl->type == 'Policont')
-                {
+                if ($ctrl->type == 'Policont') {
                     $card->addDevice($device);
                 }
             }
@@ -170,30 +163,23 @@ class Tasker
             }
         }
 
-        if ($ctrl->type == 'Z5RWEB')
-        {
+        if ($ctrl->type == 'Z5RWEB') {
             $this->message = new Z5RWEBOutgoingMessage();
-        }
-        else
-        {
+        } else {
             $this->message = new PolicontOutgoingMessage();
         }
 
         $this->message->setOperation('del_cards');
 
         foreach ($codes as $code) {
-            if ($ctrl->type == 'Z5RWEB')
-            {
+            if ($ctrl->type == 'Z5RWEB') {
                 $card = new Z5RWEBCard($code);
-            }
-            else
-            {
+            } else {
                 $card = new PolicontCard($code);
             }
 
             foreach ($devices as $device) {
-                if ($ctrl->type == 'Policont')
-                {
+                if ($ctrl->type == 'Policont') {
                     $card->addDevice($device);
                 }
             }
@@ -217,22 +203,38 @@ class Tasker
             }
         }
 
-        if ($ctrl->type == 'Z5RWEB')
-        {
+        if ($ctrl->type == 'Z5RWEB') {
             $this->message = new Z5RWEBOutgoingMessage();
-        }
-        else
-        {
+        } else {
             $this->message = new PolicontOutgoingMessage();
         }
 
         foreach ($devices as $device) {
-            if ($ctrl->type == 'Policont')
-            {
+            if ($ctrl->type == 'Policont') {
                 $this->message->addDevice($device);
             }
         }
 
         $this->message->setOperation('clear_cards');
+    }
+
+    /**
+     * Останавливает работу контроллера
+     *
+     * @param App\Controller $ctrl
+     * @param int $device
+     * @return void
+     */
+    public function stop(App\Controller $ctrl, int $device = -1): void
+    {
+        if ($ctrl->type == 'Policont') {
+            $this->message = new PolicontOutgoingMessage();
+        } else {
+            return;
+        }
+
+        $this->message->setDevice($device);
+
+        $this->message->setOperation('stop');
     }
 }

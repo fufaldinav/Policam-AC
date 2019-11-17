@@ -163,4 +163,37 @@ class ControllersController extends Controller
             return __('Нет отправленных заданий');
         }
     }
+
+    /**
+     * Останавливает работу контроллера
+     *
+     * @param Request $request
+     * @param int $ctrl_id
+     * @param int $device
+     *
+     * @return string
+     */
+    public function stop(Request $request, int $ctrl_id, int $device = -1): string
+    {
+        abort_if(! $request->user()->isAdmin(), 403);
+
+        $ctrl = App\Controller::find($ctrl_id);
+
+        if ($device >= $ctrl->devices) {
+            return __('У контроллера меньше ведомых, чем задано');
+        }
+
+        $tasker = new Tasker();
+
+        $tasker->stop($ctrl, $device);
+        $tasker->add($ctrl_id);
+
+        $count = $tasker->send();
+
+        if ($count > 0) {
+            return __('Заданий успешно отправлено: :count', ['count' => $count]);
+        } else {
+            return __('Нет отправленных заданий');
+        }
+    }
 }

@@ -32,6 +32,7 @@ final class OutgoingMessage implements JsonSerializable
     protected $open_control = 30;
     protected $close_control = 30;
     protected $cards = [];
+    protected $device;
     protected $devices = [];
     protected $operation_types = [
         'set_active' => ['active', 'online'],
@@ -42,6 +43,7 @@ final class OutgoingMessage implements JsonSerializable
         'add_cards' => ['cards'],
         'del_cards' => ['cards'],
         'clear_cards' => ['devices'],
+        'stop' => ['device'],
     ];
 
     public function __construct(int $id = 0)
@@ -118,5 +120,10 @@ final class OutgoingMessage implements JsonSerializable
     public function addDevice(int $device): void
     {
         $this->devices[] = $device;
+    }
+
+    public function setDevice(int $device): void
+    {
+        $this->device = $device;
     }
 }
