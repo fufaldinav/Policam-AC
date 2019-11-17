@@ -72,6 +72,7 @@ Route::group(['prefix' => 'controllers', 'as' => 'controllers.'], function () {
     Route::get('set_door_params/{controller_id}/{open_time}/{open_control?}/{close_control?}', 'ControllersController@setDoorParams');
     Route::get('clear/{controller_id}/{device?}', 'ControllersController@clear');
     Route::get('reload_cards/{controller_id}/{sl0?}', 'ControllersController@reloadCards');
+    Route::get('stop/{controller_id}/{device?}', 'ControllersController@stop');
 });
 /*
  * Control Panel
