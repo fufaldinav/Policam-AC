@@ -135,13 +135,25 @@ class DevController extends Controller
         foreach (preg_split("/((\r?\n)|(\r\n?))/", $contents) as $line) {
             $params = explode(',', $line);
 
-            $rc = App\ReferralCode::firstOrCreate(['code' => $params[0], 'card' => $params[1]]);
+            $code = $params[0];
+            $sl0 = $params[1];
+            $sl3 = $params[2];
+
+            while(strlen($sl3) < 12) {
+                $sl3 = '0' . $sl3;
+            }
+
+            while(strlen($sl0) < 12) {
+                $sl0 = '0' . $sl0;
+            }
+
+            $rc = App\ReferralCode::firstOrCreate(['code' => $code, 'card' => $sl3]);
             if (is_null($rc)) {
-                $response .= $params[0] . PHP_EOL;
+                $response .= $code . PHP_EOL;
                 continue;
             }
 
-            $rc->sl0 = $params[2];
+            $rc->sl0 = $sl0;
             $rc->save();
         }
 
