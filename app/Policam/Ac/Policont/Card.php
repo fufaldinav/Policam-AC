@@ -23,7 +23,7 @@ use JsonSerializable;
 final class Card implements JsonSerializable
 {
     protected $card;
-    protected $flags = 32;
+    protected $type = 2;
     protected $tz = 255;
     protected $active = false;
     protected $devices = [];
@@ -38,7 +38,7 @@ final class Card implements JsonSerializable
         $response = ['card' => $this->card, 'devices' => $this->devices];
 
         if ($this->active) {
-            $response['flags'] = $this->flags;
+            $response['type'] = $this->type;
             $response['tz'] = $this->tz;
         }
 
