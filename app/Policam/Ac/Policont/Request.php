@@ -151,7 +151,7 @@ final class Request
 
                 //чтение событий
                 foreach ($message->events as $inc_event) {
-                    if ($inc_event == 21) {
+                    if ($inc_event->event == 21) {
                         if ($ctrl->devices_voltage == null) {
                             $devices_voltage = [];
                         } else {
