@@ -151,25 +151,39 @@ final class Request
 
                 //чтение событий
                 foreach ($message->events as $inc_event) {
-                    $wiegand = str_pad($inc_event->card, 12, '0', STR_PAD_LEFT);
-                    $dateTimeString = Carbon::createFromTimestamp($inc_event->timestamp, date_default_timezone_get())->toDateTimeString();
+                    if ($inc_event == 21) {
+                        if ($ctrl->devices_voltage == null) {
+                            $devices_voltage = [];
+                        } else {
+                            $devices_voltage = json_decode($ctrl->devices_voltage);
+                        }
 
-                    $card = App\Card::firstOrNew(['wiegand' => $wiegand]);
-                    $card->last_conn = $dateTimeString;
-                    $card->controller_id = $ctrl->id;
-                    $card->save();
+                        $devices_voltage[hexdec($inc_event->flag)] = hexdec($inc_event->card);
+                        $ctrl->devices_voltage = json_encode($devices_voltage);
+                        $ctrl->save();
 
-                    $event = new App\Event;
-                    $event->controller_id = $ctrl->id;
-                    $event->event = $inc_event->event;
-                    $event->flag = $inc_event->flag;
-                    $event->time = $dateTimeString;
-                    $event->card_id = $card->id;
-                    $event->save();
+                        $out_message->eventCounter();
+                    } else {
+                        $wiegand = str_pad($inc_event->card, 12, '0', STR_PAD_LEFT);
+                        $dateTimeString = Carbon::createFromTimestamp($inc_event->timestamp, date_default_timezone_get())->toDateTimeString();
 
-                    $out_message->eventCounter();
+                        $card = App\Card::firstOrNew(['wiegand' => $wiegand]);
+                        $card->last_conn = $dateTimeString;
+                        $card->controller_id = $ctrl->id;
+                        $card->save();
 
-                    event(new EventReceived($event));
+                        $event = new App\Event;
+                        $event->controller_id = $ctrl->id;
+                        $event->event = $inc_event->event;
+                        $event->flag = $inc_event->flag;
+                        $event->time = $dateTimeString;
+                        $event->card_id = $card->id;
+                        $event->save();
+
+                        $out_message->eventCounter();
+
+                        event(new EventReceived($event));
+                    }
                 }
 
                 $response->addMessage($out_message);

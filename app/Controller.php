@@ -57,7 +57,7 @@ class Controller extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'sn', 'type', 'fw', 'conn_fw', 'mode', 'ip', 'active', 'online', 'last_conn', 'devices', 'devices_status', 'organization_id',
+        'name', 'sn', 'type', 'fw', 'conn_fw', 'mode', 'ip', 'active', 'online', 'last_conn', 'devices', 'devices_status', 'devices_voltage', 'organization_id',
     ];
 
     /**
