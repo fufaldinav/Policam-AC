@@ -115,9 +115,32 @@ final class Request
              | Пинг от контроллера
              */
             elseif ($message->operation === 'ping') {
+                $devices = [];
+
                 if (isset($message->devices)) {
-                    event(new PingReceived($ctrl->id, $message->devices));
+                    foreach ($message->devices as $device) {
+                        $devices[$device->id] = [
+                            'timeout' => $device->timeout,
+                            'alarm' => $device->alarm ?? null,
+                            'sd_error' => $device->sd_error ?? null,
+                        ];
+                    }
+                } else {
+                    if (isset($message->timeouts) && isset($message->alarm) && isset($message->sd_errors)) {
+                        for ($i = 0; $i < strlen($message->timeouts); $i++) {
+                            $devices[$i] = [
+                                'timeout' => $message->timeouts[$i],
+                                'alarm' => $message->alarm[$i],
+                                'sd_errors' => $message->sd_errors[$i],
+                            ];
+                        }
+                    }
                 }
+
+                $ctrl->devices_status = json_encode($devices);
+                $ctrl->save();
+
+                event(new PingReceived($ctrl->id, $devices));
             }
             /*
              | Cобытия на контроллере

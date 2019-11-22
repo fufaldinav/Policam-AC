@@ -22,7 +22,7 @@ class PingReceived implements ShouldBroadcastNow
      * @param int $ctrlId
      * @param $devices
      */
-    public function __construct(int $ctrlId, $devices = null)
+    public function __construct(int $ctrlId, $devices)
     {
         $this->ctrlId = $ctrlId;
         $this->devices = $devices;
@@ -45,17 +45,9 @@ class PingReceived implements ShouldBroadcastNow
      */
     public function broadcastWith()
     {
-        $devices = [];
-        if (is_array($this->devices)) {
-            foreach ($this->devices as $device) {
-                $devices[$device->id] = $device->timeout;
-            }
-        } else if (isset($this->devices)) {
-            $devices = $this->devices;
-        }
         return [
             'controller_id' => $this->ctrlId,
-            'devices' => $devices,
+            'devices' => $this->devices,
         ];
     }
 }
