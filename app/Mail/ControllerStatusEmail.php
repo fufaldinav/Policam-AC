@@ -12,6 +12,7 @@ class ControllerStatusEmail extends Mailable
     use Queueable, SerializesModels;
 
     public $controller;
+    public $devices;
     public $user;
 
     /**
@@ -23,6 +24,7 @@ class ControllerStatusEmail extends Mailable
     public function __construct($controller, $user)
     {
         $this->controller = $controller;
+        $this->devices = $controller->devices_status;
         $this->user = $user;
     }
 
