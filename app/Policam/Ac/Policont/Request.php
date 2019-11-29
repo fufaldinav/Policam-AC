@@ -125,7 +125,8 @@ final class Request
                 }
 
                 for ($i = 0; $i < $ctrl->devices; $i++) {
-                    if (is_null($devices[$i])) {
+                    if (!array_key_exists($i, $devices)) {
+                        $devices[$i] = new \stdClass();
                         $devices[$i]->timeout = 0;
                         $devices[$i]->alarm = 0;
                         $devices[$i]->sd_error = 0;
