@@ -126,9 +126,9 @@ final class Request
 
                 for ($i = 0; $i < $ctrl->devices; $i++) {
                     if (is_null($devices[$i])) {
-                        $devices[$i]['timeout'] = 0;
-                        $devices[$i]['alarm'] = 0;
-                        $devices[$i]['sd_error'] = 0;
+                        $devices[$i]->timeout = 0;
+                        $devices[$i]->alarm = 0;
+                        $devices[$i]->sd_error = 0;
                     }
                 }
 
@@ -136,26 +136,26 @@ final class Request
 
                 if (isset($message->devices)) {
                     foreach ($message->devices as $device) {
-                        if ($devices[$device->id]['timeout'] == 0 && $device->timeout > 0) {
+                        if ($devices[$device->id]->timeout == 0 && $device->timeout > 0) {
                             $controllerChangedStatus = true;
-                        } else if ($devices[$device->id]['timeout'] > 0 && $device->timeout == 0) {
+                        } else if ($devices[$device->id]->timeout > 0 && $device->timeout == 0) {
                             $controllerChangedStatus = true;
                         }
-                        $devices[$device->id]['timeout'] = $device->timeout;
-                        $devices[$device->id]['alarm'] = $device->alarm ?? null;
-                        $devices[$device->id]['sd_error'] = $device->sd_error ?? null;
+                        $devices[$device->id]->timeout = $device->timeout;
+                        $devices[$device->id]->alarm = $device->alarm ?? null;
+                        $devices[$device->id]->sd_error = $device->sd_error ?? null;
                     }
                 } else {
                     if (isset($message->timeouts) && isset($message->alarms) && isset($message->sd_errors)) {
                         for ($i = 0; $i < $ctrl->devices; $i++) {
-                            if ($devices[$i]['timeout'] == 0 && $message->timeouts[$i] > 0) {
+                            if ($devices[$i]->timeout == 0 && $message->timeouts[$i] > 0) {
                                 $controllerChangedStatus = true;
-                            } else if ($devices[$i]['timeout'] > 0 && $message->timeouts[$i] == 0) {
+                            } else if ($devices[$i]->timeout > 0 && $message->timeouts[$i] == 0) {
                                 $controllerChangedStatus = true;
                             }
-                            $devices[$i]['timeout'] = $message->timeouts[$i];
-                            $devices[$i]['alarm'] = $message->alarms[$i];
-                            $devices[$i]['sd_error'] = $message->sd_errors[$i];
+                            $devices[$i]->timeout = $message->timeouts[$i];
+                            $devices[$i]->alarm = $message->alarms[$i];
+                            $devices[$i]->sd_error = $message->sd_errors[$i];
                         }
                     }
                 }
