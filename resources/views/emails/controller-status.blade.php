@@ -1,7 +1,6 @@
 @component('mail::message')
     Привет, {{ $user->name }}!<br>
     Контроллер {{$controller->sn}} изменил статус:<br>
-
     @foreach($devices as $id => $device)
         Slave {{ $id }}
         @if($device->timeout == 0)
