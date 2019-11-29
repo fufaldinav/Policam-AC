@@ -154,12 +154,13 @@ final class Request
                 foreach ($message->events as $inc_event) {
                     if ($inc_event->event == 21) {
                         if ($ctrl->devices_voltage == null) {
-                            $devices_voltage = [];
+                            $devices_voltage = new \stdClass();
                         } else {
                             $devices_voltage = json_decode($ctrl->devices_voltage);
                         }
 
-                        $devices_voltage[hexdec($inc_event->flag)] = hexdec($inc_event->card);
+                        $deviceId = hexdec($inc_event->flag);
+                        $devices_voltage->$deviceId = hexdec($inc_event->card);
                         $ctrl->devices_voltage = json_encode($devices_voltage);
                         $ctrl->save();
 
