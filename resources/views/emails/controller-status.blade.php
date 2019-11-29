@@ -6,7 +6,7 @@
         @if($device->timeout == 0)
             появился в сети
         @else
-            не в сети, {{ $device->timeout }} таймаутов
+            не в сети, {{ $device->timeout }} таймаутов<br>
         @endif
     @endforeach
 @endcomponent
