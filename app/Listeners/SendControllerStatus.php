@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Listener;
+namespace App\Listeners;
 
 use App\Events\ControllerConnected;
 use Illuminate\Queue\InteractsWithQueue;
