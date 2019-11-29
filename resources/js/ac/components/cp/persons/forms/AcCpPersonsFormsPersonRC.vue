@@ -119,10 +119,10 @@
             },
 
             rcActivatedClass() {
-              return {
-                  'is-valid': this.selectedPerson.referral_code.activated === 1,
-                  'is-invalid': this.codeActivationFailed
-              }
+                return {
+                    'is-valid': this.selectedPerson.referral_code.activated === 1,
+                    'is-invalid': this.codeActivationFailed
+                }
             },
 
             codeToCheck: {
@@ -173,29 +173,20 @@
 
             checkRCCode() {
                 this.codeChecking = true
-                let rc = this.$store.getters['rc/getByCode'](this.codeManuallyEntered)
-                if (rc === undefined) {
-                    this.$store.dispatch('rc/checkReferral', this.codeManuallyEntered)
-                        .then(response => {
-                            if (response === 0) {
-                                this.codeIsInvalid = true
-                            } else {
-                                this.codeReceived = new ReferralCode(response)
-                            }
-                        })
-                        .catch(error => {
-                            if (this.$store.state.debug) console.log(error)
-                        })
-                        .finally(() => {
-                            this.codeChecking = false
-                        })
-                } else if (rc.activated === 1) {
-                    this.codeIsInvalid = true
-                    this.codeChecking = false
-                } else {
-                    this.codeReceived = rc
-                    this.codeChecking = false
-                }
+                this.$store.dispatch('rc/checkReferral', this.codeManuallyEntered)
+                    .then(response => {
+                        if (response === 0) {
+                            this.codeIsInvalid = true
+                        } else {
+                            this.codeReceived = new ReferralCode(response)
+                        }
+                    })
+                    .catch(error => {
+                        if (this.$store.state.debug) console.log(error)
+                    })
+                    .finally(() => {
+                        this.codeChecking = false
+                    })
             },
 
             saveCode() {
