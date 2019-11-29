@@ -22,6 +22,7 @@ use App;
 use App\Events\ControllerConnected;
 use App\Events\EventReceived;
 use App\Events\PingReceived;
+use App\Events\ControllerChangedStatus;
 use Carbon\Carbon;
 
 final class Request
@@ -117,30 +118,54 @@ final class Request
              | Пинг от контроллера
              */
             elseif ($message->operation === 'ping') {
-                $devices = [];
+                if (is_null($ctrl->devices_status)) {
+                    $devices = [];
+                } else {
+                    $devices = json_decode($ctrl->devices_status);
+                }
+
+                for ($i = 0; $i < $ctrl->devices; $i++) {
+                    if (is_null($devices[$i])) {
+                        $devices[$i]['timeout'] = 0;
+                        $devices[$i]['alarm'] = 0;
+                        $devices[$i]['sd_error'] = 0;
+                    }
+                }
+
+                $controllerChangedStatus = false;
 
                 if (isset($message->devices)) {
                     foreach ($message->devices as $device) {
-                        $devices[$device->id] = [
-                            'timeout' => $device->timeout,
-                            'alarm' => $device->alarm ?? null,
-                            'sd_error' => $device->sd_error ?? null,
-                        ];
+                        if ($devices[$device->id]['timeout'] == 0 && $device->timeout > 0) {
+                            $controllerChangedStatus = true;
+                        } else if ($devices[$device->id]['timeout'] > 0 && $device->timeout == 0) {
+                            $controllerChangedStatus = true;
+                        }
+                        $devices[$device->id]['timeout'] = $device->timeout;
+                        $devices[$device->id]['alarm'] = $device->alarm ?? null;
+                        $devices[$device->id]['sd_error'] = $device->sd_error ?? null;
                     }
                 } else {
                     if (isset($message->timeouts) && isset($message->alarms) && isset($message->sd_errors)) {
-                        for ($i = 0; $i < strlen($message->timeouts); $i++) {
-                            $devices[$i] = [
-                                'timeout' => $message->timeouts[$i],
-                                'alarm' => $message->alarms[$i],
-                                'sd_errors' => $message->sd_errors[$i],
-                            ];
+                        for ($i = 0; $i < $ctrl->devices; $i++) {
+                            if ($devices[$i]['timeout'] == 0 && $message->timeouts[$i] > 0) {
+                                $controllerChangedStatus = true;
+                            } else if ($devices[$i]['timeout'] > 0 && $message->timeouts[$i] == 0) {
+                                $controllerChangedStatus = true;
+                            }
+                            $devices[$i]['timeout'] = $message->timeouts[$i];
+                            $devices[$i]['alarm'] = $message->alarms[$i];
+                            $devices[$i]['sd_error'] = $message->sd_errors[$i];
                         }
                     }
                 }
 
                 $ctrl->devices_status = json_encode($devices);
                 $ctrl->save();
+
+                if ($controllerChangedStatus) {
+                    event(new ControllerChangedStatus($ctrl));
+                }
 
                 event(new PingReceived($ctrl->id, $devices));
             } /*
