@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import {ReferralCode} from '../../classes'
 
 const state = {
