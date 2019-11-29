@@ -128,11 +128,11 @@ final class Request
                         ];
                     }
                 } else {
-                    if (isset($message->timeouts) && isset($message->alarm) && isset($message->sd_errors)) {
+                    if (isset($message->timeouts) && isset($message->alarms) && isset($message->sd_errors)) {
                         for ($i = 0; $i < strlen($message->timeouts); $i++) {
                             $devices[$i] = [
                                 'timeout' => $message->timeouts[$i],
-                                'alarm' => $message->alarm[$i],
+                                'alarm' => $message->alarms[$i],
                                 'sd_errors' => $message->sd_errors[$i],
                             ];
                         }
