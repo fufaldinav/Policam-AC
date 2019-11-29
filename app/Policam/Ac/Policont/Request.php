@@ -49,14 +49,19 @@ final class Request
 
         $response = new Response();
 
-        $sn = $this->request->sn;
-        $messages = $this->request->messages;
+        $sn = $this->request->sn ?? null;
+
+        if (is_null($sn)) {
+            return null;
+        }
 
         $ctrl = App\Controller::where(['sn' => $sn])->first();
 
         if (! $ctrl) {
             return null;
         }
+
+        $messages = $this->request->messages;
 
         $ctrl->last_conn = $datetime;
         $ctrl->save();
@@ -71,8 +76,7 @@ final class Request
                 if ($message->success === 1) {
                     App\Task::where(['task_id' => $message->id])->delete();
                 }
-            }
-            /*
+            } /*
              | Запуск контроллера
              */
             elseif ($message->operation === 'power_on') {
@@ -89,8 +93,7 @@ final class Request
                 }
 
                 $ctrl->save();
-            }
-            /*
+            } /*
              | Проверка доступа
              */
             elseif ($message->operation === 'check_access') {
@@ -110,8 +113,7 @@ final class Request
                 $card->save();
 
                 $response->addMessage($out_message);
-            }
-            /*
+            } /*
              | Пинг от контроллера
              */
             elseif ($message->operation === 'ping') {
@@ -141,8 +143,7 @@ final class Request
                 $ctrl->save();
 
                 event(new PingReceived($ctrl->id, $devices));
-            }
-            /*
+            } /*
              | Cобытия на контроллере
              */
             elseif ($message->operation === 'events') {
