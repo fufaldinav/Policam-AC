@@ -74,7 +74,7 @@ Route::group(['prefix' => 'controllers', 'as' => 'controllers.'], function () {
     Route::get('reload_cards/{controller_id}/{sl0?}', 'ControllersController@reloadCards');
     Route::get('stop/{controller_id}/{device?}', 'ControllersController@stop');
     Route::get('panel/{organizationId}/{sl0?}', 'ControllersController@generateImportString');
-    Route::get('panel/xml/{organizationId}/{sl0?}', 'ControllersController@generateImportXml');
+    Route::get('xml/{organizationId}/{sl0?}', 'ControllersController@generateImportXml');
 });
 /*
  * Control Panel
