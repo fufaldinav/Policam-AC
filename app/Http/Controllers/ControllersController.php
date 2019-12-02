@@ -275,8 +275,8 @@ class ControllersController extends Controller
                         continue;
                     }
 
-                    if (preg_match('/62490(.{4})468(.)/', $rc->code, $matches)) {
-                        $cardNo = '88' . substr($cardNo,-6);
+                    if (preg_match('/62490(.{4})468(.)/', $rc->code)) {
+                        $cardNo = '88' . substr($cardNo, -6);
                     } else {
                         $byte1 = substr($cardNo, -8, 2);
                         $byte2 = substr($cardNo, -6, 2);
@@ -297,6 +297,6 @@ class ControllersController extends Controller
         $xml .= $cards;
         $xml .= '</AccessControlCard><AccessControlPwd bCheck="0" /><AccessQRCode bCheck="0" /></VTO>';
 
-        return $xml;
+        return response($xml)->header('Content-type', 'text/xml');
     }
 }
