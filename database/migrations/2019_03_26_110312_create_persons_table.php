@@ -21,7 +21,7 @@ class CreatePersonsTable extends Migration
             $table->unsignedTinyInteger('type')->default(1);
             $table->date('birthday');
             $table->string('address', 50)->nullable();
-            $table->string('phone', 10)->nullable();
+            $table->string('phone', 20)->nullable();
             $table->timestamps();
         });
     }
