@@ -226,12 +226,16 @@ class ControllersController extends Controller
                         continue;
                     }
 
-                    $byte1 = substr($card->CardNo, -8, 2);
-                    $byte2 = substr($card->CardNo, -6, 2);
-                    $byte3 = substr($card->CardNo, -4, 2);
-                    $byte4 = substr($card->CardNo, -2);
+                    if (preg_match('/62490(.{4})468(.)/', $rc->code)) {
+                        $card->CardNo = '88' . substr($card->CardNo, -6);
+                    } else {
+                        $byte1 = substr($card->CardNo, -8, 2);
+                        $byte2 = substr($card->CardNo, -6, 2);
+                        $byte3 = substr($card->CardNo, -4, 2);
+                        $byte4 = substr($card->CardNo, -2);
 
-                    $card->CardNo = $byte4 . $byte3 . $byte2 . $byte1;
+                        $card->CardNo = $byte4 . $byte3 . $byte2 . $byte1;
+                    }
 
                     $card->CardStatus = 0;
                     $card->CardType = 0;
