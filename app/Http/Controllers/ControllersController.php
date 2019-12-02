@@ -196,4 +196,107 @@ class ControllersController extends Controller
             return __('Нет отправленных заданий');
         }
     }
+
+    public function generateImportString(Request $request, int $organizationId, bool $sl0 = false)
+    {
+        if (! $request->user()->isAdmin()) {
+            abort(403);
+        }
+
+        $organization = App\Organization::find($organizationId);
+
+        abort_if(! $organization, 403);
+
+        $obj = new \stdClass();
+        $obj->AccessControlCard = [];
+
+        foreach ($organization->divisions as $division) {
+            foreach ($division->persons()->whereNotNull('referral_code_id')->get() as $person) {
+                $rc = $person->referralCode;
+
+                if ($rc->activated === 1) {
+                    $card = new \stdClass();
+                    $card->CardName = substr($rc->code, -10);
+
+                    if ($sl0 && isset($rc->sl0)) {
+                        $card->CardNo = $rc->sl0;
+                    } else if (! $sl0) {
+                        $card->CardNo = $rc->card;
+                    } else {
+                        continue;
+                    }
+
+                    $byte1 = substr($card->CardNo, -8, 2);
+                    $byte2 = substr($card->CardNo, -6, 2);
+                    $byte3 = substr($card->CardNo, -4, 2);
+                    $byte4 = substr($card->CardNo, -2);
+
+                    $card->CardNo = $byte4 . $byte3 . $byte2 . $byte1;
+
+                    $card->CardStatus = 0;
+                    $card->CardType = 0;
+                    $card->UserID = '9901';
+
+                    $obj->AccessControlCard[] = $card;
+                }
+            }
+        }
+
+        echo json_encode($obj);
+    }
+
+    public function generateImportXml(Request $request, int $organizationId, bool $sl0 = false)
+    {
+        if (! $request->user()->isAdmin()) {
+            abort(403);
+        }
+
+        $organization = App\Organization::find($organizationId);
+
+        abort_if(! $organization, 403);
+
+        $xml = '<VTO><VideoConfig bCheck="0" /><AudioConfig bCheck="0" /><Indoor bCheck="0" />';
+        $cards = '';
+
+        $i = 1;
+
+        foreach ($organization->divisions as $division) {
+            foreach ($division->persons()->whereNotNull('referral_code_id')->get() as $person) {
+                $rc = $person->referralCode;
+
+                if ($rc->activated === 1) {
+                    $recNo = $i + 70;
+
+                    if ($sl0 && isset($rc->sl0)) {
+                        $cardNo = $rc->sl0;
+                    } else if (! $sl0) {
+                        $cardNo = $rc->card;
+                    } else {
+                        continue;
+                    }
+
+                    if (preg_match('/62490(.{4})468(.)/', $rc->code, $matches)) {
+                        $cardNo = '88' . substr($cardNo,-6);
+                    } else {
+                        $byte1 = substr($cardNo, -8, 2);
+                        $byte2 = substr($cardNo, -6, 2);
+                        $byte3 = substr($cardNo, -4, 2);
+                        $byte4 = substr($cardNo, -2);
+
+                        $cardNo = $byte4 . $byte3 . $byte2 . $byte1;
+                    }
+
+                    $cards .= '<record' . $i . '  nRecNo="' . $recNo . '" nCardStatus="0" nCardType="0" szCardNo="' . $cardNo . '" szUserID="9901" />';
+
+                    $i++;
+                }
+            }
+        }
+
+        $xml .= '<AccessControlCard bCheck="1" recordNum="' . $i . '">';
+        $xml .= $cards;
+        $xml .= '</AccessControlCard><AccessControlPwd bCheck="0" /><AccessQRCode bCheck="0" /></VTO>';
+
+        echo $xml;
+    }
 }

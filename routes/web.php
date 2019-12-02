@@ -73,6 +73,8 @@ Route::group(['prefix' => 'controllers', 'as' => 'controllers.'], function () {
     Route::get('clear/{controller_id}/{device?}', 'ControllersController@clear');
     Route::get('reload_cards/{controller_id}/{sl0?}', 'ControllersController@reloadCards');
     Route::get('stop/{controller_id}/{device?}', 'ControllersController@stop');
+    Route::get('panel/{organizationId}/{sl0?}', 'ControllersController@generateImportString');
+    Route::get('panel/xml/{organizationId}/{sl0?}', 'ControllersController@generateImportXml');
 });
 /*
  * Control Panel
@@ -93,7 +95,6 @@ Route::get('dev', 'DevController@index');
 Route::get('dev/import', 'DevController@parseImportFile');
 Route::get('dev/export/{organizationId}', 'DevController@createExportFile');
 Route::get('dev/import_sl0', 'DevController@parseImportSl0File');
-Route::get('dev/panel/{organizationId}/{sl0?}', 'DevController@generateImportString');
 /*
  * Post registration
  */
