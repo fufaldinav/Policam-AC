@@ -297,6 +297,6 @@ class ControllersController extends Controller
         $xml .= $cards;
         $xml .= '</AccessControlCard><AccessControlPwd bCheck="0" /><AccessQRCode bCheck="0" /></VTO>';
 
-        echo $xml;
+        return $xml;
     }
 }
