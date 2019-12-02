@@ -148,8 +148,8 @@ final class Request
                     }
                 } else {
                     if (isset($message->timeouts) && isset($message->alarms) && isset($message->sd_errors)) {
-                        for ($i = 0; $i < $ctrl->devices; $i++) {
-                            if ($devices[$i]->timeout == 0 && $message->timeouts[$i] > 0) {
+                        for ($i = 0; $i < count($ctrl->devices); $i++) {
+                            if ($devices[$i]->timeout == 0 && $message->timeouts[$i] >= 3) {
                                 $controllerChangedStatus = true;
                             } else if ($devices[$i]->timeout > 0 && $message->timeouts[$i] == 0) {
                                 $controllerChangedStatus = true;
