@@ -258,15 +258,13 @@ class ControllersController extends Controller
         $xml = '<VTO><VideoConfig bCheck="0" /><AudioConfig bCheck="0" /><Indoor bCheck="0" />';
         $cards = '';
 
-        $i = 1;
+        $i = 0;
 
         foreach ($organization->divisions as $division) {
             foreach ($division->persons()->whereNotNull('referral_code_id')->get() as $person) {
                 $rc = $person->referralCode;
 
                 if ($rc->activated === 1) {
-                    $recNo = $i + 70;
-
                     if ($sl0 && isset($rc->sl0)) {
                         $cardNo = $rc->sl0;
                     } else if (! $sl0) {
@@ -274,6 +272,8 @@ class ControllersController extends Controller
                     } else {
                         continue;
                     }
+
+                    $recNo = $i++ + 70;
 
                     if (preg_match('/62490(.{4})468(.)/', $rc->code)) {
                         $cardNo = '88' . substr($cardNo, -6);
@@ -287,8 +287,6 @@ class ControllersController extends Controller
                     }
 
                     $cards .= '<record' . $i . '  nRecNo="' . $recNo . '" nCardStatus="0" nCardType="0" szCardNo="' . $cardNo . '" szUserID="9901" />';
-
-                    $i++;
                 }
             }
         }
