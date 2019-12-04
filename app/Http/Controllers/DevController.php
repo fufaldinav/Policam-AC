@@ -143,8 +143,10 @@ class DevController extends Controller
                 $sl3 = '0' . $sl3;
             }
 
-            while(strlen($sl0) < 12) {
-                $sl0 = '0' . $sl0;
+            if (isset($sl0)) {
+                while(strlen($sl0) < 12) {
+                    $sl0 = '0' . $sl0;
+                }
             }
 
             $rc = App\ReferralCode::firstOrCreate(['code' => $code, 'card' => $sl3]);
