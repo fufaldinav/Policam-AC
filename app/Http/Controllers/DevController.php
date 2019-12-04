@@ -147,6 +147,8 @@ class DevController extends Controller
                 while(strlen($sl0) < 12) {
                     $sl0 = '0' . $sl0;
                 }
+            } else {
+                $sl0 = null;
             }
 
             $rc = App\ReferralCode::firstOrCreate(['code' => $code, 'card' => $sl3]);
