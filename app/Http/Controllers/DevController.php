@@ -143,7 +143,7 @@ class DevController extends Controller
                 $sl3 = '0' . $sl3;
             }
 
-            if (isset($sl0)) {
+            if (strlen($sl0) > 0) {
                 while(strlen($sl0) < 12) {
                     $sl0 = '0' . $sl0;
                 }
