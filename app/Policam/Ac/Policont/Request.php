@@ -164,7 +164,7 @@ final class Request
                             }
                         }
                     } catch (\Exception $e) {
-                        \Log::debug(print_r($message, true));
+                        \Log::error(print_r($message, true));
                     }
                 }
 
