@@ -164,7 +164,7 @@ final class Request
                             }
                         }
                     } catch (\Exception $e) {
-                        \Log::error(print_r($message, true));
+                        \Log::channel('daily')->error(print_r($message, true));
                     }
                 }
 
