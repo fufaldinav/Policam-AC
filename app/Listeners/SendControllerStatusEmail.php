@@ -23,7 +23,7 @@ class SendControllerStatusEmail
     /**
      * Handle the event.
      *
-     * @param  ControllerChangedStatus  $event
+     * @param ControllerChangedStatus $event
      * @return void
      */
     public function handle(ControllerChangedStatus $event)

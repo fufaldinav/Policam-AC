@@ -35,6 +35,6 @@ class ControllerStatusEmail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.controller-status');
+        return $this->subject('Контроллер ' . $this->controller->sn . ' изменил статус')->markdown('emails.controller-status');
     }
 }
