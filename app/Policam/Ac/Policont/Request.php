@@ -147,24 +147,20 @@ final class Request
                         $devices[$device->id]->sd_error = $device->sd_error ?? null;
                     }
                 } else {
-                    try {
-                        if (isset($message->timeouts) && isset($message->alarms) && isset($message->sd_errors)) {
-                            for ($i = 0; $i < $ctrl->devices; $i++) {
-                                if (! isset($devices[$i])) {
-                                    $devices[$i] = new \stdClass();
-                                    $controllerChangedStatus = true;
-                                } else if ($devices[$i]->timeout == 0 && $message->timeouts[$i] > 0) {
-                                    $controllerChangedStatus = true;
-                                } else if ($devices[$i]->timeout > 0 && $message->timeouts[$i] == 0) {
-                                    $controllerChangedStatus = true;
-                                }
-                                $devices[$i]->timeout = $message->timeouts[$i];
-                                $devices[$i]->alarm = $message->alarms[$i];
-                                $devices[$i]->sd_error = $message->sd_errors[$i];
+                    if (isset($message->timeouts) && isset($message->alarms) && isset($message->sd_errors)) {
+                        for ($i = 0; $i < $ctrl->devices; $i++) {
+                            if (! isset($devices[$i])) {
+                                $devices[$i] = new \stdClass();
+                                $controllerChangedStatus = true;
+                            } else if ($devices[$i]->timeout == 0 && $message->timeouts[$i] > 0) {
+                                $controllerChangedStatus = true;
+                            } else if ($devices[$i]->timeout > 0 && $message->timeouts[$i] == 0) {
+                                $controllerChangedStatus = true;
                             }
+                            $devices[$i]->timeout = $message->timeouts[$i];
+                            $devices[$i]->alarm = $message->alarms[$i];
+                            $devices[$i]->sd_error = $message->sd_errors[$i];
                         }
-                    } catch (\Exception $e) {
-                        \Log::channel('daily')->error(print_r($message, true));
                     }
                 }
 
