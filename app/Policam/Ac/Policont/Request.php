@@ -137,12 +137,13 @@ final class Request
 
                 if (isset($message->devices)) {
                     foreach ($message->devices as $device) {
-                        if ($devices[$device->id]->timeout < 3 && $device->timeout >= 3) {
+                        if ($devices[$device->id]->timeout == 0 && $device->timeout >= 3) {
+                            $devices[$device->id]->timeout = 1;
                             $controllerChangedStatus = true;
-                        } else if ($devices[$device->id]->timeout >= 3 && $device->timeout < 3) {
+                        } else if ($devices[$device->id]->timeout > 0 && $device->timeout < 3) {
+                            $devices[$device->id]->timeout = 0;
                             $controllerChangedStatus = true;
                         }
-                        $devices[$device->id]->timeout = $device->timeout;
                         $devices[$device->id]->alarm = $device->alarm ?? null;
                         $devices[$device->id]->sd_error = $device->sd_error ?? null;
                     }
