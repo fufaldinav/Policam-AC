@@ -137,9 +137,9 @@ final class Request
 
                 if (isset($message->devices)) {
                     foreach ($message->devices as $device) {
-                        if ($devices[$device->id]->timeout == 0 && $device->timeout > 0) {
+                        if ($devices[$device->id]->timeout < 3 && $device->timeout >= 3) {
                             $controllerChangedStatus = true;
-                        } else if ($devices[$device->id]->timeout > 0 && $device->timeout == 0) {
+                        } else if ($devices[$device->id]->timeout >= 3 && $device->timeout < 3) {
                             $controllerChangedStatus = true;
                         }
                         $devices[$device->id]->timeout = $device->timeout;
