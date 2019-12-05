@@ -133,6 +133,8 @@ final class Request
                     }
                 }
 
+                array_splice($devices, $ctrl->devices);
+
                 $controllerChangedStatus = false;
 
                 if (isset($message->devices)) {
