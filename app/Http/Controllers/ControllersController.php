@@ -34,16 +34,18 @@ class ControllersController extends Controller
      * Загружает в контроллер все карты
      *
      * @param Request $request
-     * @param int $ctrl_id
+     * @param int $ctrl_sn
      * @param bool $sl0
      *
      * @return string
      */
-    public function reloadCards(Request $request, int $ctrl_id, bool $sl0 = false): string
+    public function reloadCards(Request $request, int $ctrl_sn, bool $sl0 = false): string
     {
         abort_if(! $request->user()->isAdmin(), 403);
 
-        $ctrl = App\Controller::find($ctrl_id);
+        $ctrl = App\Controller::where('sn', $ctrl_sn)->first();
+
+        abort_if(is_null($ctrl), 404);
 
         $org = $ctrl->organization;
 
@@ -83,7 +85,7 @@ class ControllersController extends Controller
             */
             if (($i > 0 && ($i % 5 === 0)) || ($i === ($card_count - 1))) {
                 $tasker->addCards($ctrl, $codes);
-                $tasker->add($ctrl_id);
+                $tasker->add($ctrl->id);
 
                 $codes = [];
             }
@@ -105,21 +107,25 @@ class ControllersController extends Controller
      * Устанавливает параметры открытия двери
      *
      * @param Request $request
-     * @param int $ctrl_id
+     * @param int $ctrl_sn
      * @param int $open
      * @param int $open_control
      * @param int $close_control
      *
      * @return string
      */
-    public function setDoorParams(Request $request, int $ctrl_id, int $open, int $open_control = 30, int $close_control = 30): string
+    public function setDoorParams(Request $request, int $ctrl_sn, int $open, int $open_control = 30, int $close_control = 30): string
     {
         abort_if(! $request->user()->isAdmin(), 403);
+
+        $ctrl = App\Controller::where('sn', $ctrl_sn)->first();
+
+        abort_if(is_null($ctrl), 404);
 
         $tasker = new Tasker();
 
         $tasker->setDoorParams($open, $open_control, $close_control);
-        $tasker->add($ctrl_id);
+        $tasker->add($ctrl->id);
 
         $count = $tasker->send();
 
@@ -134,12 +140,12 @@ class ControllersController extends Controller
      * Очищает память контроллера
      *
      * @param Request $request
-     * @param int $ctrl_id
+     * @param int $ctrl_sn
      * @param int $device
      *
      * @return string
      */
-    public function clear(Request $request, int $ctrl_id, int $device = null): string
+    public function clear(Request $request, int $ctrl_sn, int $device = null): string
     {
         abort_if(! $request->user()->isAdmin(), 403);
 
@@ -148,12 +154,14 @@ class ControllersController extends Controller
             $devices[] = $device;
         }
 
-        $ctrl = App\Controller::find($ctrl_id);
+        $ctrl = App\Controller::where('sn', $ctrl_sn)->first();
+
+        abort_if(is_null($ctrl), 404);
 
         $tasker = new Tasker();
 
         $tasker->clearCards($ctrl, $devices);
-        $tasker->add($ctrl_id);
+        $tasker->add($ctrl->id);
 
         $count = $tasker->send();
 
@@ -168,16 +176,18 @@ class ControllersController extends Controller
      * Останавливает работу контроллера
      *
      * @param Request $request
-     * @param int $ctrl_id
+     * @param int $ctrl_sn
      * @param int $device
      *
      * @return string
      */
-    public function stop(Request $request, int $ctrl_id, int $device = -1): string
+    public function stop(Request $request, int $ctrl_sn, int $device = -1): string
     {
         abort_if(! $request->user()->isAdmin(), 403);
 
-        $ctrl = App\Controller::find($ctrl_id);
+        $ctrl = App\Controller::where('sn', $ctrl_sn)->first();
+
+        abort_if(is_null($ctrl), 404);
 
         if ($device >= $ctrl->devices) {
             return __('У контроллера меньше ведомых, чем задано');
@@ -186,7 +196,7 @@ class ControllersController extends Controller
         $tasker = new Tasker();
 
         $tasker->stop($ctrl, $device);
-        $tasker->add($ctrl_id);
+        $tasker->add($ctrl->id);
 
         $count = $tasker->send();
 
