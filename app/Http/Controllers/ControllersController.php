@@ -137,43 +137,7 @@ class ControllersController extends Controller
     }
 
     /**
-     * Очищает память контроллера
-     *
-     * @param Request $request
-     * @param int $ctrl_sn
-     * @param int $device
-     *
-     * @return string
-     */
-    public function clear(Request $request, int $ctrl_sn, int $device = null): string
-    {
-        abort_if(! $request->user()->isAdmin(), 403);
-
-        $devices = [];
-        if (isset($device)) {
-            $devices[] = $device;
-        }
-
-        $ctrl = App\Controller::where('sn', $ctrl_sn)->first();
-
-        abort_if(is_null($ctrl), 404);
-
-        $tasker = new Tasker();
-
-        $tasker->clearCards($ctrl, $devices);
-        $tasker->add($ctrl->id);
-
-        $count = $tasker->send();
-
-        if ($count > 0) {
-            return __('Заданий успешно отправлено: :count', ['count' => $count]);
-        } else {
-            return __('Нет отправленных заданий');
-        }
-    }
-
-    /**
-     * Останавливает работу контроллера
+     * Отправляем комманду на контроллер
      *
      * @param Request $request
      * @param int $ctrl_sn

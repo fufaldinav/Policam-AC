@@ -70,11 +70,28 @@ Route::group(['prefix' => 'cards', 'as' => 'cards.'], function () {
 Route::group(['prefix' => 'controllers', 'as' => 'controllers.'], function () {
     Route::get('get_list', 'ControllersController@getList');
     Route::get('set_door_params/{controller_sn}/{open_time}/{open_control?}/{close_control?}', 'ControllersController@setDoorParams');
-    Route::get('clear/{controller_sn}/{device?}', 'ControllersController@clear');
     Route::get('reload_cards/{controller_sn}/{sl0?}', 'ControllersController@reloadCards');
-    Route::get('stop/{controller_sn}/{device?}', 'ControllersController@stop');
     Route::get('panel/{organizationId}/{sl0?}', 'ControllersController@generateImportString');
     Route::get('xml/{organizationId}/{sl0?}', 'ControllersController@generateImportXml');
+    Route::group(['prefix' => 'cmd', 'as' => 'cmd.'], function () {
+        Route::get('stop/{controller_sn}/{device?}', 'ControllersController@command');
+        Route::get('reboot/{controller_sn}/{device?}', 'ControllersController@command');
+        Route::get('reset/{controller_sn}/{device?}', 'ControllersController@command');
+        Route::get('clear_eeprom/{controller_sn}/{device?}', 'ControllersController@command');
+        Route::get('clear_cards/{controller_sn}/{device}', 'ControllersController@command');
+        Route::get('clear_events/{controller_sn}/{device?}', 'ControllersController@command');
+        Route::get('clear_cards_bl/{controller_sn}/{device}', 'ControllersController@command');
+        Route::get('clear_events_bl/{controller_sn}/{device?}', 'ControllersController@command');
+        Route::get('address/{value}/{controller_sn}/{device}', 'ControllersController@command');
+        Route::get('alarm/{value}/{controller_sn}/{device?}', 'ControllersController@command');
+        Route::get('free_mode_timeout/{value}/{controller_sn}/{device}', 'ControllersController@command');
+        Route::get('door_mode/{value}/{controller_sn}/{device}', 'ControllersController@command');
+        Route::get('door_sensors/{value}/{controller_sn}/{device}', 'ControllersController@command');
+        Route::get('door_open_timeout/{value}/{controller_sn}/{device}', 'ControllersController@command');
+        Route::get('vbat_min/{value}/{controller_sn}/{device}', 'ControllersController@command');
+        Route::get('vbat_delta/{value}/{controller_sn}/{device}', 'ControllersController@command');
+        Route::get('readers/{value}/{controller_sn}/{device}', 'ControllersController@command');
+    });
 });
 /*
  * Control Panel

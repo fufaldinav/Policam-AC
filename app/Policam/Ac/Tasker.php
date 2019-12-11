@@ -225,7 +225,7 @@ class Tasker
      * @param int $device
      * @return void
      */
-    public function stop(App\Controller $ctrl, int $device = -1): void
+    public function cmd(int $cmdId, App\Controller $ctrl, $value = null, int $device = -1): void
     {
         if ($ctrl->type == 'Policont') {
             $this->message = new PolicontOutgoingMessage();
