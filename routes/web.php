@@ -85,7 +85,7 @@ Route::group(['prefix' => 'controllers', 'as' => 'controllers.'], function () {
         Route::get('clear_cards_bl/{controller_sn}/{device}', 'ControllersController@clearCardsBlacklist');
         Route::get('clear_events_bl/{controller_sn}/{device?}', 'ControllersController@clearEventsBlacklist');
         Route::get('devices/{value}/{controller_sn}', 'ControllersController@devices');
-        Route::get('address/{value}/{controller_sn}/{device}', 'ControllersController@address');
+//        Route::get('address/{value}/{controller_sn}/{device}', 'ControllersController@address');
         Route::get('alarm/{value}/{controller_sn}/{device?}', 'ControllersController@alarm');
         Route::get('free_mode_timeout/{value}/{controller_sn}/{device}', 'ControllersController@freeModeTimeout');
         Route::get('door_mode/{value}/{controller_sn}/{device}', 'ControllersController@doorMode');
