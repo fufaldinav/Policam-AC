@@ -241,19 +241,21 @@ class ControllersController extends Controller
         return $this->command();
     }
 
-    public function devices(Request $request, int $controllerSn): string
+    public function devices(Request $request, int $value, int $controllerSn): string
     {
         $this->request = $request;
         $this->cmd = 'devices';
+        $this->value = $value;
         $this->controllerSn = $controllerSn;
 
         return $this->command();
     }
 
-    public function address(Request $request, int $controllerSn, int $device): string
+    public function address(Request $request, int $value, int $controllerSn, int $device): string
     {
         $this->request = $request;
         $this->cmd = 'address';
+        $this->value = $value;
         $this->controllerSn = $controllerSn;
         $this->device = $device;
 
