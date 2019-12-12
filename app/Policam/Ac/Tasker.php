@@ -236,6 +236,8 @@ class Tasker
             return;
         }
 
+        $this->message->setCmd($cmd);
+        $this->message->setValue($value);
         $this->message->setDevice($device);
 
         $this->message->setOperation('command');

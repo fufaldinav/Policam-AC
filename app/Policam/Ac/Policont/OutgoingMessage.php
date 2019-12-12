@@ -46,6 +46,28 @@ final class OutgoingMessage implements JsonSerializable
         'del_cards' => ['cards'],
         'command' => ['device', 'cmd', 'value'],
     ];
+    protected $cmd_types = [
+      'stop' => 0,
+      'reboot' => 1,
+      'reset' => 2,
+      'clear_eeprom' => 3,
+      'clear_messages' => 4,
+      'clear_cards' => 4,
+      'clear_events' => 5,
+      'clear_messages_bl' => 6,
+      'clear_cards_bl' => 6,
+      'clear_events_bl' => 7,
+      'devices' => 8,
+      'address' => 8,
+      'alarm' => 9,
+      'free_mode_timeout' => 10,
+      'door_mode' => 11,
+      'door_sensors' => 12,
+      'door_open_timeout' => 13,
+      'vbat_min' => 14,
+      'vbat_delta' => 15,
+      'readers' => 16,
+    ];
 
     public function __construct(int $id = 0)
     {
@@ -121,6 +143,22 @@ final class OutgoingMessage implements JsonSerializable
     public function addDevice(int $device): void
     {
         $this->devices[] = $device;
+    }
+
+    public function setCmd(string $cmd): bool
+    {
+        $this->cmd = $cmd;
+        if (array_key_exists($cmd, $this->cmd_types)) {
+            $this->cmd = $cmd;
+            return true;
+        }
+
+        return false;
+    }
+
+    public function setValue(int $value): void
+    {
+        $this->value = $value;
     }
 
     public function setDevice(int $device): void
