@@ -147,9 +147,8 @@ final class OutgoingMessage implements JsonSerializable
 
     public function setCmd(string $cmd): bool
     {
-        $this->cmd = $cmd;
         if (array_key_exists($cmd, $this->cmd_types)) {
-            $this->cmd = $cmd;
+            $this->cmd = $this->cmd_types[$cmd];
             return true;
         }
 
