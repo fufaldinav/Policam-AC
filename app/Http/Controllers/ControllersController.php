@@ -262,10 +262,11 @@ class ControllersController extends Controller
         return $this->command();
     }
 
-    public function alarm(Request $request, int $controllerSn, int $device = -1): string
+    public function alarm(Request $request, int $value, int $controllerSn, int $device = -1): string
     {
         $this->request = $request;
         $this->cmd = 'alarm';
+        $this->value = $value;
         $this->controllerSn = $controllerSn;
         $this->device = $device;
 
