@@ -195,7 +195,7 @@ class ControllersController extends Controller
     public function clearCards(Request $request, int $controllerSn, int $device): string
     {
         $this->request = $request;
-        $this->cmd = 'stop';
+        $this->cmd = 'clear_cards';
         $this->controllerSn = $controllerSn;
         $this->device = $device;
 
