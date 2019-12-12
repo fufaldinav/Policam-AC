@@ -221,11 +221,14 @@ class Tasker
     /**
      * Останавливает работу контроллера
      *
+     * @param string $cmd
+     * @param int $value
      * @param App\Controller $ctrl
      * @param int $device
+     *
      * @return void
      */
-    public function cmd(int $cmdId, App\Controller $ctrl, $value = null, int $device = -1): void
+    public function cmd(string $cmd, int $value, App\Controller $ctrl, int $device): void
     {
         if ($ctrl->type == 'Policont') {
             $this->message = new PolicontOutgoingMessage();
@@ -235,6 +238,6 @@ class Tasker
 
         $this->message->setDevice($device);
 
-        $this->message->setOperation('stop');
+        $this->message->setOperation('command');
     }
 }

@@ -24,6 +24,12 @@ use Illuminate\Http\Request;
 
 class ControllersController extends Controller
 {
+    private $request;
+    private $cmd;
+    private $controllerSn;
+    private $value = -1;
+    private $device = -1;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -136,39 +142,209 @@ class ControllersController extends Controller
         }
     }
 
-    /**
-     * Отправляем комманду на контроллер
-     *
-     * @param Request $request
-     * @param int $ctrl_sn
-     * @param int $device
-     *
-     * @return string
-     */
-    public function stop(Request $request, int $ctrl_sn, int $device = -1): string
+    public function stop(Request $request, int $controllerSn, int $device = -1): string
     {
-        abort_if(! $request->user()->isAdmin(), 403);
+        $this->request = $request;
+        $this->cmd = 'stop';
+        $this->controllerSn = $controllerSn;
+        $this->device = $device;
 
-        $ctrl = App\Controller::where('sn', $ctrl_sn)->first();
+        return $this->command();
+    }
 
-        abort_if(is_null($ctrl), 404);
+    public function reboot(Request $request, int $controllerSn, int $device = -1): string
+    {
+        $this->request = $request;
+        $this->cmd = 'reboot';
+        $this->controllerSn = $controllerSn;
+        $this->device = $device;
 
-        if ($device >= $ctrl->devices) {
-            return __('У контроллера меньше ведомых, чем задано');
-        }
+        return $this->command();
+    }
 
-        $tasker = new Tasker();
+    public function reset(Request $request, int $controllerSn, int $device = -1): string
+    {
+        $this->request = $request;
+        $this->cmd = 'reset';
+        $this->controllerSn = $controllerSn;
+        $this->device = $device;
 
-        $tasker->stop($ctrl, $device);
-        $tasker->add($ctrl->id);
+        return $this->command();
+    }
 
-        $count = $tasker->send();
+    public function clearEeprom(Request $request, int $controllerSn, int $device = -1): string
+    {
+        $this->request = $request;
+        $this->cmd = 'clear_eeprom';
+        $this->controllerSn = $controllerSn;
+        $this->device = $device;
 
-        if ($count > 0) {
-            return __('Заданий успешно отправлено: :count', ['count' => $count]);
-        } else {
-            return __('Нет отправленных заданий');
-        }
+        return $this->command();
+    }
+
+    public function clearMessages(Request $request, int $controllerSn, int $device = -1): string
+    {
+        $this->request = $request;
+        $this->cmd = 'clear_messages';
+        $this->controllerSn = $controllerSn;
+        $this->device = $device;
+
+        return $this->command();
+    }
+
+    public function clearCards(Request $request, int $controllerSn, int $device): string
+    {
+        $this->request = $request;
+        $this->cmd = 'stop';
+        $this->controllerSn = $controllerSn;
+        $this->device = $device;
+
+        return $this->command();
+    }
+
+    public function clearEvents(Request $request, int $controllerSn, int $device = -1): string
+    {
+        $this->request = $request;
+        $this->cmd = 'clear_events';
+        $this->controllerSn = $controllerSn;
+        $this->device = $device;
+
+        return $this->command();
+    }
+
+    public function clearMessagesBlacklist(Request $request, int $controllerSn): string
+    {
+        $this->request = $request;
+        $this->cmd = 'clear_messages_bl';
+        $this->controllerSn = $controllerSn;
+
+        return $this->command();
+    }
+
+    public function clearCardsBlacklist(Request $request, int $controllerSn, int $device): string
+    {
+        $this->request = $request;
+        $this->cmd = 'clear_cards_bl';
+        $this->controllerSn = $controllerSn;
+        $this->device = $device;
+
+        return $this->command();
+    }
+
+    public function clearEventsBlacklist(Request $request, int $controllerSn, int $device = -1): string
+    {
+        $this->request = $request;
+        $this->cmd = 'clear_events_bl';
+        $this->controllerSn = $controllerSn;
+        $this->device = $device;
+
+        return $this->command();
+    }
+
+    public function devices(Request $request, int $controllerSn): string
+    {
+        $this->request = $request;
+        $this->cmd = 'devices';
+        $this->controllerSn = $controllerSn;
+
+        return $this->command();
+    }
+
+    public function address(Request $request, int $controllerSn, int $device): string
+    {
+        $this->request = $request;
+        $this->cmd = 'address';
+        $this->controllerSn = $controllerSn;
+        $this->device = $device;
+
+        return $this->command();
+    }
+
+    public function alarm(Request $request, int $controllerSn, int $device = -1): string
+    {
+        $this->request = $request;
+        $this->cmd = 'alarm';
+        $this->controllerSn = $controllerSn;
+        $this->device = $device;
+
+        return $this->command();
+    }
+
+    public function freeModeTimeout(Request $request, int $value, int $controllerSn, int $device): string
+    {
+        $this->request = $request;
+        $this->cmd = 'free_mode_timeout';
+        $this->value = $value;
+        $this->device = $device;
+        $this->controllerSn = $controllerSn;
+
+        return $this->command();
+    }
+
+    public function doorMode(Request $request, int $value, int $controllerSn, int $device): string
+    {
+        $this->request = $request;
+        $this->cmd = 'door_mode';
+        $this->value = $value;
+        $this->device = $device;
+        $this->controllerSn = $controllerSn;
+
+        return $this->command();
+    }
+
+    public function doorSensors(Request $request, int $value, int $controllerSn, int $device): string
+    {
+        $this->request = $request;
+        $this->cmd = 'door_sensors';
+        $this->value = $value;
+        $this->device = $device;
+        $this->controllerSn = $controllerSn;
+
+        return $this->command();
+    }
+
+    public function doorOpenTimeout(Request $request, int $value, int $controllerSn, int $device): string
+    {
+        $this->request = $request;
+        $this->cmd = 'door_open_timeout';
+        $this->value = $value;
+        $this->device = $device;
+        $this->controllerSn = $controllerSn;
+
+        return $this->command();
+    }
+
+    public function vBatMin(Request $request, int $value, int $controllerSn, int $device): string
+    {
+        $this->request = $request;
+        $this->cmd = 'vbat_min';
+        $this->value = $value;
+        $this->device = $device;
+        $this->controllerSn = $controllerSn;
+
+        return $this->command();
+    }
+
+    public function vBatDelta(Request $request, int $value, int $controllerSn, int $device): string
+    {
+        $this->request = $request;
+        $this->cmd = 'vbat_delta';
+        $this->value = $value;
+        $this->device = $device;
+        $this->controllerSn = $controllerSn;
+
+        return $this->command();
+    }
+
+    public function readers(Request $request, int $value, int $controllerSn, int $device): string
+    {
+        $this->request = $request;
+        $this->cmd = 'readers';
+        $this->value = $value;
+        $this->device = $device;
+        $this->controllerSn = $controllerSn;
+
+        return $this->command();
     }
 
     public function generateImportString(Request $request, int $organizationId, bool $sl0 = false)
@@ -274,5 +450,36 @@ class ControllersController extends Controller
         $xml .= '</AccessControlCard><AccessControlPwd bCheck="0" /><AccessQRCode bCheck="0" /></VTO>';
 
         return response($xml)->header('Content-type', 'text/xml');
+    }
+
+    /**
+     * Отправляет комманду на контроллер
+     *
+     * @return string
+     */
+    private function command()
+    {
+        abort_if(! $this->request->user()->isAdmin(), 403);
+
+        $ctrl = App\Controller::where('sn', $this->controllerSn)->first();
+
+        abort_if(is_null($ctrl), 404);
+
+        if ($this->device >= $ctrl->devices) {
+            return __('У контроллера меньше slave, чем задано');
+        }
+
+        $tasker = new Tasker();
+
+        $tasker->cmd($this->cmd, $this->value, $ctrl, $this->device);
+        $tasker->add($ctrl->id);
+
+        $count = $tasker->send();
+
+        if ($count > 0) {
+            return __('Заданий успешно отправлено: :count', ['count' => $count]);
+        } else {
+            return __('Нет отправленных заданий');
+        }
     }
 }

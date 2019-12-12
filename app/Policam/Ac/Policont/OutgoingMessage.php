@@ -33,6 +33,8 @@ final class OutgoingMessage implements JsonSerializable
     protected $close_control = 30;
     protected $cards = [];
     protected $device;
+    protected $cmd;
+    protected $value;
     protected $devices = [];
     protected $operation_types = [
         'set_active' => ['active', 'online'],
@@ -42,8 +44,7 @@ final class OutgoingMessage implements JsonSerializable
         'set_door_params' => ['open', 'open_control', 'close_control'],
         'add_cards' => ['cards'],
         'del_cards' => ['cards'],
-        'clear_cards' => ['devices'],
-        'stop' => ['device'],
+        'command' => ['device', 'cmd', 'value'],
     ];
 
     public function __construct(int $id = 0)
