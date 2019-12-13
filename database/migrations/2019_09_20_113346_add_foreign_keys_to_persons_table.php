@@ -14,6 +14,7 @@ class AddForeignKeysToPersonsTable extends Migration
     public function up()
     {
         Schema::table('persons', function (Blueprint $table) {
+            $table->foreign('referral_code_id')->references('id')->on('referral_codes');
             $table->foreign('organization_id')->references('id')->on('organizations');
         });
     }
@@ -26,6 +27,7 @@ class AddForeignKeysToPersonsTable extends Migration
     public function down()
     {
         Schema::table('persons', function (Blueprint $table) {
+            $table->dropForeign('persons_referral_code_id_foreign');
             $table->dropForeign('persons_organization_id_foreign');
         });
     }

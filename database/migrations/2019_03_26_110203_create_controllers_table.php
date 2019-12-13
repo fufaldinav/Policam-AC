@@ -17,7 +17,7 @@ class CreateControllersTable extends Migration
             $table->increments('id');
             $table->string('name', 20)->default('Без имени');
             $table->string('sn', 20)->unique();
-            $table->string('type', 20)->default('Z5RWEB');
+            $table->string('type', 20)->default('Policont');
             $table->string('fw', 10)->nullable();
             $table->string('conn_fw', 10)->nullable();
             $table->unsignedTinyInteger('mode')->default(0);

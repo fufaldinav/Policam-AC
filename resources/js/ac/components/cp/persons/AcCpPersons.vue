@@ -94,9 +94,6 @@
             this.$bus.$on('ControllerConnected', e => {
                 if (this.$store.state.debug) console.log('Контроллер ID: ' + e.controller_id + ' вышел на связь')
             })
-            this.$bus.$on('PingReceived', e => {
-                if (this.$store.state.debug) console.log('Контроллер ID: ' + e.controller_id + ', devices: ' + e.devices)
-            })
             this.$bus.$on('OrganizationChanged', e => {
                 console.log(e)
             })
@@ -104,8 +101,6 @@
 
         beforeDestroy() {
             this.$bus.$off('EventReceived')
-            this.$bus.$off('ControllerConnected')
-            this.$bus.$off('PingReceived')
             this.$bus.$off('OrgSelected')
         }
     }

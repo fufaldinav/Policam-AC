@@ -15,7 +15,7 @@ class ChangeColumnsInReferralCodesTable extends Migration
     {
         Schema::table('referral_codes', function (Blueprint $table) {
             $table->string('code', 13)->change();
-            $table->string('card', 8)->change();
+            $table->string('card', 12)->change();
         });
     }
 

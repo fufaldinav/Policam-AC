@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * App\Controller
  *
- * @mixin \Eloquent
  * @property int $id
  * @property string $name
  * @property string $sn
@@ -18,14 +17,19 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $ip
  * @property int $active
  * @property int $online
- * @property string|null $last_conn
+ * @property \Illuminate\Support\Carbon|null $last_conn
  * @property int $organization_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Organization $organization
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Camera[] $cameras
+ * @property-read int|null $cameras_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Device[] $devices
+ * @property-read int|null $devices_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Notification[] $notifications
+ * @property-read int|null $notifications_count
+ * @property-read \App\Organization $organization
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Task[] $tasks
+ * @property-read int|null $tasks_count
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Controller newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Controller newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Controller query()
@@ -43,11 +47,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Controller whereSn($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Controller whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Controller whereUpdatedAt($value)
- * @property-read int|null $cameras_count
- * @property-read int|null $notifications_count
- * @property-read int|null $tasks_count
- * @property int $devices
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Controller whereDevices($value)
+ * @mixin \Eloquent
  */
 class Controller extends Model
 {
@@ -57,7 +57,7 @@ class Controller extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'sn', 'type', 'fw', 'conn_fw', 'mode', 'ip', 'active', 'online', 'last_conn', 'devices', 'devices_status', 'devices_voltage', 'organization_id',
+        'name', 'sn', 'type', 'fw', 'conn_fw', 'mode', 'ip', 'active', 'online', 'last_conn', 'organization_id',
     ];
 
     /**
@@ -79,7 +79,6 @@ class Controller extends Model
         'active' => 'integer',
         'online' => 'integer',
         'last_conn' => 'datetime',
-        'devices' => 'integer',
         'organization_id' => 'integer',
     ];
 
@@ -101,5 +100,10 @@ class Controller extends Model
     public function tasks()
     {
         return $this->hasMany('App\Task');
+    }
+
+    public function devices()
+    {
+        return $this->hasMany('App\Device');
     }
 }

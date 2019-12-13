@@ -21,7 +21,6 @@ namespace App\Policam\Ac\Policont;
 use App;
 use App\Events\ControllerConnected;
 use App\Events\EventReceived;
-use App\Events\PingReceived;
 use App\Events\ControllerChangedStatus;
 use Carbon\Carbon;
 
@@ -90,7 +89,27 @@ final class Request
                 $ctrl->ip = $message->controller_ip;
 
                 if (isset($message->devices)) {
-                    $ctrl->devices = $message->devices;
+                    $devicesFromCtrl = $message->devices;
+                    $devicesInDbCount = $ctrl->devices()->count();
+
+                    for ($i = $devicesFromCtrl; $i < $devicesInDbCount; $i++) {
+                        $device = App\Device::where('controller_id', $ctrl->id)->where('address', $i)->first();
+                        $device->delete();
+                    }
+
+                    foreach ($ctrl->devices as $device) {
+                        $device->name = $ctrl->name . ' Slave #' . $i;
+                        $device->type = $ctrl->type;
+                        $device->save();
+                    }
+
+                    for ($i = $devicesInDbCount; $i < $devicesFromCtrl; $i++) {
+                        $ctrl->devices()->create([
+                            'address' => $i,
+                            'name' => $ctrl->name . ' Slave #' . $i,
+                            'type' => $ctrl->type,
+                        ]);
+                    }
                 }
 
                 $ctrl->save();
@@ -118,63 +137,39 @@ final class Request
              | Пинг от контроллера
              */
             elseif ($message->operation === 'ping') {
-                if (is_null($ctrl->devices_status)) {
-                    $devices = [];
-                } else {
-                    $devices = json_decode($ctrl->devices_status);
-                }
-
-                for ($i = 0; $i < $ctrl->devices; $i++) {
-                    if (! array_key_exists($i, $devices)) {
-                        $devices[$i] = new \stdClass();
-                        $devices[$i]->timeout = 0;
-                        $devices[$i]->alarm = 0;
-                        $devices[$i]->sd_error = 0;
-                    }
-                }
-
-                array_splice($devices, $ctrl->devices);
-
                 $controllerChangedStatus = false;
 
                 if (isset($message->devices)) {
-                    foreach ($message->devices as $device) {
-                        if ($devices[$device->id]->timeout == 0 && $device->timeout >= 3) {
-                            $devices[$device->id]->timeout = 1;
+                    $devices = $message->devices;
+                    foreach ($ctrl->devices as $device) {
+                        if ($device->timeout == 0 && $devices[$device->address]->timeout >= 3) {
+                            $device->timeout = 1;
                             $controllerChangedStatus = true;
-                        } else if ($devices[$device->id]->timeout > 0 && $device->timeout < 3) {
-                            $devices[$device->id]->timeout = 0;
+                        } else if ($device->timeout == 0 && $devices[$device->address]->timeout < 3) {
+                            $device->timeout = 0;
                             $controllerChangedStatus = true;
                         }
-                        $devices[$device->id]->alarm = $device->alarm ?? null;
-                        $devices[$device->id]->sd_error = $device->sd_error ?? null;
+                        $device->alarm = $devices[$device->address]->alarm;
+                        $device->sd_error = $devices[$device->address]->sd_error;
+                        $device->save();
                     }
                 } else {
                     if (isset($message->timeouts) && isset($message->alarms) && isset($message->sd_errors)) {
-                        for ($i = 0; $i < $ctrl->devices; $i++) {
-                            if (! isset($devices[$i])) {
-                                $devices[$i] = new \stdClass();
-                                $controllerChangedStatus = true;
-                            } else if ($devices[$i]->timeout == 0 && $message->timeouts[$i] > 0) {
-                                $controllerChangedStatus = true;
-                            } else if ($devices[$i]->timeout > 0 && $message->timeouts[$i] == 0) {
+                        foreach ($ctrl->devices as $device) {
+                            if (($device->timeout == 0 && $message->timeouts[$device->address] > 0) || ($device->timeout == 0 && $message->timeouts[$device->address] == 0)) {
                                 $controllerChangedStatus = true;
                             }
-                            $devices[$i]->timeout = $message->timeouts[$i];
-                            $devices[$i]->alarm = $message->alarms[$i];
-                            $devices[$i]->sd_error = $message->sd_errors[$i];
+                            $device->timeout = $message->timeouts[$device->address];
+                            $device->alarm = $message->alarms[$device->address];
+                            $device->sd_error = $message->sd_errors[$device->address];
+                            $device->save();
                         }
                     }
                 }
-
-                $ctrl->devices_status = json_encode($devices);
-                $ctrl->save();
 
                 if ($controllerChangedStatus) {
                     event(new ControllerChangedStatus($ctrl));
                 }
-
-                event(new PingReceived($ctrl->id, $devices));
             } /*
              | Cобытия на контроллере
              */
