@@ -156,7 +156,7 @@ final class Request
                 } else {
                     if (isset($message->timeouts) && isset($message->alarms) && isset($message->sd_errors)) {
                         foreach ($ctrl->devices as $device) {
-                            if (($device->timeout == 0 && $message->timeouts[$device->address] > 0) || ($device->timeout == 0 && $message->timeouts[$device->address] == 0)) {
+                            if (($device->timeout == 0 && $message->timeouts[$device->address] > 0) || ($device->timeout == 1 && $message->timeouts[$device->address] == 0)) {
                                 $controllerChangedStatus = true;
                             }
                             $device->timeout = $message->timeouts[$device->address];
