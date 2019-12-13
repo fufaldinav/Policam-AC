@@ -38,6 +38,7 @@ final class Request
      *
      * @return string|null Сообщение в формате JSON или NULL,
      *                     если сообщение от неизвестного контроллера
+     * @throws \Exception
      */
     public function handle(): ?string
     {
@@ -98,7 +99,7 @@ final class Request
                     }
 
                     foreach ($ctrl->devices as $device) {
-                        $device->name = $ctrl->name . ' Slave #' . $i;
+                        $device->name = $ctrl->name . ' Slave #' . $device->address;
                         $device->type = $ctrl->type;
                         $device->save();
                     }
