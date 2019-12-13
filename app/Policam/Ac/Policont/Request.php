@@ -180,16 +180,10 @@ final class Request
                 //чтение событий
                 foreach ($message->events as $inc_event) {
                     if ($inc_event->event == 21) {
-                        if ($ctrl->devices_voltage == null) {
-                            $devices_voltage = new \stdClass();
-                        } else {
-                            $devices_voltage = json_decode($ctrl->devices_voltage);
-                        }
-
-                        $deviceId = hexdec($inc_event->flag);
-                        $devices_voltage->$deviceId = hexdec($inc_event->card);
-                        $ctrl->devices_voltage = json_encode($devices_voltage);
-                        $ctrl->save();
+                        $deviceAddress = hexdec($inc_event->flag);
+                        $device = App\Device::where('controller_id', $ctrl->id)->where('address', $deviceAddress)->first();
+                        $device->voltage = hexdec($inc_event->card) / 100;
+                        $device->save();
 
                         $out_message->eventCounter();
                     } else {
