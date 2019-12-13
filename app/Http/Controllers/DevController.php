@@ -74,6 +74,8 @@ class DevController extends Controller
 
             if (isset($rc)) {
                 $rcId = $rc->id;
+                $rc->activated = 1;
+                $rc->save();
             } else {
                 $rcId = null;
                 echo $params[6] . PHP_EOL;
