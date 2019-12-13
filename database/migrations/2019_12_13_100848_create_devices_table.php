@@ -20,7 +20,7 @@ class CreateDevicesTable extends Migration
             $table->string('sn', 20)->nullable()->unique();
             $table->string('type', 20)->default('Policont');
             $table->string('fw', 10)->nullable();
-            $table->unsignedInteger('voltage')->nullable();
+            $table->float('voltage')->nullable();
             $table->unsignedTinyInteger('alarm')->default(0);
             $table->unsignedTinyInteger('timeout')->default(0);
             $table->unsignedTinyInteger('sd_error')->default(0);

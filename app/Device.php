@@ -64,7 +64,7 @@ class Device extends Model
      */
     protected $casts = [
         'address' => 'integer',
-        'voltage' => 'integer',
+        'voltage' => 'float',
         'alarm' => 'integer',
         'timeout' => 'integer',
         'sd_error' => 'datetime',
