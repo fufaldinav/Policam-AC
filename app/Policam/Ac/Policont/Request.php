@@ -149,8 +149,8 @@ final class Request
                             $device->timeout = 0;
                             $controllerChangedStatus = true;
                         }
-                        $device->alarm = $devices[$device->address]->alarm;
-                        $device->sd_error = $devices[$device->address]->sd_error;
+                        $device->alarm = $devices[$device->address]->alarm ?? 0;
+                        $device->sd_error = $devices[$device->address]->sd_error ?? 0;
                         $device->save();
                     }
                 } else {
