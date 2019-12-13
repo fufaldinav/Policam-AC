@@ -145,7 +145,7 @@ final class Request
                         if ($device->timeout == 0 && $devices[$device->address]->timeout >= 3) {
                             $device->timeout = 1;
                             $controllerChangedStatus = true;
-                        } else if ($device->timeout == 0 && $devices[$device->address]->timeout < 3) {
+                        } else if ($device->timeout == 1 && $devices[$device->address]->timeout < 3) {
                             $device->timeout = 0;
                             $controllerChangedStatus = true;
                         }
