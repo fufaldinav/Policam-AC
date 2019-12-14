@@ -115,7 +115,7 @@ class Tasker
     public function addCards(App\Controller $ctrl, array $codes, array $devices = []): void
     {
         if (count($devices) === 0) {
-            for ($i = 0; $i < $ctrl->devices; $i++) {
+            for ($i = 0; $i < $ctrl->devices()->count(); $i++) {
                 $devices[] = $i;
             }
         }
