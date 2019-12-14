@@ -34,6 +34,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\ReferralCode whereOrganizationId($value)
  * @property string|null $sl0
  * @method static \Illuminate\Database\Eloquent\Builder|\App\ReferralCode whereSl0($value)
+ * @property int $type
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\ReferralCode whereType($value)
  */
 class ReferralCode extends Model
 {
@@ -43,7 +45,7 @@ class ReferralCode extends Model
      * @var array
      */
     protected $fillable = [
-        'code', 'card', 'sl0', 'user_id', 'organization_id', 'activated',
+        'code', 'card', 'sl0', 'type', 'user_id', 'organization_id', 'activated',
     ];
 
     /**
@@ -61,6 +63,7 @@ class ReferralCode extends Model
      * @var array
      */
     protected $casts = [
+        'type' => 'integer',
         'activated' => 'integer',
     ];
 

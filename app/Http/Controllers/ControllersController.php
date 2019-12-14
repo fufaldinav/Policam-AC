@@ -379,7 +379,7 @@ class ControllersController extends Controller
                         continue;
                     }
 
-                    if (preg_match('/62490(.{4})468(.)/', $rc->code)) {
+                    if ($rc->type === 2) {
                         $card->CardNo = '88' . substr($card->CardNo, -6);
                     } else {
                         $byte1 = substr($card->CardNo, -8, 2);
