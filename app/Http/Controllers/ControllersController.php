@@ -432,7 +432,7 @@ class ControllersController extends Controller
 
                     $recNo = $i++ + 70;
 
-                    if (preg_match('/62490(.{4})468(.)/', $rc->code)) {
+                    if ($rc->type === 2) {
                         $cardNo = '88' . substr($cardNo, -6);
                     } else {
                         $byte1 = substr($cardNo, -8, 2);
