@@ -40,12 +40,12 @@ class ControllersController extends Controller
      * Загружает в контроллер все карты
      *
      * @param Request $request
-     * @param int $ctrl_sn
+     * @param string $ctrl_sn
      * @param bool $sl0
      *
      * @return string
      */
-    public function reloadCards(Request $request, int $ctrl_sn, bool $sl0 = false): string
+    public function reloadCards(Request $request, string $ctrl_sn, bool $sl0 = false): string
     {
         abort_if(! $request->user()->isAdmin(), 403);
 
