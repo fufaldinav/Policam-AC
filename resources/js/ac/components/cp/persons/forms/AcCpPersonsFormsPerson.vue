@@ -187,7 +187,7 @@
     export default {
         name: "AcCpPersonsFormsPerson",
 
-        data: function () {
+        data() {
             return {
                 errors: {
                     f: false,
