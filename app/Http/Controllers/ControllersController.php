@@ -468,7 +468,7 @@ class ControllersController extends Controller
 
         abort_if(is_null($ctrl), 404);
 
-        if ($this->device >= $ctrl->devices) {
+        if ($this->device >= $ctrl->devices()->count()) {
             return __('У контроллера меньше slave, чем задано');
         }
 
