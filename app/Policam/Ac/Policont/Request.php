@@ -65,6 +65,26 @@ final class Request
         $messages = $this->request->messages;
 
         $ctrl->last_conn = $datetime;
+
+        if (isset($this->request->eq)) {
+            $ctrl->events_queue = $this->request->eq;
+        }
+        if (isset($this->request->mq)) {
+            $ctrl->messages_queue = $this->request->mq;
+        }
+        if (isset($this->request->ebl)) {
+            $ctrl->events_bl = $this->request->ebl;
+        }
+        if (isset($this->request->mbl)) {
+            $ctrl->messages_bl = $this->request->mbl;
+        }
+        if (isset($this->request->alarm)) {
+            $ctrl->alarm = $this->request->alarm;
+        }
+        if (isset($this->request->sd_error)) {
+            $ctrl->sd_error = $this->request->sd_error;
+        }
+
         $ctrl->save();
 
         event(new ControllerConnected($ctrl));
