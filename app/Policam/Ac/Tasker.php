@@ -158,7 +158,7 @@ class Tasker
     public function delCards(App\Controller $ctrl, array $codes, array $devices = []): void
     {
         if (count($devices) === 0) {
-            for ($i = 0; $i < $ctrl->devices; $i++) {
+            for ($i = 0; $i < $ctrl->devices()->count(); $i++) {
                 $devices[] = $i;
             }
         }
@@ -198,7 +198,7 @@ class Tasker
     public function clearCards(App\Controller $ctrl, array $devices = []): void
     {
         if (count($devices) === 0) {
-            for ($i = 0; $i < $ctrl->devices; $i++) {
+            for ($i = 0; $i < $ctrl->devices()->count(); $i++) {
                 $devices[] = $i;
             }
         }
