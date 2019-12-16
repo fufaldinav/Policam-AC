@@ -4,7 +4,8 @@ import {Person, Photo} from '../../classes'
 const state = {
     collection: {},
     selected: new Person({}),
-    manually: false
+    manually: false,
+    searchByCode: false
 }
 
 const getters = {
@@ -45,6 +46,10 @@ const mutations = {
 
     setManually(state, status = true) {
         state.manually = status
+    },
+
+    setSearchByCode(state, status = true) {
+        state.searchByCode = status
     },
 
     addPhoto(state, photo) {
