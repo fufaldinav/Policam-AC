@@ -72,9 +72,9 @@ class ReferralCode extends Model
         return $this->belongsTo('App\Organization');
     }
 
-    public function persons()
+    public function person()
     {
-        return $this->hasMany('App\Person');
+        return $this->hasOne('App\Person');
     }
 
     public function user()
