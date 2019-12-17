@@ -11,15 +11,7 @@
             v-touch:swipe.left="showForm"
         >
             <div
-                v-if="searchByCode"
-                class="list-group list-group-flush"
-            >
-                <ac-cp-persons-buttons-cancel-search-by-code></ac-cp-persons-buttons-cancel-search-by-code>
-                <ac-cp-buttons-search-field></ac-cp-buttons-search-field>
-                <ac-cp-persons-buttons-search-code></ac-cp-persons-buttons-search-code>
-            </div>
-            <div
-                v-else-if="selectedDivision === null"
+                v-if="selectedDivision === null"
                 class="list-group list-group-flush"
             >
                 <ac-buttons-division
@@ -35,7 +27,6 @@
             >
                 <ac-buttons-back></ac-buttons-back>
                 <ac-cp-persons-buttons-add></ac-cp-persons-buttons-add>
-                <ac-cp-persons-buttons-add-by-code></ac-cp-persons-buttons-add-by-code>
                 <ac-buttons-person
                     v-for="id in selectedDivisionPersons"
                     :key="id"
@@ -49,10 +40,6 @@
 
 <script>
     import AcCpPersonsButtonsAdd from './buttons/AcCpPersonsButtonsAdd'
-    import AcCpPersonsButtonsAddByCode from './buttons/AcCpPersonsButtonsAddByCode'
-    import AcCpPersonsButtonsCancelSearchByCode from './buttons/AcCpPersonsButtonsCancelSearchByCode'
-    import AcCpPersonsButtonsSearchCode from './buttons/AcCpPersonsButtonsSearchCode'
-    import AcCpButtonsSearchField from './buttons/AcCpButtonsSearchField'
     import AcButtonsBack from '../../buttons/AcButtonsBack'
     import AcButtonsPerson from '../../buttons/AcButtonsPerson'
     import AcButtonsDivision from '../../buttons/AcButtonsDivision'
@@ -60,16 +47,7 @@
     export default {
         name: "AcCpPersonsMenuLeft",
 
-        components: {
-            AcCpPersonsButtonsAdd,
-            AcCpPersonsButtonsAddByCode,
-            AcCpPersonsButtonsCancelSearchByCode,
-            AcCpPersonsButtonsSearchCode,
-            AcCpButtonsSearchField,
-            AcButtonsBack,
-            AcButtonsPerson,
-            AcButtonsDivision
-        },
+        components: {AcCpPersonsButtonsAdd, AcButtonsBack, AcButtonsPerson, AcButtonsDivision},
 
         computed: {
             leftMenuShown() {
@@ -78,7 +56,7 @@
 
             displayNone() {
                 return {
-                    'd-none': !this.leftMenuShown
+                    'd-none': ! this.leftMenuShown
                 }
             },
 
@@ -100,11 +78,7 @@
 
             breakpoint() {
                 return this.$store.state.bp.current
-            },
-
-            searchByCode() {
-                return this.$store.state.persons.searchByCode
-            },
+            }
         },
 
         methods: {
