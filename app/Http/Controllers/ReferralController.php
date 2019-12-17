@@ -131,17 +131,18 @@ class ReferralController extends Controller
             $user->roles()->save($role);
 
             if ($roleId === 9) {
-                $rc = App\ReferralCode::find($userData['code']);
-
                 $person = App\Person::create([
                     'f' => $userData['f'],
                     'i' => $userData['i'],
                     'o' => $userData['o'],
                     'gender' => $userData['gender'],
                     'type' => 2,
-                    'birthday' => $userData['birthday'],
-                    'referral_code_id' => $rc->id,
+                    'birthday' => $userData['birthday']
                 ]);
+
+                $rc = App\ReferralCode::find($userData['code']);
+
+                $rc->persons()->save($person);
 
                 $card = App\Card::firstOrCreate([
                     'wiegand' => $rc->card
@@ -165,17 +166,18 @@ class ReferralController extends Controller
         }
 
         foreach ($students as $student) {
-            $rc = App\ReferralCode::find($student['code']);
-
             $person = App\Person::create([
                 'f' => $student['f'],
                 'i' => $student['i'],
                 'o' => $student['o'],
                 'gender' => $student['gender'],
                 'type' => 1,
-                'birthday' => $student['birthday'],
-                'referral_code_id' => $rc->id,
+                'birthday' => $student['birthday']
             ]);
+
+            $rc = App\ReferralCode::find($student['code']);
+
+            $rc->persons()->save($person);
 
             $card = App\Card::firstOrCreate([
                 'wiegand' => $rc->card

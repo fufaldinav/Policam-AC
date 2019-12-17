@@ -110,9 +110,7 @@ class PersonsController extends Controller
             }
 
             $rcOnUpdate->save();
-
-            $personOnUpdate->referral_code_id = $rcOnUpdate->id;
-            $personOnUpdate->save();
+            $rcOnUpdate->persons()->save($personOnUpdate);
         } else if (isset($oldRC)) {
             $oldRC->activated = 0;
             $personOnUpdate->detachCard($oldRC->card, $division->organization_id);
@@ -127,7 +125,9 @@ class PersonsController extends Controller
 
     public function store(Request $request)
     {
-        abort_if(! $request->user()->hasRole([1, 2, 3, 7]), 403);
+        $user = $request->user();
+
+        abort_if(! $user->hasRole([1, 2, 3, 7]), 403);
 
         $person = $request->input('person');
 
@@ -149,9 +149,7 @@ class PersonsController extends Controller
             }
 
             $rcOnUpdate->save();
-
-            $person->referral_code_id = $rcOnUpdate->id;
-            $person->save();
+            $rcOnUpdate->persons()->save($person);
         }
 
         return response()->json($person->load(['divisions', 'photos', 'referralCode']));
