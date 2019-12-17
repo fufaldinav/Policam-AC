@@ -198,19 +198,4 @@ class ReferralController extends Controller
 
         return response()->json();
     }
-
-    public function getPerson(Request $request, string $code)
-    {
-        abort_if(!$request->user()->hasRole([1, 2, 3]), 403);
-
-        $rc = App\ReferralCode::where('code', $code)->first();
-
-        abort_if(is_null($rc), 404);
-
-        if ($rc->activated === 0) {
-            return 0;
-        }
-
-        return response()->json($rc->person);
-    }
 }

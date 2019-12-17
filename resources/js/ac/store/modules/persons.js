@@ -155,24 +155,6 @@ const actions = {
                 if (rootState.debug) console.log(error)
                 window.Ac.alert(error, 'danger')
             })
-    },
-
-    async searchByCode({state, commit, rootState, rootGetters}, code) {
-        window.axios.get('/api/referral/person/' + code)
-            .then(response => {
-                if (response.data !== 0) {
-                    let person = response.data;
-
-                    if (person.organization_id !== rootState.organizations.selected.id) {
-                        commit('add', person);
-                        commit('divisions/addPerson', {divisionId: rootState.divisions.selected, personId: person.id}, {root: true});
-                    }
-                }
-            })
-            .catch(error => {
-                if (rootState.debug) console.log(error)
-                window.Ac.alert(error, 'danger')
-            })
     }
 }
 

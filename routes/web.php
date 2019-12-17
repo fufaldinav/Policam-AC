@@ -37,12 +37,11 @@ Route::group(['prefix' => 'api', 'as' => 'api.'], function () {
         Route::delete('{id}', 'DivisionsController@destroy');
     });
     Route::group(['prefix' => 'referral', 'as' => 'referral.'], function () {
-        Route::get('divisions/{organizationId}/{type?}', 'ReferralController@getDivisions')->middleware('verified');
-        Route::get('organizations/{type}/{organizationId?}', 'ReferralController@getOrganizations')->middleware('verified');
-        Route::get('activate/{cardCode}', 'ReferralController@activateReferral')->middleware('role:2,3,7')->middleware('verified');
-        Route::get('checkcode/{cardCode}', 'ReferralController@getReferral')->middleware('verified');
-        Route::post('data', 'ReferralController@parseData')->middleware('verified');
-        Route::get('person/{code}', 'ReferralController@getPerson')->middleware('verified');
+        Route::get('divisions/{organizationId}/{type?}', 'ReferralController@getDivisions');
+        Route::get('organizations/{type}/{organizationId?}', 'ReferralController@getOrganizations');
+        Route::get('activate/{cardCode}', 'ReferralController@activateReferral')->middleware('role:2,3,7');
+        Route::get('checkcode/{cardCode}', 'ReferralController@getReferral');
+        Route::post('data', 'ReferralController@parseData');
     });
     Route::get('user', 'ReferralController@getUserInfo');
     Route::get('codes', 'ReferralController@getCodes');

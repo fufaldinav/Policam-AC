@@ -10,9 +10,14 @@
             :class="displayNone"
             v-touch:swipe.left="showForm"
         >
-            <template v-if="searchByCode">
-                <ac-cp-persons-search-by-code-group></ac-cp-persons-search-by-code-group>
-            </template>
+            <div
+                v-if="searchByCode"
+                class="list-group list-group-flush"
+            >
+                <ac-cp-persons-buttons-cancel-search-by-code></ac-cp-persons-buttons-cancel-search-by-code>
+                <ac-cp-buttons-search-field></ac-cp-buttons-search-field>
+                <ac-cp-persons-buttons-search-code></ac-cp-persons-buttons-search-code>
+            </div>
             <div
                 v-else-if="selectedDivision === null"
                 class="list-group list-group-flush"
@@ -43,9 +48,11 @@
 </template>
 
 <script>
-    import AcCpPersonsSearchByCodeGroup from './AcCpPersonsSearchByCodeGroup'
     import AcCpPersonsButtonsAdd from './buttons/AcCpPersonsButtonsAdd'
     import AcCpPersonsButtonsAddByCode from './buttons/AcCpPersonsButtonsAddByCode'
+    import AcCpPersonsButtonsCancelSearchByCode from './buttons/AcCpPersonsButtonsCancelSearchByCode'
+    import AcCpPersonsButtonsSearchCode from './buttons/AcCpPersonsButtonsSearchCode'
+    import AcCpButtonsSearchField from './buttons/AcCpButtonsSearchField'
     import AcButtonsBack from '../../buttons/AcButtonsBack'
     import AcButtonsPerson from '../../buttons/AcButtonsPerson'
     import AcButtonsDivision from '../../buttons/AcButtonsDivision'
@@ -54,9 +61,11 @@
         name: "AcCpPersonsMenuLeft",
 
         components: {
-            AcCpPersonsSearchByCodeGroup,
             AcCpPersonsButtonsAdd,
             AcCpPersonsButtonsAddByCode,
+            AcCpPersonsButtonsCancelSearchByCode,
+            AcCpPersonsButtonsSearchCode,
+            AcCpButtonsSearchField,
             AcButtonsBack,
             AcButtonsPerson,
             AcButtonsDivision
