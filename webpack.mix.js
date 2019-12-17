@@ -14,6 +14,7 @@ const mix = require('laravel-mix');
 mix.js('resources/js/ac.js', 'public/js')
     .js('resources/js/portal.js', 'public/js')
     .js('resources/js/postreg.js', 'public/js')
+    .js('resources/js/admin.js', 'public/js')
     .extract()
     .scripts([
         'resources/js/ac/notification.js',

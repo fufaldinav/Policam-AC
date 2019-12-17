@@ -24,6 +24,14 @@ Route::group(['prefix' => 'pages', 'as' => 'pages.'], function () {
  */
 Route::get('observer', 'ObserverController@index')->name('observer');
 /*
+ * Admin Panel
+ */
+Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
+    Route::get('/', 'AdminPanelController@index')->name('index');
+    Route::get('controllers', 'AdminPanelController@getControllers')->name('controllers');
+
+});
+/*
  * API
  */
 Route::group(['prefix' => 'api', 'as' => 'api.'], function () {
