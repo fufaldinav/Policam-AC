@@ -350,6 +350,16 @@ class ControllersController extends Controller
         return $this->command();
     }
 
+    public function format(Request $request, int $controllerSn, int $device = -1): string
+    {
+        $this->request = $request;
+        $this->cmd = 'format';
+        $this->controllerSn = $controllerSn;
+        $this->device = $device;
+
+        return $this->command();
+    }
+
     public function generateImportString(Request $request, int $organizationId, bool $sl0 = false)
     {
         if (! $request->user()->isAdmin()) {

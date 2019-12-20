@@ -102,6 +102,7 @@ Route::group(['prefix' => 'controllers', 'as' => 'controllers.'], function () {
         Route::get('vbat_min/{value}/{controller_sn}/{device}', 'ControllersController@vBatMin');
         Route::get('vbat_delta/{value}/{controller_sn}/{device}', 'ControllersController@vBatDelta');
         Route::get('readers/{value}/{controller_sn}/{device}', 'ControllersController@readers');
+        Route::get('format/{controller_sn}/{device?}', 'ControllersController@format');
     });
 });
 /*

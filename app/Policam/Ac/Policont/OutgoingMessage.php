@@ -67,6 +67,7 @@ final class OutgoingMessage implements JsonSerializable
       'vbat_min' => 14,
       'vbat_delta' => 15,
       'readers' => 16,
+      'format' => 17,
     ];
 
     public function __construct(int $id = 0)
