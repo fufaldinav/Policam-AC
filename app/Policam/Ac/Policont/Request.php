@@ -268,7 +268,7 @@ final class Request
 
                 $out_message->eventSuccess($message->id);
 
-                event(new EventReceived($event));
+                //event(new EventReceived($event));
 
                 $response->addMessage($out_message);
             }
