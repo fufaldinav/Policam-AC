@@ -231,6 +231,33 @@ final class Request
                 }
 
                 $response->addMessage($out_message);
+            } elseif ($message->operation === 'event') {
+                $out_message = new OutgoingMessage($message->id);
+                $out_message->setOperation('event');
+
+                $wiegand = str_pad($message->card, 12, '0', STR_PAD_LEFT);
+                $dateTimeString = Carbon::createFromTimestamp($message->timestamp, date_default_timezone_get())->toDateTimeString();
+
+                $card = App\Card::firstOrNew(['wiegand' => $wiegand]);
+                $card->last_conn = $dateTimeString;
+                $card->controller_id = $ctrl->id;
+                $card->save();
+
+                $event = new App\Event;
+                $event->controller_id = $ctrl->id;
+                $event->event = $message->event;
+                $event->flag = $message->flag;
+                $event->time = $dateTimeString;
+                $event->ms = $message->ms;
+                $event->voltage = $message->voltage;
+                $event->card_id = $card->id;
+                $event->save();
+
+                $out_message->eventSuccess($message->id);
+
+                event(new EventReceived($event));
+
+                $response->addMessage($out_message);
             }
         }
 

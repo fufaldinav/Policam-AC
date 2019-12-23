@@ -27,6 +27,7 @@ final class OutgoingMessage implements JsonSerializable
     protected $active = 1;
     protected $online = 0;
     protected $granted = 0;
+    protected $event_success = 0;
     protected $events_success = 0;
     protected $open = 15;
     protected $open_control = 30;
@@ -40,6 +41,7 @@ final class OutgoingMessage implements JsonSerializable
         'set_active' => ['active', 'online'],
         'check_access' => ['granted'],
         'ping' => [],
+        'event' => ['event_success'],
         'events' => ['events_success'],
         'set_door_params' => ['open', 'open_control', 'close_control'],
         'add_cards' => ['cards'],
@@ -114,6 +116,11 @@ final class OutgoingMessage implements JsonSerializable
     public function setGranted(int $granted): void
     {
         $this->granted = $granted;
+    }
+
+    public function eventSuccess(int $id = 0): void
+    {
+        $this->event_success = $id;
     }
 
     public function eventCounter(bool $count = true): void

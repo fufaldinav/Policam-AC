@@ -7,12 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * App\Event
  *
- * @mixin \Eloquent
  * @property int $id
  * @property int $controller_id
  * @property int $event
  * @property int $flag
- * @property string $time
+ * @property float|null $voltage
+ * @property \Illuminate\Support\Carbon $time
+ * @property int $ms
  * @property int $card_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -27,8 +28,11 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Event whereEvent($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Event whereFlag($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Event whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Event whereMs($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Event whereTime($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Event whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Event whereVoltage($value)
+ * @mixin \Eloquent
  */
 class Event extends Model
 {
@@ -38,7 +42,7 @@ class Event extends Model
      * @var array
      */
     protected $fillable = [
-        'controller_id', 'event', 'flag', 'time', 'card_id',
+        'controller_id', 'event', 'flag', 'voltage', 'time', 'ms', 'card_id',
     ];
 
     /**
@@ -59,7 +63,9 @@ class Event extends Model
         'controller_id' => 'integer',
         'event' => 'integer',
         'flag' => 'integer',
+        'voltage' => 'float',
         'time' => 'datetime',
+        'ms' => 'integer',
         'card_id' => 'integer',
     ];
 
