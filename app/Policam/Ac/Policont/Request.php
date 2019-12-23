@@ -245,6 +245,7 @@ final class Request
 
                 $event = new App\Event;
                 $event->controller_id = $ctrl->id;
+                $event->device = $message->device;
                 $event->event = $message->event;
                 $event->flag = $message->flag;
                 $event->time = $dateTimeString;
@@ -252,6 +253,18 @@ final class Request
                 $event->voltage = $message->voltage;
                 $event->card_id = $card->id;
                 $event->save();
+
+                $device = App\Device::where([
+                    'controller_id' => $ctrl->id,
+                    'address' => $message->device,
+                ])->first();
+
+                if (isset($device)) {
+                    $device->voltage = $message->voltage;
+                    $device->events_queue = $message->eq;
+                    $device->events_bl = $message->ebl;
+                    $device->save();
+                }
 
                 $out_message->eventSuccess($message->id);
 
