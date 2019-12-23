@@ -67,7 +67,7 @@ class Device extends Model
         'voltage' => 'float',
         'alarm' => 'integer',
         'timeout' => 'integer',
-        'sd_error' => 'datetime',
+        'sd_error' => 'integer',
         'controller_id' => 'integer',
     ];
 
