@@ -7,28 +7,35 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * App\Device
  *
- * @property-read \App\Controller $controller
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Device newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Device newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Device query()
- * @mixin \Eloquent
  * @property int $id
  * @property int $address
  * @property string $name
  * @property string|null $sn
  * @property string $type
  * @property string|null $fw
- * @property int|null $voltage
+ * @property float|null $voltage
  * @property int $alarm
  * @property int $timeout
- * @property \Illuminate\Support\Carbon $sd_error
+ * @property int $sd_error
+ * @property int $events_queue
+ * @property int $cards_count
+ * @property int $events_bl
+ * @property int $cards_bl
  * @property int $controller_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Controller $controller
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Device newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Device newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Device query()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Device whereAddress($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Device whereAlarm($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Device whereCardsBl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Device whereCardsCount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Device whereControllerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Device whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Device whereEventsBl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Device whereEventsQueue($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Device whereFw($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Device whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Device whereName($value)
@@ -38,6 +45,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Device whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Device whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Device whereVoltage($value)
+ * @mixin \Eloquent
  */
 class Device extends Model
 {
@@ -47,7 +55,8 @@ class Device extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'address', 'sn', 'type', 'fw', 'voltage', 'alarm', 'timeout', 'sd_error', 'controller_id',
+        'address', 'name', 'sn', 'type', 'fw', 'voltage', 'alarm', 'timeout', 'sd_error',
+        'events_queue', 'cards_count', 'events_bl', 'cards_bl', 'controller_id',
     ];
 
     /**
@@ -68,6 +77,10 @@ class Device extends Model
         'alarm' => 'integer',
         'timeout' => 'integer',
         'sd_error' => 'integer',
+        'events_queue' => 'integer',
+        'cards_count' => 'integer',
+        'events_bl' => 'integer',
+        'cards_bl' => 'integer',
         'controller_id' => 'integer',
     ];
 
