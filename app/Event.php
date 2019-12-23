@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id
  * @property int $controller_id
+ * @property int|null $device
  * @property int $event
  * @property int $flag
  * @property float|null $voltage
@@ -25,6 +26,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Event whereCardId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Event whereControllerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Event whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Event whereDevice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Event whereEvent($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Event whereFlag($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Event whereId($value)
@@ -42,7 +44,7 @@ class Event extends Model
      * @var array
      */
     protected $fillable = [
-        'controller_id', 'event', 'flag', 'voltage', 'time', 'ms', 'card_id',
+        'controller_id', 'device', 'event', 'flag', 'voltage', 'time', 'ms', 'card_id',
     ];
 
     /**
@@ -61,6 +63,7 @@ class Event extends Model
      */
     protected $casts = [
         'controller_id' => 'integer',
+        'device' => 'integer',
         'event' => 'integer',
         'flag' => 'integer',
         'voltage' => 'float',
