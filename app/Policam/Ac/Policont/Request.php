@@ -121,6 +121,7 @@ final class Request
                     foreach ($ctrl->devices as $device) {
                         $device->name = $ctrl->name . ' Slave #' . $device->address;
                         $device->type = $ctrl->type;
+                        $device->fw = $ctrl->fw;
                         $device->save();
                     }
 
@@ -129,6 +130,7 @@ final class Request
                             'address' => $i,
                             'name' => $ctrl->name . ' Slave #' . $i,
                             'type' => $ctrl->type,
+                            'fw' => $ctrl->fw,
                         ]);
                     }
                 }
