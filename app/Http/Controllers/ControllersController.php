@@ -53,23 +53,39 @@ class ControllersController extends Controller
 
         abort_if(is_null($ctrl), 404);
 
-        $org = $ctrl->organization;
+        $divisions = $ctrl->organization->divisions()->where('type', '!=', 0)->get();
 
         $cards = [];
 
-        foreach ($org->persons as $person) {
-            $rc = $person->referralCode;
-            if (isset($rc)) {
-                if ($rc->activated === 1) {
-                    if ($sl0 && isset($rc->sl0)) {
-                        $card = App\Card::firstOrCreate(['wiegand' => $rc->sl0]);
-                    } else if (! $sl0) {
-                        $card = App\Card::firstOrCreate(['wiegand' => $rc->card]);
-                    } else {
-                        continue;
+        foreach ($divisions as $division) {
+            $devices = [];
+            if ($division->devices()->where('controller_id', $ctrl->id)->count() > 0) {
+                $devicesInDivision = $division->devices()->where('controller_id', $ctrl->id)->get();
+            } else {
+                $devicesInDivision = $ctrl->devices()->get();
+            }
+
+            foreach ($devicesInDivision as $device) {
+                $devices[] = $device->address;
+            }
+
+            foreach ($division->persons as $person) {
+                $rc = $person->referralCode;
+                if (isset($rc)) {
+                    if ($rc->activated === 1) {
+                        if ($sl0 && isset($rc->sl0)) {
+                            $card = App\Card::firstOrCreate(['wiegand' => $rc->sl0]);
+                        } else if (! $sl0) {
+                            $card = App\Card::firstOrCreate(['wiegand' => $rc->card]);
+                        } else {
+                            continue;
+                        }
+                        $person->cards()->save($card);
+                        $cards[] = [
+                            'code' => $card->wiegand,
+                            'devices' => $devices,
+                        ];
                     }
-                    $person->cards()->save($card);
-                    $cards[] = $card;
                 }
             }
         }
@@ -77,7 +93,7 @@ class ControllersController extends Controller
         $tasker = new Tasker();
 
         for ($i = 0, $codes = [], $card_count = count($cards); $i < $card_count; $i++) {
-            $codes[] = $cards[$i]->wiegand;
+            $codes[] = $cards[$i]['code'];
 
             /*
             | 1. Запишем задания если: а) это не первый проход
@@ -90,7 +106,7 @@ class ControllersController extends Controller
             | Таким образом сформируем задания на отправку по 5 за раз
             */
             if (($i > 0 && ($i % 5 === 0)) || ($i === ($card_count - 1))) {
-                $tasker->addCards($ctrl, $codes);
+                $tasker->addCards($ctrl, $codes, $cards[$i]['devices']);
                 $tasker->add($ctrl->id);
 
                 $codes = [];
