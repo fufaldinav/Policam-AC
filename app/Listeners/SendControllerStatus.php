@@ -3,11 +3,14 @@
 namespace App\Listeners;
 
 use App\Events\ControllerConnected;
+use App\Notifications\DeviceChangedStatus;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class SendControllerStatus
 {
+    use Notifiable;
     /**
      * Create the event listener.
      *
@@ -26,6 +29,6 @@ class SendControllerStatus
      */
     public function handle(ControllerConnected $event)
     {
-        //
+        $this->notify(new DeviceChangedStatus());
     }
 }
