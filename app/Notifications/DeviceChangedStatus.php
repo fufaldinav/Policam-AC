@@ -41,7 +41,7 @@ class DeviceChangedStatus extends Notification
     {
         return TelegramMessage::create()
             // Optional recipient user id.
-            ->to('artemfufaldin')
+            ->to(577532899)
             // Markdown supported.
             ->content("Hello there!\nYour invoice has been *PAID*");
     }
