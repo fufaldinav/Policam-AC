@@ -29,6 +29,6 @@ class SendControllerStatus
      */
     public function handle(ControllerConnected $event)
     {
-        $this->notify(new DeviceChangedStatus());
+//        $this->notify(new DeviceChangedStatus());
     }
 }
