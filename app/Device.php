@@ -24,7 +24,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $controller_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $deleted_at
  * @property-read \App\Controller $controller
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Event[] $events
+ * @property-read int|null $events_count
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Device newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Device newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Device query()
@@ -34,6 +37,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Device whereCardsCount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Device whereControllerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Device whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Device whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Device whereEventsBl($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Device whereEventsQueue($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Device whereFw($value)
@@ -87,5 +91,10 @@ class Device extends Model
     public function controller()
     {
         return $this->belongsTo('App\Controller');
+    }
+
+    public function events()
+    {
+        return $this->hasMany('App\Event');
     }
 }

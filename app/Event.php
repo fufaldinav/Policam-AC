@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id
  * @property int $controller_id
- * @property int|null $device
+ * @property int|null $device_id
  * @property int $event
  * @property int $flag
  * @property float|null $voltage
@@ -20,13 +20,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Card $card
  * @property-read \App\Controller $controller
+ * @property-read \App\Device|null $device
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Event newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Event newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Event query()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Event whereCardId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Event whereControllerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Event whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Event whereDevice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Event whereDeviceId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Event whereEvent($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Event whereFlag($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Event whereId($value)
@@ -44,7 +45,7 @@ class Event extends Model
      * @var array
      */
     protected $fillable = [
-        'controller_id', 'device', 'event', 'flag', 'voltage', 'time', 'ms', 'card_id',
+        'controller_id', 'device_id', 'event', 'flag', 'voltage', 'time', 'ms', 'card_id',
     ];
 
     /**
@@ -63,7 +64,7 @@ class Event extends Model
      */
     protected $casts = [
         'controller_id' => 'integer',
-        'device' => 'integer',
+        'device_id' => 'integer',
         'event' => 'integer',
         'flag' => 'integer',
         'voltage' => 'float',
@@ -75,6 +76,11 @@ class Event extends Model
     public function card()
     {
         return $this->belongsTo('App\Card');
+    }
+
+    public function device()
+    {
+        return $this->belongsTo('App\Device');
     }
 
     public function controller()
