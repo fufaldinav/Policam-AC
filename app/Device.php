@@ -26,6 +26,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string|null $deleted_at
  * @property-read \App\Controller $controller
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Division[] $divisions
+ * @property-read int|null $divisions_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Event[] $events
  * @property-read int|null $events_count
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Device newModelQuery()
@@ -91,6 +93,11 @@ class Device extends Model
     public function controller()
     {
         return $this->belongsTo('App\Controller');
+    }
+
+    public function divisions()
+    {
+        return $this->belongsToMany('App\Division')->withTimestamps();
     }
 
     public function events()

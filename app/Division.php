@@ -7,15 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * App\Division
  *
- * @mixin \Eloquent
  * @property int $id
  * @property string $name
  * @property int $organization_id
  * @property int $type
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Device[] $devices
+ * @property-read int|null $devices_count
  * @property-read \App\Organization $organization
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Person[] $persons
+ * @property-read int|null $persons_count
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Division newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Division newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Division query()
@@ -25,7 +27,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Division whereOrganizationId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Division whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Division whereUpdatedAt($value)
- * @property-read int|null $persons_count
+ * @mixin \Eloquent
  */
 class Division extends Model
 {
@@ -56,6 +58,11 @@ class Division extends Model
         'organization_id' => 'integer',
         'type' => 'integer',
     ];
+
+    public function devices()
+    {
+        return $this->belongsToMany('App\Device')->withTimestamps();
+    }
 
     public function organization()
     {
