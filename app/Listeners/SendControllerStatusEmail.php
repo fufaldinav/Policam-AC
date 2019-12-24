@@ -5,11 +5,14 @@ namespace App\Listeners;
 use App;
 use App\Events\ControllerChangedStatus;
 use App\Mail\ControllerStatusEmail;
+use App\Notifications\DeviceChangedStatus;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class SendControllerStatusEmail
 {
+    use Notifiable;
     /**
      * Create the event listener.
      *
@@ -38,5 +41,7 @@ class SendControllerStatusEmail
                 );
             }
         }
+
+        $this->notify(new DeviceChangedStatus());
     }
 }
