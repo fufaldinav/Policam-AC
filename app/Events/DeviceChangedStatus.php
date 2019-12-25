@@ -6,7 +6,7 @@ use App\Controller;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
 
-class ControllerChangedStatus
+class DeviceChangedStatus
 {
     use Dispatchable, SerializesModels;
 

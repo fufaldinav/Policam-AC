@@ -92,7 +92,7 @@
                 }
             })
             this.$bus.$on('ControllerConnected', e => {
-                if (this.$store.state.debug) console.log('Контроллер ID: ' + e.controller_id + ' вышел на связь')
+                // if (this.$store.state.debug) console.log('Контроллер ID: ' + e.controller_id + ' вышел на связь')
             })
             this.$bus.$on('OrganizationChanged', e => {
                 console.log(e)

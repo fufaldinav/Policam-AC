@@ -24,12 +24,12 @@ const actions = {
         for (let controller of rootState.organizations.selected.controllers) {
             window.Echo.private('controller-events.' + controller)
                 .listen('EventReceived', e => {
-                    commit('add', e)
-                    window.Ac.$bus.$emit('EventReceived', e)
+                    // commit('add', e)
+                    // window.Ac.$bus.$emit('EventReceived', e)
                 })
                 .listen('ControllerConnected', e => {
-                    commit('add', e)
-                    window.Ac.$bus.$emit('ControllerConnected', e)
+                    // commit('add', e)
+                    // window.Ac.$bus.$emit('ControllerConnected', e)
                 })
         }
     },

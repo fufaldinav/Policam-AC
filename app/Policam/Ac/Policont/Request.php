@@ -19,9 +19,7 @@
 namespace App\Policam\Ac\Policont;
 
 use App;
-use App\Events\ControllerConnected;
-use App\Events\EventReceived;
-use App\Events\ControllerChangedStatus;
+use App\Events\DeviceChangedStatus;
 use Carbon\Carbon;
 
 final class Request
@@ -86,8 +84,6 @@ final class Request
         }
 
         $ctrl->save();
-
-        event(new ControllerConnected($ctrl));
 
         foreach ($messages as $message) {
             /*
@@ -160,17 +156,17 @@ final class Request
              | Пинг от контроллера
              */
             elseif ($message->operation === 'ping') {
-                $controllerChangedStatus = false;
+                $deviceChangedStatus = false;
 
                 if (isset($message->devices)) {
                     $devices = $message->devices;
                     foreach ($ctrl->devices as $device) {
                         if ($device->timeout == 0 && $devices[$device->address]->timeout >= 3) {
                             $device->timeout = 1;
-                            $controllerChangedStatus = true;
+                            $deviceChangedStatus = true;
                         } else if ($device->timeout == 1 && $devices[$device->address]->timeout < 3) {
                             $device->timeout = 0;
-                            $controllerChangedStatus = true;
+                            $deviceChangedStatus = true;
                         }
                         $device->alarm = $devices[$device->address]->alarm ?? 0;
                         $device->sd_error = $devices[$device->address]->sd_error ?? 0;
@@ -180,7 +176,7 @@ final class Request
                     if (isset($message->timeouts) && isset($message->alarms) && isset($message->sd_errors)) {
                         foreach ($ctrl->devices as $device) {
                             if (($device->timeout == 0 && $message->timeouts[$device->address] > 0) || ($device->timeout == 1 && $message->timeouts[$device->address] == 0)) {
-                                $controllerChangedStatus = true;
+                                $deviceChangedStatus = true;
                             }
                             $device->timeout = $message->timeouts[$device->address];
                             $device->alarm = $message->alarms[$device->address];
@@ -190,8 +186,8 @@ final class Request
                     }
                 }
 
-                if ($controllerChangedStatus) {
-                    event(new ControllerChangedStatus($ctrl));
+                if ($deviceChangedStatus) {
+                    event(new DeviceChangedStatus($ctrl));
                 }
             } /*
              | Cобытия на контроллере
@@ -227,8 +223,6 @@ final class Request
                         $event->save();
 
                         $out_message->eventCounter();
-
-                        event(new EventReceived($event));
                     }
                 }
 
@@ -270,8 +264,6 @@ final class Request
                 }
 
                 $out_message->eventSuccess($message->id);
-
-                //event(new EventReceived($event));
 
                 $response->addMessage($out_message);
             }

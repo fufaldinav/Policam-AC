@@ -19,8 +19,6 @@
 namespace App\Policam\Ac\Z5RWEB;
 
 use App;
-use App\Events\ControllerConnected;
-use App\Events\EventReceived;
 use Carbon\Carbon;
 
 final class Request
@@ -61,8 +59,6 @@ final class Request
 
         $ctrl->last_conn = $datetime;
         $ctrl->save();
-
-        event(new ControllerConnected($ctrl));
 
         foreach ($messages as $message) {
             /*
@@ -139,8 +135,6 @@ final class Request
                     $event->save();
 
                     $out_message->eventCounter();
-
-                    event(new EventReceived($event));
                 }
 
                 $response->addMessage($out_message);

@@ -3,14 +3,12 @@
 namespace App\Listeners;
 
 use App;
-use App\Events\ControllerChangedStatus;
+use App\Events\DeviceChangedStatus;
 use App\Mail\ControllerStatusEmail;
-use App\Notifications\DeviceChangedStatus;
+use App\Notifications\DeviceChangedStatus as DeviceChangedStatusNotification;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
-class SendControllerStatusEmail
+class SendDeviceStatus
 {
     use Notifiable;
     /**
@@ -26,10 +24,10 @@ class SendControllerStatusEmail
     /**
      * Handle the event.
      *
-     * @param ControllerChangedStatus $event
+     * @param DeviceChangedStatus $event
      * @return void
      */
-    public function handle(ControllerChangedStatus $event)
+    public function handle(DeviceChangedStatus $event)
     {
         $controller = $event->controller;
         $organization = App\Organization::find($controller->organization_id);
@@ -37,11 +35,11 @@ class SendControllerStatusEmail
         foreach ($organization->users as $user) {
             if ($user->hasRole(1)) {
                 \Mail::to($user->email)->send(
-                    new ControllerStatusEmail($event->controller, $user)
+                    new ControllerStatusEmail($controller, $user)
                 );
             }
         }
 
-        $this->notify(new DeviceChangedStatus());
+        $this->notify(new DeviceChangedStatusNotification($controller));
     }
 }

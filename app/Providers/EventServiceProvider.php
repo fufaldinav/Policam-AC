@@ -18,14 +18,8 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
-        'App\Events\EventReceived' => [
-            'App\Listeners\SendPassNotification',
-        ],
-        'App\Events\ControllerConnected' => [
-            'App\Listeners\SendControllerStatus',
-        ],
-        'App\Events\ControllerChangedStatus' => [
-            'App\Listeners\SendControllerStatusEmail',
+        'App\Events\DeviceChangedStatus' => [
+            'App\Listeners\SendDeviceStatus',
         ],
     ];
 
