@@ -54,7 +54,7 @@ class DeviceChangedStatus extends Notification
 
         return TelegramMessage::create()
             // Optional recipient user id.
-            ->to(577532899)
+            ->to(447605861)
             // Markdown supported.
             ->content($content);
     }
