@@ -54,6 +54,7 @@ Route::group(['prefix' => 'api', 'as' => 'api.'], function () {
     Route::get('user', 'ReferralController@getUserInfo');
     Route::get('codes', 'ReferralController@getCodes');
     Route::get('codes/{organizationId}', 'ReferralController@getCodesByOrganization');
+    Route::post('policont', 'ServersController@policontApi');
 });
 /*
  * Auth

@@ -21,6 +21,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\DeviceChangedStatus' => [
             'App\Listeners\SendDeviceStatus',
         ],
+        'App\Events\PolicamMasterPowerOn' => [
+            'App\Listeners\SendPolicamMasterLoaded',
+        ],
     ];
 
     /**
