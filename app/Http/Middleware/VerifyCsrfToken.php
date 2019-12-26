@@ -21,5 +21,6 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         '/server',
         '/policont',
+        '/api/policont',
     ];
 }
