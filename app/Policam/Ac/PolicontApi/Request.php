@@ -84,6 +84,7 @@ final class Request
                 $out_message = new OutgoingMessage();
                 $out_message->setOperation('set_active');
                 $out_message->setActive($ctrl->active);
+                $out_message->setOnline();
                 $response->addMessage($out_message);
 
                 $ctrl->fw = $message->fw;
