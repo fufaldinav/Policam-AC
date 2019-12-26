@@ -162,7 +162,6 @@ final class Request
                 $event->ms = $message->ms;
                 $event->voltage = $message->voltage;
                 $event->card_id = $card->id;
-                $event->save();
 
                 $device = App\Device::where([
                     'controller_id' => $ctrl->id,
@@ -174,8 +173,11 @@ final class Request
                     $device->events_queue = $message->eq;
                     $device->events_bl = $message->ebl;
                     $device->save();
-                    $device->events()->save($event);
+
+                    $event->device_id = $device->id;
                 }
+
+                $event->save();
 
                 $out_message->eventSuccess($message->id);
 
