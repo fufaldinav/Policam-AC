@@ -24,6 +24,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\PolicamMasterPowerOn' => [
             'App\Listeners\SendPolicamMasterLoaded',
         ],
+        'App\Events\PolicamSlavePowerOn' => [
+            'App\Listeners\SendPolicamSlaveLoaded',
+        ],
     ];
 
     /**

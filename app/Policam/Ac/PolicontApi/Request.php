@@ -21,6 +21,7 @@ namespace App\Policam\Ac\PolicontApi;
 use App;
 use App\Events\DeviceChangedStatus;
 use App\Events\PolicamMasterPowerOn;
+use App\Events\PolicamSlavePowerOn;
 use Carbon\Carbon;
 
 final class Request
@@ -176,6 +177,10 @@ final class Request
                 }
 
                 $out_message->eventSuccess($message->id);
+
+                if ($event->event === 21) {
+                    event(new PolicamSlavePowerOn($device));
+                }
 
                 $response->addMessage($out_message);
             }
