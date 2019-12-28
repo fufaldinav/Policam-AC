@@ -7,8 +7,9 @@ use App\Events\DeviceChangedStatus;
 use App\Mail\ControllerStatusEmail;
 use App\Notifications\DeviceChangedStatus as DeviceChangedStatusNotification;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class SendDeviceStatus
+class SendDeviceStatus implements ShouldQueue
 {
     use Notifiable;
     /**

@@ -6,8 +6,9 @@ use App;
 use App\Events\PolicamMasterPowerOn;
 use App\Notifications\PolicamMasterLoaded;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class SendPolicamMasterLoaded
+class SendPolicamMasterLoaded implements ShouldQueue
 {
     use Notifiable;
     /**

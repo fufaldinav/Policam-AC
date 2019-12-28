@@ -6,8 +6,9 @@ use App;
 use App\Events\PolicamSlavePowerOn;
 use App\Notifications\PolicamSlaveLoaded;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class SendPolicamSlaveLoaded
+class SendPolicamSlaveLoaded implements ShouldQueue
 {
     use Notifiable;
     /**
