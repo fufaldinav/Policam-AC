@@ -132,7 +132,7 @@ class UsersController extends Controller
      */
     public function getOrganizationsByType(Request $request, int $type)
     {
-        return $request->user()->organizations->where('type', $type)->orderBy('name')->get();
+        return $request->user()->organizations()->where('type', $type)->orderBy('name')->get();
     }
 
     /**
