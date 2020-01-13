@@ -78,7 +78,14 @@ final class Request
             $response->addMessage($out_message);
         } else {
             foreach ($messages as $message) {
-                if ($message->operation === 'activation' || $message->operation === 'power_on') {
+                if (!isset($message->operation) && isset($message->success)) {
+                    if ($message->success === 1) {
+                        App\Task::where([
+                            'task_id' => $message->id,
+                            'controller_id' => $ctrl->id,
+                        ])->delete();
+                    }
+                } else if ($message->operation === 'activation' || $message->operation === 'power_on') {
                     $out_message = new OutgoingMessage();
                     if ($message->operation === 'activation') {
                         $out_message->setOperation('activation');
