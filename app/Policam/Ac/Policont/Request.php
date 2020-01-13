@@ -239,29 +239,31 @@ final class Request
                 $card->controller_id = $ctrl->id;
                 $card->save();
 
-                $event = new App\Event;
-                $event->controller_id = $ctrl->id;
-                $event->device_id = $message->device;
-                $event->event = $message->event;
-                $event->flag = $message->flag;
-                $event->time = $dateTimeString;
-                $event->ms = $message->ms;
-                $event->voltage = $message->voltage;
-                $event->card_id = $card->id;
-                $event->save();
-
-                $device = App\Device::where([
+                $device = App\Device::firstOrNew([
                     'controller_id' => $ctrl->id,
                     'address' => $message->device,
-                ])->first();
+                ]);
 
-                if (isset($device)) {
-                    $device->voltage = $message->voltage;
-                    $device->events_queue = $message->eq;
-                    $device->events_bl = $message->ebl;
-                    $device->save();
-                    $device->events()->save($event);
+                if (!$device->exists) {
+                    $device->name = $ctrl->name . ' Slave #' . $device->address;
+                    $device->type = $ctrl->type;
+                    $device->fw = $ctrl->fw;
                 }
+                $device->voltage = $message->voltage;
+                $device->events_queue = $message->eq;
+                $device->events_bl = $message->ebl;
+                $device->save();
+
+                $device->events()->create([
+                    'controller_id' => $ctrl->id,
+                    'device_id' =>$device->id,
+                    'event' => $message->event,
+                    'flag' => $message->flag,
+                    'time' => $dateTimeString,
+                    'ms' => $message->ms,
+                    'voltage' => $message->voltage,
+                    'card_id' => $card->id,
+                ]);
 
                 $out_message->eventSuccess($message->id);
 
