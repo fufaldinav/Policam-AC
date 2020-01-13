@@ -133,7 +133,7 @@ final class Request
                     if ($message->operation === 'connection') {
                         $out_message->setOperation('connection');
                     } else {
-                        $out_message->setOperation('connect');
+                        $out_message->setOperation('set_online');
                     }
                     $out_message->setOnline();
 
