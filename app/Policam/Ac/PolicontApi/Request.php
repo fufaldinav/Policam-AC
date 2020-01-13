@@ -78,9 +78,13 @@ final class Request
             $response->addMessage($out_message);
         } else {
             foreach ($messages as $message) {
-                if ($message->operation === 'activation') {
+                if ($message->operation === 'activation' || $message->operation === 'power_on') {
                     $out_message = new OutgoingMessage();
-                    $out_message->setOperation('activation');
+                    if ($message->operation === 'activation') {
+                        $out_message->setOperation('activation');
+                    } else {
+                        $out_message->setOperation('set_active');
+                    }
                     $out_message->setActivated();
                     $out_message->setOnline();
 
@@ -124,9 +128,13 @@ final class Request
                             'controller_id' => $ctrl->id,
                         ])->delete();
                     }
-                } else if ($message->operation === 'connection') {
+                } else if ($message->operation === 'connection' || $message->operation === 'connect') {
                     $out_message = new OutgoingMessage();
-                    $out_message->setOperation('connection');
+                    if ($message->operation === 'connection') {
+                        $out_message->setOperation('connection');
+                    } else {
+                        $out_message->setOperation('connect');
+                    }
                     $out_message->setOnline();
 
                     $response->addMessage($out_message);
@@ -178,7 +186,7 @@ final class Request
 
                     $event = $device->events()->create([
                         'controller_id' => $ctrl->id,
-                        'device_id' =>$device->id,
+                        'device_id' => $device->id,
                         'event' => $message->event,
                         'flag' => $message->flag,
                         'time' => $dateTimeString,

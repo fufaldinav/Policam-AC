@@ -38,7 +38,9 @@ final class OutgoingMessage implements JsonSerializable
     protected $devices = [];
     protected $operation_types = [
         'activation' => ['active', 'online'],
+        'set_active' => ['active', 'online'],
         'connection' => ['online'],
+        'set_online' => ['online'],
         'check_access' => ['granted'],
         'ping' => [],
         'event' => ['event_success'],
