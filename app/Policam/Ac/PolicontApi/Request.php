@@ -178,7 +178,7 @@ final class Request
 
                     $event = $device->events()->create([
                         'controller_id' => $ctrl->id,
-                        'device_id' => $message->device,
+                        'device_id' =>$device->id,
                         'event' => $message->event,
                         'flag' => $message->flag,
                         'time' => $dateTimeString,
