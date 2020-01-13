@@ -48,25 +48,15 @@ final class Request
 
         $datetime = Carbon::now()->toDateTimeString();
 
-        $response = new Response();
-
         $type = $this->request->type ?? null;
-
         if ($type !== 'Policont') {
             return null;
         }
 
-        $ctrl = App\Controller::firstOrCreate(['sn' => $this->request->sn]);
-
-        if (!$ctrl) {
-            $ctrl = App\Controller::create([
-                'sn' => $this->request->sn,
-                'active' => 0,
-            ]);
-        }
-
-        $messages = $this->request->messages;
-
+        $ctrl = App\Controller::firstOrCreate([
+            'sn' => $this->request->sn,
+            'type' => $this->request->type,
+        ]);
         $ctrl->last_conn = $datetime;
         $ctrl->events_queue = $this->request->eq;
         $ctrl->messages_queue = $this->request->mq;
@@ -76,19 +66,24 @@ final class Request
         $ctrl->sd_error = $this->request->sd_error;
         $ctrl->save();
 
+        $response = new Response();
+        $messages = $this->request->messages;
+
         if ($ctrl->active === 0) {
             $out_message = new OutgoingMessage();
-            $out_message->setOperation('set_active');
-            $out_message->setActive(0);
-            $out_message->setOnline(0);
+            $out_message->setOperation('activation');
+            $out_message->setDeactivated();
+            $out_message->setOffline();
+
             $response->addMessage($out_message);
         } else {
             foreach ($messages as $message) {
-                if ($message->operation === 'power_on') {
+                if ($message->operation === 'activation') {
                     $out_message = new OutgoingMessage();
-                    $out_message->setOperation('set_active');
-                    $out_message->setActive(1);
-                    $out_message->setOnline(1);
+                    $out_message->setOperation('activation');
+                    $out_message->setActivated();
+                    $out_message->setOnline();
+
                     $response->addMessage($out_message);
 
                     $ctrl->fw = $message->fw;
@@ -99,8 +94,10 @@ final class Request
                     $devicesInDbCount = $ctrl->devices()->count();
 
                     for ($i = $devicesFromCtrl; $i < $devicesInDbCount; $i++) {
-                        $device = App\Device::where('controller_id', $ctrl->id)->where('address', $i)->first();
-                        $device->delete();
+                        App\Device::where([
+                            'controller_id' => $ctrl->id,
+                            'address' => $i,
+                        ])->delete();
                     }
 
                     foreach ($ctrl->devices as $device) {
@@ -127,15 +124,16 @@ final class Request
                             'controller_id' => $ctrl->id,
                         ])->delete();
                     }
-                } elseif ($message->operation === 'connect') {
+                } else if ($message->operation === 'connection') {
                     $out_message = new OutgoingMessage();
-                    $out_message->setOperation('set_online');
-                    $out_message->setOnline(1);
+                    $out_message->setOperation('connection');
+                    $out_message->setOnline();
+
                     $response->addMessage($out_message);
 
                     $ctrl->ip = $message->controller_ip;
                     $ctrl->save();
-                } elseif ($message->operation === 'ping') {
+                } else if ($message->operation === 'ping') {
                     $deviceChangedStatus = false;
 
                     foreach ($ctrl->devices as $device) {
@@ -151,7 +149,7 @@ final class Request
                     if ($deviceChangedStatus) {
                         event(new DeviceChangedStatus($ctrl));
                     }
-                } elseif ($message->operation === 'event') {
+                } else if ($message->operation === 'event') {
                     $out_message = new OutgoingMessage($message->id);
                     $out_message->setOperation('event');
 
@@ -163,37 +161,37 @@ final class Request
                     $card->controller_id = $ctrl->id;
                     $card->save();
 
-                    $event = new App\Event;
-                    $event->controller_id = $ctrl->id;
-                    $event->device_id = $message->device;
-                    $event->event = $message->event;
-                    $event->flag = $message->flag;
-                    $event->time = $dateTimeString;
-                    $event->ms = $message->ms;
-                    $event->voltage = $message->voltage;
-                    $event->card_id = $card->id;
-
-                    $device = App\Device::where([
+                    $device = App\Device::firstOrNew([
                         'controller_id' => $ctrl->id,
                         'address' => $message->device,
-                    ])->first();
+                    ]);
 
-                    if (isset($device)) {
-                        $device->voltage = $message->voltage;
-                        $device->events_queue = $message->eq;
-                        $device->events_bl = $message->ebl;
-                        $device->save();
-
-                        $event->device_id = $device->id;
+                    if (!$device->exists) {
+                        $device->name = $ctrl->name . ' Slave #' . $device->address;
+                        $device->type = $ctrl->type;
+                        $device->fw = $ctrl->fw;
                     }
+                    $device->voltage = $message->voltage;
+                    $device->events_queue = $message->eq;
+                    $device->events_bl = $message->ebl;
+                    $device->save();
 
-                    $event->save();
-
-                    $out_message->eventSuccess($message->id);
+                    $event = $device->events()->create([
+                        'controller_id' => $ctrl->id,
+                        'device_id' => $message->device,
+                        'event' => $message->event,
+                        'flag' => $message->flag,
+                        'time' => $dateTimeString,
+                        'ms' => $message->ms,
+                        'voltage' => $message->voltage,
+                        'card_id' => $card->id,
+                    ]);
 
                     if ($event->event === 21) {
                         event(new PolicamSlavePowerOn($device));
                     }
+
+                    $out_message->eventSuccess($message->id);
 
                     $response->addMessage($out_message);
                 }

@@ -24,7 +24,7 @@ final class OutgoingMessage implements JsonSerializable
 {
     protected $id;
     protected $operation;
-    protected $active = 1;
+    protected $active = 0;
     protected $online = 0;
     protected $granted = 0;
     protected $event_success = 0;
@@ -37,8 +37,8 @@ final class OutgoingMessage implements JsonSerializable
     protected $value;
     protected $devices = [];
     protected $operation_types = [
-        'set_active' => ['active', 'online'],
-        'set_online' => ['online'],
+        'activation' => ['active', 'online'],
+        'connection' => ['online'],
         'check_access' => ['granted'],
         'ping' => [],
         'event' => ['event_success'],
@@ -107,14 +107,24 @@ final class OutgoingMessage implements JsonSerializable
         return false;
     }
 
-    public function setActive(int $active): void
+    public function setActivated(): void
     {
-        $this->active = $active;
+        $this->active = 1;
     }
 
-    public function setOnline(int $online): void
+    public function setDeactivated(): void
     {
-        $this->online = $online;
+        $this->active = 0;
+    }
+
+    public function setOnline(): void
+    {
+        $this->online = 1;
+    }
+
+    public function setOffline(): void
+    {
+        $this->online = 0;
     }
 
     public function setGranted(int $granted): void
