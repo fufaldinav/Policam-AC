@@ -79,7 +79,7 @@ Route::group(['prefix' => 'cards', 'as' => 'cards.'], function () {
 Route::group(['prefix' => 'controllers', 'as' => 'controllers.'], function () {
     Route::get('get_list', 'ControllersController@getList');
     Route::get('set_door_params/{controller_sn}/{open_time}/{open_control?}/{close_control?}', 'ControllersController@setDoorParams');
-    Route::get('reload_cards/{controller_sn}/{sl0?}', 'ControllersController@reloadCards');
+    Route::get('reload_cards/{controller_sn}/{device_number?}', 'ControllersController@reloadCards');
     Route::get('panel/{organizationId}/{sl0?}', 'ControllersController@generateImportString');
     Route::get('xml/{organizationId}/{sl0?}', 'ControllersController@generateImportXml');
     Route::group(['prefix' => 'cmd', 'as' => 'cmd.'], function () {

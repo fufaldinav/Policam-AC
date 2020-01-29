@@ -41,11 +41,11 @@ class ControllersController extends Controller
      *
      * @param Request $request
      * @param string $ctrl_sn
-     * @param bool $sl0
+     * @param int $deviceNumber
      *
      * @return string
      */
-    public function reloadCards(Request $request, string $ctrl_sn, bool $sl0 = false): string
+    public function reloadCards(Request $request, string $ctrl_sn, int $deviceNumber = -1): string
     {
         abort_if(! $request->user()->isAdmin(), 403);
 
@@ -53,16 +53,33 @@ class ControllersController extends Controller
 
         abort_if(is_null($ctrl), 404);
 
+        if ($deviceNumber >= $ctrl->devices()->count()) {
+            return __('У контроллера меньше slave, чем задано');
+        }
+
         $divisions = $ctrl->organization->divisions()->where('type', '!=', 0)->get();
 
         $cards = [];
 
         foreach ($divisions as $division) {
             $devices = [];
+
             if ($division->devices()->where('controller_id', $ctrl->id)->count() > 0) {
-                $devicesInDivision = $division->devices()->where('controller_id', $ctrl->id)->get();
+                if ($deviceNumber === -1) {
+                    $devicesInDivision = $division->devices()->where(['controller_id' => $ctrl->id])->get();
+                } else {
+                    $devicesInDivision = $division->devices()->where(['controller_id' => $ctrl->id, 'address' => $deviceNumber])->get();
+                }
             } else {
-                $devicesInDivision = $ctrl->devices()->get();
+                if ($deviceNumber === -1) {
+                    $devicesInDivision = $ctrl->devices()->get();
+                } else {
+                    $devicesInDivision = $ctrl->devices()->where(['address' => $deviceNumber])->get();
+                }
+            }
+
+            if ($devicesInDivision->count() === 0) {
+                continue;
             }
 
             foreach ($devicesInDivision as $device) {
@@ -73,13 +90,7 @@ class ControllersController extends Controller
                 $rc = $person->referralCode;
                 if (isset($rc)) {
                     if ($rc->activated === 1) {
-                        if ($sl0 && isset($rc->sl0)) {
-                            $card = App\Card::firstOrCreate(['wiegand' => $rc->sl0]);
-                        } else if (! $sl0) {
-                            $card = App\Card::firstOrCreate(['wiegand' => $rc->card]);
-                        } else {
-                            continue;
-                        }
+                        $card = App\Card::firstOrCreate(['wiegand' => $rc->card]);
                         $person->cards()->save($card);
                         $cards[] = [
                             'code' => $card->wiegand,
