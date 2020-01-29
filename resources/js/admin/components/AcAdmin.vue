@@ -3,7 +3,8 @@
         <thead>
         <tr>
             <th scope="col">id</th>
-            <th scope="col">Серийный номер</th>
+            <th scope="col">SN</th>
+            <th scope="col">Имя</th>
             <th scope="col">Тип</th>
             <th scope="col">Версия ПО</th>
             <th scope="col">Локальный IP</th>
@@ -23,6 +24,7 @@
         >
             <th scope="row">{{ ctrl.id }}</th>
             <td>{{ ctrl.sn }}</td>
+            <td>{{ ctrl.name }}</td>
             <td>{{ ctrl.type }}</td>
             <td>{{ ctrl.fw }}</td>
             <td>{{ ctrl.ip }}</td>
