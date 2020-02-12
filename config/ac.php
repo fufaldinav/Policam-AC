@@ -1,18 +1,12 @@
 <?php
 /**
  * Name:   Policam AC
- * Author: Artem Fufaldin
- *         artem.fufaldin@gmail.com
  *
  * Created: 03.03.2019
  *
  * Description: Приложение для систем контроля и управления доступом.
  *
  * Requirements: PHP7.0 or above
- *
- * @package Policam-AC
- * @author  Artem Fufaldin
- * @link    http://github.com/m2jest1c/Policam-AC
  */
 return [
     /*
@@ -24,17 +18,17 @@ return [
      * Каталог с фотографиями камер
      */
     'camera_path' => '/var/www/img_snapshots',
-    
+
     /*
      * Каталог с логами
      */
     'log_path' => '/var/www/logs',
-    
+
     /*
      * Таймаут одного long poll
      */
     'long_poll_timeout' => 10,
-    
+
     /*
      * Firebase Cloud Messaging
      */
