@@ -57,7 +57,7 @@ class ControllersController extends Controller
         foreach ($divisions as $division) {
             $devices = [];
 
-            if ($division->devices()->where('controller_id', $ctrl->id)->count() > 0) {
+            if ($division->devices()->where(['controller_id' => $ctrl->id])->count() > 0) {
                 if ($deviceNumber === -1) {
                     $devicesInDivision = $division->devices()->where(['controller_id' => $ctrl->id])->get();
                 } else {

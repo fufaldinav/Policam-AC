@@ -47,9 +47,7 @@ class Card extends Model
      *
      * @var array
      */
-    protected $hidden = [
-        'events', 'person',
-    ];
+    protected $hidden = [];
 
     /**
      * The attributes that should be cast to native types.
@@ -58,8 +56,6 @@ class Card extends Model
      */
     protected $casts = [
         'last_conn' => 'datetime',
-        'controller_id' => 'integer',
-        'person_id' => 'integer',
     ];
 
     public function events()
