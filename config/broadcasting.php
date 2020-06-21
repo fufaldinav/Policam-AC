@@ -38,12 +38,8 @@ return [
             'options' => [
                 'cluster' => env('PUSHER_APP_CLUSTER'),
                 'host' => '127.0.0.1',
-                'port' => env('MIX_WS_PORT', 6002),
-                'scheme' => 'https',
-                'curl_options' => [
-                    CURLOPT_SSL_VERIFYHOST => 0,
-                    CURLOPT_SSL_VERIFYPEER => 0,
-                ],
+                'port' => env('MIX_WS_PORT', 6001),
+                'scheme' => 'http',
             ],
         ],
 
