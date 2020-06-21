@@ -16,6 +16,7 @@ use App\Policam\Ac\Z5RWEB\OutgoingMessage as Z5RWEBOutgoingMessage;
 use App\Policam\Ac\Z5RWEB\Card as Z5RWEBCard;
 use App\Policam\Ac\Policont\OutgoingMessage as PolicontOutgoingMessage;
 use App\Policam\Ac\Policont\Card as PolicontCard;
+use Illuminate\Support\Facades\Log;
 
 class Tasker
 {
@@ -46,6 +47,7 @@ class Tasker
             $counter += $task->save();
         }
 
+        Log::debug(print_r($this->to_send, true));
         $this->to_send = [];
 
         return $counter;
