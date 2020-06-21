@@ -165,8 +165,8 @@ class PersonsController extends Controller
             $rc->save();
         }
 
-        $person->detachAllDivisions()
-            ->detachAllCards()
+        $person->detachAllCards()
+            ->detachAllDivisions()
             ->detachAllPhotos()
             ->detachAllSubscribers();
 
