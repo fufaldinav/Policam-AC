@@ -61,9 +61,9 @@
                                     </p>
                             </div>
                         @endif
-                        <div class="d-flex justify-content-center mb-2">
-                            {!! NoCaptcha::display() !!}
-                        </div>
+{{--                        <div class="d-flex justify-content-center mb-2">--}}
+{{--                            {!! NoCaptcha::display() !!}--}}
+{{--                        </div>--}}
                         <div class="form-group row mb-0">
                             <div class="col-md-8 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
